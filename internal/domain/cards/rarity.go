@@ -1,5 +1,9 @@
 package cards
 
+import (
+    "fmt"
+)
+
 type Rarity string
 
 const (
@@ -14,11 +18,15 @@ const (
     SSS Rarity = "SSS"
 )
 
-func (r Rarity) IsValid() bool {
+func (r Rarity) Validate() error {
 	switch r {
 	case F, E, D, C, B, A, S, SS, SSS:
-		return true
+		return nil
 	default:
-		return false
+		return fmt.Errorf("invalid rarity: %s", r)
 	}
 }
+
+/* TODO:
+	- Create rarity
+ */

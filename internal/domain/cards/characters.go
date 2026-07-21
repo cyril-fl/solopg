@@ -1,5 +1,7 @@
 package cards
 
+import "fmt"
+
 type Character struct {
 	Card
 
@@ -19,6 +21,43 @@ type Stats struct {
 	Stamina int
 	Social int
 }
+
+type NewCharacterParams struct {
+	Name string
+	Description string
+	Rarity Rarity
+	Class Class
+	Race Race
+	Stats Stats
+}
+
+func NewCharacter(params NewCharacterParams) (*Character, error) {
+	newCard, err := NewCard(NewCardParams{
+		Name: params.Name,
+		Description: params.Description,
+		Rarity: params.Rarity,
+		Variety: CharacterCard,
+	})
+	
+	if err != nil {
+		return nil, err
+	}
+
+	if newCard == nil  {
+		return nil, fmt.Errorf("failed to create new card for character")
+	}	
+
+	if newCard == nil || newCard.Variety != CharacterCard {
+		return nil, fmt.Errorf("invalid card variety for character: %s", newCard.Variety)
+	}	
+
+	return &Character{
+		Card: *newCard,
+		Class: params.Class,
+		Race: params.Race,
+		Stats: params.Stats,
+	}, nil
+}	
 
 /* -
 Point 3: stats de Character “en dur” sans redondance.

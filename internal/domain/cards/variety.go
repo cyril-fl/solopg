@@ -1,5 +1,9 @@
 package cards
 
+import (
+	"fmt"
+)
+
 type Variety string
 
 const (
@@ -10,11 +14,15 @@ const (
 	ItemCard      Variety = "item_card"
 )
 
-func (c Variety) IsValid() bool {
+func (c Variety) Validate() error {
 	switch c {
 	case CharacterCard, EquipmentCard, EventCard, LocationCard, ItemCard:
-		return true
+		return nil
 	default:
-		return false
+		return fmt.Errorf("invalid variety: %s", c)
 	}
 }
+
+/* TODO:
+	- Create variety
+ */
