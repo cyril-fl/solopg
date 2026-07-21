@@ -1,8 +1,6 @@
 package cards
 
-import (
-    "fmt"
-)
+import "fmt"
 
 type Rarity string
 
@@ -26,7 +24,3 @@ func (r Rarity) Validate() error {
 		return fmt.Errorf("invalid rarity: %s", r)
 	}
 }
-
-/* TODO:
-	- Create rarity
- */

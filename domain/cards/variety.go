@@ -1,8 +1,6 @@
 package cards
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type Variety string
 
@@ -22,7 +20,3 @@ func (c Variety) Validate() error {
 		return fmt.Errorf("invalid variety: %s", c)
 	}
 }
-
-/* TODO:
-	- Create variety
- */

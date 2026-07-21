@@ -1,4 +1,4 @@
-package cards
+package types
 
 type Description struct {
 	Name        string

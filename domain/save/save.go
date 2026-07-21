@@ -3,10 +3,11 @@ package save
 import (
 	"github.com/google/uuid"
 
-	"solopg/internal/domain/cards"
+	"solopg/domain/cards"
+	"solopg/domain/characters"
 )
 type Save struct {
 	CampainID uuid.UUID
-	Character cards.Character
+	Character characters.Character
 	Location  cards.Location
 }

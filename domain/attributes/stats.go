@@ -1,4 +1,16 @@
-package cards
+package attributes
+
+import (
+	"solopg/domain/types"
+)
+
+type Stats struct {
+	Health int
+	Physical int
+	Mental int
+	Stamina int
+	Social int
+}
 
 type Stat string
 
@@ -10,7 +22,7 @@ const (
     Social   Stat = "social" // Charisma, persuasion, and social skills
 )
 
-func (s Stat) IsValid() bool {
+func (s Stat) Validate() bool {
 	switch s {
 	case Health, Physical, Mental, Stamina, Social:
 		return true
@@ -29,7 +41,11 @@ type Attribute struct {
 }
 
 type Effect struct {
-	Description
+	types.Description
 	Modifier Attribute
 }
 
+
+/* TODO:
+	- Create stats
+ */

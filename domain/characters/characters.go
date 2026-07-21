@@ -1,42 +1,41 @@
-package cards
+package characters
 
-import "fmt"
+import (
+	// "fmt"
+	"fmt"
+	"solopg/domain/attributes"
+	"solopg/domain/cards"
+	"solopg/domain/items"
+)
 
 type Character struct {
-	Card
+	cards.Card
 
 	Class Class
 	Race  Race
-	Stats Stats
+	Stats attributes.Stats
 
-	Equipments Equipment
-	Inventory []Item
-	Wallet Wallet
-}
-
-type Stats struct {
-	Health int
-	Physical int
-	Mental int
-	Stamina int
-	Social int
+	Equipment items.Equipment
+	Inventory []items.Item
+	Wallet items.Wallet
 }
 
 type NewCharacterParams struct {
 	Name string
 	Description string
-	Rarity Rarity
+	Rarity cards.Rarity
 	Class Class
 	Race Race
-	Stats Stats
+	Stats attributes.Stats
 }
 
 func NewCharacter(params NewCharacterParams) (*Character, error) {
-	newCard, err := NewCard(NewCardParams{
+	// Check Card
+	newCard, err := cards.NewCard(cards.NewCardParams{
 		Name: params.Name,
 		Description: params.Description,
 		Rarity: params.Rarity,
-		Variety: CharacterCard,
+		Variety: cards.CharacterCard,
 	})
 	
 	if err != nil {
@@ -47,17 +46,58 @@ func NewCharacter(params NewCharacterParams) (*Character, error) {
 		return nil, fmt.Errorf("failed to create new card for character")
 	}	
 
-	if newCard == nil || newCard.Variety != CharacterCard {
+	if newCard.Variety != cards.CharacterCard {
 		return nil, fmt.Errorf("invalid card variety for character: %s", newCard.Variety)
 	}	
+
+	// Check Class
+	if err := params.Class.Validate(); err != nil {
+		return nil, err
+	}
+	
+	// Check Race
+	if err := params.Race.Validate(); err != nil {
+		return nil, err
+	}
 
 	return &Character{
 		Card: *newCard,
 		Class: params.Class,
 		Race: params.Race,
 		Stats: params.Stats,
+		Equipment: items.Equipment{},
+		Inventory: []items.Item{},
+		Wallet: items.NewWallet(0, 0, 0),
 	}, nil
 }	
+
+func (character *Character) SetEquipment(gear []items.EquipmentGear) {
+	for _, g := range gear {
+		character.SetEquipmentSlot(g)
+	}
+}
+
+func (character *Character) SetEquipmentSlot(gear items.EquipmentGear) {
+	switch gear.DestinedSlot {
+	case items.Helmet:
+		character.Equipment.Helmet = &gear
+	case items.Chestplate:
+		character.Equipment.Chestplate = &gear
+	case items.Gauntlets:
+		character.Equipment.Gauntlets = &gear
+	case items.Greaves:
+		character.Equipment.Greaves = &gear
+	case items.Boots:
+		character.Equipment.Boots = &gear
+	case items.RightHand:
+		character.Equipment.RightHand = &gear
+	case items.LeftHand:
+		character.Equipment.LeftHand = &gear
+	default:
+		fmt.Printf("Invalid equipment slot: %s\n", gear.DestinedSlot)
+	}
+}
+
 
 /* -
 Point 3: stats de Character “en dur” sans redondance.
@@ -77,3 +117,4 @@ Le vrai point à éviter, ce n’est pas l’absence de Stat dans Character, c�
 Donc mon retour pragmatique est celui-ci: garde bien les stats en dur dans characters.go, mais fais porter le ciblage par stats.go via Effect.Modifier.Stat. Ensuite, applique l’effet avec une seule méthode de Character qui route vers le bon champ. C’est minimal, lisible, et ça évite la redondance sans perdre la capacité d’appliquer des effets correctement.
 
 Si tu veux, je peux te proposer juste la forme exacte de cette méthode d’application, en restant très simple et sans réarchitecture. */
+
