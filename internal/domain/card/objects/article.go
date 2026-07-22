@@ -2,13 +2,9 @@ package objects
 
 import (
 	"fmt"
-	// "os"
 
-	// "solopg/models/cards/objects"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"
-	// "solopg/utils"
-	// "gopkg.in/yaml.v3"
 )
 
 type Article struct {
@@ -17,7 +13,7 @@ type Article struct {
 	IsConsumable bool
 }
 
-type NewArticleParams struct {
+type ArticleTemplate struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
@@ -28,7 +24,7 @@ type NewArticleParams struct {
 	Consumable  bool
 }
 
-func NewArticle(params NewArticleParams) (*Article, error) {
+func NewArticle(params ArticleTemplate) (*Article, error) {
 	// Check Card
 	newItem, err := NewObject(NewObjectParams{
 		Name:        params.Name,
@@ -53,28 +49,3 @@ func NewArticle(params NewArticleParams) (*Article, error) {
 		IsConsumable: params.Consumable,
 	}, nil
 }
-
-// func LoadFromFile(fileAddress string) (*Article, error) {
-// 	data, err := os.ReadFile(fileAddress)
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	var articleParams NewArticleParams
-// 	if err := yaml.Unmarshal(data, &articleParams); err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	utils.JsonifiedLog(articleParams)
-
-// 	article, err := NewArticle(articleParams)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	utils.JsonifiedLog(article)
-
-// 	return article, nil
-// }

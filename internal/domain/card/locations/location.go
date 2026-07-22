@@ -5,7 +5,6 @@ import (
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"
-	// "solopg/models/cards/utils"
 )
 
 type Location struct {
@@ -14,7 +13,7 @@ type Location struct {
 	Effects []effects.Effect
 }
 
-type NewLocationParams struct {
+type LocationTemplate struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
@@ -22,7 +21,7 @@ type NewLocationParams struct {
 	Effects     []effects.Effect
 }
 
-func NewLocation(params NewLocationParams) (*Location, error) {
+func NewLocation(params LocationTemplate) (*Location, error) {
 	// Check Card
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,
@@ -44,31 +43,3 @@ func NewLocation(params NewLocationParams) (*Location, error) {
 		Effects: params.Effects,
 	}, nil
 }
-
-// func LoadFromFile(fileAddress string) (*Location, error) {
-// 	data, err := os.ReadFile(fileAddress)
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	var locationParams NewLocationParams
-// 	if err := yaml.Unmarshal(data, &locationParams); err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	// TODO: Ajouter une config "verbose"
-// 	// utils.JsonifiedLog(locationParams)
-
-// 	location, err := NewLocation(locationParams)
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, err, "NewLocation:", fileAddress)
-// 		return nil, err
-// 	}
-
-// 	// TODO: Ajouter une config "verbose"
-// 	// utils.JsonifiedLog(location)
-
-// 	return location, nil
-// }

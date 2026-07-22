@@ -2,23 +2,16 @@ package objects
 
 import (
 	"fmt"
-	// "os"
 
-	// "solopg/models/cards"
-	// "solopg/models/cards/objects"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"
-	// "solopg/internal/domain/card/slots"
-	// "solopg/utils"
-	// "solopg/domain/stats"
-	// "gopkg.in/yaml.v3"
 )
 
 type Gear struct {
 	Object
 
-	Attributes   Attribute
-	EquipmentSlot EquipmentSlot
+	Attributes    Attribute
+	EquipmentSlot EquipmentSlot `yaml:"destinedslot"`
 }
 
 type EquipmentSlot string
@@ -42,19 +35,19 @@ func (s EquipmentSlot) Validate() error {
 	}
 }
 
-type NewGearParams struct {
-	Name         string
-	Description  string
-	Rarity       attributes.Rarity
-	Variety      attributes.Variety
-	Category     Category
-	Attributes   Attribute
-	Effects      []effects.Effect
-	Pod          int
-	EquipmentSlot EquipmentSlot
+type GearTemplate struct {
+	Name          string
+	Description   string
+	Rarity        attributes.Rarity
+	Variety       attributes.Variety
+	Category      Category
+	Attributes    Attribute
+	Effects       []effects.Effect
+	Pod           int
+	EquipmentSlot EquipmentSlot `yaml:"destinedslot"`
 }
 
-func NewGear(params NewGearParams) (*Gear, error) {
+func NewGear(params GearTemplate) (*Gear, error) {
 	// Check Card
 	newItem, err := NewObject(NewObjectParams{
 		Name:        params.Name,
@@ -74,40 +67,14 @@ func NewGear(params NewGearParams) (*Gear, error) {
 		return nil, fmt.Errorf("failed to create new item for equipment gear")
 	}
 
-	// Check DestinedSlot
+	// Check EquipmentSlot
 	if err := params.EquipmentSlot.Validate(); err != nil {
 		return nil, err
 	}
 
 	return &Gear{
-		Object:       *newItem,
-		Attributes:   params.Attributes,
+		Object:        *newItem,
+		Attributes:    params.Attributes,
 		EquipmentSlot: params.EquipmentSlot,
 	}, nil
 }
-
-// func LoadFromFile(fileAddress string) (*Gear, error) {
-// 	data, err := os.ReadFile(fileAddress)
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	var gearParams NewGearParams
-// 	if err := yaml.Unmarshal(data, &gearParams); err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	utils.JsonifiedLog(gearParams)
-
-// 	gear, err := NewGear(gearParams)
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, err)
-// 		return nil, err
-// 	}
-
-// 	utils.JsonifiedLog(gear)
-
-// 	return gear, nil
-// }
