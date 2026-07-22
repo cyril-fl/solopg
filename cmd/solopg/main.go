@@ -1,46 +1,22 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
-	"time"
-
-	// "solopg/cards/characters"
-	"solopg/internal/infrastructure/mongo"
-	// "solopg/cards/items/articles"
-	// "solopg/cards/items/equipments"
-	// "solopg/cards/utils"
-	// "solopg/cards/locations"
+	"solopg/internal/app"
 )
 
 func main() {
-	fmt.Fprintln(os.Stdout, "Create character cards")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	repo, err := mongo.Connect(ctx, "mongodb://localhost:27017", "solopg")
+	db, err := app.Load()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		return
+		os.Exit(1)
 	}
 
-	defer repo.Close(ctx)
+	defer app.CloseDatabase(db)
 
-	_ = repo
-
-	//
-
-	// articles.LoadFromFile("cards/template/articles/potion/heal_lvl1.yaml")
-	// characters.LoadFromFile("cards/template/characters/monsters/slime.yaml")
-	// characters.LoadFromFile("cards/template/characters/npcs/blacksmith.yaml")
-	// locations.LoadFromFile("cards/template/locations/tavern.yaml")
-
-	// adventurerSword, _:= equipments.LoadFromFile("cards/template/equipments/adventurers/sword.yaml")
-	// hero, _ := characters.LoadFromFile("cards/template/characters/hero.yaml")
-
-	// hero.SetEquipmentSlot(adventurerSword)
-	// utils.JsonifiedLog(hero)
-
+	if err := app.Run(db); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
