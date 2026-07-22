@@ -1,0 +1,8 @@
+name: Adventurer's shield
+description: A sturdy shield for defense from the adventurer's set.
+rarity: E
+variety: equipment_card
+category: weapon
+effects: []
+pod: 1
+destinedslot: right_hand

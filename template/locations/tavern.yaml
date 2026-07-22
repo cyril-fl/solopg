@@ -1,0 +1,11 @@
+name: Tavern
+description: A cozy tavern where adventurers gather to share stories and enjoy a warm meal.
+rarity: E
+variety: location_card
+effects:
+  - description: 
+      name: Saturdy night fever
+      description: Increases social by 1
+    modifier:
+      stat: social
+      value: 1

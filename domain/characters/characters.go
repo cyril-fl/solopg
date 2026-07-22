@@ -1,11 +1,16 @@
 package characters
 
 import (
-	// "fmt"
 	"fmt"
+	"os"
 	"solopg/domain/cards"
 	"solopg/domain/items"
+	"solopg/domain/items/equipments"
+
 	"solopg/domain/stats"
+	// "solopg/domain/utils"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Character struct {
@@ -15,7 +20,7 @@ type Character struct {
 	Race  Race
 	Stats stats.Stats
 
-	Equipment items.Equipment
+	Equipment equipments.Equipment
 	Inventory []items.Item
 	Wallet items.Wallet
 }
@@ -28,7 +33,7 @@ type NewCharacterParams struct {
 	Race Race
 	Stats stats.Stats
 	Wallet items.Wallet
-	Equipment items.Equipment
+	Equipment equipments.Equipment
 	Inventory []items.Item
 }
 
@@ -68,33 +73,61 @@ func NewCharacter(params NewCharacterParams) (*Character, error) {
 		Class: params.Class,
 		Race: params.Race,
 		Stats: params.Stats,
-		Equipment: items.Equipment{},
-		Inventory: []items.Item{},
-		Wallet: items.NewWallet(0, 0, 0),
+		Equipment: params.Equipment,
+		Inventory: params.Inventory,
+		Wallet: params.Wallet,
 	}, nil
 }	
 
-func (character *Character) SetEquipment(gear []*items.EquipmentGear) {
+func LoadFromFile(fileAddress string) (*Character, error) {
+	data, err := os.ReadFile(fileAddress)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil, err
+	}
+
+	var characterParams NewCharacterParams
+	if err := yaml.Unmarshal(data, &characterParams); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil, err
+	}
+
+	// TODO: Ajouter une config "verbose"
+	// utils.JsonifiedLog(characterParams)
+
+	character, err := NewCharacter(characterParams)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil, err
+	}
+
+	// TODO: Ajouter une config "verbose"
+	// utils.JsonifiedLog(character)
+
+	return character, nil
+}
+
+func (character *Character) SetEquipment(gear []*equipments.Gear) {
 	for _, g := range gear {
 		character.SetEquipmentSlot(g)
 	}
 }
 
-func (character *Character) SetEquipmentSlot(gear *items.EquipmentGear) {
+func (character *Character) SetEquipmentSlot(gear *equipments.Gear) {
 	switch gear.DestinedSlot {
-	case items.Helmet:
+	case equipments.Helmet:
 		character.Equipment.Helmet = gear
-	case items.Chestplate:
+	case equipments.Chestplate:
 		character.Equipment.Chestplate = gear
-	case items.Gauntlets:
+	case equipments.Gauntlets:
 		character.Equipment.Gauntlets = gear
-	case items.Greaves:
+	case equipments.Greaves:
 		character.Equipment.Greaves = gear
-	case items.Boots:
+	case equipments.Boots:
 		character.Equipment.Boots = gear
-	case items.RightHand:
+	case equipments.RightHand:
 		character.Equipment.RightHand = gear
-	case items.LeftHand:
+	case equipments.LeftHand:
 		character.Equipment.LeftHand = gear
 	default:
 		fmt.Printf("Invalid equipment slot: %s\n", gear.DestinedSlot)

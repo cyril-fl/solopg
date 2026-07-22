@@ -1,0 +1,17 @@
+name: Adventurer's sword
+description: A sharp blade for combat from the adventurer's set.
+rarity: E
+variety: equipment_card
+category: weapon
+attributes: 
+  attack: 1
+  defense: 0
+effects:
+  - description: 
+      name: Newbie's charm
+      description: Increases social by 1
+    modifier:
+      stat: social
+      value: 1
+pod: 1
+destinedslot: left_hand

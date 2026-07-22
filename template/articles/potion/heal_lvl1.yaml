@@ -1,0 +1,14 @@
+name: Healing Potion (Level 1)
+description: Heals a small amount of health when consumed.
+rarity: E
+variety: article_card
+category: potion
+effects:
+  - description: 
+      name: Heal
+      description: Restores 10 health points to the user.
+  - modifier:
+      stat: health
+      value: 10
+pod: 1
+consumable: true

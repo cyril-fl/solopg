@@ -1,0 +1,25 @@
+name: Hero
+description: This is a test character
+rarity: A
+variety: character_card
+class: Adventurer
+race: Human
+stats:
+  health: 20
+  physical: 10
+  mental: 10
+  stamina: 10
+  social: 10
+equipment:
+  helmet: 
+  chestplate:
+  gauntlets:
+  greaves:
+  boots:
+  rightHand:
+  leftHand:
+inventory: 
+wallet:
+  gold: 20
+  silver: 3
+  copper: 1

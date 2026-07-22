@@ -1,0 +1,25 @@
+name: Slime
+description: A small, gelatinous creature that oozes around and attacks anything in its path.
+rarity: A
+variety: character_card
+class: Monster
+race: Slime
+stats:
+  health: 3
+  physical: 1
+  mental: 1
+  stamina: 1
+  social: 1
+equipment:
+  helmet: 
+  chestplate:
+  gauntlets:
+  greaves:
+  boots:
+  rightHand:
+  leftHand:
+inventory: 
+wallet:
+  gold:
+  silver:
+  copper:

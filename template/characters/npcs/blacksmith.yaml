@@ -1,0 +1,25 @@
+name: Black smith
+description: A skilled blacksmith who can forge weapons and armor for adventurers.
+rarity: A
+variety: character_card
+class: Craftsman
+race: Dwarf
+stats:
+  health: 15
+  physical: 15
+  mental: 10
+  stamina: 13
+  social: 8
+equipment:
+  helmet: 
+  chestplate:
+  gauntlets:
+  greaves:
+  boots:
+  rightHand:
+  leftHand:
+inventory: 
+wallet:
+  gold: 1000
+  silver: 1000
+  copper: 1000
