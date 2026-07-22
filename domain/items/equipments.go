@@ -2,8 +2,8 @@ package items
 
 import (
 	"fmt"
-	"solopg/domain/attributes"
 	"solopg/domain/cards"
+	"solopg/domain/stats"
 )
 
 type EquipmentSlot string
@@ -39,6 +39,8 @@ type Equipment struct {
 
 type EquipmentGear struct {
 	Item
+
+	Attributes stats.Attribute
 	DestinedSlot EquipmentSlot
 }
 
@@ -48,7 +50,8 @@ type NewEquipmentParams struct {
 	Rarity cards.Rarity
 	Variety cards.Variety
 	Category Category
-	Effects []attributes.Effect
+	Attributes stats.Attribute
+	Effects []stats.Effect
 	Pod int
 	DestinedSlot EquipmentSlot
 }
@@ -80,6 +83,7 @@ func NewEquipmentGear(params NewEquipmentParams) (*EquipmentGear, error) {
 
 	return &EquipmentGear{
 		Item: *newItem,
+		Attributes: params.Attributes,
 		DestinedSlot: params.DestinedSlot,
 	}, nil
 }

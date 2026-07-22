@@ -2,15 +2,15 @@ package items
 
 import (
 	"fmt"
-	"solopg/domain/attributes"
 	"solopg/domain/cards"
+	"solopg/domain/stats"
 )
 
 type Item struct {
 	cards.Card
 
 	Category Category
-	Effects  []attributes.Effect
+	Effects  []stats.Effect
 	Pod      int
 }
 
@@ -37,7 +37,7 @@ type NewItemParams struct {
 	Rarity cards.Rarity
 	Variety cards.Variety
 	Category Category
-	Effects []attributes.Effect
+	Effects []stats.Effect
 	Pod int
 }
 
@@ -58,7 +58,7 @@ func NewItem(params NewItemParams) (*Item, error) {
 		return nil, fmt.Errorf("failed to create new card for item")
 	}	
 	
-	if newCard.Variety != cards.ItemCard && newCard.Variety != cards.EquipmentCard {
+	if newCard.Variety != cards.ArticleCard && newCard.Variety != cards.EquipmentCard {
 		return nil, fmt.Errorf("invalid card variety for item: %s", newCard.Variety)
 	}
 

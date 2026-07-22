@@ -9,12 +9,12 @@ const (
 	EquipmentCard Variety = "equipment_card"
 	EventCard     Variety = "event_card"
 	LocationCard  Variety = "location_card"
-	ItemCard      Variety = "item_card"
+	ArticleCard      Variety = "article_card"
 )
 
 func (c Variety) Validate() error {
 	switch c {
-	case CharacterCard, EquipmentCard, EventCard, LocationCard, ItemCard:
+	case CharacterCard, EquipmentCard, EventCard, LocationCard, ArticleCard:
 		return nil
 	default:
 		return fmt.Errorf("invalid variety: %s", c)

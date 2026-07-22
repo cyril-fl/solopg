@@ -1,13 +1,13 @@
 package cards
 
 import (
-	"solopg/domain/attributes"
+	"solopg/domain/stats"
 )		
 
 type Location struct {
 	Card
 
-	Effects []attributes.Effect
+	Effects []stats.Effect
 }
 
 /* TODO:

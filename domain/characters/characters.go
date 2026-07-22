@@ -3,9 +3,9 @@ package characters
 import (
 	// "fmt"
 	"fmt"
-	"solopg/domain/attributes"
 	"solopg/domain/cards"
 	"solopg/domain/items"
+	"solopg/domain/stats"
 )
 
 type Character struct {
@@ -13,7 +13,7 @@ type Character struct {
 
 	Class Class
 	Race  Race
-	Stats attributes.Stats
+	Stats stats.Stats
 
 	Equipment items.Equipment
 	Inventory []items.Item
@@ -26,7 +26,10 @@ type NewCharacterParams struct {
 	Rarity cards.Rarity
 	Class Class
 	Race Race
-	Stats attributes.Stats
+	Stats stats.Stats
+	Wallet items.Wallet
+	Equipment items.Equipment
+	Inventory []items.Item
 }
 
 func NewCharacter(params NewCharacterParams) (*Character, error) {
@@ -71,28 +74,28 @@ func NewCharacter(params NewCharacterParams) (*Character, error) {
 	}, nil
 }	
 
-func (character *Character) SetEquipment(gear []items.EquipmentGear) {
+func (character *Character) SetEquipment(gear []*items.EquipmentGear) {
 	for _, g := range gear {
 		character.SetEquipmentSlot(g)
 	}
 }
 
-func (character *Character) SetEquipmentSlot(gear items.EquipmentGear) {
+func (character *Character) SetEquipmentSlot(gear *items.EquipmentGear) {
 	switch gear.DestinedSlot {
 	case items.Helmet:
-		character.Equipment.Helmet = &gear
+		character.Equipment.Helmet = gear
 	case items.Chestplate:
-		character.Equipment.Chestplate = &gear
+		character.Equipment.Chestplate = gear
 	case items.Gauntlets:
-		character.Equipment.Gauntlets = &gear
+		character.Equipment.Gauntlets = gear
 	case items.Greaves:
-		character.Equipment.Greaves = &gear
+		character.Equipment.Greaves = gear
 	case items.Boots:
-		character.Equipment.Boots = &gear
+		character.Equipment.Boots = gear
 	case items.RightHand:
-		character.Equipment.RightHand = &gear
+		character.Equipment.RightHand = gear
 	case items.LeftHand:
-		character.Equipment.LeftHand = &gear
+		character.Equipment.LeftHand = gear
 	default:
 		fmt.Printf("Invalid equipment slot: %s\n", gear.DestinedSlot)
 	}

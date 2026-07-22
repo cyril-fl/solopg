@@ -2,8 +2,8 @@ package items
 
 import (
 	"fmt"
-	"solopg/domain/attributes"
 	"solopg/domain/cards"
+	"solopg/domain/stats"
 )
 
 type Article struct {
@@ -18,9 +18,9 @@ type NewArticleParams struct {
 	Rarity cards.Rarity
 	Variety cards.Variety
 	Category Category
-	Effects []attributes.Effect
+	Effects []stats.Effect
 	Pod int
-	IsConsumable bool
+	Consumable bool 
 }
 
 func NewArticle(params NewArticleParams) (*Article, error) {
@@ -45,7 +45,7 @@ func NewArticle(params NewArticleParams) (*Article, error) {
 	
 	return &Article{
 		Item: *newItem,
-		IsConsumable: params.IsConsumable,
+		IsConsumable: params.Consumable,
 	}, nil
 }
 
