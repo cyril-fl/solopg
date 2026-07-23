@@ -18,3 +18,9 @@ func (c Class) Validate() error {
 		return fmt.Errorf("invalid class: %s", c)
 	}
 }
+
+var PlayableClasses = []Class{Adventurer}
+
+func (c Class) String() string {
+	return string(c)
+}

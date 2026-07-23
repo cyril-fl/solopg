@@ -1,0 +1,11 @@
+name: Forest
+description: A dense forest filled with ancient trees, hidden paths, and lurking creatures.
+rarity: E
+variety: location_card
+effects:
+  - description:
+      name: Fresh air
+      description: Increases stamina by 1
+    modifier:
+      stat: stamina
+      value: 1

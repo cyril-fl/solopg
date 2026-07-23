@@ -7,13 +7,12 @@ import (
 )
 
 type Codex struct {
-	CampaignID     uuid.UUID               `bson:"campaignId" json:"campaignId"`
-	Codex codex.Codex	`bson:"codex" json:"codex"`
+	CampaignID uuid.UUID   `bson:"campaignId" json:"campaignId"`
+	Codex      codex.Codex `bson:"codex" json:"codex"`
 }
 type CodexTemplate struct {
-	CampaignID     uuid.UUID
-	Codex codex.Codex
-
+	CampaignID uuid.UUID
+	Codex      codex.Codex
 }
 
 func NewCodex(params CodexTemplate) *Codex {

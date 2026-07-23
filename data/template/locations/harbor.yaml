@@ -1,0 +1,11 @@
+name: Harbor
+description: A bustling harbor where merchants, sailors, and adventurers arrive from distant lands.
+rarity: E
+variety: location_card
+effects:
+  - description:
+      name: Sea breeze
+      description: Increases stamina by 1
+    modifier:
+      stat: stamina
+      value: 1

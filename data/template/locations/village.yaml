@@ -1,0 +1,11 @@
+name: Village
+description: A peaceful village where travelers can rest, trade, and gather information.
+rarity: E
+variety: location_card
+effects:
+  - description:
+      name: Friendly locals
+      description: Increases social by 1
+    modifier:
+      stat: social
+      value: 1

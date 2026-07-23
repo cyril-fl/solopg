@@ -8,16 +8,16 @@ import (
 type Codex struct {
 	NpcsTable      []*characters.Character
 	MonstersTable  []*characters.Character
-	LocationsTable []*locations.Location  
-	ObjectsTable   []interface{}          
-	ObjectifsTable []interface{}          
+	LocationsTable []*locations.Location
+	ObjectsTable   []interface{}
+	ObjectifsTable []interface{}
 }
 type CodexTemplate struct {
-	NpcsTable      []*characters.Character 
-	MonstersTable  []*characters.Character 
-	LocationsTable []*locations.Location   
-	ObjectsTable   []interface{}           
-	ObjectifsTable []interface{}           
+	NpcsTable      []*characters.Character
+	MonstersTable  []*characters.Character
+	LocationsTable []*locations.Location
+	ObjectsTable   []interface{}
+	ObjectifsTable []interface{}
 }
 
 func NewCodex(params CodexTemplate) *Codex {

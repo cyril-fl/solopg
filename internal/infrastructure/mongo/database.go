@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -55,8 +54,6 @@ func Connect() (*Mongo, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("🥭 Database connected successfully!")
 
 	return database, nil
 }

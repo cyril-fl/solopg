@@ -1,0 +1,11 @@
+name: Mountain Pass
+description: A narrow path through towering mountains where every step tests your endurance.
+rarity: D
+variety: location_card
+effects:
+  - description:
+      name: Thin air
+      description: Increases physical by 1
+    modifier:
+      stat: physical
+      value: 1

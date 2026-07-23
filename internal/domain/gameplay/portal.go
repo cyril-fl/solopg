@@ -1,0 +1,41 @@
+package gameplay
+
+import (
+	"solopg/internal/domain/card/locations"
+	"solopg/internal/infrastructure/folder"
+	"solopg/internal/infrastructure/yaml"
+)
+
+func LoadPresetLocations() ([]locations.Location, error) {
+	folderName := "data/template/locations"
+	folderContents, err := folder.GetContents(folderName)
+	if err != nil {
+		return nil, err
+	}
+
+	var locationsList []locations.Location
+	for _, fileName := range folderContents {
+		filePath := "data/template/locations/" + fileName
+
+		location, err := yaml.LocationFromFile(filePath)
+		if err != nil {
+			return nil, err
+		}
+		locationsList = append(locationsList, *location)
+	}
+
+	return locationsList, nil
+}
+
+func DrawLocations() (*locations.Location, error) {
+	// Lister les location predefinie
+	list, err := LoadPresetLocations()
+	if err != nil {
+		return nil, err
+	}
+
+	roll := roll(len(list))
+	selectedLocation := list[roll-1]
+
+	return &selectedLocation, nil
+}

@@ -10,7 +10,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("solopg v0.1.0")
+		fmt.Println("solopg v0.0.3")
 	},
 }
 

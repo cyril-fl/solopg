@@ -1,0 +1,11 @@
+name: Ancient Temple
+description: Forgotten ruins hiding relics, dangerous traps, and ancient knowledge.
+rarity: D
+variety: location_card
+effects:
+  - description:
+      name: Ancient wisdom
+      description: Increases mental by 1
+    modifier:
+      stat: mental
+      value: 1
