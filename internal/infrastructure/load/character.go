@@ -1,8 +1,6 @@
 package load
 
-import (
-	"solopg/internal/domain/card/characters"
-)
+import "solopg/internal/domain/card/characters"
 
 func CharacterFromFile(fileAddress string) (*characters.Character, error) {
 	var characterParams characters.CharacterTemplate

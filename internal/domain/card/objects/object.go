@@ -2,6 +2,7 @@ package objects
 
 import (
 	"fmt"
+
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"

@@ -1,12 +1,10 @@
-package app
+package game
 
-import (
-	"solopg/internal/infrastructure/mongo"
-)
+import "solopg/internal/infrastructure/mongo"
 
-func Run(db *mongo.Mongo) error {
+func Start(db *mongo.Mongo) error {
 
- 	// load.ArticleFromFile("data/template/articles/potion/heal_lvl1.yaml")
+	// load.ArticleFromFile("data/template/articles/potion/heal_lvl1.yaml")
 	// load.CharacterFromFile("data/template/characters/monsters/slime.yaml")
 	// load.CharacterFromFile("data/template/characters/npcs/blacksmith.yaml")
 	// load.LocationFromFile("data/template/locations/tavern.yaml")
@@ -33,7 +31,6 @@ func Run(db *mongo.Mongo) error {
 
 	// hero.SetEquipmentSlot(adventurerSword)
 	// jsonlog.JsonifiedLog(hero)
-
 
 	return nil
 }

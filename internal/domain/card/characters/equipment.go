@@ -2,6 +2,7 @@ package characters
 
 import (
 	"fmt"
+
 	"solopg/internal/domain/card/objects"
 )
 
