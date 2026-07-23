@@ -1,4 +1,4 @@
-package load
+package yaml
 
 import "solopg/internal/domain/card/locations"
 
