@@ -1,4 +1,4 @@
-package mongo
+package campaign
 
 import (
 	"time"
@@ -18,8 +18,8 @@ type Save struct {
 }
 
 type SaveTemplate struct {
-	Player          *characters.Character `bson:"character" json:"character"`
-	CurrentLocation *locations.Location   `bson:"location" json:"location"`
+	Player          *characters.Character
+	CurrentLocation *locations.Location
 }
 
 func NewSave(params SaveTemplate) *Save {

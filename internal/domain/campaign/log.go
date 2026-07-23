@@ -1,4 +1,4 @@
-package mongo
+package campaign
 
 import (
 	"time"
@@ -14,8 +14,8 @@ type Log struct {
 }
 
 type LogTemplate struct {
-	CampaignID uuid.UUID `bson:"campaignId" json:"campaignId"`
-	Message    string    `bson:"message" json:"message"`
+	CampaignID uuid.UUID
+	Message    string
 }
 
 func NewLog(params LogTemplate) *Log {
