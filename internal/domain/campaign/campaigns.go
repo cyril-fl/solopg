@@ -8,14 +8,15 @@ import (
 	"solopg/internal/domain/card/locations"
 
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Campaign struct {
-	ID              uuid.UUID            `bson:"Id" json:"Id"`
-	Player          characters.Character `bson:"character" json:"character"`
-	CurrentLocation locations.Location   `bson:"location" json:"location"`
-	CreatedAt       time.Time            `bson:"createdAt" json:"createdAt"`
-	UpdatedAt       time.Time            `bson:"updatedAt" json:"updatedAt"`
+	ID              uuid.UUID             `bson:"Id" json:"Id"`
+	Player          *characters.Character `bson:"character" json:"character"`
+	CurrentLocation *locations.Location   `bson:"location" json:"location"`
+	CreatedAt       time.Time             `bson:"createdAt" json:"createdAt"`
+	UpdatedAt       time.Time             `bson:"updatedAt" json:"updatedAt"`
 }
 
 type Template struct {
@@ -28,8 +29,8 @@ func New(params Template) *Campaign {
 
 	return &Campaign{
 		ID:              uuid.New(),
-		Player:          *params.Player,
-		CurrentLocation: *params.CurrentLocation,
+		Player:          params.Player,
+		CurrentLocation: params.CurrentLocation,
 		CreatedAt:       now,
 		UpdatedAt:       now,
 	}
@@ -49,4 +50,14 @@ func (c *Campaign) Description() string {
 		c.CurrentLocation.Name,
 		c.UpdatedAt.Format("2006-01-02 15:04:05"),
 	)
+}
+
+func (c *Campaign) SetUpdatedAt(t time.Time) {
+	c.UpdatedAt = t
+}
+
+func (c *Campaign) Filter() bson.M {
+	return bson.M{
+		"Id": c.ID,
+	}
 }

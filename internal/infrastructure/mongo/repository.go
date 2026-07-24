@@ -6,102 +6,127 @@ import (
 	"time"
 
 	"solopg/internal/domain/campaign"
+	// "solopg/internal/domain/codex"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (db *Mongo) collection(name string) *mongo.Collection {
-	return db.instance.Collection(name)
-}
+var campaignCollectionName = "campaigns"
+var archivesCollectionName = "archives"
 
-func (db *Mongo) LoadSaves() ([]campaign.Campaign, error) {
+func loadFromCollection[T any](db *Mongo, collectionName string) ([]T, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cursor, err := db.collection("saves").Find(ctx, bson.M{})
+	cursor, err := db.collection(collectionName).Find(ctx, bson.M{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to load saves: %w", err)
+		return nil, fmt.Errorf("failed to load %s: %w", collectionName, err)
 	}
 
 	defer cursor.Close(ctx)
 
-	var saves []campaign.Campaign
+	var data []T
 
-	if err := cursor.All(ctx, &saves); err != nil {
-		return nil, fmt.Errorf("failed to decode saves: %w", err)
+	if err := cursor.All(ctx, &data); err != nil {
+		return nil, fmt.Errorf("failed to decode %s: %w", collectionName, err)
 	}
 
-	return saves, nil
+	return data, nil
 }
 
-func (db *Mongo) SaveCampaign(save *campaign.Campaign) error {
+func loadFromCollectionByFilter[T any](db *Mongo, collectionName string, filter bson.M) ([]T, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	save.UpdatedAt = time.Now().UTC()
+	cursor, err := db.collection(collectionName).Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load %s: %w", collectionName, err)
+	}
 
-	_, err := db.collection("saves").ReplaceOne(
+	defer cursor.Close(ctx)
+
+	var data []T
+
+	if err := cursor.All(ctx, &data); err != nil {
+		return nil, fmt.Errorf("failed to decode %s: %w", collectionName, err)
+	}
+
+	return data, nil
+}
+
+func saveToCollection[T Document](db *Mongo, collectionName string, data T) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	data.SetUpdatedAt(time.Now().UTC())
+
+	_, err := db.collection(collectionName).ReplaceOne(
 		ctx,
-		bson.M{"campaignId": save.ID},
-		save,
+		data.Filter(),
+		data,
 		options.Replace().SetUpsert(true),
 	)
 
-	if err != nil {
-		return fmt.Errorf("failed to upsert save: %w", err)
-	}
-
-	fmt.Println("Save upserted successfully:", save.ID)
-
-	return nil
+	return err
 }
 
-/* func (db *Mongo) LoadGameState() *Repository {
-	return &Repository {
-		saves: db.instance.Collection("saves"),
-		logs: db.instance.Collection("logs"),
-		codex: db.instance.Collection("codex"),
-	}
-}
-type Repository struct {
-	saves  *mongo.Collection
-	logs   *mongo.Collection
-	codex  *mongo.Collection
-} */
-
-/* func (db *Mongo) LoadCodex() *Repository {
-	return &Repository {
-		codex: db.instance.Collection("codex"),
-	}
+func (db *Mongo) collection(name string) *mongo.Collection {
+	return db.instance.Collection(name)
 }
 
-func (db *Mongo) LoadLogs() *Repository {
-	return &Repository {
-		logs: db.instance.Collection("logs"),
-	}
+func (db *Mongo) LoadCampaign() ([]campaign.Campaign, error) {
+	return loadFromCollection[campaign.Campaign](db, campaignCollectionName)
 }
 
-func (db *Mongo) LoadSaves() *Repository {
-	fmt.Println("Loading saves repository...")
-
-	return &Repository {
-		saves: db.instance.Collection("saves"),
-	}
-} */
-
-/* func (repository *Repository) FindByCampaignID(ctx context.Context, campaignID uuid.UUID) (*Save, error) {
-	if repository == nil || repository.collection == nil {
-		return nil, fmt.Errorf("save store is not initialized")
-	}
-
-	var save Save
-	err := repository.collection.FindOne(ctx, map[string]uuid.UUID{"campaignId": campaignID}).Decode(&save)
+func (db *Mongo) LoadCampaignByID(campaignID uuid.UUID) (*campaign.Campaign, error) {
+	campaigns, err := loadFromCollectionByFilter[campaign.Campaign](db, campaignCollectionName, bson.M{"id": campaignID})
 	if err != nil {
 		return nil, err
 	}
 
-	return &save, nil
+	if len(campaigns) == 0 {
+		return nil, fmt.Errorf("campaign with ID %s not found", campaignID)
+	}
+
+	return &campaigns[0], nil
 }
-*/
+
+func (db *Mongo) RegisterCampaign(save *campaign.Campaign) error {
+	err := saveToCollection(db, campaignCollectionName, save)
+	if err != nil {
+		return fmt.Errorf("failed to save campaign: %w", err)
+	}
+
+	fmt.Println("Campaign saved successfully:", save.ID)
+	return nil
+}
+
+func (db *Mongo) LoadAllArchives() ([]campaign.Archives, error) {
+	return loadFromCollection[campaign.Archives](db, archivesCollectionName)
+}
+
+func (db *Mongo) LoadArchivesByCampaignID(campaignID uuid.UUID) (*campaign.Archives, error) {
+	archives, err := loadFromCollectionByFilter[campaign.Archives](db, archivesCollectionName, bson.M{"campaignId": campaignID})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(archives) == 0 {
+		return nil, nil
+	}
+
+	return &archives[0], nil
+}
+
+func (db *Mongo) RegisterArchives(archives *campaign.Archives) error {
+	err := saveToCollection(db, archivesCollectionName, archives)
+	if err != nil {
+		return fmt.Errorf("failed to save archives: %w", err)
+	}
+
+	fmt.Println("Archives saved successfully:", archives.CampaignID)
+	return nil
+}

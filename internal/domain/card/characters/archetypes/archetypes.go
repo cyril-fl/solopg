@@ -1,12 +1,14 @@
 package archetypes
 
 import (
+	"solopg/internal/domain/card/effects"
 	"solopg/internal/infrastructure/yaml"
 )
 
 type Archetype struct {
 	Name     string
 	Playable bool
+	Bonus    []effects.Modifier
 }
 
 type Race Archetype
@@ -51,4 +53,22 @@ func ListRaceNames() []string {
 		RaceList = append(RaceList, race.Name)
 	}
 	return RaceList
+}
+
+func FindRaceByName(name string) *Race {
+	for _, race := range ListRaces() {
+		if race.Name == name {
+			return &race
+		}
+	}
+	return nil
+}
+
+func FindClassByName(name string) *Class {
+	for _, class := range ListClasses() {
+		if class.Name == name {
+			return &class
+		}
+	}
+	return nil
 }

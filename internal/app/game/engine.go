@@ -1,9 +1,8 @@
 package game
 
 import (
-	"fmt"
+	// "fmt"
 	"solopg/internal/domain/campaign"
-	"solopg/internal/platform/jsonlog"
 
 	"github.com/google/uuid"
 )
@@ -20,13 +19,29 @@ func NewEngine(CampaignID uuid.UUID, State *State) *Engine {
 	}
 }
 
-func Boot(save *campaign.Campaign) *Engine {
-	// TODO: Implement logic to load the game state from the selected save or create a new game state if no saves are available.
+func Boot(campaign *campaign.Campaign, archives *campaign.Archives) *Engine {
+	return NewEngine(campaign.ID, NewState(StateTemplate{
+		Campaign: campaign,
+		Archives: archives,
+	}))
+}
 
-	if save == nil {
-		fmt.Println("No save selected, creating new game.")
-		return NewEngine(uuid.Nil, nil)
+func (e *Engine) ExportArchives() *campaign.Archives {
+	return &campaign.Archives{
+		CampaignID: e.CampaignID,
+		Codex:      e.State.Codex,
+		Journal:    e.State.Journal,
+		CreatedAt:  e.State.Metadata.Archive.CreatedAt,
+		UpdatedAt:  e.State.Metadata.Archive.UpdatedAt,
 	}
-	jsonlog.JsonifiedLog(save)
-	return NewEngine(uuid.Nil, nil)
+}
+
+func (e *Engine) ExportCampaign() *campaign.Campaign {
+	return &campaign.Campaign{
+		ID:              e.CampaignID,
+		Player:          e.State.Player,
+		CurrentLocation: e.State.CurrentLocation,
+		CreatedAt:       e.State.Metadata.Campaign.CreatedAt,
+		UpdatedAt:       e.State.Metadata.Campaign.UpdatedAt,
+	}
 }

@@ -7,6 +7,7 @@ import (
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters/archetypes"
+	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/yaml"
 )
@@ -16,7 +17,7 @@ type Character struct {
 
 	Class string
 	Race  string
-	Stats Stats
+	Stats effects.Stats
 
 	Equipment Equipment
 	Inventory []objects.Object
@@ -29,7 +30,7 @@ type Template struct {
 	Rarity      attributes.Rarity
 	Class       string
 	Race        string
-	Stats       Stats
+	Stats       effects.Stats
 	Wallet      Wallet
 	Equipment   Equipment
 	Inventory   []objects.Object
