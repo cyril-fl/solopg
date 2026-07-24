@@ -43,7 +43,7 @@ func (m model) updateRace(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !ok {
 			return m, nil
 		}
-		m.selectedRace = selected.race
+		m.selectedRace = selected.race.Name
 		m.step = stepClass
 		m.classList.ResetSelected()
 		return m, nil
@@ -61,7 +61,7 @@ func (m model) updateClass(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !ok {
 			return m, nil
 		}
-		m.selectedClass = selected.class
+		m.selectedClass = selected.class.Name
 		m.step = stepConfirm
 		return m, nil
 	}

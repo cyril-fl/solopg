@@ -53,4 +53,4 @@ func FromFile(fileAddress string) (*Location, error) {
 	}
 
 	return New(*params)
-}	
+}

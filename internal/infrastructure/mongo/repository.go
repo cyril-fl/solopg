@@ -58,75 +58,50 @@ func (db *Mongo) SaveCampaign(save *campaign.Campaign) error {
 	return nil
 }
 
-// func (db *Mongo) LoadGameState() *Repository {
-// 	return &Repository {
-// 		saves: db.instance.Collection("saves"),
-// 		logs: db.instance.Collection("logs"),
-// 		codex: db.instance.Collection("codex"),
-// 	}
-// }
-// type Repository struct {
-// 	saves  *mongo.Collection
-// 	logs   *mongo.Collection
-// 	codex  *mongo.Collection
-// }
+/* func (db *Mongo) LoadGameState() *Repository {
+	return &Repository {
+		saves: db.instance.Collection("saves"),
+		logs: db.instance.Collection("logs"),
+		codex: db.instance.Collection("codex"),
+	}
+}
+type Repository struct {
+	saves  *mongo.Collection
+	logs   *mongo.Collection
+	codex  *mongo.Collection
+} */
 
-// func (db *Mongo) LoadCodex() *Repository {
-// 	return &Repository {
-// 		codex: db.instance.Collection("codex"),
-// 	}
-// }
+/* func (db *Mongo) LoadCodex() *Repository {
+	return &Repository {
+		codex: db.instance.Collection("codex"),
+	}
+}
 
-// func (db *Mongo) LoadLogs() *Repository {
-// 	return &Repository {
-// 		logs: db.instance.Collection("logs"),
-// 	}
-// }
+func (db *Mongo) LoadLogs() *Repository {
+	return &Repository {
+		logs: db.instance.Collection("logs"),
+	}
+}
 
-// func (db *Mongo) LoadSaves() *Repository {
-// 	fmt.Println("Loading saves repository...")
+func (db *Mongo) LoadSaves() *Repository {
+	fmt.Println("Loading saves repository...")
 
-// 	return &Repository {
-// 		saves: db.instance.Collection("saves"),
-// 	}
-// }
+	return &Repository {
+		saves: db.instance.Collection("saves"),
+	}
+} */
 
-// func (repository *Repository) Upsert(ctx context.Context, save *Save) error {
-// 	if repository == nil || repository.collection == nil {
-// 		return fmt.Errorf("save store is not initialized")
-// 	}
-// 	if save == nil {
-// 		return fmt.Errorf("save is nil")
-// 	}
+/* func (repository *Repository) FindByCampaignID(ctx context.Context, campaignID uuid.UUID) (*Save, error) {
+	if repository == nil || repository.collection == nil {
+		return nil, fmt.Errorf("save store is not initialized")
+	}
 
-// 	if save.CreatedAt.IsZero() {
-// 		now := time.Now().UTC()
-// 		save.CreatedAt = now
-// 		save.UpdatedAt = now
-// 	} else {
-// 		save.UpdatedAt = time.Now().UTC()
-// 	}
+	var save Save
+	err := repository.collection.FindOne(ctx, map[string]uuid.UUID{"campaignId": campaignID}).Decode(&save)
+	if err != nil {
+		return nil, err
+	}
 
-// 	_, err := repository.collection.ReplaceOne(
-// 		ctx,
-// 		map[string]uuid.UUID{"campaignId": save.CampaignID},
-// 		save,
-// 		options.Replace().SetUpsert(true),
-// 	)
-
-// 	return err
-// }
-
-// func (repository *Repository) FindByCampaignID(ctx context.Context, campaignID uuid.UUID) (*Save, error) {
-// 	if repository == nil || repository.collection == nil {
-// 		return nil, fmt.Errorf("save store is not initialized")
-// 	}
-
-// 	var save Save
-// 	err := repository.collection.FindOne(ctx, map[string]uuid.UUID{"campaignId": campaignID}).Decode(&save)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return &save, nil
-// }
+	return &save, nil
+}
+*/

@@ -4,6 +4,7 @@ import "solopg/internal/domain/card/attributes"
 
 type Stat string
 
+// // TODO: upgrade to File driven approach if Stat are
 const (
 	Health   Stat = "health"
 	Physical Stat = "physical"

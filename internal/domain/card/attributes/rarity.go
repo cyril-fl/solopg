@@ -2,6 +2,7 @@ package attributes
 
 import "fmt"
 
+// TODO: upgrade to File driven approach if not needed in game logic
 type Rarity string
 
 const (

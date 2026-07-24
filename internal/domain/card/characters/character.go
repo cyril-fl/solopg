@@ -2,6 +2,7 @@ package characters
 
 import (
 	"fmt"
+	"slices"
 
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
@@ -13,8 +14,8 @@ import (
 type Character struct {
 	card.Card
 
-	Class archetypes.OG_Class
-	Race  archetypes.OG_Race
+	Class string
+	Race  string
 	Stats Stats
 
 	Equipment Equipment
@@ -22,19 +23,19 @@ type Character struct {
 	Wallet    Wallet
 }
 
-type CharacterTemplate struct {
+type Template struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
-	Class       archetypes.OG_Class
-	Race        archetypes.OG_Race
+	Class       string
+	Race        string
 	Stats       Stats
 	Wallet      Wallet
 	Equipment   Equipment
 	Inventory   []objects.Object
 }
 
-func NewCharacter(params CharacterTemplate) (*Character, error) {
+func New(params Template) (*Character, error) {
 	// Check Card
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,
@@ -56,13 +57,13 @@ func NewCharacter(params CharacterTemplate) (*Character, error) {
 	}
 
 	// Check Class
-	if err := params.Class.Validate(); err != nil {
-		return nil, err
+	if !slices.Contains(archetypes.ListClassNames(), params.Class) {
+		return nil, fmt.Errorf("invalid class for character: %s", params.Class)
 	}
 
 	// Check Race
-	if err := params.Race.Validate(); err != nil {
-		return nil, err
+	if !slices.Contains(archetypes.ListRaceNames(), params.Race) {
+		return nil, fmt.Errorf("invalid race for character: %s", params.Race)
 	}
 
 	return &Character{
@@ -76,14 +77,14 @@ func NewCharacter(params CharacterTemplate) (*Character, error) {
 	}, nil
 }
 
-func CharacterFromFile(fileAddress string) (*Character, error) {
-	params, err := yaml.LoadFromFile[CharacterTemplate](fileAddress)
+func FromFile(fileAddress string) (*Character, error) {
+	params, err := yaml.LoadFromFile[Template](fileAddress)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewCharacter(*params)
-}	
+	return New(*params)
+}
 
 /* -
 Point 3: stats de Character “en dur” sans redondance.

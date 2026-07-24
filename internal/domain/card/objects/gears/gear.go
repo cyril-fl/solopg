@@ -81,9 +81,8 @@ func New(params Template) (*Gear, error) {
 	}, nil
 }
 
-
 func FromFile(fileAddress string) (*Gear, error) {
-	params,err := yaml.LoadFromFile[Template](fileAddress)
+	params, err := yaml.LoadFromFile[Template](fileAddress)
 	if err != nil {
 		return nil, err
 	}

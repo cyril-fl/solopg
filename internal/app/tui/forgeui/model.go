@@ -19,8 +19,8 @@ type model struct {
 	classList list.Model
 
 	selectedName  string
-	selectedRace  archetypes.OG_Race
-	selectedClass archetypes.OG_Class
+	selectedRace  string
+	selectedClass string
 
 	cancelled bool
 }
@@ -30,16 +30,26 @@ func newModel() model {
 	nameInput.Placeholder = "Enter your name"
 	nameInput.Focus()
 
-	raceItems := make([]list.Item, 0, len(archetypes.PlayableRaces))
-	for _, race := range archetypes.PlayableRaces {
+	races := archetypes.ListRaces()
+	raceItems := make([]list.Item, 0, len(races))
+	for _, race := range races {
+		if !race.Playable {
+			continue
+		}
+
 		raceItems = append(raceItems, raceItem{
 			title: race.String(),
 			race:  race,
 		})
 	}
 
-	classItems := make([]list.Item, 0, len(archetypes.PlayableClasses))
-	for _, class := range archetypes.PlayableClasses {
+	classes := archetypes.ListClasses()
+	classItems := make([]list.Item, 0, len(classes))
+	for _, class := range archetypes.ListClasses() {
+		if !class.Playable {
+			continue
+		}
+
 		classItems = append(classItems, classItem{
 			title: class.String(),
 			class: class,
@@ -94,7 +104,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) buildCharacter() (*characters.Character, error) {
-	return characters.NewCharacter(characters.CharacterTemplate{
+	return characters.New(characters.Template{
 		Name:   m.selectedName,
 		Rarity: attributes.F,
 		Class:  m.selectedClass,

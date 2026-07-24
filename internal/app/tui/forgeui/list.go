@@ -8,7 +8,7 @@ import (
 
 type raceItem struct {
 	title string
-	race  archetypes.OG_Race
+	race  archetypes.Race
 }
 
 func (entry raceItem) Title() string       { return entry.title }
@@ -17,7 +17,7 @@ func (entry raceItem) FilterValue() string { return entry.title }
 
 type classItem struct {
 	title string
-	class archetypes.OG_Class
+	class archetypes.Class
 }
 
 func (entry classItem) Title() string       { return entry.title }
