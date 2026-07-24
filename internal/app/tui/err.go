@@ -1,6 +1,20 @@
 package tui
 
-import "fmt"
+import (
+	"errors"
+)
 
-var ErrCreationCancelled = fmt.Errorf("character creation cancelled")
-var ErrSelectionCancelled = fmt.Errorf("selection cancelled")
+var ErrCreationCancelled = errors.New("character creation cancelled")
+var ErrSelectionCancelled = errors.New("selection cancelled")
+
+func IsCancelled(err error) bool {
+	return errors.Is(err, ErrSelectionCancelled) ||
+		errors.Is(err, ErrCreationCancelled)
+}
+
+func NormalizeError(err error) error {
+	if IsCancelled(err) {
+		return nil
+	}
+	return err
+}
