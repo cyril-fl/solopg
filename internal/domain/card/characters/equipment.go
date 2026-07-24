@@ -2,21 +2,20 @@ package characters
 
 import (
 	"fmt"
-
-	"solopg/internal/domain/card/objects"
+	"solopg/internal/domain/card/objects/gears"
 )
 
 type Equipment struct {
-	Helmet     *objects.Gear
-	Chestplate *objects.Gear
-	Gauntlets  *objects.Gear
-	Greaves    *objects.Gear
-	Boots      *objects.Gear
-	RightHand  *objects.Gear
-	LeftHand   *objects.Gear
+	Helmet     *gears.Gear
+	Chestplate *gears.Gear
+	Gauntlets  *gears.Gear
+	Greaves    *gears.Gear
+	Boots      *gears.Gear
+	RightHand  *gears.Gear
+	LeftHand   *gears.Gear
 }
 
-func (character *Character) SetEquipment(gear []*objects.Gear) {
+func (character *Character) SetEquipment(gear []*gears.Gear) {
 	if character == nil {
 		return
 	}
@@ -25,25 +24,25 @@ func (character *Character) SetEquipment(gear []*objects.Gear) {
 	}
 }
 
-func (character *Character) SetEquipmentSlot(gear *objects.Gear) {
+func (character *Character) SetEquipmentSlot(gear *gears.Gear) {
 	if character == nil || gear == nil {
 		return
 	}
 
 	switch gear.EquipmentSlot {
-	case objects.Helmet:
+	case gears.Helmet:
 		character.Equipment.Helmet = gear
-	case objects.Chestplate:
+	case gears.Chestplate:
 		character.Equipment.Chestplate = gear
-	case objects.Gauntlets:
+	case gears.Gauntlets:
 		character.Equipment.Gauntlets = gear
-	case objects.Greaves:
+	case gears.Greaves:
 		character.Equipment.Greaves = gear
-	case objects.Boots:
+	case gears.Boots:
 		character.Equipment.Boots = gear
-	case objects.RightHand:
+	case gears.RightHand:
 		character.Equipment.RightHand = gear
-	case objects.LeftHand:
+	case gears.LeftHand:
 		character.Equipment.LeftHand = gear
 	default:
 		fmt.Printf("Invalid equipment slot: %s\n", gear.EquipmentSlot)

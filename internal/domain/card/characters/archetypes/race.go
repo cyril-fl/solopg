@@ -2,17 +2,17 @@ package archetypes
 
 import "fmt"
 
-type Race string
+type OG_Race string
 
 const (
-	Elf   Race = "Elf"
-	Human Race = "Human"
-	Dwarf Race = "Dwarf"
+	Elf   OG_Race = "Elf"
+	Human OG_Race = "Human"
+	Dwarf OG_Race = "Dwarf"
 
-	Slime Race = "Slime"
+	Slime OG_Race = "Slime"
 )
 
-func (r Race) Validate() error {
+func (r OG_Race) Validate() error {
 	switch r {
 	case Elf, Human, Dwarf, Slime:
 		return nil
@@ -21,8 +21,9 @@ func (r Race) Validate() error {
 	}
 }
 
-var PlayableRaces = []Race{Elf, Human, Dwarf}
+var PlayableRaces = []OG_Race{Elf, Human, Dwarf}
 
-func (r Race) String() string {
+func (r OG_Race) String() string {
 	return string(r)
 }
+

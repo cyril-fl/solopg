@@ -16,7 +16,7 @@ type Object struct {
 	Pod      int
 }
 
-type NewObjectParams struct {
+type Template struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
@@ -26,7 +26,7 @@ type NewObjectParams struct {
 	Pod         int
 }
 
-func NewObject(params NewObjectParams) (*Object, error) {
+func New(params Template) (*Object, error) {
 	// Check Card
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,

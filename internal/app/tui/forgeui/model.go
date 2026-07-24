@@ -19,8 +19,8 @@ type model struct {
 	classList list.Model
 
 	selectedName  string
-	selectedRace  archetypes.Race
-	selectedClass archetypes.Class
+	selectedRace  archetypes.OG_Race
+	selectedClass archetypes.OG_Class
 
 	cancelled bool
 }

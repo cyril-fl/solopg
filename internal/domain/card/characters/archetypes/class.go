@@ -2,15 +2,15 @@ package archetypes
 
 import "fmt"
 
-type Class string
+type OG_Class string
 
 const (
-	Adventurer Class = "Adventurer"
-	Craftsman  Class = "Craftsman"
-	Monster    Class = "Monster"
+	Adventurer OG_Class = "Adventurer"
+	Craftsman  OG_Class = "Craftsman"
+	Monster    OG_Class = "Monster"
 )
 
-func (c Class) Validate() error {
+func (c OG_Class) Validate() error {
 	switch c {
 	case Adventurer, Craftsman, Monster:
 		return nil
@@ -19,8 +19,9 @@ func (c Class) Validate() error {
 	}
 }
 
-var PlayableClasses = []Class{Adventurer}
+var PlayableClasses = []OG_Class{Adventurer}
 
-func (c Class) String() string {
+func (c OG_Class) String() string {
 	return string(c)
 }
+

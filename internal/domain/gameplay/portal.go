@@ -2,13 +2,12 @@ package gameplay
 
 import (
 	"solopg/internal/domain/card/locations"
-	"solopg/internal/infrastructure/folder"
 	"solopg/internal/infrastructure/yaml"
 )
 
 func LoadPresetLocations() ([]locations.Location, error) {
 	folderName := "data/template/locations"
-	folderContents, err := folder.GetContents(folderName)
+	folderContents, err := yaml.GetFolderContents(folderName)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +16,7 @@ func LoadPresetLocations() ([]locations.Location, error) {
 	for _, fileName := range folderContents {
 		filePath := "data/template/locations/" + fileName
 
-		location, err := yaml.LocationFromFile(filePath)
+		location, err := locations.FromFile(filePath)
 		if err != nil {
 			return nil, err
 		}

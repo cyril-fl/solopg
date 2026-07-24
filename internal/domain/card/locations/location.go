@@ -6,6 +6,7 @@ import (
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"
+	"solopg/internal/infrastructure/yaml"
 )
 
 type Location struct {
@@ -14,7 +15,7 @@ type Location struct {
 	Effects []effects.Effect
 }
 
-type LocationTemplate struct {
+type Template struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
@@ -22,7 +23,7 @@ type LocationTemplate struct {
 	Effects     []effects.Effect
 }
 
-func NewLocation(params LocationTemplate) (*Location, error) {
+func New(params Template) (*Location, error) {
 	// Check Card
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,
@@ -44,3 +45,12 @@ func NewLocation(params LocationTemplate) (*Location, error) {
 		Effects: params.Effects,
 	}, nil
 }
+
+func FromFile(fileAddress string) (*Location, error) {
+	params, err := yaml.LoadFromFile[Template](fileAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return New(*params)
+}	

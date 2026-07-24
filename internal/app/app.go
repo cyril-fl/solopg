@@ -1,8 +1,15 @@
 package app
 
+import (
+	"solopg/internal/domain/card/characters"
+	"solopg/internal/domain/card/locations"
+	"solopg/internal/domain/card/objects"
+	"solopg/internal/platform/jsonlog"
+)
+
 // import "solopg/internal/domain/gameplay"
 
-import (
+/* import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/campaign"
@@ -12,8 +19,8 @@ import (
 	"solopg/internal/app/tui/forgeui"
 	"solopg/internal/app/tui/portalui"
 )
-
-func Start() error {
+*/
+/* func Start() error {
 	db, err := mongo.Connect()
 	if err != nil {
 		return err
@@ -73,4 +80,53 @@ func Start() error {
 
 	// return gameUi.Start()
 	return nil
+} */
+
+func Start() error {
+	// race, err := yaml.ListFromFile[archetypes.Race]("data/template/systems/archetypes/races.yaml")
+	// if err != nil {
+	// 	return err
+	// }
+
+	// class, err := yaml.ListFromFile[archetypes.Class]("data/template/systems/archetypes/class.yaml")
+	// if err != nil {
+	// 	return err
+	// }
+
+	// jsonlog.JsonifiedLog(race)
+	// jsonlog.JsonifiedLog(class)
+
+
+	// load.ArticleFromFile("data/template/articles/potion/heal_lvl1.yaml")
+	// load.CharacterFromFile("data/template/characters/monsters/slime.yaml")
+	// load.CharacterFromFile("data/template/characters/npcs/blacksmith.yaml")
+	// load.LocationFromFile("data/template/locations/tavern.yaml")
+
+	obj,err := objects.ArticleFromFile("data/template/articles/potion/heal_lvl1.yaml")
+	if err != nil {
+		return err
+	}
+
+	monster,err := characters.CharacterFromFile("data/template/characters/monsters/slime.yaml")
+	if err != nil {
+		return err
+	}
+
+	npc,err := characters.CharacterFromFile("data/template/characters/npcs/blacksmith.yaml")
+	if err != nil {
+		return err
+	}
+
+	location,err := locations.LocationFromFile("data/template/locations/tavern.yaml")
+	if err != nil {
+		return err
+	}
+
+	jsonlog.JsonifiedLog(obj)
+	jsonlog.JsonifiedLog(monster)
+	jsonlog.JsonifiedLog(npc)
+	jsonlog.JsonifiedLog(location)	
+
+	return nil
 }
+

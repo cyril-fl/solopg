@@ -7,13 +7,14 @@ import (
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters/archetypes"
 	"solopg/internal/domain/card/objects"
+	"solopg/internal/infrastructure/yaml"
 )
 
 type Character struct {
 	card.Card
 
-	Class archetypes.Class
-	Race  archetypes.Race
+	Class archetypes.OG_Class
+	Race  archetypes.OG_Race
 	Stats Stats
 
 	Equipment Equipment
@@ -25,8 +26,8 @@ type CharacterTemplate struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
-	Class       archetypes.Class
-	Race        archetypes.Race
+	Class       archetypes.OG_Class
+	Race        archetypes.OG_Race
 	Stats       Stats
 	Wallet      Wallet
 	Equipment   Equipment
@@ -74,6 +75,15 @@ func NewCharacter(params CharacterTemplate) (*Character, error) {
 		Wallet:    params.Wallet,
 	}, nil
 }
+
+func CharacterFromFile(fileAddress string) (*Character, error) {
+	params, err := yaml.LoadFromFile[CharacterTemplate](fileAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewCharacter(*params)
+}	
 
 /* -
 Point 3: stats de Character “en dur” sans redondance.

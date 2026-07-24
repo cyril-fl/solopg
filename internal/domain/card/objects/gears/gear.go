@@ -1,16 +1,18 @@
-package objects
+package gears
 
 import (
 	"fmt"
 
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/objects"
+	"solopg/internal/infrastructure/yaml"
 )
 
 type Gear struct {
-	Object
+	objects.Object
 
-	Attributes    Attribute
+	Attributes    objects.Attribute
 	EquipmentSlot EquipmentSlot `yaml:"destinedslot"`
 }
 
@@ -35,21 +37,21 @@ func (s EquipmentSlot) Validate() error {
 	}
 }
 
-type GearTemplate struct {
+type Template struct {
 	Name          string
 	Description   string
 	Rarity        attributes.Rarity
 	Variety       attributes.Variety
-	Category      Category
-	Attributes    Attribute
+	Category      objects.Category
+	Attributes    objects.Attribute
 	Effects       []effects.Effect
 	Pod           int
 	EquipmentSlot EquipmentSlot `yaml:"destinedslot"`
 }
 
-func NewGear(params GearTemplate) (*Gear, error) {
+func New(params Template) (*Gear, error) {
 	// Check Card
-	newItem, err := NewObject(NewObjectParams{
+	newItem, err := objects.New(objects.Template{
 		Name:        params.Name,
 		Description: params.Description,
 		Rarity:      params.Rarity,
@@ -77,4 +79,14 @@ func NewGear(params GearTemplate) (*Gear, error) {
 		Attributes:    params.Attributes,
 		EquipmentSlot: params.EquipmentSlot,
 	}, nil
+}
+
+
+func FromFile(fileAddress string) (*Gear, error) {
+	params,err := yaml.LoadFromFile[Template](fileAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return New(*params)
 }

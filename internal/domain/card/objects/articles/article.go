@@ -1,32 +1,34 @@
-package objects
+package articles
 
 import (
 	"fmt"
 
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/objects"
+	"solopg/internal/infrastructure/yaml"
 )
 
 type Article struct {
-	Object
+	objects.Object
 
 	IsConsumable bool
 }
 
-type ArticleTemplate struct {
+type Template struct {
 	Name        string
 	Description string
 	Rarity      attributes.Rarity
 	Variety     attributes.Variety
-	Category    Category
+	Category    objects.Category
 	Effects     []effects.Effect
 	Pod         int
 	Consumable  bool
 }
 
-func NewArticle(params ArticleTemplate) (*Article, error) {
+func New(params Template) (*Article, error) {
 	// Check Card
-	newItem, err := NewObject(NewObjectParams{
+	newItem, err := objects.New(objects.Template{
 		Name:        params.Name,
 		Description: params.Description,
 		Rarity:      params.Rarity,
@@ -48,4 +50,13 @@ func NewArticle(params ArticleTemplate) (*Article, error) {
 		Object:       *newItem,
 		IsConsumable: params.Consumable,
 	}, nil
+}
+
+func FromFile(fileAddress string) (*Article, error) {
+	params, err := yaml.LoadFromFile[Template](fileAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return New(*params)
 }

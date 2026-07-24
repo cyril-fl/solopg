@@ -1,0 +1,10 @@
+- name: Warrior
+  playable: true
+- name: Mage
+  playable: true
+- name: Thief
+  playable: true
+- name: Merchant
+  playable: false
+- name: Monster
+  playable: false
