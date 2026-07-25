@@ -99,8 +99,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case stepClass:
 		return m.updateClass(msg)
 	// TODO Rajouter une step pour chaque stats en fonction de la race
-	// TODO ajouter les stuff de base en fonct de la class
-
 	case stepConfirm:
 		return m.updateConfirm(msg)
 	default:
@@ -112,13 +110,7 @@ func (m model) buildCharacter() (*characters.Character, error) {
 	race := archetypes.FindRaceByName(m.selectedRace)
 	class := archetypes.FindClassByName(m.selectedClass)
 
-	baseStats := effects.Stats{
-		Health:   10,
-		Physical: 10,
-		Mental:   10,
-		Stamina:  10,
-		Social:   10,
-	}
+	baseStats := effects.BaseStats()
 
 	// TODO: Applys somme randomness with dice roll
 	if race != nil {

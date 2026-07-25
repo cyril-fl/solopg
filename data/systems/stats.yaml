@@ -1,0 +1,13 @@
+names:
+- health # HP
+- physical # Physical strength, dexterity, and endurance
+- mental # Intelligence and wisdom
+- stamina # MP
+- social # Charisma, persuasion, and social skills
+
+baseStats:
+ health: 10
+ physical: 10
+ mental: 10
+ stamina: 10
+ social: 10

@@ -5,7 +5,7 @@ import (
 	"solopg/internal/app/game/process"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/bootui"
-	"solopg/internal/domain/card/characters"
+	"solopg/internal/domain/card/effects"
 	"solopg/internal/infrastructure/mongo"
 	"solopg/internal/platform/jsonlog"
 )
@@ -57,18 +57,7 @@ func Start() error {
 }
 
 func Try() {
-	// race := archetypes.ListRaces()
-	// class := archetypes.ListClasses()
+	test := effects.ListStats()
 
-	// jsonlog.JsonifiedLog(race)
-	// jsonlog.JsonifiedLog(class)
-
-	// return nil
-
-	characters.ListArmorSets()
-
-
-	// characters.FindArmorSetByName("adventurer")
-
-	// characters.FindArmorSetByName("example")
+	jsonlog.JsonifiedLog(test)
 }

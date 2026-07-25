@@ -6,10 +6,10 @@ import (
 )
 
 type Class struct {
-	Name     string `yaml:"name"`
-	Playable bool `yaml:"playable"`
+	Name     string             `yaml:"name"`
+	Playable bool               `yaml:"playable"`
 	Bonus    []effects.Modifier `yaml:"bonus"`
-	ArmorSet string `yaml:"armor_set"`
+	ArmorSet string             `yaml:"armor_set"`
 }
 
 func ListClasses() []Class {

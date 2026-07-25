@@ -42,13 +42,13 @@ func getFolderEntries(folderPath string, wanted wantedEntries) ([]string, error)
 		skipFile := !wanted.files && !isDirectory
 		skipFolder := !wanted.directories && isDirectory
 
-        if  skipFile {
-            continue
-        }
+		if skipFile {
+			continue
+		}
 
-        if skipFolder {
-            continue
-        }
+		if skipFolder {
+			continue
+		}
 
 		names = append(names, entry.Name())
 	}

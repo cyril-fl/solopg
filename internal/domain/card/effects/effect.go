@@ -1,36 +1,24 @@
 package effects
 
 import (
+	"fmt"
+	"slices"
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/infrastructure/yaml"
+	"solopg/internal/platform/jsonlog"
 )
 
-// TODO: upgrade to File driven approach if not needed in game logic
-type Stats struct {
-	Health   int // HP
-	Physical int // Physical strength, dexterity, and endurance
-	Mental   int // Intelligence and wisdom
-	Stamina  int // MP
-	Social   int // Charisma, persuasion, and social skills
-}
+const fileAddress = "data/systems/stats.yaml"
+
+var config *statsConfig
 
 type Stat string
 
-// // TODO: upgrade to File driven approach if Stat are
-const (
-	Health   Stat = "health"
-	Physical Stat = "physical"
-	Mental   Stat = "mental"
-	Stamina  Stat = "stamina"
-	Social   Stat = "social"
-)
+type Stats map[Stat]int
 
-func (s Stat) Validate() bool {
-	switch s {
-	case Health, Physical, Mental, Stamina, Social:
-		return true
-	default:
-		return false
-	}
+type statsConfig struct {
+	Names     []Stat `yaml:"names"`
+	BaseStats Stats  `yaml:"baseStats"`
 }
 
 type Modifier struct {
@@ -43,19 +31,67 @@ type Effect struct {
 	Modifier Modifier
 }
 
-func (s *Stats) ApplyModifier(mod Modifier) {
-	switch mod.Stat {
-	case Health:
-		s.Health += mod.Value
-	case Physical:
-		s.Physical += mod.Value
-	case Mental:
-		s.Mental += mod.Value
-	case Stamina:
-		s.Stamina += mod.Value
-	case Social:
-		s.Social += mod.Value
+func loadStatsFromFile() error {
+	params, err := yaml.LoadFromFile[statsConfig](fileAddress)
+	if err != nil {
+		return fmt.Errorf("failed to load stats from file: %w", err)
 	}
+
+	config = params
+
+	return nil
+}
+
+func ListStats() []Stat {
+	if config == nil {
+		err := loadStatsFromFile()
+		if err != nil {
+			fmt.Printf("Error loading stats: %v\n", err)
+			return nil
+		}
+	}
+
+	return config.Names
+}
+
+func BaseStats() Stats {
+	if config == nil {
+		err := loadStatsFromFile()
+		if err != nil {
+			fmt.Printf("Error loading stats: %v\n", err)
+			return nil
+		}
+	}
+
+	copy := make(Stats)
+
+	for stat, value := range config.BaseStats {
+		copy[stat] = value
+	}
+
+	return copy
+}
+
+func (s Stat) Validate() bool {
+
+	jsonlog.JsonifiedLog(s)
+
+	jsonlog.JsonifiedLog(config)
+	return slices.Contains(ListStats(), s)
+}
+
+func (s *Stats) ApplyModifier(mod Modifier) {
+	if s == nil {
+		return
+	}
+
+	isValidStat := mod.Stat.Validate()
+	if !isValidStat {
+		fmt.Printf("Invalid stat: %s\n", mod.Stat)
+		return
+	}
+
+	(*s)[mod.Stat] += mod.Value
 }
 
 func (s *Stats) ApplyModifiers(mods []Modifier) {

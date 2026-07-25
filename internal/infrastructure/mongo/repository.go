@@ -60,7 +60,6 @@ func saveToCollection[T Document](db *Mongo, collectionName string, data T) erro
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-
 	data.SetUpdatedAt(time.Now().UTC())
 
 	_, err := db.collection(collectionName).ReplaceOne(

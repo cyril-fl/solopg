@@ -10,7 +10,7 @@ import (
 )
 
 type Archives struct {
-	CampaignID id.ID          `bson:"campaignId" json:"campaignId"`
+	CampaignID id.ID            `bson:"campaignId" json:"campaignId"`
 	Codex      *codex.Codex     `bson:"codex" json:"codex"`
 	Journal    *journal.Journal `bson:"journal" json:"journal"`
 	CreatedAt  time.Time        `bson:"createdAt" json:"createdAt"`

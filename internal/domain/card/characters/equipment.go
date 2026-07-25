@@ -16,7 +16,6 @@ type ArmorSet struct {
 	LeftHand   *gears.Gear
 }
 
-
 func NewArmorSet(set []*gears.Gear) ArmorSet {
 	if len(set) == 0 {
 		return ArmorSet{}
@@ -85,7 +84,7 @@ func (character *Character) EquipGear(gear *gears.Gear) {
 
 const armorSetFilePath = "data/template/armor_sets"
 
-func ListArmorSets() []string { 
+func ListArmorSets() []string {
 	armorSets, err := yaml.GetFolderDirectories(armorSetFilePath)
 	if err != nil {
 		fmt.Printf("Error reading armor set folder: %v\n", err)
@@ -96,7 +95,7 @@ func ListArmorSets() []string {
 }
 
 func FindArmorSetByName(name string) []*gears.Gear {
-	armorSetFiles, err := yaml.GetFolderFiles(armorSetFilePath+"/"+name)
+	armorSetFiles, err := yaml.GetFolderFiles(armorSetFilePath + "/" + name)
 
 	if err != nil {
 		fmt.Printf("Error reading equipment file: %v\n", err)
@@ -117,6 +116,6 @@ func FindArmorSetByName(name string) []*gears.Gear {
 		}
 		armorSet = append(armorSet, gear)
 	}
-	
+
 	return armorSet
 }

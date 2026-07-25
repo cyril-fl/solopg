@@ -12,8 +12,8 @@ import (
 type Gear struct {
 	objects.Object
 
-	Attributes    objects.Attribute
-	Slot Slot `yaml:"destinedslot"`
+	Attributes objects.Attribute
+	Slot       Slot `yaml:"destinedslot"`
 }
 
 type Slot string
@@ -38,15 +38,15 @@ func (s Slot) Validate() error {
 }
 
 type Template struct {
-	Name          string
-	Description   string
-	Rarity        attributes.Rarity
-	Variety       attributes.Variety
-	Category      objects.Category
-	Attributes    objects.Attribute
-	Effects       []effects.Effect
-	Pod           int
-	EquipmentSlot Slot `yaml:"destinedslot"`
+	Name        string
+	Description string
+	Rarity      attributes.Rarity
+	Variety     attributes.Variety
+	Category    objects.Category
+	Attributes  objects.Attribute
+	Effects     []effects.Effect
+	Pod         int
+	Slot        Slot `yaml:"destinedslot"`
 }
 
 func New(params Template) (*Gear, error) {
@@ -70,14 +70,14 @@ func New(params Template) (*Gear, error) {
 	}
 
 	// Check EquipmentSlot
-	if err := params.EquipmentSlot.Validate(); err != nil {
+	if err := params.Slot.Validate(); err != nil {
 		return nil, err
 	}
 
 	return &Gear{
-		Object:        *newItem,
-		Attributes:    params.Attributes,
-		Slot: params.EquipmentSlot,
+		Object:     *newItem,
+		Attributes: params.Attributes,
+		Slot:       params.Slot,
 	}, nil
 }
 
