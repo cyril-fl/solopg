@@ -1,0 +1,29 @@
+id: "neutral"
+dice: 20
+type: "oracle" # Oracle / Action / Test / Roll
+visible: true 
+intervals:
+  - min: 1
+    max: 2
+    critical: true
+    result: "Non et en plus"
+  - min: 3
+    max: 8
+    critical: false
+    result: "Non"
+  - min: 9
+    max: 10
+    critical: false
+    result: "Non mais par contre"
+  - min: 11
+    max: 12
+    critical: false
+    result: "Oui mais par contre"
+  - min: 13
+    max: 18
+    critical: false
+    result: "Oui"
+  - min: 19
+    max: 20
+    critical: true
+    result: "Oui et en plus"  
