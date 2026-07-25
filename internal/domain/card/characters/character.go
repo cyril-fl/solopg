@@ -19,7 +19,7 @@ type Character struct {
 	Race  string
 	Stats effects.Stats
 
-	Equipment Equipment
+	Equipment ArmorSet
 	Inventory []objects.Object
 	Wallet    Wallet
 }
@@ -32,7 +32,7 @@ type Template struct {
 	Race        string
 	Stats       effects.Stats
 	Wallet      Wallet
-	Equipment   Equipment
+	Equipment   ArmorSet
 	Inventory   []objects.Object
 }
 

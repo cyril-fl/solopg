@@ -43,7 +43,7 @@ type Effect struct {
 	Modifier Modifier
 }
 
-func (s *Stats) ApplyModifier(mod Modifier)  {
+func (s *Stats) ApplyModifier(mod Modifier) {
 	switch mod.Stat {
 	case Health:
 		s.Health += mod.Value
@@ -62,4 +62,4 @@ func (s *Stats) ApplyModifiers(mods []Modifier) {
 	for _, mod := range mods {
 		s.ApplyModifier(mod)
 	}
-}	
+}

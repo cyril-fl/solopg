@@ -24,23 +24,44 @@ func loadYAMLFromFile(fileAddress string, target any) error {
 	return nil
 }
 
-func GetFolderContents(folderPath string) ([]string, error) {
-	entries, err := os.ReadDir(folderPath)
+type wantedEntries struct {
+	directories bool
+	files       bool
+}
 
+func getFolderEntries(folderPath string, wanted wantedEntries) ([]string, error) {
+	entries, err := os.ReadDir(folderPath)
 	if err != nil {
 		return nil, err
 	}
 
-	var files []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		files = append(files, entry.Name())
+	var names []string
 
+	for _, entry := range entries {
+		isDirectory := entry.IsDir()
+		skipFile := !wanted.files && !isDirectory
+		skipFolder := !wanted.directories && isDirectory
+
+        if  skipFile {
+            continue
+        }
+
+        if skipFolder {
+            continue
+        }
+
+		names = append(names, entry.Name())
 	}
 
-	return files, nil
+	return names, nil
+}
+
+func GetFolderFiles(folderPath string) ([]string, error) {
+	return getFolderEntries(folderPath, wantedEntries{directories: false, files: true})
+}
+
+func GetFolderDirectories(folderPath string) ([]string, error) {
+	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
 }
 
 func LoadFromFile[T any](fileAddress string) (*T, error) {

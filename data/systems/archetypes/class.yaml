@@ -12,6 +12,7 @@
       value: 2
     - stat: social
       value: 0
+  armor_set: adventurer
 - name: Mage
   playable: true
   bonus:
@@ -25,6 +26,7 @@
       value: 0
     - stat: social
       value: 1
+  armor_set: adventurer
 - name: Thief
   playable: true
   bonus:
@@ -38,7 +40,8 @@
       value: 2
     - stat: social
       value: 2
-        
+  armor_set: adventurer
+  
 # Non-playable races
 - name: Merchant
   playable: false

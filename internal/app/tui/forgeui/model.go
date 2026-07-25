@@ -7,7 +7,6 @@ import (
 	"solopg/internal/domain/card/characters/archetypes"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
-	"solopg/internal/platform/jsonlog"
 
 	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/textinput"
@@ -41,7 +40,7 @@ func newModel() model {
 		}
 
 		raceItems = append(raceItems, raceItem{
-			title: race.String(),
+			title: race.Name,
 			race:  race,
 		})
 	}
@@ -54,7 +53,7 @@ func newModel() model {
 		}
 
 		classItems = append(classItems, classItem{
-			title: class.String(),
+			title: class.Name,
 			class: class,
 		})
 	}
@@ -128,19 +127,19 @@ func (m model) buildCharacter() (*characters.Character, error) {
 	if class != nil {
 		baseStats.ApplyModifiers(class.Bonus)
 	}
-	
 
-	jsonlog.JsonifiedLog(baseStats)
+	armorClassSet := characters.FindArmorSetByName(class.ArmorSet)
+	armorSet := characters.NewArmorSet(armorClassSet)
 
 	return characters.New(characters.Template{
-		Name:   m.selectedName,
+		Name:        m.selectedName,
 		Description: "Your character",
-		Rarity: attributes.F,
-		Class:  m.selectedClass,
-		Race:   m.selectedRace,
-		Stats: baseStats,
-		Equipment: characters.Equipment{},
-		Inventory: []objects.Object{},
-		Wallet:    characters.Wallet{Gold: 0, Silver: 0, Copper: 0},
+		Rarity:      attributes.F,
+		Class:       m.selectedClass,
+		Race:        m.selectedRace,
+		Stats:       baseStats,
+		Equipment:   armorSet,
+		Inventory:   []objects.Object{},
+		Wallet:      characters.Wallet{Gold: 0, Silver: 0, Copper: 0},
 	})
-}	
+}
