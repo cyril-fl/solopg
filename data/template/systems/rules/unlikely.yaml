@@ -1,0 +1,29 @@
+id: "unlikely"
+dice: 20
+type: "oracle" # Oracle / Action / Test / Roll
+visible: true 
+intervals:
+  - min: 1
+    max: 3
+    critical: true
+    result: "Non et en plus"
+  - min: 4
+    max: 11
+    critical: false
+    result: "Non"
+  - min: 12
+    max: 15
+    critical: false
+    result: "Non mais par contre"
+  - min: 16
+    max: 17
+    critical: false
+    result: "Oui mais par contre"
+  - min: 18
+    max: 19
+    critical: false
+    result: "Oui"
+  - min: 20
+    max: 20
+    critical: true
+    result: "Oui et en plus"  

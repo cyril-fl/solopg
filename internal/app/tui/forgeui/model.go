@@ -96,6 +96,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateRace(msg)
 	case stepClass:
 		return m.updateClass(msg)
+	// TODO Rajouter une step pour chaque stats en fonction de la race
+	// TODO ajouter les stuff de base en fonct de la class
 	case stepConfirm:
 		return m.updateConfirm(msg)
 	default:
