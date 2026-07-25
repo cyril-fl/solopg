@@ -1,0 +1,46 @@
+# Playable races
+- name: Elf
+  playable: true
+  bonus:
+    - stat: health
+      value: -1
+    - stat: physical
+      value: 1
+    - stat: mental
+      value: 3
+    - stat: stamina
+      value: 0
+    - stat: social
+      value: 1
+
+- name: Human
+  playable: true
+  bonus:
+    - stat: health
+      value: 1
+    - stat: physical
+      value: 1
+    - stat: mental
+      value: 1
+    - stat: stamina
+      value: 1
+    - stat: social
+      value: 1
+
+- name: Dwarf
+  playable: true
+  bonus:
+    - stat: health
+      value: 3
+    - stat: physical
+      value: 2
+    - stat: mental
+      value: 0
+    - stat: stamina
+      value: 2
+    - stat: social
+      value: -1
+
+# Monsters races
+- name: Slime
+  playable: false

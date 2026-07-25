@@ -7,7 +7,7 @@ import (
 
 func LoadPresetLocations() ([]locations.Location, error) {
 	folderName := "data/template/locations"
-	folderContents, err := yaml.GetFolderContents(folderName)
+	folderContents, err := yaml.GetFolderFiles(folderName)
 	if err != nil {
 		return nil, err
 	}

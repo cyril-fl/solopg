@@ -1,0 +1,50 @@
+# Playable classes
+- name: Warrior
+  playable: true
+  bonus:
+    - stat: health
+      value: 3
+    - stat: physical
+      value: 3
+    - stat: mental
+      value: 0
+    - stat: stamina
+      value: 2
+    - stat: social
+      value: 0
+  armor_set: adventurer
+- name: Mage
+  playable: true
+  bonus:
+    - stat: health
+      value: -1
+    - stat: physical
+      value: -2
+    - stat: mental
+      value: 5
+    - stat: stamina
+      value: 0
+    - stat: social
+      value: 1
+  armor_set: adventurer
+- name: Thief
+  playable: true
+  bonus:
+    - stat: health
+      value: 0
+    - stat: physical
+      value: 2
+    - stat: mental
+      value: 2
+    - stat: stamina
+      value: 2
+    - stat: social
+      value: 2
+  armor_set: adventurer
+  
+# Non-playable races
+- name: Merchant
+  playable: false
+- name: Monster
+  playable: false
+

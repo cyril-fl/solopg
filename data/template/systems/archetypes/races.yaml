@@ -1,8 +1,0 @@
-- name: Elf
-  playable: true
-- name: Human
-  playable: true
-- name: Dwarf
-  playable: true
-- name: Slime
-  playable: false

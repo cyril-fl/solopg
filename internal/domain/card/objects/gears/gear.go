@@ -13,22 +13,22 @@ type Gear struct {
 	objects.Object
 
 	Attributes    objects.Attribute
-	EquipmentSlot EquipmentSlot `yaml:"destinedslot"`
+	Slot Slot `yaml:"destinedslot"`
 }
 
-type EquipmentSlot string
+type Slot string
 
 const (
-	Helmet     EquipmentSlot = "helmet"
-	Chestplate EquipmentSlot = "chestplate"
-	Gauntlets  EquipmentSlot = "gauntlets"
-	Greaves    EquipmentSlot = "greaves"
-	Boots      EquipmentSlot = "boots"
-	RightHand  EquipmentSlot = "right_hand"
-	LeftHand   EquipmentSlot = "left_hand"
+	Helmet     Slot = "helmet"
+	Chestplate Slot = "chestplate"
+	Gauntlets  Slot = "gauntlets"
+	Greaves    Slot = "greaves"
+	Boots      Slot = "boots"
+	RightHand  Slot = "right_hand"
+	LeftHand   Slot = "left_hand"
 )
 
-func (s EquipmentSlot) Validate() error {
+func (s Slot) Validate() error {
 	switch s {
 	case Helmet, Chestplate, Gauntlets, Greaves, Boots, RightHand, LeftHand:
 		return nil
@@ -46,7 +46,7 @@ type Template struct {
 	Attributes    objects.Attribute
 	Effects       []effects.Effect
 	Pod           int
-	EquipmentSlot EquipmentSlot `yaml:"destinedslot"`
+	EquipmentSlot Slot `yaml:"destinedslot"`
 }
 
 func New(params Template) (*Gear, error) {
@@ -77,7 +77,7 @@ func New(params Template) (*Gear, error) {
 	return &Gear{
 		Object:        *newItem,
 		Attributes:    params.Attributes,
-		EquipmentSlot: params.EquipmentSlot,
+		Slot: params.EquipmentSlot,
 	}, nil
 }
 

@@ -5,6 +5,8 @@ import (
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/characters/archetypes"
+	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/objects"
 
 	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/textinput"
@@ -38,7 +40,7 @@ func newModel() model {
 		}
 
 		raceItems = append(raceItems, raceItem{
-			title: race.String(),
+			title: race.Name,
 			race:  race,
 		})
 	}
@@ -51,7 +53,7 @@ func newModel() model {
 		}
 
 		classItems = append(classItems, classItem{
-			title: class.String(),
+			title: class.Name,
 			class: class,
 		})
 	}
@@ -96,6 +98,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateRace(msg)
 	case stepClass:
 		return m.updateClass(msg)
+	// TODO Rajouter une step pour chaque stats en fonction de la race
+	// TODO ajouter les stuff de base en fonct de la class
+
 	case stepConfirm:
 		return m.updateConfirm(msg)
 	default:
@@ -104,10 +109,37 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) buildCharacter() (*characters.Character, error) {
+	race := archetypes.FindRaceByName(m.selectedRace)
+	class := archetypes.FindClassByName(m.selectedClass)
+
+	baseStats := effects.Stats{
+		Health:   10,
+		Physical: 10,
+		Mental:   10,
+		Stamina:  10,
+		Social:   10,
+	}
+
+	// TODO: Applys somme randomness with dice roll
+	if race != nil {
+		baseStats.ApplyModifiers(race.Bonus)
+	}
+	if class != nil {
+		baseStats.ApplyModifiers(class.Bonus)
+	}
+
+	armorClassSet := characters.FindArmorSetByName(class.ArmorSet)
+	armorSet := characters.NewArmorSet(armorClassSet)
+
 	return characters.New(characters.Template{
-		Name:   m.selectedName,
-		Rarity: attributes.F,
-		Class:  m.selectedClass,
-		Race:   m.selectedRace,
+		Name:        m.selectedName,
+		Description: "Your character",
+		Rarity:      attributes.F,
+		Class:       m.selectedClass,
+		Race:        m.selectedRace,
+		Stats:       baseStats,
+		Equipment:   armorSet,
+		Inventory:   []objects.Object{},
+		Wallet:      characters.Wallet{Gold: 0, Silver: 0, Copper: 0},
 	})
 }

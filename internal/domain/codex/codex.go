@@ -5,6 +5,11 @@ import (
 	"solopg/internal/domain/card/locations"
 )
 
+/*
+TODO: Ameliorer le codex avec des vrai entrée pour chaque sous codex
+s'insperer de Journal
+ajouter des méthodes
+*/
 type Codex struct {
 	NpcsTable      []*characters.Character
 	MonstersTable  []*characters.Character
