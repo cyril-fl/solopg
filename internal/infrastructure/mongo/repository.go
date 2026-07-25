@@ -6,9 +6,10 @@ import (
 	"time"
 
 	"solopg/internal/domain/campaign"
+	"solopg/types/id"
+
 	// "solopg/internal/domain/codex"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -81,7 +82,7 @@ func (db *Mongo) LoadCampaign() ([]campaign.Campaign, error) {
 	return loadFromCollection[campaign.Campaign](db, campaignCollectionName)
 }
 
-func (db *Mongo) LoadCampaignByID(campaignID uuid.UUID) (*campaign.Campaign, error) {
+func (db *Mongo) LoadCampaignByID(campaignID id.ID) (*campaign.Campaign, error) {
 	campaigns, err := loadFromCollectionByFilter[campaign.Campaign](db, campaignCollectionName, bson.M{"id": campaignID})
 	if err != nil {
 		return nil, err
@@ -108,7 +109,7 @@ func (db *Mongo) LoadAllArchives() ([]campaign.Archives, error) {
 	return loadFromCollection[campaign.Archives](db, archivesCollectionName)
 }
 
-func (db *Mongo) LoadArchivesByCampaignID(campaignID uuid.UUID) (*campaign.Archives, error) {
+func (db *Mongo) LoadArchivesByCampaignID(campaignID id.ID) (*campaign.Archives, error) {
 	archives, err := loadFromCollectionByFilter[campaign.Archives](db, archivesCollectionName, bson.M{"campaignId": campaignID})
 	if err != nil {
 		return nil, err

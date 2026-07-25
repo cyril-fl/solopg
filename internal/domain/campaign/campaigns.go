@@ -6,13 +6,13 @@ import (
 
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/locations"
+	"solopg/types/id"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Campaign struct {
-	ID              uuid.UUID             `bson:"Id" json:"Id"`
+	ID              id.ID                 `bson:"Id" json:"Id"`
 	Player          *characters.Character `bson:"character" json:"character"`
 	CurrentLocation *locations.Location   `bson:"location" json:"location"`
 	CreatedAt       time.Time             `bson:"createdAt" json:"createdAt"`
@@ -28,7 +28,7 @@ func New(params Template) *Campaign {
 	now := time.Now().UTC()
 
 	return &Campaign{
-		ID:              uuid.New(),
+		ID:              id.New(),
 		Player:          params.Player,
 		CurrentLocation: params.CurrentLocation,
 		CreatedAt:       now,

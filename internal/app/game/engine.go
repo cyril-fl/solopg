@@ -3,16 +3,15 @@ package game
 import (
 	// "fmt"
 	"solopg/internal/domain/campaign"
-
-	"github.com/google/uuid"
+	"solopg/types/id"
 )
 
 type Engine struct {
-	CampaignID uuid.UUID
+	CampaignID id.ID
 	State      *State
 }
 
-func NewEngine(CampaignID uuid.UUID, State *State) *Engine {
+func NewEngine(CampaignID id.ID, State *State) *Engine {
 	return &Engine{
 		CampaignID: CampaignID,
 		State:      State,

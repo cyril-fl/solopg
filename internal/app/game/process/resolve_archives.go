@@ -4,11 +4,10 @@ import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/codex"
 	"solopg/internal/domain/journal"
-
-	"github.com/google/uuid"
+	"solopg/types/id"
 )
 
-func ResolveArchives(id uuid.UUID, archives *campaign.Archives) *campaign.Archives {
+func ResolveArchives(id id.ID, archives *campaign.Archives) *campaign.Archives {
 	if archives == nil {
 		archives = campaign.NewArchives(campaign.ArchivesTemplate{
 			CampaignID: id,

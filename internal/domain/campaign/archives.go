@@ -3,14 +3,14 @@ package campaign
 import (
 	"solopg/internal/domain/codex"
 	"solopg/internal/domain/journal"
+	"solopg/types/id"
 	"time"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Archives struct {
-	CampaignID uuid.UUID        `bson:"campaignId" json:"campaignId"`
+	CampaignID id.ID          `bson:"campaignId" json:"campaignId"`
 	Codex      *codex.Codex     `bson:"codex" json:"codex"`
 	Journal    *journal.Journal `bson:"journal" json:"journal"`
 	CreatedAt  time.Time        `bson:"createdAt" json:"createdAt"`
@@ -18,7 +18,7 @@ type Archives struct {
 }
 
 type ArchivesTemplate struct {
-	CampaignID uuid.UUID
+	CampaignID id.ID
 	Codex      *codex.Codex
 	Journal    *journal.Journal
 }

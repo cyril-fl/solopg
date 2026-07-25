@@ -1,9 +1,8 @@
 package journal
 
 import (
+	"solopg/types/id"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Journal struct {
@@ -11,7 +10,7 @@ type Journal struct {
 }
 
 type Entry struct {
-	ID        uuid.UUID
+	ID        id.ID
 	Message   string
 	Timestamp time.Time
 }
@@ -24,7 +23,7 @@ func New(entries []Entry) *Journal {
 
 func (j *Journal) AddEntry(message string) *Entry {
 	entry := &Entry{
-		ID:        uuid.New(),
+		ID:        id.New(),
 		Message:   message,
 		Timestamp: time.Now().UTC(),
 	}
