@@ -20,3 +20,9 @@ func SaveGame(db *mongo.Mongo, engine *game.Engine) error {
 	}
 	return nil
 }
+
+func NewSaveFunc(db *mongo.Mongo, engine *game.Engine) func() error {
+	return func() error {
+		return SaveGame(db, engine)
+	}
+}

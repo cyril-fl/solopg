@@ -21,13 +21,6 @@ func NewEngine(CampaignID id.ID, State *State) *Engine {
 	}
 }
 
-func Boot(campaign *campaign.Campaign, archives *campaign.Archives) *Engine {
-	return NewEngine(campaign.ID, NewState(StateTemplate{
-		Campaign: campaign,
-		Archives: archives,
-	}))
-}
-
 func (e *Engine) Initialize() {
 	e.Log("Game engine initialized. Welcome to SoloPG!")
 	e.DiscoverLocation(e.State.CurrentLocation)

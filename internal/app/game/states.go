@@ -24,12 +24,12 @@ type Timestamps struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
-type StateTemplate struct {
+type CampaignData struct {
 	Campaign *campaign.Campaign
 	Archives *campaign.Archives
 }
 
-func NewState(data StateTemplate) *State {
+func NewState(data CampaignData) *State {
 	// TODO: Add a timer logic to register the time spent in the game and update the state accordingly.
 	return &State{
 		Player:          data.Campaign.Player,
