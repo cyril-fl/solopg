@@ -34,33 +34,3 @@ func (ui *Ui) CreateCharacter() (*characters.Character, error) {
 
 	return finalModel.buildCharacter()
 }
-
-/*
-	load.ArticleFromFile("data/template/articles/potion/heal_lvl1.yaml")
-	load.CharacterFromFile("data/template/characters/monsters/slime.yaml")
-	load.CharacterFromFile("data/template/characters/npcs/blacksmith.yaml")
-	load.LocationFromFile("data/template/locations/tavern.yaml")
-
-	adventurerSword, err := load.GearFromFile("data/template/equipments/adventurers/sword.yaml")
-	if err != nil {
-		return err
-	}
-
-	hero, err := load.CharacterFromFile("data/template/characters/hero.yaml")
-	if err != nil {
-		return err
-	}
-
-	if hero == nil {
-		fmt.Println("hero is nil")
-		return nil
-	}
-
-	if adventurerSword == nil {
-		fmt.Println("adventurerSword is nil")
-		return nil
-	}
-
-	hero.SetEquipmentSlot(adventurerSword)
-	jsonlog.JsonifiedLog(hero)
-*/

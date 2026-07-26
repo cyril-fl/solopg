@@ -42,6 +42,7 @@ func Start() error {
 	archives := process.ResolveArchives(campaign.ID, maybeArchives)
 
 	engine := game.Boot(campaign, archives)
+	engine.Initialize()
 
 	jsonlog.JsonifiedLog(engine)
 

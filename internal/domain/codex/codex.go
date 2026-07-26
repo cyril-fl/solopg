@@ -1,36 +1,36 @@
 package codex
 
-import (
-	"solopg/internal/domain/card/characters"
-	"solopg/internal/domain/card/locations"
-)
-
 /*
-TODO: Ameliorer le codex avec des vrai entrée pour chaque sous codex
-s'insperer de Journal
-ajouter des méthodes
+TODO: ajouter des méthodes pour chaque sous codex
 */
 type Codex struct {
-	NpcsTable      []*characters.Character
-	MonstersTable  []*characters.Character
-	LocationsTable []*locations.Location
-	ObjectsTable   []interface{}
-	ObjectifsTable []interface{}
-}
-type Template struct {
-	NpcsTable      []*characters.Character
-	MonstersTable  []*characters.Character
-	LocationsTable []*locations.Location
-	ObjectsTable   []interface{}
-	ObjectifsTable []interface{}
+	NpcsTable      *NpcsTable
+	MonstersTable  *MonstersTable
+	LocationsTable *LocationsTable
+	ObjectsTable   *ObjectsTable
+	ObjectifsTable *ObjectifsTable
 }
 
-func New(params Template) *Codex {
+func New() *Codex {
 	return &Codex{
-		NpcsTable:      params.NpcsTable,
-		MonstersTable:  params.MonstersTable,
-		LocationsTable: params.LocationsTable,
-		ObjectsTable:   params.ObjectsTable,
-		ObjectifsTable: params.ObjectifsTable,
+		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
+		MonstersTable:  NewMonstersTable([]MonstersEntry{}),
+		LocationsTable: NewLocationsTable([]LocationsEntry{}),
+		ObjectsTable:   NewObjectsTable([]ObjectsEntry{}),
+		ObjectifsTable: NewObjectifsTable([]ObjectifsEntry{}),
 	}
+}
+
+type Table[E any] struct {
+	Entries []E
+}
+
+func NewTable[E any](entries []E) *Table[E] {
+	return &Table[E]{
+		Entries: entries,
+	}
+}
+
+func (t *Table[E]) AddEntry(entry E) {
+	t.Entries = append(t.Entries, entry)
 }

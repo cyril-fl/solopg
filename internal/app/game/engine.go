@@ -4,6 +4,8 @@ import (
 	// "fmt"
 	// "fmt"
 	"solopg/internal/domain/campaign"
+	"solopg/internal/domain/card/locations"
+	"solopg/internal/domain/codex"
 	"solopg/types/id"
 )
 
@@ -24,6 +26,34 @@ func Boot(campaign *campaign.Campaign, archives *campaign.Archives) *Engine {
 		Campaign: campaign,
 		Archives: archives,
 	}))
+}
+
+func (e *Engine) Initialize() {
+	e.Log("Game engine initialized. Welcome to SoloPG!")
+	e.DiscoverLocation(e.State.CurrentLocation)
+}
+
+func (e *Engine) UpdateLocation(newLocation *locations.Location) {
+	e.State.CurrentLocation = newLocation
+	e.DiscoverLocation(newLocation)
+}
+
+func (e *Engine) Log(message string) {
+	e.State.Journal.AddEntry(message)
+}
+
+func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
+	LocationsEntry := e.State.Codex.LocationsTable.FindEntryByName(newLocation.Name)
+	if LocationsEntry != nil {
+		e.Log("Player moved to " + newLocation.Name)
+		return
+	}
+
+	e.State.Codex.LocationsTable.AddEntry(codex.LocationsEntryTemplate{
+		Location: newLocation,
+	})
+
+	e.Log("New location discovered: " + newLocation.Name)
 }
 
 func (e *Engine) ExportArchives() *campaign.Archives {
