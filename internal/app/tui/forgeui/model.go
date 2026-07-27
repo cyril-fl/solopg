@@ -2,11 +2,8 @@ package forgeui
 
 import (
 	"solopg/internal/app/tui"
-	"solopg/internal/domain/card/attributes"
-	"solopg/internal/domain/card/characters"
-	"solopg/internal/domain/card/characters/archetypes"
-	"solopg/internal/domain/card/effects"
-	"solopg/internal/domain/card/objects"
+	"solopg/internal/domain/card/characters/archetypes/classes"
+	"solopg/internal/domain/card/characters/archetypes/races"
 
 	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/textinput"
@@ -32,36 +29,11 @@ func newModel() model {
 	nameInput.Placeholder = "Enter your name"
 	nameInput.Focus()
 
-	races := archetypes.ListRaces()
-	raceItems := make([]list.Item, 0, len(races))
-	for _, race := range races {
-		if !race.Playable {
-			continue
-		}
+	races := races.List()
+	raceList := makeModel(races)
 
-		raceItems = append(raceItems, raceItem{
-			title: race.Name,
-			race:  race,
-		})
-	}
-
-	classes := archetypes.ListClasses()
-	classItems := make([]list.Item, 0, len(classes))
-	for _, class := range archetypes.ListClasses() {
-		if !class.Playable {
-			continue
-		}
-
-		classItems = append(classItems, classItem{
-			title: class.Name,
-			class: class,
-		})
-	}
-
-	raceList := list.New(raceItems, list.NewDefaultDelegate(), 0, 0)
-	classList := list.New(classItems, list.NewDefaultDelegate(), 0, 0)
-	configureList(&raceList)
-	configureList(&classList)
+	classes := classes.List()
+	classList := makeModel(classes)
 
 	return model{
 		step:      stepName,
@@ -104,34 +76,4 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	default:
 		return m, nil
 	}
-}
-
-func (m model) buildCharacter() (*characters.Character, error) {
-	race := archetypes.FindRaceByName(m.selectedRace)
-	class := archetypes.FindClassByName(m.selectedClass)
-
-	baseStats := effects.BaseStats()
-
-	// TODO: Applys somme randomness with dice roll
-	if race != nil {
-		baseStats.ApplyModifiers(race.Bonus)
-	}
-	if class != nil {
-		baseStats.ApplyModifiers(class.Bonus)
-	}
-
-	armorClassSet := characters.FindArmorSetByName(class.ArmorSet)
-	armorSet := characters.NewArmorSet(armorClassSet)
-
-	return characters.New(characters.Template{
-		Name:        m.selectedName,
-		Description: "Your character",
-		Rarity:      attributes.F,
-		Class:       m.selectedClass,
-		Race:        m.selectedRace,
-		Stats:       baseStats,
-		Equipment:   armorSet,
-		Inventory:   []objects.Object{},
-		Wallet:      characters.Wallet{Gold: 0, Silver: 0, Copper: 0},
-	})
 }

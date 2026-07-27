@@ -1,9 +1,9 @@
 package tui
 
 const (
-	KeyCtrlC    = "ctrl+c"
+	KeyCtrlC    = "ctr"
 	KeyEnter    = "enter"
-	KeyQuit     = "q"
+	KeyQuit     = "ctrl+q"
 	KeySettings = "s"
 	KeyBack     = "b"
 	KeyEsc      = "esc"

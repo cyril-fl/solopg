@@ -6,7 +6,8 @@ import (
 
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
-	"solopg/internal/domain/card/characters/archetypes"
+	"solopg/internal/domain/card/characters/archetypes/classes"
+	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/yaml"
@@ -58,12 +59,12 @@ func New(params Template) (*Character, error) {
 	}
 
 	// Check Class
-	if !slices.Contains(archetypes.ListClassNames(), params.Class) {
+	if !slices.Contains(classes.ListNames(), params.Class) {
 		return nil, fmt.Errorf("invalid class for character: %s", params.Class)
 	}
 
 	// Check Race
-	if !slices.Contains(archetypes.ListRaceNames(), params.Race) {
+	if !slices.Contains(races.ListNames(), params.Race) {
 		return nil, fmt.Errorf("invalid race for character: %s", params.Race)
 	}
 

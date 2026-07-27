@@ -33,5 +33,5 @@ func (ui *Ui) SelectLocation() (*locations.Location, error) {
 		return nil, tui.ErrSelectionCancelled
 	}
 
-	return &finalModel.selectedLocation, nil
+	return &finalModel.drawLocations, nil
 }

@@ -40,5 +40,4 @@ func (m model) renderConfirm() string {
 		m.selectedRace,
 		m.selectedClass,
 	)
-	// return jsonlog.JsonifiedLog()
 }

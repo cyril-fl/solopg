@@ -4,6 +4,14 @@ import (
 	"errors"
 )
 
+// Message
+type ResolutionMsg struct {
+	Completed bool
+	Value     any
+	Err       error
+}
+
+// Errors
 var ErrCreationCancelled = errors.New("character creation cancelled")
 var ErrSelectionCancelled = errors.New("selection cancelled")
 

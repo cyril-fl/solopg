@@ -2,6 +2,8 @@ package forgeui
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/internal/domain/card/characters/archetypes/classes"
+	"solopg/internal/domain/card/characters/archetypes/races"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -39,11 +41,11 @@ func (m model) updateRace(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.raceList = updatedList
 
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
-		selected, ok := m.raceList.SelectedItem().(raceItem)
+		selected, ok := m.raceList.SelectedItem().(tui.Item[*races.Race])
 		if !ok {
 			return m, nil
 		}
-		m.selectedRace = selected.race.Name
+		m.selectedRace = selected.Value().GetName()
 		m.step = stepClass
 		m.classList.ResetSelected()
 		return m, nil
@@ -57,11 +59,11 @@ func (m model) updateClass(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.classList = updatedList
 
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
-		selected, ok := m.classList.SelectedItem().(classItem)
+		selected, ok := m.classList.SelectedItem().(tui.Item[*classes.Class])
 		if !ok {
 			return m, nil
 		}
-		m.selectedClass = selected.class.Name
+		m.selectedClass = selected.Value().GetName()
 		m.step = stepConfirm
 		return m, nil
 	}

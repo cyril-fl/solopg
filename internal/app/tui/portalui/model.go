@@ -11,32 +11,23 @@ import (
 )
 
 type model struct {
-	attempt          int
-	choiceList       list.Model
-	selectedLocation locations.Location
+	attempt       int
+	choiceList    list.Model
+	drawLocations locations.Location
 
 	cancelled bool
 }
 
 func newModel() model {
-	choiceList := []list.Item{
-		choiceItem{title: "Accept", retry: false},
-		choiceItem{title: "Reroll", retry: true},
-	}
-
-	choiceListModel := list.New(choiceList, list.NewDefaultDelegate(), 0, 0)
-	configureList(&choiceListModel)
-
-	selectedLocation, err := gameplay.DrawLocations()
+	locations, err := gameplay.DrawLocations()
 	if err != nil {
 		fmt.Println("Error drawing locations:", err)
 	}
-
 	return model{
-		choiceList:       choiceListModel,
-		attempt:          0,
-		selectedLocation: *selectedLocation,
-		cancelled:        false,
+		choiceList:    makeModel(),
+		attempt:       0,
+		drawLocations: *locations,
+		cancelled:     false,
 	}
 }
 
@@ -52,20 +43,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case tui.KeyCtrlC, tui.KeyQuit:
+		case tui.KeyQuit:
 			m.cancelled = true
 			return m, tea.Quit
 
 		case tui.KeyEnter:
-			if selected, ok := m.choiceList.SelectedItem().(choiceItem); ok {
-				if selected.retry && m.attempt < 3 {
+			if selected, ok := m.choiceList.SelectedItem().(tui.Item[bool]); ok {
+				if selected.Value() && m.attempt < 3 {
 					m.attempt++
 					newLocation, err := gameplay.DrawLocations()
 					if err != nil {
 						fmt.Println("Error drawing locations:", err)
 						return m, nil
 					}
-					m.selectedLocation = *newLocation
+					m.drawLocations = *newLocation
 				} else {
 					return m, tea.Quit
 				}
