@@ -1,7 +1,7 @@
 package tui
 
 const (
-	KeyCtrlC    = "ctr"
+	KeyCtrlC    = "ctrl+c"
 	KeyEnter    = "enter"
 	KeyQuit     = "ctrl+q"
 	KeySettings = "s"

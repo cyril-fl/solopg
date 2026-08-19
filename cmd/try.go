@@ -9,8 +9,8 @@ import (
 var tryCmd = &cobra.Command{
 	Use:   "try",
 	Short: "Launch the game in try mode",
-	Run: func(cmd *cobra.Command, args []string) {
-		app.Try()
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return app.Try()
 	},
 }
 

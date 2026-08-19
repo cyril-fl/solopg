@@ -1,8 +1,6 @@
 package tui
 
 import (
-	"fmt"
-
 	tea "charm.land/bubbletea/v2"
 )
 
@@ -19,39 +17,29 @@ const (
 	step3
 )
 
-func resolveStep(m model, msg tea.Msg) {
-	resolution, ok := msg.(ResolutionMsg)
-	skip := !ok || resolution.Err != nil || !resolution.Completed
-
-	if skip {
-		return
+func resolveStep(m *model, value any) error {
+	if len(m.steps) == 0 || int(m.step) >= len(m.steps) {
+		return nil
 	}
-
-	 m.steps[m.step].Resolve(&m.context, resolution.Value)
+	if m.steps[m.step].Resolve == nil {
+		return nil
+	}
+	return m.steps[m.step].Resolve(&m.context, value)
 }
 
-
-func changeStep(m model, msg tea.Msg) (model, tea.Cmd) {
-	resolution, ok := msg.(ResolutionMsg)
-	if !ok {
-		return m, nil
+func advanceStep(m *model) (tea.Model, tea.Cmd) {
+	if int(m.step) >= len(m.steps)-1 {
+		return *m, tea.Quit
 	}
-
-	if resolution.Err != nil {
-		return m, tea.Quit
-	}
-
-	if !resolution.Completed {
-		return m, nil
-	}
-
-
-if m.step < step(len(m.steps)-1) {
 	m.step++
 
-	fmt.Println("NEW STEP", m.step)
+	init := m.current().Init()
+	if m.size == nil {
+		return *m, init
+	}
 
-	return m, m.current().Init()
-}
-	return m, tea.Quit
+	resize := func() tea.Msg {
+		return *m.size
+	}
+	return *m, tea.Sequence(init, resize)
 }

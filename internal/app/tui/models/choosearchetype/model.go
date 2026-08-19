@@ -1,7 +1,6 @@
 package choosearchetype
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/characters/archetypes"
 
@@ -18,7 +17,7 @@ const (
 
 type model struct {
 	Step step
-	list  list.Model
+	list list.Model
 }
 
 func NewModel[T archetypes.Archetype](data []T) model {
@@ -35,9 +34,6 @@ func NewModel[T archetypes.Archetype](data []T) model {
 	listModel := list.New(items, list.NewDefaultDelegate(), 0, 0)
 	tui.ConfigureList(&listModel)
 
-	fmt.Printf("SIZE %d %d\n", listModel.Width(), listModel.Height())
-	fmt.Printf("ITEMS %d\n", len(listModel.Items()))
-
 	return model{
 		Step: choiceStep,
 		list: listModel,
@@ -51,11 +47,9 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 
-	
 	case tea.WindowSizeMsg:
-			fmt.Println("ARCHETYPE SIZE", msg.Width, msg.Height)
-		m.list.SetSize(msg.Width, max(0, msg.Height))
-			fmt.Println("SIZE", m.list.Width(), m.list.Height())
+		// The parent adds a three-line footer to the child view.
+		m.list.SetSize(msg.Width, max(0, msg.Height-3))
 		return m, nil
 	}
 
@@ -74,19 +68,21 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.list = updatedList
 
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
-		selectedItem := m.list.SelectedItem().(archetypes.Archetype).GetName()
+		selectedItem := m.list.SelectedItem()
+		if selectedItem == nil {
+			return m, nil
+		}
 
 		return m, func() tea.Msg {
 			return tui.ResolutionMsg{
 				Completed: true,
-				Value:   selectedItem,
+				Value:     selectedItem.FilterValue(),
 			}
 		}
 	}
 
 	return m, cmd
 }
-
 
 func (m model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {

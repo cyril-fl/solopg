@@ -1,15 +1,23 @@
 package tui
 
-import tea "charm.land/bubbletea/v2"
+import (
+	"fmt"
+
+	tea "charm.land/bubbletea/v2"
+)
 
 const footer = "\n\nCtrl+Q: Quitter"
 
 func (m model) View() tea.View {
-	content := ""
-
-	if m.current() != nil {
-		content = m.current().View().Content
+	if m.err != nil {
+		return tea.NewView(fmt.Sprintf("Erreur: %v%s", m.err, footer))
 	}
 
-	return tea.NewView(content + footer)
+	if current := m.current(); current != nil {
+		view := current.View()
+		view.Content += footer
+		return view
+	}
+
+	return tea.NewView(footer)
 }

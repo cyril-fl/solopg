@@ -10,8 +10,7 @@ var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Launch the game",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		app.Start()
-		return nil
+		return app.Start()
 	},
 }
 

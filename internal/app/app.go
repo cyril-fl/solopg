@@ -13,6 +13,10 @@ import (
 )
 
 func Start() error {
+	return runTUI()
+}
+
+func runTUI() error {
 	db, err := mongo.Connect()
 	if err != nil {
 		return err
@@ -20,24 +24,63 @@ func Start() error {
 
 	defer mongo.Disconnect(db)
 
-	// campaignData, err := loadCampaignData(db)
-	// if err != nil {
-	// 	return err
-	// }
+	return runBootstrap(db)
+}
 
-	// engine, err := boot(db, campaignData)
-	// if err != nil {
-	// 	return err
-	// }
+func runBootstrap(db *mongo.Mongo) error {
+	saves, err := db.LoadCampaign()
+	if err != nil {
+		return err
+	}
 
-	// gameUi := gameui.NewUi(gameui.UiParams{
-	// 	Engine: engine,
-	// 	OnSave: process.NewSaveFunc(db, engine),
-	// })
+	models := []tui.Step{
+		{
+			Model: loadsave.NewModel(saves),
+			Resolve: func(ctx *tui.Context, value any) error {
+				if value == nil {
+					ctx.SelectedSave = nil
+					return nil
+				}
+				selected, ok := value.(*campaign.Campaign)
+				if !ok {
+					return fmt.Errorf("unexpected save value %T", value)
+				}
+				ctx.SelectedSave = selected
+				return nil
+			},
+		},
+		{
+			Model: choosename.NewModel(),
+			Resolve: func(ctx *tui.Context, value any) error {
+				ctx.SelectedName, _ = value.(string)
+				return nil
+			},
+		},
+		{
+			Model: choosearchetype.NewModel(races.List()),
+			Resolve: func(ctx *tui.Context, value any) error {
+				name, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("unexpected race value %T", value)
+				}
+				ctx.SelectedRace = races.FindByName(name)
+				return nil
+			},
+		},
+		{
+			Model: choosearchetype.NewModel(classes.List()),
+			Resolve: func(ctx *tui.Context, value any) error {
+				name, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("unexpected class value %T", value)
+				}
+				ctx.SelectedClass = classes.FindByName(name)
+				return nil
+			},
+		},
+	}
 
-	// gameUi.Start()
-
-	return nil
+	return tui.New(models).Run()
 }
 
 // func loadCampaignData(db *mongo.Mongo) (*game.CampaignData, error) {
@@ -87,104 +130,5 @@ func Try() error {
 
 	defer mongo.Disconnect(db)
 
-	saves, err := db.LoadCampaign()
-	if err != nil {
-		return err
-	}
-
-	races := races.List()
-	classes := classes.List()
-
-	models := []tui.Step{
-		{
-			Model: loadsave.NewModel(saves),
-			Resolve: func(ctx *tui.Context, value any) error {
-				if value == nil {
-					ctx.SelectedSave = nil
-					return nil
-				}
-				ctx.SelectedSave = value.(*campaign.Campaign)
-				return nil
-			},
-		},
-
-				{
-			Model: loadsave.NewModel(saves),
-			Resolve: func(ctx *tui.Context, value any) error {
-				if value == nil {
-					ctx.SelectedSave = nil
-					return nil
-				}
-				ctx.SelectedSave = value.(*campaign.Campaign)
-				return nil
-			},
-		},
-
-				{
-			Model: loadsave.NewModel(saves),
-			Resolve: func(ctx *tui.Context, value any) error {
-				if value == nil {
-					ctx.SelectedSave = nil
-					return nil
-				}
-				ctx.SelectedSave = value.(*campaign.Campaign)
-				return nil
-			},
-		},
-
-				{
-			Model: loadsave.NewModel(saves),
-			Resolve: func(ctx *tui.Context, value any) error {
-				if value == nil {
-					ctx.SelectedSave = nil
-					return nil
-				}
-				ctx.SelectedSave = value.(*campaign.Campaign)
-				return nil
-			},
-		},
-		{
-			Model: choosename.NewModel(),
-			Resolve: func(ctx *tui.Context, value any) error {
-				if value == nil {
-					ctx.SelectedName = ""
-					return nil
-				}
-				ctx.SelectedName = value.(string)
-				return nil
-			},
-		},
-		{
-			Model: choosearchetype.NewModel(races),
-			Resolve: func(ctx *tui.Context, value any) error {
-
-				if value == nil {
-					ctx.SelectedRace = nil
-					return nil
-				}
-				
-				fmt.Printf("%+v\n", ctx)
-				fmt.Printf("%+v\n", value)
-				
-				return nil
-			},
-		},
-				{
-			Model: choosearchetype.NewModel(classes),
-			Resolve: func(ctx *tui.Context, value any) error {
-
-				if value == nil {
-					ctx.SelectedClass = nil
-					return nil
-				}
-				fmt.Printf("%+v\n", ctx)
-				fmt.Printf("%+v\n", value)
-				
-				return nil
-			},
-		},
-	}
-	tui.New(models).Run()
-
-	return nil
+	return runBootstrap(db)
 }

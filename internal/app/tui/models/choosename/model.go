@@ -1,7 +1,6 @@
 package choosename
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"strings"
 
@@ -10,8 +9,8 @@ import (
 )
 
 type model struct {
-	Input	  textinput.Model
-	Name string
+	Input     textinput.Model
+	Name      string
 	Cancelled bool
 }
 
@@ -20,8 +19,8 @@ func NewModel() model {
 	input.Focus()
 
 	return model{
-		Input: input,
-		Name: "",
+		Input:     input,
+		Name:      "",
 		Cancelled: false,
 	}
 }
@@ -33,7 +32,6 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-			fmt.Println("ARCHETYPE SIZE", msg.Width, msg.Height)
 		m.Input.SetWidth(msg.Width - 2)
 		return m, nil
 	}
@@ -48,7 +46,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if name == "" {
 			return m, nil
 		}
-		
+
 		m.Name = name
 
 		return m, func() tea.Msg {
@@ -58,7 +56,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	
+
 	return m, cmd
 }
-

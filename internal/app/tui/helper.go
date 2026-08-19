@@ -1,17 +1,10 @@
 package tui
 
-import (
-	"fmt"
-
-	tea "charm.land/bubbletea/v2"
-)
+import tea "charm.land/bubbletea/v2"
 
 func handleEvent(m model, msg tea.Msg) (model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-			fmt.Println("PARENT SIZE", msg.Width, msg.Height)
-
-
 	case tea.KeyMsg:
 		switch msg.String() {
 		case KeyQuit:

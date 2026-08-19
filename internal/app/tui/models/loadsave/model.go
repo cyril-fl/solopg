@@ -1,7 +1,6 @@
 package loadsave
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/campaign"
 
@@ -26,7 +25,6 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-			fmt.Println("LOADSAVE SIZE", msg.Width, msg.Height)
 		m.list.SetSize(msg.Width, max(0, msg.Height-3))
 		return m, nil
 
