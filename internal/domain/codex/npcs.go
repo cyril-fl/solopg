@@ -24,7 +24,12 @@ func NewNpcsTable(entries []NpcsEntry) *NpcsTable {
 	}
 }
 
+func (n *NpcsTable) ensureTable() {
+	ensureEmbeddedTable(&n.Table)
+}
+
 func (n *NpcsTable) AddEntry(entry NpcsEntryTemplate) {
+	n.ensureTable()
 	n.Entries = append(n.Entries, NpcsEntry{
 		timestamp: time.Now().UTC(),
 		character: entry.character,

@@ -24,7 +24,12 @@ func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	}
 }
 
+func (l *LocationsTable) ensureTable() {
+	ensureEmbeddedTable(&l.Table)
+}
+
 func (l *LocationsTable) AddEntry(entry LocationsEntryTemplate) {
+	l.ensureTable()
 	l.Entries = append(l.Entries, LocationsEntry{
 		Timestamp: time.Now().UTC(),
 		Location:  entry.Location,
@@ -32,9 +37,10 @@ func (l *LocationsTable) AddEntry(entry LocationsEntryTemplate) {
 }
 
 func (l *LocationsTable) FindEntryByName(name string) *LocationsEntry {
-	for _, entry := range l.Entries {
-		if entry.Location.Name == name {
-			return &entry
+	l.ensureTable()
+	for i, entry := range l.Entries {
+		if entry.Location != nil && entry.Location.Name == name {
+			return &l.Entries[i]
 		}
 	}
 	return nil

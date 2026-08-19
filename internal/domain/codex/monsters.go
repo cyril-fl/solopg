@@ -24,7 +24,12 @@ func NewMonstersTable(entries []MonstersEntry) *MonstersTable {
 	}
 }
 
+func (m *MonstersTable) ensureTable() {
+	ensureEmbeddedTable(&m.Table)
+}
+
 func (m *MonstersTable) AddEntry(entry MonstersEntryTemplate) {
+	m.ensureTable()
 	m.Entries = append(m.Entries, MonstersEntry{
 		timestamp: time.Now().UTC(),
 		character: entry.character,

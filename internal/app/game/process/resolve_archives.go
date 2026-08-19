@@ -9,11 +9,16 @@ import (
 
 func ResolveArchives(id id.ID, archives *campaign.Archives) *campaign.Archives {
 	if archives == nil {
-		archives = campaign.NewArchives(campaign.ArchivesTemplate{
+		return campaign.NewArchives(campaign.ArchivesTemplate{
 			CampaignID: id,
 			Codex:      codex.New(),
 			Journal:    journal.New([]journal.Entry{}),
 		})
+	}
+
+	archives.Codex = codex.EnsureInitialized(archives.Codex)
+	if archives.Journal == nil {
+		archives.Journal = journal.New([]journal.Entry{})
 	}
 
 	return archives

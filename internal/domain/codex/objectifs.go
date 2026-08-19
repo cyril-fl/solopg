@@ -19,7 +19,12 @@ func NewObjectifsTable(entries []ObjectifsEntry) *ObjectifsTable {
 	}
 }
 
+func (o *ObjectifsTable) ensureTable() {
+	ensureEmbeddedTable(&o.Table)
+}
+
 func (o *ObjectifsTable) AddEntry(entry ObjectifsEntryTemplate) {
+	o.ensureTable()
 	o.Entries = append(o.Entries, ObjectifsEntry{
 		timestamp: time.Now().UTC(),
 	})

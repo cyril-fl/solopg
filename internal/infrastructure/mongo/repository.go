@@ -118,11 +118,6 @@ func (db *Mongo) LoadArchivesByCampaignID(campaignID id.ID) (*campaign.Archives,
 	}
 
 	return &archives[0], nil
-	if len(archives) == 0 {
-		return nil, nil
-	}
-
-	return &archives[0], nil
 }
 
 func (db *Mongo) RegisterArchives(archives *campaign.Archives) error {

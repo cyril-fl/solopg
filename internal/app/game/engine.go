@@ -36,6 +36,10 @@ func (e *Engine) Log(message string) {
 }
 
 func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
+	if newLocation == nil {
+		return
+	}
+
 	LocationsEntry := e.State.Codex.LocationsTable.FindEntryByName(newLocation.Name)
 	if LocationsEntry != nil {
 		e.Log("Player moved to " + newLocation.Name)

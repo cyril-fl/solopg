@@ -24,7 +24,12 @@ func NewObjectsTable(entries []ObjectsEntry) *ObjectsTable {
 	}
 }
 
+func (o *ObjectsTable) ensureTable() {
+	ensureEmbeddedTable(&o.Table)
+}
+
 func (o *ObjectsTable) AddEntry(entry ObjectsEntryTemplate) {
+	o.ensureTable()
 	o.Entries = append(o.Entries, ObjectsEntry{
 		timestamp: time.Now().UTC(),
 		object:    entry.object,
