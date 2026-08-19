@@ -23,8 +23,13 @@ type UiParams struct {
 
 func NewUi(params UiParams) *Ui {
 	return &Ui{
-		program: tea.NewProgram(initialModel()),
+		program: tea.NewProgram(NewModel(params)),
 	}
+}
+
+// NewModel returns the game view for embedding in the main TUI router.
+func NewModel(params UiParams) tea.Model {
+	return initialModel()
 }
 
 func (ui *Ui) Start() error {
@@ -96,7 +101,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.viewport.SetWidth(msg.Width)
 		m.textarea.SetWidth(msg.Width)
-		m.viewport.SetHeight(msg.Height - m.textarea.Height())
+		// Reserve the parent footer plus the separator between viewport and input.
+		m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-7))
 
 		if len(m.messages) > 0 {
 			// Wrap content before setting it.

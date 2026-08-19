@@ -4,6 +4,7 @@ import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
+	"solopg/internal/domain/card/locations"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -17,10 +18,11 @@ type model struct {
 }
 
 type Context struct {
-	SelectedSave  *campaign.Campaign
-	SelectedName  string
-	SelectedRace  *races.Race
-	SelectedClass *classes.Class
+	SelectedSave     *campaign.Campaign
+	SelectedName     string
+	SelectedRace     *races.Race
+	SelectedClass    *classes.Class
+	SelectedLocation *locations.Location
 }
 
 func newModel(steps []Step) model {

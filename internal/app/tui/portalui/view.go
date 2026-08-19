@@ -9,10 +9,14 @@ import (
 func (m model) View() tea.View {
 	content := strings.Builder{}
 
+	content.WriteString("Location: ")
 	content.WriteString(m.drawLocations.Name)
+	if m.drawLocations.Description.Description != "" {
+		content.WriteString("\n")
+		content.WriteString(m.drawLocations.Description.Description)
+	}
 	content.WriteString("\n\n")
 	content.WriteString(m.choiceList.View())
-	content.WriteString("\n\nq: quit  enter: select")
 
 	return tea.NewView(content.String())
 }

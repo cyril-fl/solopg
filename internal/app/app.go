@@ -3,12 +3,15 @@ package app
 import (
 	"fmt"
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/gameui"
 	"solopg/internal/app/tui/models/choosearchetype"
 	"solopg/internal/app/tui/models/choosename"
 	"solopg/internal/app/tui/models/loadsave"
+	"solopg/internal/app/tui/portalui"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
+	"solopg/internal/domain/card/locations"
 	"solopg/internal/infrastructure/mongo"
 )
 
@@ -51,6 +54,9 @@ func runBootstrap(db *mongo.Mongo) error {
 		},
 		{
 			Model: choosename.NewModel(),
+			Skip: func(ctx *tui.Context) bool {
+				return ctx.SelectedSave != nil
+			},
 			Resolve: func(ctx *tui.Context, value any) error {
 				ctx.SelectedName, _ = value.(string)
 				return nil
@@ -58,6 +64,9 @@ func runBootstrap(db *mongo.Mongo) error {
 		},
 		{
 			Model: choosearchetype.NewModel(races.List()),
+			Skip: func(ctx *tui.Context) bool {
+				return ctx.SelectedSave != nil
+			},
 			Resolve: func(ctx *tui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
@@ -69,6 +78,9 @@ func runBootstrap(db *mongo.Mongo) error {
 		},
 		{
 			Model: choosearchetype.NewModel(classes.List()),
+			Skip: func(ctx *tui.Context) bool {
+				return ctx.SelectedSave != nil
+			},
 			Resolve: func(ctx *tui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
@@ -77,6 +89,23 @@ func runBootstrap(db *mongo.Mongo) error {
 				ctx.SelectedClass = classes.FindByName(name)
 				return nil
 			},
+		},
+		{
+			Model: portalui.NewModel(),
+			Skip: func(ctx *tui.Context) bool {
+				return ctx.SelectedSave != nil
+			},
+			Resolve: func(ctx *tui.Context, value any) error {
+				location, ok := value.(*locations.Location)
+				if !ok {
+					return fmt.Errorf("unexpected location value %T", value)
+				}
+				ctx.SelectedLocation = location
+				return nil
+			},
+		},
+		{
+			Model: gameui.NewModel(gameui.UiParams{}),
 		},
 	}
 

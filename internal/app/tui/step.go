@@ -7,6 +7,7 @@ import (
 type Step struct {
 	Model   tea.Model
 	Resolve func(ctx *Context, value any) error
+	Skip    func(ctx *Context) bool
 }
 
 type step int
@@ -28,10 +29,15 @@ func resolveStep(m *model, value any) error {
 }
 
 func advanceStep(m *model) (tea.Model, tea.Cmd) {
-	if int(m.step) >= len(m.steps)-1 {
+	for int(m.step) < len(m.steps)-1 {
+		m.step++
+		if m.steps[m.step].Skip == nil || !m.steps[m.step].Skip(&m.context) {
+			break
+		}
+	}
+	if int(m.step) >= len(m.steps)-1 && m.steps[m.step].Skip != nil && m.steps[m.step].Skip(&m.context) {
 		return *m, tea.Quit
 	}
-	m.step++
 
 	init := m.current().Init()
 	if m.size == nil {

@@ -15,19 +15,24 @@ type model struct {
 	choiceList    list.Model
 	drawLocations locations.Location
 
-	cancelled bool
+	cancelled      bool
+	emitResolution bool
 }
 
-func newModel() model {
+func newModel(emitResolution bool) model {
 	locations, err := gameplay.DrawLocations()
 	if err != nil {
 		fmt.Println("Error drawing locations:", err)
 	}
+	if locations == nil {
+		return model{choiceList: makeModel(), cancelled: true, emitResolution: emitResolution}
+	}
 	return model{
-		choiceList:    makeModel(),
-		attempt:       0,
-		drawLocations: *locations,
-		cancelled:     false,
+		choiceList:     makeModel(),
+		attempt:        0,
+		drawLocations:  *locations,
+		cancelled:      false,
+		emitResolution: emitResolution,
 	}
 }
 
@@ -38,7 +43,8 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.choiceList.SetSize(msg.Width, max(0, msg.Height-5))
+		// Reserve space for the location header and the parent's footer.
+		m.choiceList.SetSize(msg.Width, max(0, msg.Height-6))
 		return m, nil
 
 	case tea.KeyMsg:
@@ -53,11 +59,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.attempt++
 					newLocation, err := gameplay.DrawLocations()
 					if err != nil {
-						fmt.Println("Error drawing locations:", err)
 						return m, nil
 					}
 					m.drawLocations = *newLocation
 				} else {
+					if m.emitResolution {
+						location := m.drawLocations
+						return m, func() tea.Msg {
+							return tui.ResolutionMsg{Completed: true, Value: &location}
+						}
+					}
 					return m, tea.Quit
 				}
 			}

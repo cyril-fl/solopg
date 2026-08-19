@@ -14,8 +14,13 @@ type Ui struct {
 
 func NewUi() *Ui {
 	return &Ui{
-		program: tea.NewProgram(newModel()),
+		program: tea.NewProgram(newModel(false)),
 	}
+}
+
+// NewModel returns a portal view that can be embedded in the parent TUI.
+func NewModel() tea.Model {
+	return newModel(true)
 }
 
 func (ui *Ui) SelectLocation() (*locations.Location, error) {
