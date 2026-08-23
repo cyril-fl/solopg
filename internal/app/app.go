@@ -2,6 +2,8 @@ package app
 
 import (
 	"fmt"
+	"solopg/internal/app/game"
+	"solopg/internal/app/game/process"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/gameui"
 	"solopg/internal/app/tui/models/choosearchetype"
@@ -44,9 +46,6 @@ func runBootstrap(db *mongo.Mongo) error {
 					ui.Add(
 						tui.Step{
 							Submodel: choosename.NewModel(),
-							Skip: func(ctx *tui.Context) bool {
-								return ctx.SelectedSave != nil
-							},
 							Resolve: func(ctx *tui.Context, value any) error {
 								ctx.SelectedName, _ = value.(string)
 								return nil
@@ -54,9 +53,6 @@ func runBootstrap(db *mongo.Mongo) error {
 						},
 						tui.Step{
 							Submodel: choosearchetype.NewModel(races.List()),
-							Skip: func(ctx *tui.Context) bool {
-								return ctx.SelectedSave != nil
-							},
 							Resolve: func(ctx *tui.Context, value any) error {
 								name, ok := value.(string)
 								if !ok {
@@ -68,9 +64,6 @@ func runBootstrap(db *mongo.Mongo) error {
 						},
 						tui.Step{
 							Submodel: choosearchetype.NewModel(classes.List()),
-							Skip: func(ctx *tui.Context) bool {
-								return ctx.SelectedSave != nil
-							},
 							Resolve: func(ctx *tui.Context, value any) error {
 								name, ok := value.(string)
 								if !ok {
@@ -82,9 +75,6 @@ func runBootstrap(db *mongo.Mongo) error {
 						},
 						tui.Step{
 							Submodel: portalui.NewModel(),
-							Skip: func(ctx *tui.Context) bool {
-								return ctx.SelectedSave != nil
-							},
 							Resolve: func(ctx *tui.Context, value any) error {
 								location, ok := value.(*locations.Location)
 								if !ok {
@@ -133,24 +123,24 @@ func runBootstrap(db *mongo.Mongo) error {
 // 	}, nil
 // }
 
-// func boot(db *mongo.Mongo, data *game.CampaignData) (*game.Engine, error) {
-// 	campaign := data.Campaign
-// 	archives := data.Archives
+func boot(db *mongo.Mongo, data *game.CampaignData) (*game.Engine, error) {
+	campaign := data.Campaign
+	archives := data.Archives
 
-// 	engine := game.NewEngine(campaign.ID, game.NewState(game.CampaignData{
-// 		Campaign: campaign,
-// 		Archives: archives,
-// 	}))
+	engine := game.NewEngine(campaign.ID, game.NewState(game.CampaignData{
+		Campaign: campaign,
+		Archives: archives,
+	}))
 
-// 	engine.Initialize()
+	engine.Initialize()
 
-// 	err := process.SaveGame(db, engine)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	err := process.SaveGame(db, engine)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return engine, nil
-// }
+	return engine, nil
+}
 
 func Try() error {
 	db, err := mongo.Connect()
