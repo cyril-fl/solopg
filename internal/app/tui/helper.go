@@ -15,8 +15,8 @@ func (m model) handleEvent(msg tea.Msg) (model, tea.Cmd) {
 	return m, nil
 }
 
-func (m model) handleProcess(msg tea.Msg) (model, tea.Cmd) {
-	current := m.stepList.getCurrentSubmodel()
+func (m model) handleSubmodel(msg tea.Msg) (model, tea.Cmd) {
+	current := m.steps.GetCurrentSubmodel()
 
 	if current == nil {
 		return m, nil
@@ -25,7 +25,7 @@ func (m model) handleProcess(msg tea.Msg) (model, tea.Cmd) {
 	var cmd tea.Cmd
 	current, cmd = current.Update(msg)
 
-	m.stepList.setCurrentSubmodel(current)
+	m.steps.SetCurrentSubmodel(current)
 
 	return m, cmd
 }
@@ -49,5 +49,5 @@ func (m model) handleResolution(resolution ResolutionMsg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 	}
 
-	return m.moveToNextStep()
+	return m.forwardNextStep()
 }

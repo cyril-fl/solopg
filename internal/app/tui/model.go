@@ -5,12 +5,13 @@ import (
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/locations"
+	"solopg/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	stepList stepList
+	steps contextStepList	
 	context  Context
 	size     *tea.WindowSizeMsg
 	err      error
@@ -24,17 +25,21 @@ type Context struct {
 	SelectedLocation *locations.Location
 }
 
-func newModel(steps []Step) model {
+type contextStepList = step.List[ Context ]
+type contextStep = step.Step[ Context ]
+
+func newModel(steps []contextStep) model {
 	return model{
-		stepList: stepList{
+		steps: contextStepList{
 			Steps:        steps,
 			CurrentIndex: 0,
 		},
 	}
 }
+
 func (m *model) resolveCurrentStep(value any) error {
-	list := m.stepList
-	current := list.currentStep()
+	list := m.steps
+	current := list.CurrentStep()
 
 	isResolvable := current != nil && current.Resolve != nil
 	if !isResolvable {
@@ -46,7 +51,7 @@ func (m *model) resolveCurrentStep(value any) error {
 
 func (m *model) selectNextStep() bool {
 	for {
-		next := m.stepList.nextStep()
+		next := m.steps.NextStep()
 		if next == nil {
 			return false
 		}
@@ -57,12 +62,12 @@ func (m *model) selectNextStep() bool {
 	}
 }
 
-func (m *model) moveToNextStep() (tea.Model, tea.Cmd) {
+func (m *model) forwardNextStep() (tea.Model, tea.Cmd) {
 	if !m.selectNextStep() {
 		return *m, tea.Quit
 	}
 
-	submodel := m.stepList.getCurrentSubmodel()
+	submodel := m.steps.GetCurrentSubmodel()
 	if submodel == nil {
 		return *m, tea.Quit
 	}
@@ -78,7 +83,7 @@ func (m *model) moveToNextStep() (tea.Model, tea.Cmd) {
 }
 
 func (m model) Init() tea.Cmd {
-	submodel := m.stepList.getCurrentSubmodel()
+	submodel := m.steps.GetCurrentSubmodel()
 	if submodel == nil {
 		return nil
 	}
@@ -101,9 +106,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.handleResolution(resolution)
 	}
 
-	if m.stepList.getCurrentSubmodel() == nil {
+	if m.steps.GetCurrentSubmodel() == nil {
 		return m, nil
 	}
 
-	return m.handleProcess(msg)
+	return m.handleSubmodel(msg)
 }

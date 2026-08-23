@@ -8,7 +8,9 @@ type Ui struct {
 	program *tea.Program
 }
 
-func New(subsystem []Step) *Ui {
+type ModelList []contextStep
+
+func New(subsystem ModelList) *Ui {
 	return &Ui{
 		program: tea.NewProgram(newModel(subsystem)),
 	}

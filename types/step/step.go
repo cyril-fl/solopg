@@ -1,53 +1,53 @@
-package tui
+package step
 
 import (
 	tea "charm.land/bubbletea/v2"
 )
 
-type stepList struct {
-	Steps        []Step
+type List[ T any] struct {
+	Steps        []Step[ T ]
 	CurrentIndex int
 }
 
-type Step struct {
+type Step[ T any] struct {
 	Submodel tea.Model
-	Resolve  func(ctx *Context, value any) error
-	Skip     func(ctx *Context) bool
+	Resolve  func(ctx *T, value any) error
+	Skip     func(ctx *T) bool
 }
 
-func (sl *stepList) isOutOfBounds() bool {
+func (sl *List[ T ]) isOutOfBounds() bool {
 	return len(sl.Steps) == 0 || sl.CurrentIndex < 0 || sl.CurrentIndex >= len(sl.Steps)
 }
 
-func (sl *stepList) currentStep() *Step {
+func (sl *List[ T ]) CurrentStep() *Step[ T ] {
 	if sl.isOutOfBounds() {
 		return nil
 	}
 	return &sl.Steps[sl.CurrentIndex]
 }
 
-func (sl *stepList) nextStep() *Step {
+func (sl *List[ T ]) NextStep() *Step[ T ] {
 	if sl.isOutOfBounds() {
 		return nil
 	}
 
 	sl.CurrentIndex++
 
-	return sl.currentStep()
+	return sl.CurrentStep()
 }
 
-func (sl *stepList) previousStep() *Step {
+func (sl *List[ T ]) PreviousStep() *Step[ T ] {
 	if sl.isOutOfBounds() {
 		return nil
 	}
 
 	sl.CurrentIndex--
 
-	return sl.currentStep()
+	return sl.CurrentStep()
 }
 
-func (sl *stepList) getCurrentSubmodel() tea.Model {
-	current := sl.currentStep()
+func (sl *List[ T ]) GetCurrentSubmodel() tea.Model {
+	current := sl.CurrentStep()
 	if current == nil {
 		return nil
 	}
@@ -60,8 +60,8 @@ func (sl *stepList) getCurrentSubmodel() tea.Model {
 	return submodel
 }
 
-func (sl *stepList) setCurrentSubmodel(submodel tea.Model) {
-	current := sl.currentStep()
+func (sl *List[ T ]) SetCurrentSubmodel(submodel tea.Model) {
+	current := sl.CurrentStep()
 	if current == nil {
 		return
 	}

@@ -32,7 +32,7 @@ func runBootstrap(db *mongo.Mongo) error {
 		return err
 	}
 
-	models := []tui.Step{
+	models := tui.ModelList{
 		{
 			Submodel: loadsave.NewModel(saves),
 			Resolve: func(ctx *tui.Context, value any) error {
