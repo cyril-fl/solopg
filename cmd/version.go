@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"solopg/internal/buildinfo"
 
 	"github.com/spf13/cobra"
 )
@@ -10,7 +11,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("solopg v0.0.3")
+		fmt.Println(buildinfo.String())
 	},
 }
 

@@ -3,14 +3,16 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"solopg/internal/buildinfo"
 
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "solopg",
-	Short: "SoloPG CLI",
-	Long:  "SoloPG is a CLI to manage a solo RPG session in the terminal.",
+	Use:     buildinfo.AppName,
+	Short:   "SoloPG CLI",
+	Long:    "SoloPG is a CLI to manage a solo RPG session in the terminal.",
+	Version: buildinfo.Version,
 	Example: "solopg run\n" +
 		"solopg load data/template/characters/hero.yaml\n" +
 		"solopg version",
