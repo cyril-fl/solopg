@@ -11,10 +11,10 @@ import (
 )
 
 type model struct {
-	steps contextStepList	
-	context  Context
-	size     *tea.WindowSizeMsg
-	err      error
+	steps   *contextStepList
+	context Context
+	size    *tea.WindowSizeMsg
+	err     error
 }
 
 type Context struct {
@@ -25,15 +25,13 @@ type Context struct {
 	SelectedLocation *locations.Location
 }
 
-type contextStepList = step.List[ Context ]
-type contextStep = step.Step[ Context ]
+type contextStepList = step.List[Context]
+type contextStep = step.Step[Context]
+type Step = contextStep
 
-func newModel(steps []contextStep) model {
+func newModel(steps *contextStepList) model {
 	return model{
-		steps: contextStepList{
-			Steps:        steps,
-			CurrentIndex: 0,
-		},
+		steps: steps,
 	}
 }
 

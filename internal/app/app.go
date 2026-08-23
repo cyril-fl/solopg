@@ -32,12 +32,70 @@ func runBootstrap(db *mongo.Mongo) error {
 		return err
 	}
 
-	models := tui.ModelList{
-		{
+	ui := tui.New()
+
+	ui.
+		Add(tui.Step{
 			Submodel: loadsave.NewModel(saves),
 			Resolve: func(ctx *tui.Context, value any) error {
 				if value == nil {
 					ctx.SelectedSave = nil
+
+					ui.Add(
+						tui.Step{
+							Submodel: choosename.NewModel(),
+							Skip: func(ctx *tui.Context) bool {
+								return ctx.SelectedSave != nil
+							},
+							Resolve: func(ctx *tui.Context, value any) error {
+								ctx.SelectedName, _ = value.(string)
+								return nil
+							},
+						},
+						tui.Step{
+							Submodel: choosearchetype.NewModel(races.List()),
+							Skip: func(ctx *tui.Context) bool {
+								return ctx.SelectedSave != nil
+							},
+							Resolve: func(ctx *tui.Context, value any) error {
+								name, ok := value.(string)
+								if !ok {
+									return fmt.Errorf("unexpected race value %T", value)
+								}
+								ctx.SelectedRace = races.FindByName(name)
+								return nil
+							},
+						},
+						tui.Step{
+							Submodel: choosearchetype.NewModel(classes.List()),
+							Skip: func(ctx *tui.Context) bool {
+								return ctx.SelectedSave != nil
+							},
+							Resolve: func(ctx *tui.Context, value any) error {
+								name, ok := value.(string)
+								if !ok {
+									return fmt.Errorf("unexpected class value %T", value)
+								}
+								ctx.SelectedClass = classes.FindByName(name)
+								return nil
+							},
+						},
+						tui.Step{
+							Submodel: portalui.NewModel(),
+							Skip: func(ctx *tui.Context) bool {
+								return ctx.SelectedSave != nil
+							},
+							Resolve: func(ctx *tui.Context, value any) error {
+								location, ok := value.(*locations.Location)
+								if !ok {
+									return fmt.Errorf("unexpected location value %T", value)
+								}
+								ctx.SelectedLocation = location
+								return nil
+							},
+						},
+					)
+
 					return nil
 				}
 				selected, ok := value.(*campaign.Campaign)
@@ -47,65 +105,12 @@ func runBootstrap(db *mongo.Mongo) error {
 				ctx.SelectedSave = selected
 				return nil
 			},
-		},
-		{
-			Submodel: choosename.NewModel(),
-			Skip: func(ctx *tui.Context) bool {
-				return ctx.SelectedSave != nil
-			},
-			Resolve: func(ctx *tui.Context, value any) error {
-				ctx.SelectedName, _ = value.(string)
-				return nil
-			},
-		},
-		{
-			Submodel: choosearchetype.NewModel(races.List()),
-			Skip: func(ctx *tui.Context) bool {
-				return ctx.SelectedSave != nil
-			},
-			Resolve: func(ctx *tui.Context, value any) error {
-				name, ok := value.(string)
-				if !ok {
-					return fmt.Errorf("unexpected race value %T", value)
-				}
-				ctx.SelectedRace = races.FindByName(name)
-				return nil
-			},
-		},
-		{
-			Submodel: choosearchetype.NewModel(classes.List()),
-			Skip: func(ctx *tui.Context) bool {
-				return ctx.SelectedSave != nil
-			},
-			Resolve: func(ctx *tui.Context, value any) error {
-				name, ok := value.(string)
-				if !ok {
-					return fmt.Errorf("unexpected class value %T", value)
-				}
-				ctx.SelectedClass = classes.FindByName(name)
-				return nil
-			},
-		},
-		{
-			Submodel: portalui.NewModel(),
-			Skip: func(ctx *tui.Context) bool {
-				return ctx.SelectedSave != nil
-			},
-			Resolve: func(ctx *tui.Context, value any) error {
-				location, ok := value.(*locations.Location)
-				if !ok {
-					return fmt.Errorf("unexpected location value %T", value)
-				}
-				ctx.SelectedLocation = location
-				return nil
-			},
-		},
-		{
+		}).
+		Add(tui.Step{
 			Submodel: gameui.NewModel(gameui.UiParams{}),
-		},
-	}
+		})
 
-	return tui.New(models).Run()
+	return ui.Run()
 }
 
 // func loadCampaignData(db *mongo.Mongo) (*game.CampaignData, error) {
