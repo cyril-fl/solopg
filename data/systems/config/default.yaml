@@ -1,0 +1,22 @@
+name: "solopg"
+verbose: false
+commands: 
+  root: 
+    short: "SoloPG CLI"
+    long: "SoloPG is a CLI to manage a solo RPG session in the terminal."
+    example: |
+      solopg run
+      solopg load data/template/characters/hero.yaml
+      solopg load data/template/characters/hero.yaml --verbose
+      solopg load data/template/characters/hero.yaml -v
+      solopg load data/template/characters/hero.yaml --verbose=true
+      solopg load data/template/characters/hero.yaml --verbose=false
+  run: 
+    use: "run"
+    short: "Run a solo RPG session"
+  try: 
+    use: "try"
+    short: "Try a solo RPG session"
+  version: 
+    use: "version"
+    short: "Display the version of SoloPG"

@@ -7,8 +7,10 @@ import (
 )
 
 var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Launch the game",
+	Use:     cmd.Run.Use,
+	Short:   cmd.Run.Short,
+	Long:    cmd.Run.Long,
+	Example: cmd.Run.Example,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return app.Start()
 	},

@@ -7,8 +7,10 @@ import (
 )
 
 var tryCmd = &cobra.Command{
-	Use:   "try",
-	Short: "Launch the game in try mode",
+	Use:     cmd.Try.Use,
+	Short:   cmd.Try.Short,
+	Long:    cmd.Try.Long,
+	Example: cmd.Try.Example,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return app.Try()
 	},

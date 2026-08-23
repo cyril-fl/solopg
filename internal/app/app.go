@@ -10,11 +10,13 @@ import (
 	"solopg/internal/app/tui/models/choosename"
 	"solopg/internal/app/tui/models/loadsave"
 	"solopg/internal/app/tui/portalui"
+	"solopg/internal/config"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/locations"
 	"solopg/internal/infrastructure/mongo"
+	"solopg/internal/platform/jsonlog"
 )
 
 func Start() error {
@@ -103,13 +105,6 @@ func runBootstrap(db *mongo.Mongo) error {
 	return ui.Run()
 }
 
-// func loadCampaignData(db *mongo.Mongo) (*game.CampaignData, error) {
-
-// 	campaign, err := process.ResolveCampaign(selectedSave)
-// 	if err != nil {
-// 		return nil, tui.NormalizeError(err)
-// 	}
-
 // 	maybeArchives, err := db.LoadArchivesByCampaignID(campaign.ID)
 // 	if err != nil {
 // 		return nil, err
@@ -143,12 +138,9 @@ func boot(db *mongo.Mongo, data *game.CampaignData) (*game.Engine, error) {
 }
 
 func Try() error {
-	db, err := mongo.Connect()
-	if err != nil {
-		return err
-	}
+	c := config.Load()
 
-	defer mongo.Disconnect(db)
+	jsonlog.JsonifiedLog(c)
 
-	return runBootstrap(db)
+	return nil
 }

@@ -3,19 +3,20 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"solopg/internal/buildinfo"
+	"solopg/internal/config"
 
 	"github.com/spf13/cobra"
 )
 
+var c = config.Current
+var cmd = c.Commands
+
 var rootCmd = &cobra.Command{
-	Use:     buildinfo.AppName,
-	Short:   "SoloPG CLI",
-	Long:    "SoloPG is a CLI to manage a solo RPG session in the terminal.",
-	Version: buildinfo.Version,
-	Example: "solopg run\n" +
-		"solopg load data/template/characters/hero.yaml\n" +
-		"solopg version",
+	Use:     c.Name,
+	Short:   cmd.Root.Short,
+	Long:    cmd.Root.Long,
+	Version: config.Version,
+	Example: cmd.Root.Example,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return cmd.Help()
