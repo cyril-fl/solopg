@@ -1,5 +1,7 @@
 package process
 
+// DEPRECATED
+
 import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/codex"

@@ -9,6 +9,8 @@ import (
 	"solopg/types/id"
 )
 
+// DEPRECATED
+
 type Engine struct {
 	CampaignID id.ID
 	State      *State

@@ -5,7 +5,6 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-
 func (m model) View() tea.View {
 	title := lipgloss.NewStyle().
 		Bold(true).

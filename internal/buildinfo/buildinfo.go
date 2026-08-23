@@ -24,7 +24,7 @@ func fillFromBuildInfo() {
 
 	commitFromBuildInfo := false
 
-	isDev :=Version == "dev" && info.Main.Version != "" && info.Main.Version != "(devel)" 
+	isDev := Version == "dev" && info.Main.Version != "" && info.Main.Version != "(devel)"
 
 	if isDev {
 		Version = info.Main.Version

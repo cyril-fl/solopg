@@ -30,7 +30,7 @@ func (m model) View() tea.View {
 		return tea.NewView(alignFooter(fmt.Sprintf("Erreur: %v", m.err), m.windowHeight()))
 	}
 
-	if current := m.current(); current != nil {
+	if current := m.stepList.getCurrentSubmodel(); current != nil {
 		view := current.View()
 		view.Content = alignFooter(view.Content, m.windowHeight())
 		return view

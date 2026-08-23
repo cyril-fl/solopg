@@ -10,11 +10,10 @@ import (
 )
 
 type model struct {
-	step    step
-	steps   []Step
-	context Context
-	err     error
-	size    *tea.WindowSizeMsg
+	stepList stepList
+	context  Context
+	size     *tea.WindowSizeMsg
+	err      error
 }
 
 type Context struct {
@@ -27,59 +26,84 @@ type Context struct {
 
 func newModel(steps []Step) model {
 	return model{
-		step:  step1,
-		steps: steps,
+		stepList: stepList{
+			Steps:        steps,
+			CurrentIndex: 0,
+		},
+	}
+}
+func (m *model) resolveCurrentStep(value any) error {
+	list := m.stepList
+	current := list.currentStep()
+
+	isResolvable := current != nil && current.Resolve != nil
+	if !isResolvable {
+		return nil
+	}
+
+	return current.Resolve(&m.context, value)
+}
+
+func (m *model) selectNextStep() bool {
+	for {
+		next := m.stepList.nextStep()
+		if next == nil {
+			return false
+		}
+
+		if next.Skip == nil || !next.Skip(&m.context) {
+			return true
+		}
 	}
 }
 
-func (m model) current() tea.Model {
-	if len(m.steps) == 0 || int(m.step) >= len(m.steps) {
-		return nil
+func (m *model) moveToNextStep() (tea.Model, tea.Cmd) {
+	if !m.selectNextStep() {
+		return *m, tea.Quit
 	}
-	return m.steps[m.step].Model
+
+	submodel := m.stepList.getCurrentSubmodel()
+	if submodel == nil {
+		return *m, tea.Quit
+	}
+
+	initCmd := submodel.Init()
+	if m.size == nil {
+		return *m, initCmd
+	}
+
+	return *m, tea.Sequence(initCmd, func() tea.Msg {
+		return *m.size
+	})
 }
 
 func (m model) Init() tea.Cmd {
-	if m.current() == nil {
+	submodel := m.stepList.getCurrentSubmodel()
+	if submodel == nil {
 		return nil
 	}
 
-	return m.current().Init()
+	return submodel.Init()
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
 	if size, ok := msg.(tea.WindowSizeMsg); ok {
 		m.size = &size
 	}
 
-	m, cmd = handleEvent(m, msg)
+	var cmd tea.Cmd
+	m, cmd = m.handleEvent(msg)
 	if cmd != nil {
 		return m, cmd
 	}
 
 	if resolution, ok := msg.(ResolutionMsg); ok {
-		if resolution.Err != nil {
-			m.err = NormalizeError(resolution.Err)
-			if m.err != nil {
-				return m, tea.Quit
-			}
-			return m, nil
-		}
+		return m.handleResolution(resolution)
+	}
 
-		if resolution.Completed {
-			if err := resolveStep(&m, resolution.Value); err != nil {
-				m.err = err
-				return m, tea.Quit
-			}
-			return advanceStep(&m)
-		}
+	if m.stepList.getCurrentSubmodel() == nil {
 		return m, nil
 	}
 
-	if m.current() == nil {
-		return m, nil
-	}
-	m, cmd = handleProcess(m, msg)
-	return m, cmd
+	return m.handleProcess(msg)
 }

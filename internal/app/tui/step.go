@@ -4,48 +4,67 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+type stepList struct {
+	Steps        []Step
+	CurrentIndex int
+}
+
 type Step struct {
-	Model   tea.Model
-	Resolve func(ctx *Context, value any) error
-	Skip    func(ctx *Context) bool
+	Submodel tea.Model
+	Resolve  func(ctx *Context, value any) error
+	Skip     func(ctx *Context) bool
 }
 
-type step int
-
-const (
-	step1 step = iota
-	step2
-	step3
-)
-
-func resolveStep(m *model, value any) error {
-	if len(m.steps) == 0 || int(m.step) >= len(m.steps) {
-		return nil
-	}
-	if m.steps[m.step].Resolve == nil {
-		return nil
-	}
-	return m.steps[m.step].Resolve(&m.context, value)
+func (sl *stepList) isOutOfBounds() bool {
+	return len(sl.Steps) == 0 || sl.CurrentIndex < 0 || sl.CurrentIndex >= len(sl.Steps)
 }
 
-func advanceStep(m *model) (tea.Model, tea.Cmd) {
-	for int(m.step) < len(m.steps)-1 {
-		m.step++
-		if m.steps[m.step].Skip == nil || !m.steps[m.step].Skip(&m.context) {
-			break
-		}
+func (sl *stepList) currentStep() *Step {
+	if sl.isOutOfBounds() {
+		return nil
 	}
-	if int(m.step) >= len(m.steps)-1 && m.steps[m.step].Skip != nil && m.steps[m.step].Skip(&m.context) {
-		return *m, tea.Quit
+	return &sl.Steps[sl.CurrentIndex]
+}
+
+func (sl *stepList) nextStep() *Step {
+	if sl.isOutOfBounds() {
+		return nil
 	}
 
-	init := m.current().Init()
-	if m.size == nil {
-		return *m, init
+	sl.CurrentIndex++
+
+	return sl.currentStep()
+}
+
+func (sl *stepList) previousStep() *Step {
+	if sl.isOutOfBounds() {
+		return nil
 	}
 
-	resize := func() tea.Msg {
-		return *m.size
+	sl.CurrentIndex--
+
+	return sl.currentStep()
+}
+
+func (sl *stepList) getCurrentSubmodel() tea.Model {
+	current := sl.currentStep()
+	if current == nil {
+		return nil
 	}
-	return *m, tea.Sequence(init, resize)
+
+	submodel := current.Submodel
+	if submodel == nil {
+		return nil
+	}
+
+	return submodel
+}
+
+func (sl *stepList) setCurrentSubmodel(submodel tea.Model) {
+	current := sl.currentStep()
+	if current == nil {
+		return
+	}
+
+	current.Submodel = submodel
 }

@@ -1,5 +1,7 @@
 package process
 
+// DEPRECATED
+
 import (
 	"solopg/internal/app/tui/forgeui"
 	"solopg/internal/app/tui/portalui"
@@ -26,8 +28,8 @@ func ResolveCampaignV2(selected *campaign.Campaign) (*campaign.Campaign, error) 
 	if err != nil {
 		return nil, err
 	}
- */
-/* 	new = campaign.New(campaign.Template{
+	*/
+	/* 	new = campaign.New(campaign.Template{
 		Player:          newCharacter,
 		CurrentLocation: location,
 	})

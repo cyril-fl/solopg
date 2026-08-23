@@ -16,10 +16,6 @@ import (
 )
 
 func Start() error {
-	return runTUI()
-}
-
-func runTUI() error {
 	db, err := mongo.Connect()
 	if err != nil {
 		return err
@@ -38,7 +34,7 @@ func runBootstrap(db *mongo.Mongo) error {
 
 	models := []tui.Step{
 		{
-			Model: loadsave.NewModel(saves),
+			Submodel: loadsave.NewModel(saves),
 			Resolve: func(ctx *tui.Context, value any) error {
 				if value == nil {
 					ctx.SelectedSave = nil
@@ -53,7 +49,7 @@ func runBootstrap(db *mongo.Mongo) error {
 			},
 		},
 		{
-			Model: choosename.NewModel(),
+			Submodel: choosename.NewModel(),
 			Skip: func(ctx *tui.Context) bool {
 				return ctx.SelectedSave != nil
 			},
@@ -63,7 +59,7 @@ func runBootstrap(db *mongo.Mongo) error {
 			},
 		},
 		{
-			Model: choosearchetype.NewModel(races.List()),
+			Submodel: choosearchetype.NewModel(races.List()),
 			Skip: func(ctx *tui.Context) bool {
 				return ctx.SelectedSave != nil
 			},
@@ -77,7 +73,7 @@ func runBootstrap(db *mongo.Mongo) error {
 			},
 		},
 		{
-			Model: choosearchetype.NewModel(classes.List()),
+			Submodel: choosearchetype.NewModel(classes.List()),
 			Skip: func(ctx *tui.Context) bool {
 				return ctx.SelectedSave != nil
 			},
@@ -91,7 +87,7 @@ func runBootstrap(db *mongo.Mongo) error {
 			},
 		},
 		{
-			Model: portalui.NewModel(),
+			Submodel: portalui.NewModel(),
 			Skip: func(ctx *tui.Context) bool {
 				return ctx.SelectedSave != nil
 			},
@@ -105,7 +101,7 @@ func runBootstrap(db *mongo.Mongo) error {
 			},
 		},
 		{
-			Model: gameui.NewModel(gameui.UiParams{}),
+			Submodel: gameui.NewModel(gameui.UiParams{}),
 		},
 	}
 

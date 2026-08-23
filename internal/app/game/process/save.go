@@ -5,6 +5,8 @@ import (
 	"solopg/internal/infrastructure/mongo"
 )
 
+// DEPRECATED
+
 func SaveGame(db *mongo.Mongo, engine *game.Engine) error {
 	archives := engine.ExportArchives()
 	campaign := engine.ExportCampaign()
