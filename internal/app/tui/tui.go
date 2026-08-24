@@ -23,18 +23,22 @@ func (ui *Ui) Insert(steps ...Step) *Ui {
 		return ui
 	}
 
-	index := ui.steps.CurrentIndex + 1
-	if index < 0 {
-		index = 0
+	insertAt := ui.steps.CurrentIndex + 1
+	if insertAt < 0 {
+		insertAt = 0
 	}
-	if index > len(ui.steps.Steps) {
-		index = len(ui.steps.Steps)
+	if insertAt > len(ui.steps.Steps) {
+		insertAt = len(ui.steps.Steps)
 	}
 
-	ui.steps.Steps = append(ui.steps.Steps, make([]contextStep, len(steps))...)
-	copy(ui.steps.Steps[index+len(steps):], ui.steps.Steps[index:])
-	copy(ui.steps.Steps[index:index+len(steps)], steps)
+	oldSteps := ui.steps.Steps
+	newSteps := make([]contextStep, 0, len(oldSteps)+len(steps))
 
+	newSteps = append(newSteps, oldSteps[:insertAt]...)
+	newSteps = append(newSteps, steps...)
+	newSteps = append(newSteps, oldSteps[insertAt:]...)
+
+	ui.steps.Steps = newSteps
 	return ui
 }
 

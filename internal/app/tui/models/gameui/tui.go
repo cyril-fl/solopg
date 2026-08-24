@@ -27,11 +27,6 @@ func NewUi(params UiParams) *Ui {
 	}
 }
 
-// NewModel returns the game view for embedding in the main TUI router.
-func NewModel(params UiParams) tea.Model {
-	return initialModel()
-}
-
 func (ui *Ui) Start() error {
 	res, err := ui.program.Run()
 	if err != nil {
@@ -56,7 +51,8 @@ type model struct {
 	err         error
 }
 
-func initialModel() model {
+// NewModel returns the game view for embedding in the main TUI router.
+func NewModel(params UiParams) model {
 	ta := textarea.New()
 	ta.Placeholder = "Send a message..."
 	ta.SetVirtualCursor(false)
@@ -135,16 +131,4 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	return m, nil
-}
-
-func (m model) View() tea.View {
-	viewportView := m.viewport.View()
-	v := tea.NewView(viewportView + "\n" + m.textarea.View())
-	c := m.textarea.Cursor()
-	if c != nil {
-		c.Y += lipgloss.Height(viewportView)
-	}
-	v.Cursor = c
-	v.AltScreen = true
-	return v
 }

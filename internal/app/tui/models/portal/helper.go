@@ -1,4 +1,4 @@
-package portalui
+package portal
 
 import (
 	"solopg/internal/app/tui"

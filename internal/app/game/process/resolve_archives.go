@@ -25,3 +25,5 @@ func ResolveArchives(id id.ID, archives *campaign.Archives) *campaign.Archives {
 
 	return archives
 }
+
+

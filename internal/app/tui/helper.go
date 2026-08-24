@@ -1,6 +1,8 @@
 package tui
 
-import tea "charm.land/bubbletea/v2"
+import (
+	tea "charm.land/bubbletea/v2"
+)
 
 func (m model) handleEvent(msg tea.Msg) (model, tea.Cmd) {
 	switch msg := msg.(type) {
