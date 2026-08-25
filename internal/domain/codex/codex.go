@@ -22,11 +22,7 @@ func New() *Codex {
 }
 
 // EnsureInitialized repairs a Codex loaded from storage where nested tables may be nil.
-func EnsureInitialized(c *Codex) *Codex {
-	if c == nil {
-		return New()
-	}
-
+func (c *Codex) EnsureInitialized() *Codex {
 	if c.NpcsTable == nil {
 		c.NpcsTable = NewNpcsTable([]NpcsEntry{})
 	} else {

@@ -21,6 +21,18 @@ func New(entries []Entry) *Journal {
 	}
 }
 
+func (j *Journal) EnsureInitialized() *Journal {
+	if j == nil {
+		return New([]Entry{})
+	}
+
+	if j.Entries == nil {
+		j.Entries = []Entry{}
+	}
+
+	return j
+}
+
 func (j *Journal) AddEntry(message string) *Entry {
 	entry := &Entry{
 		ID:        id.New(),
