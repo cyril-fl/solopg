@@ -1,4 +1,4 @@
-package choosename
+package onboardename
 
 import (
 	"solopg/internal/app/tui"

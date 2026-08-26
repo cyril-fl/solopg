@@ -1,4 +1,4 @@
-package choosearchetype
+package onboardarchetype
 
 import (
 	"solopg/internal/app/tui"

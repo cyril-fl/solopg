@@ -25,6 +25,7 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
+		// TODO standardizer les tea.WindowSizeMsg et tea.KeyMsg ainsi que leur retour
 		m.list.SetSize(msg.Width, max(0, msg.Height-3))
 		return m, nil
 

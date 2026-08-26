@@ -1,4 +1,4 @@
-package gameui
+package gameboard
 
 import (
 	tea "charm.land/bubbletea/v2"

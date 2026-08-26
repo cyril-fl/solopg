@@ -6,11 +6,11 @@ import (
 	"solopg/internal/app/game/process"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models"
-	"solopg/internal/app/tui/models/choosearchetype"
-	"solopg/internal/app/tui/models/choosename"
-	"solopg/internal/app/tui/models/gameui"
+	"solopg/internal/app/tui/models/gameboard"
 	"solopg/internal/app/tui/models/loadsave"
-	"solopg/internal/app/tui/models/portal"
+	"solopg/internal/app/tui/models/onboardarchetype"
+	"solopg/internal/app/tui/models/onboardename"
+	"solopg/internal/app/tui/models/onboardlocation"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
@@ -53,7 +53,7 @@ func runSession(db *mongo.Mongo) error {
 					}
 
 					ui.Insert(tui.Step{
-						Submodel: gameui.NewModel(gameui.UiParams{
+						Submodel: gameboard.NewModel(gameboard.UiParams{
 							Engine: engine,
 							OnSave: process.NewSaveFunc(db, engine),
 						}),
@@ -97,7 +97,7 @@ func buildEngine(db *mongo.Mongo, ctx *tui.Context) (*game.Engine, error) {
 func onboardingSteps() []tui.Step {
 	return []tui.Step{
 		{
-			Submodel: choosename.NewModel(),
+			Submodel: onboardename.NewModel(),
 			Resolve: func(ctx *tui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
@@ -108,7 +108,7 @@ func onboardingSteps() []tui.Step {
 			},
 		},
 		{
-			Submodel: choosearchetype.NewModel(races.List()),
+			Submodel: onboardarchetype.NewModel(races.List()),
 			Resolve: func(ctx *tui.Context, value any) error {
 				race, ok := value.(string)
 				if !ok {
@@ -119,7 +119,7 @@ func onboardingSteps() []tui.Step {
 			},
 		},
 		{
-			Submodel: choosearchetype.NewModel(classes.List()),
+			Submodel: onboardarchetype.NewModel(classes.List()),
 			Resolve: func(ctx *tui.Context, value any) error {
 				class, ok := value.(string)
 				if !ok {
@@ -130,7 +130,7 @@ func onboardingSteps() []tui.Step {
 			},
 		},
 		{
-			Submodel: portal.NewModel(),
+			Submodel: onboardlocation.NewModel(),
 			Resolve: func(ctx *tui.Context, value any) error {
 				location, ok := value.(*locations.Location)
 				if !ok {

@@ -1,4 +1,4 @@
-package choosename
+package onboardename
 
 import (
 	tea "charm.land/bubbletea/v2"

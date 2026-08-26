@@ -1,4 +1,4 @@
-package gameui
+package gameboard
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package choosearchetype
+package onboardarchetype
 
 import (
 	tea "charm.land/bubbletea/v2"
