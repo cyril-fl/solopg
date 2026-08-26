@@ -1,12 +1,26 @@
 package codex
 
 import (
+	"fmt"
 	"solopg/internal/domain/card/characters"
 	"time"
 )
 
 type MonstersTable struct {
 	*Table[MonstersEntry]
+}
+
+func (m *MonstersTable) Summaries() []string {
+	m.ensureTable()
+	summaries := make([]string, 0, len(m.Entries))
+	for _, entry := range m.Entries {
+		if entry.character == nil {
+			summaries = append(summaries, "Monstre inconnu")
+			continue
+		}
+		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.character.Name, entry.character.Description))
+	}
+	return summaries
 }
 
 type MonstersEntry struct {

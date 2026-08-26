@@ -1,12 +1,26 @@
 package codex
 
 import (
+	"fmt"
 	"solopg/internal/domain/card/objects"
 	"time"
 )
 
 type ObjectsTable struct {
 	*Table[ObjectsEntry]
+}
+
+func (o *ObjectsTable) Summaries() []string {
+	o.ensureTable()
+	summaries := make([]string, 0, len(o.Entries))
+	for _, entry := range o.Entries {
+		if entry.object == nil {
+			summaries = append(summaries, "Objet inconnu")
+			continue
+		}
+		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.object.Name, entry.object.Description))
+	}
+	return summaries
 }
 
 type ObjectsEntry struct {

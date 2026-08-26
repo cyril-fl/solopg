@@ -21,10 +21,21 @@ type model struct {
 	err         error
 	showPanel   bool
 	oracleList  list.Model
+	codexList   list.Model
+	activeMenu  panelMenu
+	codexPage   viewport.Model
+	pageOpen    bool
 
 	engine *game.Engine
 	save   func() error
 }
+
+type panelMenu uint8
+
+const (
+	oracleMenu panelMenu = iota
+	codexMenu
+)
 
 // NewModel returns the game view for embedding in the main TUI router.
 func NewModel(params UiParams) model {
@@ -69,8 +80,11 @@ Type a message and press Enter to send.`)
 		viewport:    vp,
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 		err:         nil,
-		
-		oracleList:  makeOracleModel(),
+
+		oracleList: makeOracleModel(),
+		codexList:  makeCodexModel(),
+		activeMenu: oracleMenu,
+		codexPage:  viewport.New(viewport.WithWidth(30), viewport.WithHeight(5)),
 
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -79,6 +93,11 @@ Type a message and press Enter to send.`)
 
 func (m model) Init() tea.Cmd {
 	return textarea.Blink
+}
+
+// HandlesEscape lets the global router forward Escape while a Codex page is open.
+func (m model) HandlesEscape() bool {
+	return m.pageOpen
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -91,15 +110,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
 		case tui.KeyEnter:
-			if m.showPanel && m.textarea.Value() == "" {
+			if m.pageOpen {
+				return m, nil
+			}
+			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == oracleMenu {
 				return handleOracleRoll(m)
+			}
+			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == codexMenu {
+				return openCodexPage(m)
 			}
 			return handleEnterInput(m)
 		case "up", "down":
-			if m.showPanel && m.textarea.Value() == "" {
+			if m.pageOpen {
 				var cmd tea.Cmd
-				m.oracleList, cmd = m.oracleList.Update(msg)
+				m.codexPage, cmd = m.codexPage.Update(msg)
 				return m, cmd
+			}
+			if m.showPanel && m.textarea.Value() == "" {
+				return handlePanelNavigation(m, msg)
+			}
+			return handleDefaultInput(m, msg)
+		case tui.KeyEsc:
+			if m.pageOpen {
+				m.pageOpen = false
+				return m, nil
 			}
 		default:
 			return handleDefaultInput(m, msg)

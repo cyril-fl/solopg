@@ -1,12 +1,26 @@
 package codex
 
 import (
+	"fmt"
 	"solopg/internal/domain/card/locations"
 	"time"
 )
 
 type LocationsTable struct {
 	*Table[LocationsEntry]
+}
+
+func (l *LocationsTable) Summaries() []string {
+	l.ensureTable()
+	summaries := make([]string, 0, len(l.Entries))
+	for _, entry := range l.Entries {
+		if entry.Location == nil {
+			summaries = append(summaries, "Lieu inconnu")
+			continue
+		}
+		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))
+	}
+	return summaries
 }
 
 type LocationsEntry struct {

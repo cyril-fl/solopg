@@ -1,12 +1,26 @@
 package codex
 
 import (
+	"fmt"
 	"solopg/internal/domain/card/characters"
 	"time"
 )
 
 type NpcsTable struct {
 	*Table[NpcsEntry]
+}
+
+func (n *NpcsTable) Summaries() []string {
+	n.ensureTable()
+	summaries := make([]string, 0, len(n.Entries))
+	for _, entry := range n.Entries {
+		if entry.character == nil {
+			summaries = append(summaries, "PNJ inconnu")
+			continue
+		}
+		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.character.Name, entry.character.Description))
+	}
+	return summaries
 }
 
 type NpcsEntry struct {

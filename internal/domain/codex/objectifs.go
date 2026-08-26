@@ -1,9 +1,21 @@
 package codex
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type ObjectifsTable struct {
 	*Table[ObjectifsEntry]
+}
+
+func (o *ObjectifsTable) Summaries() []string {
+	o.ensureTable()
+	summaries := make([]string, 0, len(o.Entries))
+	for i := range o.Entries {
+		summaries = append(summaries, fmt.Sprintf("Objectif #%d", i+1))
+	}
+	return summaries
 }
 
 type ObjectifsEntry struct {

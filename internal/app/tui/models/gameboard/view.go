@@ -14,17 +14,23 @@ import (
 func (m model) View() tea.View {
 	viewportView := m.viewport.View()
 	chatView := viewportView + "\n" + m.textarea.View()
+	if m.pageOpen {
+		chatView = m.codexPage.View()
+	}
 	if m.showPanel {
 		chatView = lipgloss.JoinHorizontal(
 			lipgloss.Top,
 			chatView,
 			strings.Repeat(" ", panelGap),
-			renderSidePanel(m.engine, lipgloss.Height(chatView), m.oracleList.View()),
+			renderSidePanel(m.engine, lipgloss.Height(chatView), m.oracleList.View(), m.codexList.View()),
 		)
 	}
 
 	v := tea.NewView(chatView)
 	c := m.textarea.Cursor()
+	if m.pageOpen {
+		c = nil
+	}
 	if c != nil {
 		c.Y += lipgloss.Height(viewportView)
 	}
@@ -34,24 +40,28 @@ func (m model) View() tea.View {
 }
 
 func (m model) GetFooter() []string {
-	return []string{"Ctrl+S: Sauvegarder"}
+	footer := []string{"Ctrl+S: Sauvegarder"}
+	if m.pageOpen {
+		footer = append(footer, "Échap: retour au chat")
+	}
+	return footer
 }
 
-func renderSidePanel(engine *game.Engine, height int, oracleView string) string {
+func renderSidePanel(engine *game.Engine, height int, oracleView, codexView string) string {
 	var content strings.Builder
 
 	renderCharacterInfo(&content, engine)
 	renderLocationInfo(&content, engine)
 	renderStatsInfo(&content, engine)
 
-	return composeSidePanel(&content, height, oracleView)
+	return composeSidePanel(&content, height, oracleView, codexView)
 }
 
-func composeSidePanel(content *strings.Builder, height int, oracleView string) string {
+func composeSidePanel(content *strings.Builder, height int, oracleView, codexView string) string {
 	renderPanel := func(content string, height int) string {
 		return lipgloss.NewStyle().
-			Width(panelWidth - 4).
-			Height(max(0, height)).
+			Width(panelWidth-4).
+			Height(max(0, height-2)).
 			Padding(0, 1).
 			Border(lipgloss.NormalBorder()).
 			BorderForeground(lipgloss.Color("5")).
@@ -62,13 +72,13 @@ func composeSidePanel(content *strings.Builder, height int, oracleView string) s
 	sideView := statsView
 
 	if oracleView != tui.EmptyKey {
-		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView, "\nORACLES\n", oracleView)
+		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView, "\nORACLES\n", oracleView, "\nCODEX\n", codexView)
 	}
 
-	return renderPanel(sideView,height)
+	return renderPanel(sideView, height)
 }
 
-func renderCharacterInfo(content *strings.Builder, engine *game.Engine)  {
+func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
 	var characterName = "PERSONNAGE: "
 
 	isEngineNil := engine == nil || engine.State == nil
@@ -83,7 +93,7 @@ func renderCharacterInfo(content *strings.Builder, engine *game.Engine)  {
 	content.WriteString("\n")
 }
 
-func renderLocationInfo(content *strings.Builder, engine *game.Engine)  {
+func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
 	var locationName = "LIEU: "
 
 	isEngineNil := engine == nil || engine.State == nil
@@ -98,16 +108,14 @@ func renderLocationInfo(content *strings.Builder, engine *game.Engine)  {
 	content.WriteString("\n")
 }
 
-func renderStatsInfo(content *strings.Builder, engine *game.Engine)  {
+func renderStatsInfo(content *strings.Builder, engine *game.Engine) {
 	content.WriteString("STATS:\n")
 
-	if engine.State.Player == nil {
+	if engine == nil || engine.State == nil || engine.State.Player == nil {
 		content.WriteString("Aucune statistique")
 	} else {
 		for _, stat := range effects.ListStats() {
 			fmt.Fprintf(content, "%-10s %d\n", stat, engine.State.Player.Stats[stat])
 		}
 	}
-}	
-
-
+}
