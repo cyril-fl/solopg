@@ -5,6 +5,7 @@ import (
 	"solopg/internal/app/tui"
 
 	"charm.land/bubbles/v2/cursor"
+	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/textarea"
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
@@ -18,6 +19,8 @@ type model struct {
 	textarea    textarea.Model
 	senderStyle lipgloss.Style
 	err         error
+	showPanel   bool
+	oracleList  list.Model
 
 	engine *game.Engine
 	save   func() error
@@ -66,6 +69,8 @@ Type a message and press Enter to send.`)
 		viewport:    vp,
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 		err:         nil,
+		
+		oracleList:  makeOracleModel(),
 
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -86,7 +91,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
 		case tui.KeyEnter:
+			if m.showPanel && m.textarea.Value() == "" {
+				return handleOracleRoll(m)
+			}
 			return handleEnterInput(m)
+		case "up", "down":
+			if m.showPanel && m.textarea.Value() == "" {
+				var cmd tea.Cmd
+				m.oracleList, cmd = m.oracleList.Update(msg)
+				return m, cmd
+			}
 		default:
 			return handleDefaultInput(m, msg)
 		}

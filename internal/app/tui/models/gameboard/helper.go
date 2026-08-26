@@ -3,17 +3,28 @@ package gameboard
 import (
 	"fmt"
 	"solopg/internal/app/tui"
+	"solopg/internal/domain/gameplay"
 	"strings"
 	"time"
 
 	"charm.land/bubbles/v2/cursor"
+	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
 
 func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
-	m.viewport.SetWidth(msg.Width)
-	m.textarea.SetWidth(msg.Width)
+	chatWidth := msg.Width
+	if msg.Width >= panelWidth+panelGap+minimumChatWidth {
+		m.showPanel = true
+		chatWidth = msg.Width - panelWidth - panelGap
+	} else {
+		m.showPanel = false
+	}
+
+	m.viewport.SetWidth(chatWidth)
+	m.textarea.SetWidth(chatWidth)
+	m.oracleList.SetSize(panelWidth-4, oracleMenuHeight)
 	// Reserve the input and the separator above it. The parent TUI already
 	// reserved the footer height before forwarding the window size.
 	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
@@ -23,6 +34,26 @@ func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 		m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
 	}
 	m.viewport.GotoBottom()
+}
+
+const (
+	panelWidth       = 34
+	panelGap         = 1
+	minimumChatWidth = 40
+	oracleMenuHeight = 1
+)
+
+func makeOracleModel() list.Model {
+	items := make([]list.Item, 0)
+	for _, oracle := range gameplay.GetOracle() {
+		if oracle.Visible {
+			items = append(items, tui.NewItem(oracle.ID, "", oracle))
+		}
+	}
+
+	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, oracleMenuHeight)
+	tui.ConfigureList(&model)
+	return model
 }
 
 func handleCursorBlink(m model, msg cursor.BlinkMsg) (model, tea.Cmd) {
@@ -45,6 +76,31 @@ func handleEnterInput(m model) (model, tea.Cmd) {
 	m.textarea.Reset()
 	m.viewport.GotoBottom()
 
+	return m, nil
+}
+
+func handleOracleRoll(m model) (model, tea.Cmd) {
+	selected, ok := m.oracleList.SelectedItem().(tui.Item[*gameplay.Oracle])
+	if !ok || selected.Value() == nil {
+		return m, nil
+	}
+
+	oracle := selected.Value()
+	result, err := gameplay.RollOracle[any](oracle)
+	if err != nil {
+		m.messages = append(m.messages, "Erreur oracle: "+err.Error())
+	} else {
+		critical := ""
+		if result.Critical {
+			critical = " (critique)"
+		}
+		message := fmt.Sprintf("Oracle %s — jet de %d : %v%s", oracle.ID, result.Roll, result.Result, critical)
+		m.engine.AddJournalEntry("Oracle", message)
+		m.messages = append(m.messages, message)
+	}
+
+	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
+	m.viewport.GotoBottom()
 	return m, nil
 }
 
