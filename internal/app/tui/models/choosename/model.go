@@ -43,7 +43,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
 		name := strings.TrimSpace(m.Name)
-		if name == "" {
+		if name == tui.EmptyKey {
 			return m, nil
 		}
 

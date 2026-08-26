@@ -1,6 +1,8 @@
 package portal
 
 import (
+	"fmt"
+	"solopg/internal/app/tui"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -11,7 +13,10 @@ func (m model) View() tea.View {
 
 	content.WriteString("Location: ")
 	content.WriteString(m.drawLocations.Name)
-	if m.drawLocations.Description.Description != "" {
+	content.WriteString(" Attempt: ")
+	content.WriteString(fmt.Sprintf("%d", m.attempt))
+
+	if m.drawLocations.Description.Description != tui.EmptyKey {
 		content.WriteString("\n")
 		content.WriteString(m.drawLocations.Description.Description)
 	}

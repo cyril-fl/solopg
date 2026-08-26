@@ -5,8 +5,8 @@ import (
 )
 
 type Ui struct {
-	steps   *contextStepList
-	
+	steps *contextStepList
+
 	program *tea.Program
 }
 

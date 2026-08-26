@@ -27,7 +27,6 @@ func LoadPresetLocations() ([]locations.Location, error) {
 }
 
 func DrawLocations() (*locations.Location, error) {
-	// Lister les location predefinie
 	list, err := LoadPresetLocations()
 	if err != nil {
 		return nil, err

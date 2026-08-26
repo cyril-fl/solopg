@@ -38,7 +38,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return tui.ResolutionMsg{
 					Completed: true,
 					Value:     m.selected,
-					Err:       nil,
 				}
 			}
 		}

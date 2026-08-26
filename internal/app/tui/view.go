@@ -25,6 +25,7 @@ func (m model) View() tea.View {
 var mainFooter = []string{
 	"Ctrl+Q: Quitter",
 }
+
 type HasFooter interface {
 	GetFooter() []string
 }

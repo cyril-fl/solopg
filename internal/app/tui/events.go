@@ -40,5 +40,5 @@ const (
 	KeySettings = "s"
 	KeyBack     = "b"
 	KeyEsc      = "esc"
-	KeyEmpty    = ""
+	EmptyKey    = ""
 )

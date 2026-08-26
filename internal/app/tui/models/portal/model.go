@@ -14,25 +14,18 @@ type model struct {
 	attempt       int
 	choiceList    list.Model
 	drawLocations locations.Location
-
-	cancelled      bool
-	emitResolution bool
 }
 
-func newModel(emitResolution bool) model {
+func NewModel() tea.Model {
 	locations, err := gameplay.DrawLocations()
 	if err != nil {
 		fmt.Println("Error drawing locations:", err)
 	}
-	if locations == nil {
-		return model{choiceList: makeModel(), cancelled: true, emitResolution: emitResolution}
-	}
+
 	return model{
-		choiceList:     makeModel(),
-		attempt:        0,
-		drawLocations:  *locations,
-		cancelled:      false,
-		emitResolution: emitResolution,
+		choiceList:    makeModel(),
+		attempt:       1,
+		drawLocations: *locations,
 	}
 }
 
@@ -43,41 +36,16 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		// Reserve space for the location header and the parent's footer.
-		m.choiceList.SetSize(msg.Width, max(0, msg.Height-6))
-		return m, nil
+		handleWindowResize(&m, msg)
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case tui.KeyQuit:
-			m.cancelled = true
-			return m, tea.Quit
-
 		case tui.KeyEnter:
-			if selected, ok := m.choiceList.SelectedItem().(tui.Item[bool]); ok {
-				if selected.Value() && m.attempt < 3 {
-					m.attempt++
-					newLocation, err := gameplay.DrawLocations()
-					if err != nil {
-						return m, nil
-					}
-					m.drawLocations = *newLocation
-				} else {
-					if m.emitResolution {
-						location := m.drawLocations
-						return m, func() tea.Msg {
-							return tui.ResolutionMsg{Completed: true, Value: &location}
-						}
-					}
-					return m, tea.Quit
-				}
-			}
-			return m, nil
+			return handleEnterInput(m)
 		}
 	}
 
 	var cmd tea.Cmd
 	m.choiceList, cmd = m.choiceList.Update(msg)
-
 	return m, cmd
 }
