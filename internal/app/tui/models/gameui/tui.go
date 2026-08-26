@@ -3,7 +3,7 @@ package gameui
 import (
 	"fmt"
 	"solopg/internal/app/game"
-	"strings"
+	"solopg/internal/app/tui"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/textarea"
@@ -45,10 +45,14 @@ func (ui *Ui) Start() error {
 
 type model struct {
 	viewport    viewport.Model
+	author      string
 	messages    []string
 	textarea    textarea.Model
 	senderStyle lipgloss.Style
 	err         error
+
+	engine *game.Engine
+	save   func() error
 }
 
 // NewModel returns the game view for embedding in the main TUI router.
@@ -58,7 +62,8 @@ func NewModel(params UiParams) model {
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
-	ta.Prompt = "┃ "
+	// TODO cherche ce que ca fait
+	// ta.Prompt = "┃ "
 	ta.CharLimit = 280
 
 	ta.SetWidth(30)
@@ -72,6 +77,7 @@ func NewModel(params UiParams) model {
 	ta.ShowLineNumbers = false
 
 	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
+	// TODO voir pour set autre choses en fonction de message deja present ou non.
 	vp.SetContent(`Welcome to the chat room!
 Type a message and press Enter to send.`)
 	vp.KeyMap.Left.SetEnabled(false)
@@ -79,12 +85,22 @@ Type a message and press Enter to send.`)
 
 	ta.KeyMap.InsertNewline.SetEnabled(false)
 
+	journalContent := make([]string, 0, len(params.Engine.State.Journal.Entries))
+
+	for _, entry := range params.Engine.State.Journal.Entries {
+		journalContent = append(journalContent, entry.String())
+	}
+
 	return model{
-		textarea:    ta,
-		messages:    []string{},
+		textarea: ta,
+		author:   "Me",
+		messages:    journalContent,
 		viewport:    vp,
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 		err:         nil,
+
+		engine: params.Engine,
+		save:   params.OnSave,
 	}
 }
 
@@ -95,39 +111,20 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.viewport.SetWidth(msg.Width)
-		m.textarea.SetWidth(msg.Width)
-		// Reserve the parent footer plus the separator between viewport and input.
-		m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-7))
-
-		if len(m.messages) > 0 {
-			// Wrap content before setting it.
-			m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-		}
-		m.viewport.GotoBottom()
+		handleWindowResize(&m, msg)
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case "ctrl+c", "esc":
-			fmt.Println(m.textarea.Value())
-			return m, tea.Quit
-		case "enter":
-			m.messages = append(m.messages, m.senderStyle.Render("You: ")+m.textarea.Value())
-			m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-			m.textarea.Reset()
-			m.viewport.GotoBottom()
-			return m, nil
+		case tui.KeySave:
+			return m, saveCmd(m.save)
+		case tui.KeyEnter:
+			return handleEnterInput(m)
 		default:
-			// Send all other keypresses to the textarea.
-			var cmd tea.Cmd
-			m.textarea, cmd = m.textarea.Update(msg)
-			return m, cmd
+			return handleDefaultInput(m, msg)
 		}
-
 	case cursor.BlinkMsg:
-		// Textarea should also process cursor blinks.
-		var cmd tea.Cmd
-		m.textarea, cmd = m.textarea.Update(msg)
-		return m, cmd
+		return handleCursorBlink(m, msg)
+	case tui.SaveMsg:
+		return handleSaveInput(m, msg)
 	}
 
 	return m, nil

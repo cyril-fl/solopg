@@ -11,6 +11,7 @@ type Journal struct {
 
 type Entry struct {
 	ID        id.ID
+	Author    string
 	Message   string
 	Timestamp time.Time
 }
@@ -33,13 +34,18 @@ func (j *Journal) EnsureInitialized() *Journal {
 	return j
 }
 
-func (j *Journal) AddEntry(message string) *Entry {
+func (j *Journal) AddEntry(author, message string) *Entry {
 	entry := &Entry{
 		ID:        id.New(),
+		Author:    author,
 		Message:   message,
 		Timestamp: time.Now().UTC(),
 	}
 
 	j.Entries = append(j.Entries, *entry)
 	return entry
+}
+
+func (e *Entry) String() string {
+	return e.Timestamp.Format(time.RFC3339) + " - " + e.Author + ": " + e.Message
 }

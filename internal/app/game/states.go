@@ -14,6 +14,7 @@ type State struct {
 	CurrentLocation *locations.Location
 	Codex           *codex.Codex
 	Journal         *journal.Journal
+	Log             *journal.Journal
 	Metadata        Metadata
 }
 type Metadata struct {
@@ -36,6 +37,7 @@ func NewState(data CampaignData) *State {
 		CurrentLocation: data.Campaign.CurrentLocation,
 		Codex:           data.Archives.Codex,
 		Journal:         data.Archives.Journal,
+		Log:             data.Archives.Log,
 		Metadata: Metadata{
 			Archive: Timestamps{
 				CreatedAt: data.Archives.CreatedAt,

@@ -6,6 +6,7 @@ import (
 
 type Ui struct {
 	steps   *contextStepList
+	
 	program *tea.Program
 }
 

@@ -8,9 +8,38 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-const footer = "\n\nCtrl+Q: Quitter"
+func (m model) View() tea.View {
+	if m.err != nil {
+		return tea.NewView(alignFooter(fmt.Sprintf("Erreur: %v", m.err), m.windowHeight(), mainFooter))
+	}
 
-func alignFooter(content string, height int) string {
+	if current := m.steps.GetCurrentSubmodel(); current != nil {
+		view := current.View()
+		view.Content = alignFooter(view.Content, m.windowHeight(), mergeFooter(current))
+		return view
+	}
+
+	return tea.NewView(alignFooter("", m.windowHeight(), mainFooter))
+}
+
+var mainFooter = []string{
+	"Ctrl+Q: Quitter",
+}
+type HasFooter interface {
+	GetFooter() []string
+}
+
+func mergeFooter(current tea.Model) []string {
+	footer := append([]string(nil), mainFooter...)
+	if provider, ok := current.(HasFooter); ok {
+		footer = append(footer, provider.GetFooter()...)
+	}
+	return footer
+}
+
+func alignFooter(content string, height int, footerParts []string) string {
+	footer := strings.Join(footerParts, " | ")
+
 	if height <= 0 {
 		return content + footer
 	}
@@ -23,20 +52,6 @@ func alignFooter(content string, height int) string {
 	}
 
 	return content + footer
-}
-
-func (m model) View() tea.View {
-	if m.err != nil {
-		return tea.NewView(alignFooter(fmt.Sprintf("Erreur: %v", m.err), m.windowHeight()))
-	}
-
-	if current := m.steps.GetCurrentSubmodel(); current != nil {
-		view := current.View()
-		view.Content = alignFooter(view.Content, m.windowHeight())
-		return view
-	}
-
-	return tea.NewView(alignFooter("", m.windowHeight()))
 }
 
 func (m model) windowHeight() int {

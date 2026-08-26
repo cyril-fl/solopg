@@ -1,7 +1,10 @@
 package tui
 
 import (
+	"strings"
+
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 func (m model) handleEvent(msg tea.Msg) (model, tea.Cmd) {
@@ -9,7 +12,7 @@ func (m model) handleEvent(msg tea.Msg) (model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 	case tea.KeyMsg:
 		switch msg.String() {
-		case KeyQuit:
+		case KeyQuit, KeyEsc:
 			return m, tea.Quit
 		}
 	}
@@ -22,6 +25,12 @@ func (m model) handleSubmodel(msg tea.Msg) (model, tea.Cmd) {
 
 	if current == nil {
 		return m, nil
+	}
+
+	if size, ok := msg.(tea.WindowSizeMsg); ok {
+		footerHeight := lipgloss.Height(strings.Join(mergeFooter(current), ""))
+		size.Height = max(0, size.Height-footerHeight)
+		msg = size
 	}
 
 	var cmd tea.Cmd

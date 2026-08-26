@@ -16,3 +16,7 @@ func (m model) View() tea.View {
 	v.AltScreen = true
 	return v
 }
+
+func (m model) GetFooter() []string {
+	return []string{"Ctrl+S: Sauvegarder"}
+}

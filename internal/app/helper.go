@@ -36,8 +36,6 @@ func runSession(db *mongo.Mongo) error {
 				}
 				ctx.SelectedSave = selected
 
-
-
 				if ctx.SelectedSave == nil {
 					onboardingSteps := onboardingSteps()
 					ui.Insert(onboardingSteps...)
@@ -128,7 +126,7 @@ func onboardingSteps() []tui.Step {
 					return fmt.Errorf("unexpected class value %T", value)
 				}
 				ctx.SelectedClass = classes.FindByName(class)
- 				return nil
+				return nil
 			},
 		},
 		{

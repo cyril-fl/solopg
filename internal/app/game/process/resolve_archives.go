@@ -22,11 +22,13 @@ func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaig
 			CampaignID: campaignID,
 			Codex:      codex.New(),
 			Journal:    journal.New([]journal.Entry{}),
+			Log:        journal.New([]journal.Entry{}),
 		})
 	}
 
 	archives.Codex.EnsureInitialized()
 	archives.Journal.EnsureInitialized()
+	archives.Log.EnsureInitialized()
 
 	return archives, nil
 }

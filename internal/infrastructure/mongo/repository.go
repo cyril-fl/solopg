@@ -99,7 +99,6 @@ func (db *Mongo) RegisterCampaign(save *campaign.Campaign) error {
 		return fmt.Errorf("failed to save campaign: %w", err)
 	}
 
-	fmt.Println("Campaign saved successfully:", save.ID)
 	return nil
 }
 
@@ -126,6 +125,5 @@ func (db *Mongo) RegisterArchives(archives *campaign.Archives) error {
 		return fmt.Errorf("failed to save archives: %w", err)
 	}
 
-	fmt.Println("Archives saved successfully:", archives.CampaignID)
 	return nil
 }

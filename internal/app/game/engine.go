@@ -1,15 +1,11 @@
 package game
 
 import (
-	// "fmt"
-	// "fmt"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/locations"
 	"solopg/internal/domain/codex"
 	"solopg/types/id"
 )
-
-// DEPRECATED
 
 type Engine struct {
 	CampaignID id.ID
@@ -34,7 +30,11 @@ func (e *Engine) UpdateLocation(newLocation *locations.Location) {
 }
 
 func (e *Engine) Log(message string) {
-	e.State.Journal.AddEntry(message)
+	e.State.Log.AddEntry("System", message)
+}
+
+func (e *Engine) AddJournalEntry(author, message string) {
+	e.State.Journal.AddEntry(author, message)
 }
 
 func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
@@ -60,6 +60,7 @@ func (e *Engine) ExportArchives() *campaign.Archives {
 		CampaignID: e.CampaignID,
 		Codex:      e.State.Codex,
 		Journal:    e.State.Journal,
+		Log:        e.State.Log,
 		CreatedAt:  e.State.Metadata.Archive.CreatedAt,
 		UpdatedAt:  e.State.Metadata.Archive.UpdatedAt,
 	}
