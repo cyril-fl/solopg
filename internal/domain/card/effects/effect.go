@@ -5,7 +5,6 @@ import (
 	"slices"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/infrastructure/yaml"
-	"solopg/internal/platform/jsonlog"
 )
 
 const fileAddress = "data/systems/stats.yaml"
@@ -73,10 +72,8 @@ func BaseStats() Stats {
 }
 
 func (s Stat) Validate() bool {
-
-	jsonlog.JsonifiedLog(s)
-
-	jsonlog.JsonifiedLog(config)
+	// jsonlog.JsonifiedLog(s)
+	// jsonlog.JsonifiedLog(config)
 	return slices.Contains(ListStats(), s)
 }
 
@@ -98,4 +95,8 @@ func (s *Stats) ApplyModifiers(mods []Modifier) {
 	for _, mod := range mods {
 		s.ApplyModifier(mod)
 	}
+}
+
+func (m Modifier) String() string {
+	return fmt.Sprintf("%s: %d", m.Stat, m.Value)
 }

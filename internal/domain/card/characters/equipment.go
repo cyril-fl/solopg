@@ -47,7 +47,7 @@ func NewArmorSet(set []*gears.Gear) ArmorSet {
 	return armorSet
 }
 
-func (character *Character) EquipArmorSet(gear []*gears.Gear) {
+func (character *Character) EquipGearList(gear []*gears.Gear) {
 	if character == nil || gear == nil {
 		return
 	}

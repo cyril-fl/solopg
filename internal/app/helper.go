@@ -10,10 +10,12 @@ import (
 	"solopg/internal/app/tui/models/loadsave"
 	"solopg/internal/app/tui/models/onboardarchetype"
 	"solopg/internal/app/tui/models/onboardename"
+	"solopg/internal/app/tui/models/onboardforgecharacter"
 	"solopg/internal/app/tui/models/onboardlocation"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
+	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/locations"
 	"solopg/internal/infrastructure/mongo"
 )
@@ -128,6 +130,17 @@ func onboardingSteps() []tui.Step {
 				ctx.SelectedClass = classes.FindByName(class)
 				return nil
 			},
+		},
+		{
+			Submodel: onboardforgecharacter.NewModel(),
+			Resolve: func(ctx *tui.Context, value any) error {
+				build, ok := value.([]effects.Modifier)
+				if !ok {
+					return fmt.Errorf("unexpected build value %T", value)
+				}
+				ctx.SelectedBuild = build
+				return nil
+			},	
 		},
 		{
 			Submodel: onboardlocation.NewModel(),

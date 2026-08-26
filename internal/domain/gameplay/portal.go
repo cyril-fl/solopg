@@ -26,6 +26,7 @@ func LoadPresetLocations() ([]locations.Location, error) {
 	return locationsList, nil
 }
 
+// TODO add a cache.
 func DrawLocations() (*locations.Location, error) {
 	list, err := LoadPresetLocations()
 	if err != nil {

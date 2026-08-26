@@ -6,6 +6,8 @@ import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters"
+	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/objects"
 )
 
 func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
@@ -29,12 +31,7 @@ func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 		return nil, fmt.Errorf("incomplete character creation context")
 	}
 
-	player, err := characters.New(characters.Template{
-		Name:   ctx.SelectedName,
-		Race:   ctx.SelectedRace.GetName(),
-		Class:  ctx.SelectedClass.GetName(),
-		Rarity: attributes.A,
-	})
+	player, err := generateCharacter(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -45,4 +42,56 @@ func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 	})
 
 	return newCampaign, nil
+}
+
+
+func generateCharacter(ctx *tui.Context) (*characters.Character, error) {
+	player, err := characters.New(characters.Template{
+		Name:   ctx.SelectedName,
+		Race:   ctx.SelectedRace.GetName(),
+		Class:  ctx.SelectedClass.GetName(),
+		Rarity: attributes.A,
+		Stats:  getStatsFromContext(ctx),
+		Equipment: getArmorSetFromContext(ctx),
+		Inventory: []objects.Object{},
+		Wallet:    characters.Wallet{},
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return player, nil
+}
+
+func getArmorSetFromContext(ctx *tui.Context) characters.ArmorSet {
+	setName := ctx.SelectedClass.GetArmorSet()
+
+	set := characters.FindArmorSetByName(setName)
+
+	armorSet := characters.NewArmorSet(set)
+
+	return armorSet
+}
+
+func getStatsFromContext(ctx *tui.Context) effects.Stats {
+	modifiers := getModifiersFromContext(ctx)
+
+	baseStats := effects.BaseStats()
+	baseStats.ApplyModifiers(modifiers)
+
+	return baseStats
+}
+
+func getModifiersFromContext(ctx *tui.Context) []effects.Modifier {
+	raceBoost := ctx.SelectedRace.GetBonus()
+	classBoost := ctx.SelectedClass.GetBonus()
+	build := ctx.SelectedBuild
+	
+	modifiers := make([]effects.Modifier, 0, len(raceBoost)+len(classBoost)+len(build))
+	modifiers = append(modifiers, raceBoost...)
+	modifiers = append(modifiers, classBoost...)
+	modifiers = append(modifiers, build...)
+	
+	return modifiers
 }

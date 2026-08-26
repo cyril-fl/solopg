@@ -12,6 +12,8 @@ type Class struct {
 	ArmorSet string             `yaml:"armor_set"`
 }
 
+// TODO optimiser class / races / ect avec des caches.
+
 func (c Class) GetName() string {
 	return c.Name
 }
@@ -22,6 +24,10 @@ func (c Class) IsPlayable() bool {
 
 func (c Class) GetBonus() []effects.Modifier {
 	return c.Bonus
+}
+
+func (c Class) GetArmorSet() string {
+	return c.ArmorSet
 }
 
 func List() []Class {

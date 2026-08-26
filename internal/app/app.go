@@ -1,9 +1,9 @@
 package app
 
 import (
-	"solopg/internal/infrastructure/config"
+	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/mongo"
-	"solopg/internal/platform/jsonlog"
 )
 
 func Start() error {
@@ -18,9 +18,31 @@ func Start() error {
 }
 
 func Try() error {
-	c := config.Load()
+	oracle, err := gameplay.GetOracleByID("stat_generation")
+	if err != nil {
+		return err
+	}
 
-	jsonlog.JsonifiedLog(c)
+	statsList := effects.ListStats()	
+	build := []effects.Modifier{}
+	
+	for _, stat := range statsList {
+		roll, err := gameplay.RollOracle[int](oracle)
+		if err != nil {
+			return err
+		}
+
+		// jsonlog.JsonifiedLog(roll)
+
+		build = append(build, effects.Modifier{
+			Stat:  stat,
+			Value: roll.Result,
+		})
+	}
+
+	d := effects.BaseStats()
+	d.ApplyModifiers(build)
+	// jsonlog.JsonifiedLog(d)
 
 	return nil
 }
