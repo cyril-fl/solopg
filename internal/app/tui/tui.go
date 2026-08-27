@@ -1,8 +1,6 @@
 package tui
 
-import (
-	tea "charm.land/bubbletea/v2"
-)
+import tea "charm.land/bubbletea/v2"
 
 type Ui struct {
 	steps *contextStepList

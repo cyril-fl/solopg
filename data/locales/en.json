@@ -1,0 +1,14 @@
+{
+  "new_save": {
+    "other": "New save"
+  },
+  "create_character": {
+    "other": "Create character"
+  },
+  "name": {
+    "other": "Name:"
+  },
+  "quit": {
+    "other": "Ctrl+Q: Quit"
+  }
+}

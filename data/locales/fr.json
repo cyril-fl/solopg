@@ -1,0 +1,14 @@
+{
+  "new_save": {
+    "other": "Nouvelle sauvegarde"
+  },
+  "create_character": {
+    "other": "Creer un personnage"
+  },
+  "name": {
+    "other": "Nom:"
+  },
+  "quit": {
+    "other": "Ctrl+Q: Quitter"
+  }
+}

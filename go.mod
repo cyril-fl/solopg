@@ -7,8 +7,10 @@ require (
 	charm.land/bubbletea/v2 v2.0.7
 	charm.land/lipgloss/v2 v2.0.4
 	github.com/google/uuid v1.6.0
+	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/spf13/cobra v1.10.2
 	go.mongodb.org/mongo-driver v1.17.4
+	golang.org/x/text v0.32.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -40,5 +42,4 @@ require (
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/text v0.20.0 // indirect
 )
