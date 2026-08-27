@@ -12,16 +12,16 @@ func (m model) View() tea.View {
 	content := strings.Builder{}
 
 	content.WriteString("Location: ")
-	content.WriteString(m.drawLocations.Name)
+	content.WriteString(m.reroll.Value.Name)
 	content.WriteString(" Attempt: ")
-	content.WriteString(fmt.Sprintf("%d", m.attempt))
+	content.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 
-	if m.drawLocations.Description.Description != tui.EmptyKey {
+	if m.reroll.Value.Description.Description != tui.EmptyKey {
 		content.WriteString("\n")
-		content.WriteString(m.drawLocations.Description.Description)
+		content.WriteString(m.reroll.Value.Description.Description)
 	}
 	content.WriteString("\n\n")
-	content.WriteString(m.choiceList.View())
+	content.WriteString(m.reroll.Options.View())
 
 	return tea.NewView(content.String())
 }

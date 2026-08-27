@@ -1,31 +1,24 @@
 package onboardlocation
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/locations"
 	"solopg/internal/domain/gameplay"
 
-	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	attempt       int
-	choiceList    list.Model
-	drawLocations locations.Location
+	reroll tui.RerollModel[*locations.Location]
 }
 
 func NewModel() tea.Model {
-	locations, err := gameplay.DrawLocations()
-	if err != nil {
-		fmt.Println("Error drawing locations:", err)
-	}
-
 	return model{
-		choiceList:    makeModel(),
-		attempt:       1,
-		drawLocations: *locations,
+		reroll: tui.NewRerollModel(
+			tui.NewOptionsModel(tui.DefaultRerollOptions),
+			gameplay.DrawLocations,
+			3,
+		),
 	}
 }
 
@@ -46,6 +39,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	var cmd tea.Cmd
-	m.choiceList, cmd = m.choiceList.Update(msg)
+	m.reroll.Options, cmd = m.reroll.Options.Update(msg)
 	return m, cmd
 }

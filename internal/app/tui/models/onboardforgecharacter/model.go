@@ -4,21 +4,20 @@ import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/effects"
 
-	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	attempt      int
-	choiceList   list.Model
-	buildsChoice []effects.Modifier
+	reroll tui.RerollModel[[]effects.Modifier]
 }
 
 func NewModel() tea.Model {
 	return model{
-		choiceList:   makeChoiceModel(),
-		attempt:      1,
-		buildsChoice: drowBuild(),
+		reroll: tui.NewRerollModel(
+			tui.NewOptionsModel(tui.DefaultRerollOptions),
+			drowBuild,
+			3,
+		),
 	}
 }
 
@@ -39,6 +38,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	var cmd tea.Cmd
-	m.choiceList, cmd = m.choiceList.Update(msg)
+	m.reroll.Options, cmd = m.reroll.Options.Update(msg)
 	return m, cmd
 }
