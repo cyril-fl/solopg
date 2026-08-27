@@ -4,6 +4,15 @@ import (
 	"fmt"
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/models/codexform"
+	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/characters"
+	"solopg/internal/domain/card/characters/archetypes/classes"
+	"solopg/internal/domain/card/characters/archetypes/races"
+	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/locations"
+	"solopg/internal/domain/card/objects"
+	"solopg/internal/domain/codex"
 	"solopg/internal/domain/gameplay"
 	"strings"
 	"time"
@@ -29,6 +38,9 @@ func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 	m.codexList.SetSize(panelWidth-4, codexMenuHeight)
 	m.codexPage.SetWidth(chatWidth)
 	m.codexPage.SetHeight(max(0, msg.Height))
+	if m.formOpen {
+		m.form.SetWidth(chatWidth)
+	}
 	// Reserve the input and the separator above it. The parent TUI already
 	// reserved the footer height before forwarding the window size.
 	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
@@ -141,6 +153,144 @@ func openCodexPage(m model) (model, tea.Cmd) {
 	m.codexPage.SetContent(renderCodexPage(m.engine, link))
 	m.codexPage.GotoTop()
 	return m, nil
+}
+
+func handleCodexPageNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
+	previousIndex := m.codexList.Index()
+	var cmd tea.Cmd
+	m.codexList, cmd = m.codexList.Update(msg)
+	if m.codexList.Index() != previousIndex {
+		selected, ok := m.codexList.SelectedItem().(tui.Item[codexLink])
+		if ok {
+			m.codexPage.SetContent(renderCodexPage(m.engine, selected.Value()))
+			m.codexPage.GotoTop()
+		}
+	}
+	return m, cmd
+}
+
+func openCodexForm(m model) (model, tea.Cmd) {
+	selected, ok := m.codexList.SelectedItem().(tui.Item[codexLink])
+	if !ok {
+		return m, nil
+	}
+
+	kind := codexform.Kind(selected.Value().name)
+	m.form = codexform.New(kind, m.viewport.Width())
+	m.formOpen = true
+	return m, nil
+}
+
+func handleCodexFormKey(m model, key tea.KeyPressMsg) (model, tea.Cmd) {
+	if key.String() == tui.KeyEsc {
+		m.formOpen = false
+		return m, nil
+	}
+	if key.String() == tui.KeyEnter {
+		if m.form.AdvanceOnEnter() {
+			return m, nil
+		}
+		result, err := m.form.Submit()
+		if err != nil {
+			m.form.SetError(err)
+			return m, nil
+		}
+		if err := addCodexEntry(m.engine, result); err != nil {
+			m.form.SetError(err)
+			return m, nil
+		}
+
+		m.formOpen = false
+		m.refreshCodexPage()
+		return m, nil
+	}
+
+	m.form.SetError(nil)
+	return m, m.form.Update(key)
+}
+
+func (m *model) refreshCodexPage() {
+	selected, ok := m.codexList.SelectedItem().(tui.Item[codexLink])
+	if !ok {
+		return
+	}
+	m.codexPage.SetContent(renderCodexPage(m.engine, selected.Value()))
+	m.codexPage.GotoTop()
+}
+
+func addCodexEntry(engine *game.Engine, result codexform.Result) error {
+	if engine == nil || engine.State == nil {
+		return fmt.Errorf("état du jeu indisponible")
+	}
+	codexData := engine.State.Codex
+	if codexData == nil {
+		codexData = codex.New()
+		engine.State.Codex = codexData
+	}
+
+	values := result.Values
+	switch result.Kind {
+	case codexform.NPCs, codexform.Monsters:
+		if result.Kind == codexform.NPCs && classes.FindByName(values["class"]) == nil {
+			return fmt.Errorf("classe inconnue : %s", values["class"])
+		}
+		if races.FindByName(values["race"]) == nil {
+			return fmt.Errorf("race inconnue : %s", values["race"])
+		}
+		if result.Kind == codexform.Monsters && !races.FindByName(values["race"]).IsMonster() {
+			return fmt.Errorf("race non-monstre : %s", values["race"])
+		}
+		character, err := characters.New(characters.Template{
+			Name:        values["name"],
+			Description: values["description"],
+			Rarity:      attributes.F,
+			Class:       values["class"],
+			Race:        values["race"],
+			Stats:       effects.BaseStats(),
+		})
+		if err != nil {
+			return err
+		}
+		if result.Kind == codexform.NPCs {
+			codexData.NpcsTable.AddNPC(character)
+		} else {
+			codexData.MonstersTable.AddMonster(character)
+		}
+	case codexform.Locations:
+		location, err := locations.New(locations.Template{
+			Name:        values["name"],
+			Description: values["description"],
+			Rarity:      attributes.F,
+			Variety:     attributes.LocationCard,
+		})
+		if err != nil {
+			return err
+		}
+		codexData.LocationsTable.AddEntry(codex.LocationsEntryTemplate{Location: location})
+	case codexform.Objects:
+		category := objects.Category(strings.ToLower(values["category"]))
+		if err := category.Validate(); err != nil {
+			return err
+		}
+		object, err := objects.New(objects.Template{
+			Name:        values["name"],
+			Description: values["description"],
+			Rarity:      attributes.F,
+			Variety:     attributes.ArticleCard,
+			Category:    category,
+		})
+		if err != nil {
+			return err
+		}
+		codexData.ObjectsTable.AddObject(object)
+	case codexform.Objectifs:
+		codexData.ObjectifsTable.AddObjectif(values["title"], values["description"])
+	default:
+		return fmt.Errorf("type de Codex inconnu : %s", result.Kind)
+	}
+
+	engine.AddJournalEntry("Codex", fmt.Sprintf("Nouvelle entrée ajoutée : %s", result.Kind))
+	return nil
 }
 
 func renderCodexPage(engine *game.Engine, link codexLink) string {

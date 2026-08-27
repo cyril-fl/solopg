@@ -13,13 +13,19 @@ func (o *ObjectifsTable) Summaries() []string {
 	o.ensureTable()
 	summaries := make([]string, 0, len(o.Entries))
 	for i := range o.Entries {
-		summaries = append(summaries, fmt.Sprintf("Objectif #%d", i+1))
+		if o.Entries[i].Title == "" {
+			summaries = append(summaries, fmt.Sprintf("Objectif #%d", i+1))
+			continue
+		}
+		summaries = append(summaries, fmt.Sprintf("%s — %s", o.Entries[i].Title, o.Entries[i].Description))
 	}
 	return summaries
 }
 
 type ObjectifsEntry struct {
-	timestamp time.Time
+	Timestamp   time.Time
+	Title       string
+	Description string
 }
 
 type ObjectifsEntryTemplate struct {
@@ -38,6 +44,15 @@ func (o *ObjectifsTable) ensureTable() {
 func (o *ObjectifsTable) AddEntry(entry ObjectifsEntryTemplate) {
 	o.ensureTable()
 	o.Entries = append(o.Entries, ObjectifsEntry{
-		timestamp: time.Now().UTC(),
+		Timestamp: time.Now().UTC(),
+	})
+}
+
+func (o *ObjectifsTable) AddObjectif(title, description string) {
+	o.ensureTable()
+	o.Entries = append(o.Entries, ObjectifsEntry{
+		Timestamp:   time.Now().UTC(),
+		Title:       title,
+		Description: description,
 	})
 }

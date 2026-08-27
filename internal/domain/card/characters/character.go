@@ -58,8 +58,7 @@ func New(params Template) (*Character, error) {
 		return nil, fmt.Errorf("invalid card variety for character: %s", newCard.Variety)
 	}
 
-	// Check Class
-	if !slices.Contains(classes.ListNames(), params.Class) {
+	if params.Class != "" && !slices.Contains(classes.ListNames(), params.Class) {
 		return nil, fmt.Errorf("invalid class for character: %s", params.Class)
 	}
 

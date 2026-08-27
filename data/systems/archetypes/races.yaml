@@ -44,3 +44,4 @@
 # Monsters races
 - name: Slime
   playable: false
+  monster: true

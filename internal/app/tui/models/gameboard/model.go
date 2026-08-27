@@ -3,6 +3,7 @@ package gameboard
 import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/models/codexform"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/list"
@@ -25,6 +26,8 @@ type model struct {
 	activeMenu  panelMenu
 	codexPage   viewport.Model
 	pageOpen    bool
+	formOpen    bool
+	form        codexform.Model
 
 	engine *game.Engine
 	save   func() error
@@ -106,9 +109,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		handleWindowResize(&m, msg)
 
 	case tea.KeyPressMsg:
+		if m.formOpen {
+			return handleCodexFormKey(m, msg)
+		}
 		switch msg.String() {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
+		case "ctrl+n":
+			if m.pageOpen {
+				return openCodexForm(m)
+			}
 		case tui.KeyEnter:
 			if m.pageOpen {
 				return m, nil
@@ -122,9 +132,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return handleEnterInput(m)
 		case "up", "down":
 			if m.pageOpen {
-				var cmd tea.Cmd
-				m.codexPage, cmd = m.codexPage.Update(msg)
-				return m, cmd
+				return handleCodexPageNavigation(m, msg)
 			}
 			if m.showPanel && m.textarea.Value() == "" {
 				return handlePanelNavigation(m, msg)

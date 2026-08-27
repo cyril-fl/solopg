@@ -18,7 +18,7 @@ func (n *NpcsTable) Summaries() []string {
 			summaries = append(summaries, "PNJ inconnu")
 			continue
 		}
-		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.character.Name, entry.character.Description))
+		summaries = append(summaries, fmt.Sprintf("%s — %s - %s - %s", entry.character.Name, entry.character.Race, entry.character.Class, entry.character.Description))
 	}
 	return summaries
 }
@@ -42,10 +42,15 @@ func (n *NpcsTable) ensureTable() {
 	ensureEmbeddedTable(&n.Table)
 }
 
+// TODO: quand j'ajoute un NPC je dois verrfier qu'il abien des stat comme pour la creation du player
 func (n *NpcsTable) AddEntry(entry NpcsEntryTemplate) {
 	n.ensureTable()
 	n.Entries = append(n.Entries, NpcsEntry{
 		timestamp: time.Now().UTC(),
 		character: entry.character,
 	})
+}
+
+func (n *NpcsTable) AddNPC(character *characters.Character) {
+	n.AddEntry(NpcsEntryTemplate{character: character})
 }

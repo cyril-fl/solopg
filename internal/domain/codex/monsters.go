@@ -49,3 +49,7 @@ func (m *MonstersTable) AddEntry(entry MonstersEntryTemplate) {
 		character: entry.character,
 	})
 }
+
+func (m *MonstersTable) AddMonster(character *characters.Character) {
+	m.AddEntry(MonstersEntryTemplate{character: character})
+}

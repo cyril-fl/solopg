@@ -10,6 +10,7 @@ const filePath = "data/systems/archetypes/races.yaml"
 type Race struct {
 	Name     string             `yaml:"name"`
 	Playable bool               `yaml:"playable"`
+	Monster  bool               `yaml:"monster"`
 	Bonus    []effects.Modifier `yaml:"bonus"`
 }
 
@@ -19,6 +20,10 @@ func (r Race) GetName() string {
 
 func (r Race) IsPlayable() bool {
 	return r.Playable
+}
+
+func (r Race) IsMonster() bool {
+	return r.Monster
 }
 
 func (r Race) GetBonus() []effects.Modifier {

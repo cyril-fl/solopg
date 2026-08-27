@@ -49,3 +49,7 @@ func (o *ObjectsTable) AddEntry(entry ObjectsEntryTemplate) {
 		object:    entry.object,
 	})
 }
+
+func (o *ObjectsTable) AddObject(object *objects.Object) {
+	o.AddEntry(ObjectsEntryTemplate{object: object})
+}

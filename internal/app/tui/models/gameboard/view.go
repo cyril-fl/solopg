@@ -17,6 +17,9 @@ func (m model) View() tea.View {
 	if m.pageOpen {
 		chatView = m.codexPage.View()
 	}
+	if m.formOpen {
+		chatView = m.form.View()
+	}
 	if m.showPanel {
 		chatView = lipgloss.JoinHorizontal(
 			lipgloss.Top,
@@ -28,7 +31,7 @@ func (m model) View() tea.View {
 
 	v := tea.NewView(chatView)
 	c := m.textarea.Cursor()
-	if m.pageOpen {
+	if m.pageOpen || m.formOpen {
 		c = nil
 	}
 	if c != nil {
@@ -41,8 +44,11 @@ func (m model) View() tea.View {
 
 func (m model) GetFooter() []string {
 	footer := []string{"Ctrl+S: Sauvegarder"}
+	if m.formOpen {
+		return append(footer, "Entrée: Valider", "Échap: Annuler")
+	}
 	if m.pageOpen {
-		footer = append(footer, "Échap: retour au chat")
+		footer = append(footer, "Ctrl+N: Ajouter", "Échap: retour au chat")
 	}
 	return footer
 }
