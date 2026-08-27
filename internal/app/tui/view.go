@@ -4,13 +4,17 @@ import (
 	"fmt"
 	"strings"
 
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"solopg/internal/infrastructure/t"
+
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
 
 func (m model) View() tea.View {
 	if m.err != nil {
-		return tea.NewView(alignFooter(fmt.Sprintf("Erreur: %v", m.err), m.windowHeight(), mainFooter))
+		errorLabel := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.label"})
+		return tea.NewView(alignFooter(fmt.Sprintf("%s: %v", errorLabel, m.err), m.windowHeight(), mainFooter()))
 	}
 
 	if current := m.steps.GetCurrentSubmodel(); current != nil {
@@ -19,11 +23,11 @@ func (m model) View() tea.View {
 		return view
 	}
 
-	return tea.NewView(alignFooter("", m.windowHeight(), mainFooter))
+	return tea.NewView(alignFooter("", m.windowHeight(), mainFooter()))
 }
 
-var mainFooter = []string{
-	"Ctrl+Q: Quitter",
+func mainFooter() []string {
+	return []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "quit"})}
 }
 
 type HasFooter interface {
@@ -31,7 +35,7 @@ type HasFooter interface {
 }
 
 func mergeFooter(current tea.Model) []string {
-	footer := append([]string(nil), mainFooter...)
+	footer := append([]string(nil), mainFooter()...)
 	if provider, ok := current.(HasFooter); ok {
 		footer = append(footer, provider.GetFooter()...)
 	}

@@ -1,0 +1,158 @@
+new_save:
+  other: New save
+create_character:
+  other: Create character
+name:
+  other: "Name:"
+quit:
+  other: "Ctrl+Q: Quit"
+accept:
+  other: Accept
+reroll:
+  other: Reroll
+location:
+  other: "Location:"
+stats:
+  other: "Stats:"
+attempt:
+  other: "Attempt:"
+error.label:
+  other: Error
+save:
+  other: "Ctrl+S: Save"
+validate:
+  other: "Enter: Validate"
+cancel:
+  other: "Esc: Cancel"
+add:
+  other: "Ctrl+N: Add"
+back_to_chat:
+  other: "Esc: Back to chat"
+oracles:
+  other: ORACLES
+codex:
+  other: CODEX
+character:
+  other: "CHARACTER: "
+place:
+  other: "PLACE: "
+unknown_player:
+  other: Unknown player
+unknown_place:
+  other: Unknown place
+stats_upper:
+  other: "STATS:"
+no_stats:
+  other: No stats
+chat.placeholder:
+  other: "Send a message..."
+chat.welcome:
+  other: "Welcome to the chat room!\nType a message and press Enter to send."
+field.name:
+  other: Name
+field.description:
+  other: Description
+field.class:
+  other: Class
+field.race:
+  other: Race
+field.category:
+  other: "Category (weapon/armor/potion)"
+field.title:
+  other: Title
+error.required_field:
+  other: "{{.Field}} is required"
+error.class_race_required:
+  other: "Class and race are required"
+error.race_required:
+  other: "Race is required"
+error.category_required:
+  other: "Category is required"
+codex.add:
+  other: "Add — {{.Kind}}"
+error.game_unavailable:
+  other: "Game state unavailable"
+error.unknown_class:
+  other: "Unknown class: {{.Class}}"
+error.unknown_race:
+  other: "Unknown race: {{.Race}}"
+error.non_monster_race:
+  other: "Race is not a monster race: {{.Race}}"
+error.unknown_codex:
+  other: "Unknown Codex type: {{.Kind}}"
+codex.empty:
+  other: "No entries in this table."
+error.oracle_action:
+  other: "Oracle error: {{.Error}}"
+critical:
+  other: Critical
+error.save:
+  other: "Save error: {{.Error}}"
+save.success:
+  other: "Saved successfully at {{.Time}}"
+campaign.description:
+  other: "Location: {{.Location}} | Updated: {{.Updated}}"
+objective.number:
+  other: "Objective #{{.Number}}"
+stat.health:
+  other: Health
+stat.physical:
+  other: Physical
+stat.mental:
+  other: Mental
+stat.stamina:
+  other: Stamina
+stat.social:
+  other: Social
+codex.npcs:
+  other: NPCs
+codex.monsters:
+  other: Monsters
+codex.locations:
+  other: Locations
+codex.objects:
+  other: Objects
+codex.objectives:
+  other: Objectives
+oracle.likely:
+  other: Likely
+oracle.unlikely:
+  other: Unlikely
+oracle.neutral:
+  other: Neutral
+oracle.very_likely:
+  other: Very likely
+oracle.very_unlikly:
+  other: Very unlikely
+error.save_unconfigured:
+  other: "Save function is not configured"
+error.oracle.not_found:
+  other: "Oracle {{.ID}} not found"
+error.oracle.load_file:
+  other: "Error loading oracle file {{.File}}: {{.Error}}"
+error.oracle.load_folder:
+  other: "Error loading oracle folder {{.Folder}}: {{.Error}}"
+error.oracle.load:
+  other: "Failed to load oracle: {{.Error}}"
+error.oracle.invalid_dice:
+  other: "Oracle {{.ID}} has an invalid dice value: {{.Dice}}"
+error.oracle.no_intervals:
+  other: "Oracle {{.ID}} has no intervals"
+error.oracle.invalid_result_type:
+  other: "Oracle {{.ID}} has an interval result of type {{.Actual}}, expected {{.Expected}}"
+error.oracle.no_matching_interval:
+  other: "Oracle {{.ID}} has no interval matching roll {{.Roll}}"
+error.incomplete_character_creation:
+  other: "Incomplete character creation context"
+error.unexpected_save_value:
+  other: "Unexpected save value type: {{.Type}}"
+error.unexpected_name_value:
+  other: "Unexpected name value type: {{.Type}}"
+error.unexpected_race_value:
+  other: "Unexpected race value type: {{.Type}}"
+error.unexpected_class_value:
+  other: "Unexpected class value type: {{.Type}}"
+error.unexpected_build_value:
+  other: "Unexpected build value type: {{.Type}}"
+error.unexpected_location_value:
+  other: "Unexpected location value type: {{.Type}}"

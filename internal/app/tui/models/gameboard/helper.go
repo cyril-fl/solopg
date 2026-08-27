@@ -14,6 +14,7 @@ import (
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/domain/codex"
 	"solopg/internal/domain/gameplay"
+	"solopg/internal/infrastructure/t"
 	"strings"
 	"time"
 
@@ -21,6 +22,7 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
@@ -64,7 +66,15 @@ func makeOracleModel() list.Model {
 	items := make([]list.Item, 0)
 	for _, oracle := range gameplay.GetOracle() {
 		if oracle.Visible {
-			items = append(items, tui.NewItem(oracle.ID, "", oracle))
+			key := "oracle." + oracle.ID
+			name := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+				MessageID: key,
+				DefaultMessage: &goi18n.Message{
+					ID:    key,
+					Other: oracle.ID,
+				},
+			})
+			items = append(items, tui.NewItem(name, "", oracle))
 		}
 	}
 
@@ -90,11 +100,11 @@ const (
 
 func makeCodexModel() list.Model {
 	links := []codexLink{
-		{name: "PNJ", kind: codexNPCs},
-		{name: "Monstres", kind: codexMonsters},
-		{name: "Lieux", kind: codexLocations},
-		{name: "Objets", kind: codexObjects},
-		{name: "Objectifs", kind: codexObjectifs},
+		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.npcs"}), kind: codexNPCs},
+		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.monsters"}), kind: codexMonsters},
+		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.locations"}), kind: codexLocations},
+		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objects"}), kind: codexObjects},
+		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objectives"}), kind: codexObjectifs},
 	}
 	items := make([]list.Item, 0, len(links))
 	for _, link := range links {
@@ -220,7 +230,7 @@ func (m *model) refreshCodexPage() {
 
 func addCodexEntry(engine *game.Engine, result codexform.Result) error {
 	if engine == nil || engine.State == nil {
-		return fmt.Errorf("état du jeu indisponible")
+		return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.game_unavailable"})
 	}
 	codexData := engine.State.Codex
 	if codexData == nil {
@@ -232,13 +242,13 @@ func addCodexEntry(engine *game.Engine, result codexform.Result) error {
 	switch result.Kind {
 	case codexform.NPCs, codexform.Monsters:
 		if result.Kind == codexform.NPCs && classes.FindByName(values["class"]) == nil {
-			return fmt.Errorf("classe inconnue : %s", values["class"])
+			return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.unknown_class", TemplateData: map[string]any{"Class": values["class"]}})
 		}
 		if races.FindByName(values["race"]) == nil {
-			return fmt.Errorf("race inconnue : %s", values["race"])
+			return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.unknown_race", TemplateData: map[string]any{"Race": values["race"]}})
 		}
 		if result.Kind == codexform.Monsters && !races.FindByName(values["race"]).IsMonster() {
-			return fmt.Errorf("race non-monstre : %s", values["race"])
+			return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.non_monster_race", TemplateData: map[string]any{"Race": values["race"]}})
 		}
 		character, err := characters.New(characters.Template{
 			Name:        values["name"],
@@ -286,7 +296,7 @@ func addCodexEntry(engine *game.Engine, result codexform.Result) error {
 	case codexform.Objectifs:
 		codexData.ObjectifsTable.AddObjectif(values["title"], values["description"])
 	default:
-		return fmt.Errorf("type de Codex inconnu : %s", result.Kind)
+		return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.unknown_codex", TemplateData: map[string]any{"Kind": result.Kind}})
 	}
 
 	engine.AddJournalEntry("Codex", fmt.Sprintf("Nouvelle entrée ajoutée : %s", result.Kind))
@@ -312,7 +322,7 @@ func renderCodexPage(engine *game.Engine, link codexLink) string {
 		}
 	}
 	if len(entries) == 0 {
-		entries = []string{"Aucune entrée dans cette table."}
+		entries = []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.empty"})}
 	}
 	return title + "\n\n" + strings.Join(entries, "\n\n")
 }
@@ -349,11 +359,11 @@ func handleOracleRoll(m model) (model, tea.Cmd) {
 	oracle := selected.Value()
 	result, err := gameplay.RollOracle[any](oracle)
 	if err != nil {
-		m.messages = append(m.messages, "Erreur oracle: "+err.Error())
+		m.messages = append(m.messages, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.oracle_action", TemplateData: map[string]any{"Error": err}}))
 	} else {
 		critical := ""
 		if result.Critical {
-			critical = " (critique)"
+			critical = " (" + t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "critical"}) + ")"
 		}
 		message := fmt.Sprintf("Oracle %s — jet de %d : %v%s", oracle.ID, result.Roll, result.Result, critical)
 		m.engine.AddJournalEntry("Oracle", message)
@@ -374,9 +384,9 @@ func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
 func handleSaveInput(m model, msg tui.SaveMsg) (model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
-		m.messages = append(m.messages, "Erreur de sauvegarde: "+msg.Err.Error())
+		m.messages = append(m.messages, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.save", TemplateData: map[string]any{"Error": msg.Err}}))
 	} else {
-		log := fmt.Sprintf("Saved successfully at %s", time.Now().Format("2006-01-02 15:04:05"))
+		log := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save.success", TemplateData: map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")}})
 		m.engine.Log(log)
 		m.messages = append(m.messages, log)
 		m.err = nil

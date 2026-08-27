@@ -1,18 +1,18 @@
 name: "solopg"
 verbose: false
 i18n: 
-  default: "en"
+  default: "fr"
   dir: "data/locales"
-  format: "json"
+  format: "yaml"
   locales: 
     - code: en
       iso: "en-US"
       name: "English"
-      file: "en.json"
+      file: "en-US.yaml"
     - code: fr
       iso: "fr-FR"
       name: Français
-      file: "fr.json"
+      file: "fr-FR.yaml"
 commands: 
   root: 
     short: "SoloPG CLI"

@@ -2,13 +2,13 @@ package app
 
 import (
 	"solopg/internal/infrastructure/config"
-	"solopg/internal/infrastructure/i18n"
 	"solopg/internal/infrastructure/mongo"
-	"solopg/internal/platform/jsonlog"
+	"solopg/internal/infrastructure/t"
+	"solopg/internal/platform/log"
 )
 
 func Start() error {
-	if err := i18n.Init(config.Current.I18n, ""); err != nil {
+	if err := t.Init(config.Current.I18n, ""); err != nil {
 		return err
 	}
 
@@ -24,7 +24,7 @@ func Start() error {
 
 func Try() error {
 
-	jsonlog.JsonifiedLog(config.Current)
+	log.ParseJson(config.Current)
 
 	return nil
 }

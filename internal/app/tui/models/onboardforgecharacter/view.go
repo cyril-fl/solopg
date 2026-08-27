@@ -2,6 +2,8 @@ package onboardforgecharacter
 
 import (
 	"fmt"
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"solopg/internal/infrastructure/t"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -10,13 +12,21 @@ import (
 func (m model) View() tea.View {
 	content := strings.Builder{}
 
-	content.WriteString("Stats: ")
+	content.WriteString(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "stats"}))
 	buildsChoiceStr := make([]string, len(m.reroll.Value))
 	for i, modifier := range m.reroll.Value {
-		buildsChoiceStr[i] = modifier.String()
+		key := "stat." + string(modifier.Stat)
+		label := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+			MessageID: key,
+			DefaultMessage: &goi18n.Message{
+				ID:    key,
+				Other: string(modifier.Stat),
+			},
+		})
+		buildsChoiceStr[i] = fmt.Sprintf("%s: %d", label, modifier.Value)
 	}
 	content.WriteString(strings.Join(buildsChoiceStr, ", "))
-	content.WriteString(" Attempt: ")
+	content.WriteString(" " + t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "attempt"}) + ": ")
 	content.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 
 	content.WriteString("\n\n")

@@ -2,14 +2,14 @@ package config
 
 import (
 	"fmt"
-	"solopg/internal/infrastructure/i18n"
+	"solopg/internal/infrastructure/t"
 	"solopg/internal/infrastructure/yaml"
 )
 
 type config struct {
 	Name     string      `yaml:"name"`
 	Verbose  bool        `yaml:"verbose"`
-	I18n     i18n.Config `yaml:"i18n"`
+	I18n     t.Config `yaml:"i18n"`
 	Commands commands    `yaml:"commands"`
 }
 

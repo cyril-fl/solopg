@@ -6,8 +6,10 @@ import (
 
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/locations"
+	"solopg/internal/infrastructure/t"
 	"solopg/types/id"
 
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -45,11 +47,13 @@ func (c *Campaign) Title() string {
 }
 
 func (c *Campaign) Description() string {
-	return fmt.Sprintf(
-		"Location: %s | Updated: %s",
-		c.CurrentLocation.Name,
-		c.UpdatedAt.Format("2006-01-02 15:04:05"),
-	)
+	return t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+		MessageID: "campaign.description",
+		TemplateData: map[string]any{
+			"Location": c.CurrentLocation.Name,
+			"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
+		},
+	})
 }
 
 func (c *Campaign) SetUpdatedAt(t time.Time) {

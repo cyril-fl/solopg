@@ -1,13 +1,15 @@
 package process
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
+	"solopg/internal/infrastructure/t"
+
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
@@ -28,7 +30,9 @@ func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 	isValidArgs := ctx.SelectedRace != nil && ctx.SelectedClass != nil && ctx.SelectedLocation != nil
 	if !isValidArgs {
-		return nil, fmt.Errorf("incomplete character creation context")
+		return nil, t.NewError(&i18n.LocalizeConfig{
+			MessageID: "error.incomplete_character_creation",
+		})
 	}
 
 	player, err := generateCharacter(ctx)

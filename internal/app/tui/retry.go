@@ -1,6 +1,9 @@
 package tui
 
 import (
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"solopg/internal/infrastructure/t"
+
 	"charm.land/bubbles/v2/list"
 )
 
@@ -40,7 +43,7 @@ func (s *RerollModel[T]) Reroll() {
 }
 
 func (s *RerollModel[T]) checkAttemptLimit() {
-	if s.Attempt < s.Limit  {
+	if s.Attempt < s.Limit {
 		return
 	}
 
@@ -53,8 +56,8 @@ func (s *RerollModel[T]) IsOutOfLimit() bool {
 
 func NewOptionsModel(options rerollOptions) list.Model {
 	items := []list.Item{
-		NewItem(options.true, "", true),
-		NewItem(options.false, "", false),
+		NewItem(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: options.true}), "", true),
+		NewItem(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: options.false}), "", false),
 	}
 
 	return newConfiguredList(items, 0, 0)
@@ -62,7 +65,7 @@ func NewOptionsModel(options rerollOptions) list.Model {
 
 func makeConfirmationModel(m list.Model) list.Model {
 	items := []list.Item{
-		NewItem("Accept", "", true),
+		NewItem(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "accept"}), "", true),
 	}
 
 	return newConfiguredList(items, m.Width(), m.Height())
@@ -80,6 +83,6 @@ type rerollOptions struct {
 }
 
 var DefaultRerollOptions = rerollOptions{
-	true:  "Accept",
-	false: "Reroll",
+	true:  "accept",
+	false: "reroll",
 }

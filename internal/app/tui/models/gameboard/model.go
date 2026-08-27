@@ -4,6 +4,9 @@ import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/codexform"
+	"solopg/internal/infrastructure/t"
+
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/list"
@@ -43,7 +46,7 @@ const (
 // NewModel returns the game view for embedding in the main TUI router.
 func NewModel(params UiParams) model {
 	ta := textarea.New()
-	ta.Placeholder = "Send a message..."
+	ta.Placeholder = t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.placeholder"})
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
@@ -63,8 +66,7 @@ func NewModel(params UiParams) model {
 
 	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
 	// TODO voir pour set autre choses en fonction de message deja present ou non.
-	vp.SetContent(`Welcome to the chat room!
-Type a message and press Enter to send.`)
+	vp.SetContent(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.welcome"}))
 	vp.KeyMap.Left.SetEnabled(false)
 	vp.KeyMap.Right.SetEnabled(false)
 

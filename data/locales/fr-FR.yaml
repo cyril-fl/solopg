@@ -1,0 +1,162 @@
+new_save:
+  other: Nouvelle sauvegarde
+create_character:
+  other: Creer un personnage
+name:
+  other: "Nom:"
+quit:
+  other: "Ctrl+Q: Quitter"
+accept:
+  other: Accepter
+reroll:
+  other: Relancer
+location:
+  other: "Lieu :"
+stats:
+  other: "Stats :"
+attempt:
+  other: "Tentative :"
+error.label:
+  other: Erreur
+save:
+  other: "Ctrl+S : Sauvegarder"
+validate:
+  other: "Entrée : Valider"
+cancel:
+  other: "Échap : Annuler"
+add:
+  other: "Ctrl+N : Ajouter"
+back_to_chat:
+  other: "Échap : Retour au chat"
+oracles:
+  other: ORACLES
+codex:
+  other: CODEX
+character:
+  other: "PERSONNAGE : "
+place:
+  other: "LIEU : "
+
+stats_upper:
+  other: "STATS :"
+no_stats:
+  other: Aucune statistique
+chat.placeholder:
+  other: "Envoyer un message..."
+chat.welcome:
+  other: "Bienvenue dans le chat !\nÉcrivez un message puis appuyez sur Entrée pour l'envoyer."
+field.name:
+  other: Nom
+field.description:
+  other: Description
+field.class:
+  other: Classe
+field.race:
+  other: Race
+field.category:
+  other: "Catégorie (weapon/armor/potion)"
+field.title:
+  other: Titre
+codex.add:
+  other: "Ajouter — {{.Kind}}"
+codex.empty:
+  other: "Aucune entrée dans cette table."
+error.oracle_action:
+  other: "Erreur oracle : {{.Error}}"
+critical:
+  other: Critique
+save.success:
+  other: "Sauvegarde réussie à {{.Time}}"
+campaign.description:
+  other: "Lieu : {{.Location}} | Mis à jour : {{.Updated}}"
+objective.number:
+  other: "Objectif n°{{.Number}}"
+stat.health:
+  other: Santé
+stat.physical:
+  other: Physique
+stat.mental:
+  other: Mental
+stat.stamina:
+  other: Endurance
+stat.social:
+  other: Social
+codex.npcs:
+  other: PNJ
+codex.monsters:
+  other: Monstres
+codex.locations:
+  other: Lieux
+codex.objects:
+  other: Objets
+codex.objectives:
+  other: Objectifs
+oracle.likely:
+  other: Probable
+oracle.unlikely:
+  other: Improbable
+oracle.neutral:
+  other: Neutre
+oracle.very_likely:
+  other: Très probable
+oracle.very_unlikly:
+  other: Très improbable
+
+# Errors
+error.required_field:
+  other: "{{.Field}} est obligatoire"
+error.class_race_required:
+  other: "La classe et la race sont obligatoires"
+error.race_required:
+  other: "La race est obligatoire"
+error.category_required:
+  other: "La catégorie est obligatoire"
+error.game_unavailable:
+  other: "État du jeu indisponible"
+error.unknown_class:
+  other: "Classe inconnue : {{.Class}}"
+error.unknown_race:
+  other: "Race inconnue : {{.Race}}"
+error.non_monster_race:
+  other: "La race n'est pas une race de monstre : {{.Race}}"
+error.unknown_codex:
+  other: "Type de Codex inconnu : {{.Kind}}"
+error.save:
+  other: "Erreur de sauvegarde : {{.Error}}"
+error.save_unconfigured:
+  other: "Fonction de sauvegarde non configurée"
+error.oracle.not_found:
+  other: "Oracle {{.ID}} introuvable"
+error.oracle.load_file:
+  other: "Erreur de chargement du fichier oracle {{.File}} : {{.Error}}"
+error.oracle.load_folder:
+  other: "Erreur de chargement du dossier oracle {{.Folder}} : {{.Error}}"
+error.oracle.load:
+  other: "Impossible de charger l'oracle : {{.Error}}"
+error.oracle.invalid_dice:
+  other: "L'oracle {{.ID}} a une valeur de dé incorrecte : {{.Dice}}"
+error.oracle.no_intervals:
+  other: "L'oracle {{.ID}} ne contient aucun intervalle"
+error.oracle.invalid_result_type:
+  other: "L'oracle {{.ID}} retourne {{.Actual}}, mais {{.Expected}} est attendu"
+error.oracle.no_matching_interval:
+  other: "Aucun intervalle de l'oracle {{.ID}} ne correspond au résultat {{.Roll}}"
+error.incomplete_character_creation:
+  other: "Le contexte de création du personnage est incomplet"
+error.unexpected_save_value:
+  other: "Type de sauvegarde inattendu : {{.Type}}"
+error.unexpected_name_value:
+  other: "Type de nom inattendu : {{.Type}}"
+error.unexpected_race_value:
+  other: "Type de race inattendu : {{.Type}}"
+error.unexpected_class_value:
+  other: "Type de classe inattendu : {{.Type}}"
+error.unexpected_build_value:
+  other: "Type de caractéristiques inattendu : {{.Type}}"
+error.unexpected_location_value:
+  other: "Type de lieu inattendu : {{.Type}}"
+
+unknown_player:
+  other: Joueur inconnu
+unknown_place:
+  other: Lieu inconnu

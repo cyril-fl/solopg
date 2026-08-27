@@ -5,8 +5,11 @@ import (
 	"solopg/internal/infrastructure/yaml"
 )
 
+// TODO add a cache.
+const basePath = "data/template/locations"
+
 func LoadPresetLocations() ([]locations.Location, error) {
-	folderName := "data/template/locations"
+	folderName := basePath
 	folderContents, err := yaml.GetFolderFiles(folderName)
 	if err != nil {
 		return nil, err
@@ -14,7 +17,7 @@ func LoadPresetLocations() ([]locations.Location, error) {
 
 	var locationsList []locations.Location
 	for _, fileName := range folderContents {
-		filePath := "data/template/locations/" + fileName
+		filePath := basePath + "/" + fileName
 
 		location, err := locations.FromFile(filePath)
 		if err != nil {
@@ -26,7 +29,6 @@ func LoadPresetLocations() ([]locations.Location, error) {
 	return locationsList, nil
 }
 
-// TODO add a cache.
 func DrawLocations() (*locations.Location, error) {
 	list, err := LoadPresetLocations()
 	if err != nil {

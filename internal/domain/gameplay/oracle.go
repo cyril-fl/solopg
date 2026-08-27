@@ -3,7 +3,10 @@ package gameplay
 import (
 	"fmt"
 
+	"solopg/internal/infrastructure/t"
 	"solopg/internal/infrastructure/yaml"
+
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 var _oracles []*Oracle
@@ -48,7 +51,12 @@ func GetOracleByID(id string) (*Oracle, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("oracle with ID %q not found", id)
+	return nil, t.NewError(&goi18n.LocalizeConfig{
+		MessageID: "error.oracle.not_found",
+		TemplateData: map[string]any{
+			"ID": id,
+		},
+	})
 }
 
 func loadOracles() []*Oracle {
@@ -57,7 +65,14 @@ func loadOracles() []*Oracle {
 	for _, file := range list {
 		oracle, err := loadOracleFromFile(fmt.Sprintf("%s/%s", fileAddress, file))
 		if err != nil {
-			fmt.Printf("Error loading oracle from file %s: %v\n", file, err)
+			message := t.NewError(&goi18n.LocalizeConfig{
+				MessageID: "error.oracle.load_file",
+				TemplateData: map[string]any{
+					"File":  file,
+					"Error": err,
+				},
+			})
+			fmt.Println(message)
 			continue
 		}
 		_oracles = append(_oracles, oracle)
@@ -69,7 +84,14 @@ func loadOracles() []*Oracle {
 func loadOraclesList() []string {
 	list, err := yaml.GetFolderFiles(fileAddress)
 	if err != nil {
-		fmt.Printf("Error loading oracles list from folder %s: %v\n", fileAddress, err)
+		message := t.NewError(&goi18n.LocalizeConfig{
+			MessageID: "error.oracle.load_folder",
+			TemplateData: map[string]any{
+				"Folder": fileAddress,
+				"Error":  err,
+			},
+		})
+		fmt.Println(message)
 		return []string{}
 	}
 	return list
@@ -78,14 +100,30 @@ func loadOraclesList() []string {
 func loadOracleFromFile(fileAddress string) (*Oracle, error) {
 	oracle, err := yaml.LoadFromFile[Oracle](fileAddress)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load oracle: %w", err)
+		return nil, t.NewError(&goi18n.LocalizeConfig{
+			MessageID: "error.oracle.load",
+			TemplateData: map[string]any{
+				"Error": err,
+			},
+		})
 	}
 
 	if oracle.Dice <= 0 {
-		return nil, fmt.Errorf("oracle %q has an invalid dice value: %d", oracle.ID, oracle.Dice)
+		return nil, t.NewError(&goi18n.LocalizeConfig{
+			MessageID: "error.oracle.invalid_dice",
+			TemplateData: map[string]any{
+				"ID":   oracle.ID,
+				"Dice": oracle.Dice,
+			},
+		})
 	}
 	if len(oracle.Intervals) == 0 {
-		return nil, fmt.Errorf("oracle %q has no intervals", oracle.ID)
+		return nil, t.NewError(&goi18n.LocalizeConfig{
+			MessageID: "error.oracle.no_intervals",
+			TemplateData: map[string]any{
+				"ID": oracle.ID,
+			},
+		})
 	}
 
 	return oracle, nil
@@ -97,7 +135,14 @@ func RollOracle[T any](o *Oracle) (*OracleResult[T], error) {
 		if value >= interval.Min && value <= interval.Max {
 			res, ok := interval.Result.(T)
 			if !ok {
-				return nil, fmt.Errorf("oracle %q has an interval with a result of type %T, expected %T", o.ID, interval.Result, res)
+				return nil, t.NewError(&goi18n.LocalizeConfig{
+					MessageID: "error.oracle.invalid_result_type",
+					TemplateData: map[string]any{
+						"ID":       o.ID,
+						"Actual":   fmt.Sprintf("%T", interval.Result),
+						"Expected": fmt.Sprintf("%T", res),
+					},
+				})
 			}
 
 			return &OracleResult[T]{
@@ -108,5 +153,11 @@ func RollOracle[T any](o *Oracle) (*OracleResult[T], error) {
 		}
 	}
 
-	return nil, fmt.Errorf("oracle %q has no interval matching roll %d", o.ID, value)
+	return nil, t.NewError(&goi18n.LocalizeConfig{
+		MessageID: "error.oracle.no_matching_interval",
+		TemplateData: map[string]any{
+			"ID":   o.ID,
+			"Roll": value,
+		},
+	})
 }

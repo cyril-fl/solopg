@@ -1,20 +1,23 @@
-package i18n
+package t
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
-	"encoding/json"
-
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 	"gopkg.in/yaml.v3"
 )
 
 var (
-	bundle *goi18n.Bundle
-	T      *goi18n.Localizer
+	bundle    *i18n.Bundle
+	Localizer *i18n.Localizer
 )
+
+func NewError(config *i18n.LocalizeConfig) error {
+	return errors.New(Localizer.MustLocalize(config))
+}
 
 func Init(cfg Config, requested string) error {
 	if err := cfg.Validate(); err != nil {
@@ -31,8 +34,7 @@ func Init(cfg Config, requested string) error {
 		return fmt.Errorf("invalid default locale '%s': %w", defaultLocale.ISO, err)
 	}
 
-	bundle = goi18n.NewBundle(defaultTag)
-	bundle.RegisterUnmarshalFunc(string(FormatJSON), json.Unmarshal)
+	bundle = i18n.NewBundle(defaultTag)
 	bundle.RegisterUnmarshalFunc(string(FormatYAML), yaml.Unmarshal)
 
 	for _, locale := range cfg.Locales {
@@ -57,6 +59,6 @@ func Init(cfg Config, requested string) error {
 		return fmt.Errorf("invalid locale '%s': %w", selectedLocale.ISO, err)
 	}
 
-	T = goi18n.NewLocalizer(bundle, selectedTag.String(), defaultTag.String())
+	Localizer = i18n.NewLocalizer(bundle, selectedTag.String(), defaultTag.String())
 	return nil
 }

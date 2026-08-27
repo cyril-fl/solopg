@@ -5,10 +5,12 @@ import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/effects"
+	"solopg/internal/infrastructure/t"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func (m model) View() tea.View {
@@ -43,12 +45,12 @@ func (m model) View() tea.View {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{"Ctrl+S: Sauvegarder"}
+	footer := []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save"})}
 	if m.formOpen {
-		return append(footer, "Entrée: Valider", "Échap: Annuler")
+		return append(footer, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "validate"}), t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "cancel"}))
 	}
 	if m.pageOpen {
-		footer = append(footer, "Ctrl+N: Ajouter", "Échap: retour au chat")
+		footer = append(footer, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "add"}), t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "back_to_chat"}))
 	}
 	return footer
 }
@@ -78,19 +80,19 @@ func composeSidePanel(content *strings.Builder, height int, oracleView, codexVie
 	sideView := statsView
 
 	if oracleView != tui.EmptyKey {
-		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView, "\nORACLES\n", oracleView, "\nCODEX\n", codexView)
+		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView, "\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "oracles"})+"\n", oracleView, "\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex"})+"\n", codexView)
 	}
 
 	return renderPanel(sideView, height)
 }
 
 func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
-	var characterName = "PERSONNAGE: "
+	var characterName = t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "character"})
 
 	isEngineNil := engine == nil || engine.State == nil
 
 	if isEngineNil || engine.State.Player == nil {
-		characterName += "Joueur inconnu"
+		characterName += t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "unknown_player"})
 	} else {
 		characterName += engine.State.Player.Name
 	}
@@ -100,12 +102,12 @@ func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
 }
 
 func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
-	var locationName = "LIEU: "
+	var locationName = t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "place"})
 
 	isEngineNil := engine == nil || engine.State == nil
 
 	if isEngineNil || engine.State.CurrentLocation == nil {
-		locationName += "Lieu inconnu"
+		locationName += t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "unknown_place"})
 	} else {
 		locationName += engine.State.CurrentLocation.Name
 	}
@@ -115,13 +117,21 @@ func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
 }
 
 func renderStatsInfo(content *strings.Builder, engine *game.Engine) {
-	content.WriteString("STATS:\n")
+	content.WriteString(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "stats_upper"}) + "\n")
 
 	if engine == nil || engine.State == nil || engine.State.Player == nil {
-		content.WriteString("Aucune statistique")
+		content.WriteString(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "no_stats"}))
 	} else {
 		for _, stat := range effects.ListStats() {
-			fmt.Fprintf(content, "%-10s %d\n", stat, engine.State.Player.Stats[stat])
+			key := "stat." + string(stat)
+			label := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+				MessageID: key,
+				DefaultMessage: &goi18n.Message{
+					ID:    key,
+					Other: string(stat),
+				},
+			})
+			fmt.Fprintf(content, "%-10s %d\n", label, engine.State.Player.Stats[stat])
 		}
 	}
 }

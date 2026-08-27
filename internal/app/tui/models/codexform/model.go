@@ -1,15 +1,16 @@
 package codexform
 
 import (
-	"fmt"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/objects"
+	"solopg/internal/infrastructure/t"
 	"strings"
 
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type Kind string
@@ -96,18 +97,22 @@ func choicesFor(kind Kind, name string) []string {
 func fieldsFor(kind Kind) [][2]string {
 	switch kind {
 	case NPCs:
-		return [][2]string{{"name", "Nom"}, {"description", "Description"}, {"class", "Classe"}, {"race", "Race"}}
+		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}, {"class", label("field.class")}, {"race", label("field.race")}}
 	case Monsters:
-		return [][2]string{{"name", "Nom"}, {"description", "Description"}, {"race", "Race"}}
+		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}, {"race", label("field.race")}}
 	case Locations:
-		return [][2]string{{"name", "Nom"}, {"description", "Description"}}
+		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}}
 	case Objects:
-		return [][2]string{{"name", "Nom"}, {"description", "Description"}, {"category", "Catégorie (weapon/armor/potion)"}}
+		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}, {"category", label("field.category")}}
 	case Objectifs:
-		return [][2]string{{"title", "Titre"}, {"description", "Description"}}
+		return [][2]string{{"title", label("field.title")}, {"description", label("field.description")}}
 	default:
 		return nil
 	}
+}
+
+func label(id string) string {
+	return t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: id})
 }
 
 func (m *Model) SetWidth(width int) {
@@ -221,18 +226,23 @@ func (m Model) Submit() (Result, error) {
 		required = "title"
 	}
 	if values[required] == "" {
-		return Result{}, fmt.Errorf("%s est obligatoire", required)
+		return Result{}, t.NewError(&goi18n.LocalizeConfig{
+			MessageID: "error.required_field",
+			TemplateData: map[string]any{
+				"Field": fieldsFor(m.kind)[0][1],
+			},
+		})
 	}
 	if m.kind == NPCs {
 		if values["class"] == "" || values["race"] == "" {
-			return Result{}, fmt.Errorf("la classe et la race sont obligatoires")
+			return Result{}, t.NewError(&goi18n.LocalizeConfig{MessageID: "error.class_race_required"})
 		}
 	}
 	if m.kind == Monsters && values["race"] == "" {
-		return Result{}, fmt.Errorf("la race est obligatoire")
+		return Result{}, t.NewError(&goi18n.LocalizeConfig{MessageID: "error.race_required"})
 	}
 	if m.kind == Objects && values["category"] == "" {
-		return Result{}, fmt.Errorf("la catégorie est obligatoire")
+		return Result{}, t.NewError(&goi18n.LocalizeConfig{MessageID: "error.category_required"})
 	}
 
 	return Result{Kind: m.kind, Values: values}, nil
@@ -247,7 +257,10 @@ func (m *Model) SetError(err error) {
 }
 
 func (m Model) View() string {
-	parts := []string{lipgloss.NewStyle().Bold(true).Render("Ajouter — " + string(m.kind)), ""}
+	parts := []string{lipgloss.NewStyle().Bold(true).Render(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+		MessageID:    "codex.add",
+		TemplateData: map[string]any{"Kind": string(m.kind)},
+	})), ""}
 	for i, item := range m.fields {
 		label := item.label
 		if i == m.index {
