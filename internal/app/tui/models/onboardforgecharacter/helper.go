@@ -56,7 +56,7 @@ func handleEnterInput(m model) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	if m.attempt >=3 {
+	if m.attempt >= 3 {
 		m.choiceList = makeConfirmationModel(m.choiceList)
 	}
 
@@ -84,9 +84,9 @@ func getStatGenerationOracle() (*gameplay.Oracle, error) {
 }
 
 func generateCharacterBuild(oracle *gameplay.Oracle) ([]effects.Modifier, error) {
-	statsList := effects.ListStats()	
+	statsList := effects.ListStats()
 	build := []effects.Modifier{}
-	
+
 	for _, stat := range statsList {
 		roll, err := gameplay.RollOracle[int](oracle)
 		if err != nil {

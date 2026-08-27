@@ -44,14 +44,13 @@ func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 	return newCampaign, nil
 }
 
-
 func generateCharacter(ctx *tui.Context) (*characters.Character, error) {
 	player, err := characters.New(characters.Template{
-		Name:   ctx.SelectedName,
-		Race:   ctx.SelectedRace.GetName(),
-		Class:  ctx.SelectedClass.GetName(),
-		Rarity: attributes.A,
-		Stats:  getStatsFromContext(ctx),
+		Name:      ctx.SelectedName,
+		Race:      ctx.SelectedRace.GetName(),
+		Class:     ctx.SelectedClass.GetName(),
+		Rarity:    attributes.A,
+		Stats:     getStatsFromContext(ctx),
 		Equipment: getArmorSetFromContext(ctx),
 		Inventory: []objects.Object{},
 		Wallet:    characters.Wallet{},
@@ -87,11 +86,11 @@ func getModifiersFromContext(ctx *tui.Context) []effects.Modifier {
 	raceBoost := ctx.SelectedRace.GetBonus()
 	classBoost := ctx.SelectedClass.GetBonus()
 	build := ctx.SelectedBuild
-	
+
 	modifiers := make([]effects.Modifier, 0, len(raceBoost)+len(classBoost)+len(build))
 	modifiers = append(modifiers, raceBoost...)
 	modifiers = append(modifiers, classBoost...)
 	modifiers = append(modifiers, build...)
-	
+
 	return modifiers
 }

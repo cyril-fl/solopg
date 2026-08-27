@@ -9,16 +9,16 @@ import (
 )
 
 type model struct {
-	attempt       int
-	choiceList    list.Model
-	buildsChoice		[]effects.Modifier
+	attempt      int
+	choiceList   list.Model
+	buildsChoice []effects.Modifier
 }
 
 func NewModel() tea.Model {
 	return model{
-		choiceList:    makeChoiceModel(),
-		attempt:       1,
-		buildsChoice:  drowBuild(),
+		choiceList:   makeChoiceModel(),
+		attempt:      1,
+		buildsChoice: drowBuild(),
 	}
 }
 

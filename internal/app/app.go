@@ -23,9 +23,9 @@ func Try() error {
 		return err
 	}
 
-	statsList := effects.ListStats()	
+	statsList := effects.ListStats()
 	build := []effects.Modifier{}
-	
+
 	for _, stat := range statsList {
 		roll, err := gameplay.RollOracle[int](oracle)
 		if err != nil {

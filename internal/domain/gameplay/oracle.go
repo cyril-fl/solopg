@@ -35,7 +35,7 @@ func GetOracle() []*Oracle {
 	if _oracles == nil {
 		_oracles = loadOracles()
 	}
-	
+
 	return _oracles
 }
 
@@ -91,7 +91,7 @@ func loadOracleFromFile(fileAddress string) (*Oracle, error) {
 	return oracle, nil
 }
 
-func  RollOracle[T any](o *Oracle) (*OracleResult[T], error) {
+func RollOracle[T any](o *Oracle) (*OracleResult[T], error) {
 	value := roll(o.Dice)
 	for _, interval := range o.Intervals {
 		if value >= interval.Min && value <= interval.Max {

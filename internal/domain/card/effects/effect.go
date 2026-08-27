@@ -72,8 +72,6 @@ func BaseStats() Stats {
 }
 
 func (s Stat) Validate() bool {
-	// jsonlog.JsonifiedLog(s)
-	// jsonlog.JsonifiedLog(config)
 	return slices.Contains(ListStats(), s)
 }
 

@@ -140,7 +140,7 @@ func onboardingSteps() []tui.Step {
 				}
 				ctx.SelectedBuild = build
 				return nil
-			},	
+			},
 		},
 		{
 			Submodel: onboardlocation.NewModel(),
