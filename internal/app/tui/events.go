@@ -33,12 +33,24 @@ func NormalizeError(err error) error {
 
 // keys
 const (
+	// Control keys
 	KeyCtrlC    = "ctrl+c"
-	KeyEnter    = "enter"
 	KeyQuit     = "ctrl+q"
 	KeySave     = "ctrl+s"
-	KeySettings = "s"
-	KeyBack     = "b"
+	KeyShiftTab = "shift+tab"
+
+	// Navigation keys
+	KeyEnter    = "enter"
 	KeyEsc      = "esc"
+	KeyBackspace = "backspace"
+	KeyTab      = "tab"
+
+	// Arrow keys
+	KeyUp       = "up"
+	KeyDown     = "down"
+	KeyLeft     = "left"
+	KeyRight    = "right"
+
+	// Other keys
 	EmptyKey    = ""
 )

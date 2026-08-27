@@ -3,7 +3,10 @@ package codex
 import (
 	"fmt"
 	"solopg/internal/domain/card/locations"
+	"solopg/internal/infrastructure/t"
 	"time"
+
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type LocationsTable struct {
@@ -15,7 +18,7 @@ func (l *LocationsTable) Summaries() []string {
 	summaries := make([]string, 0, len(l.Entries))
 	for _, entry := range l.Entries {
 		if entry.Location == nil {
-			summaries = append(summaries, "Lieu inconnu")
+			summaries = append(summaries, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_location"}))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))

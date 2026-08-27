@@ -185,7 +185,20 @@ func openCodexForm(m model) (model, tea.Cmd) {
 		return m, nil
 	}
 
-	kind := codexform.Kind(selected.Value().name)
+	var kind codexform.Kind
+	switch selected.Value().kind {
+	case codexNPCs:
+		kind = codexform.NPCs
+	case codexMonsters:
+		kind = codexform.Monsters
+	case codexLocations:
+		kind = codexform.Locations
+	case codexObjects:
+		kind = codexform.Objects
+	case codexObjectifs:
+		kind = codexform.Objectifs
+	}
+
 	m.form = codexform.New(kind, m.viewport.Width())
 	m.formOpen = true
 	return m, nil

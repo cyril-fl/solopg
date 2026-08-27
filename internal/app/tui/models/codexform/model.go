@@ -1,6 +1,7 @@
 package codexform
 
 import (
+	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/objects"
@@ -16,10 +17,10 @@ import (
 type Kind string
 
 const (
-	NPCs      Kind = "PNJ"
-	Monsters  Kind = "Monstres"
-	Locations Kind = "Lieux"
-	Objects   Kind = "Objets"
+	NPCs      Kind = "NPCs"
+	Monsters  Kind = "Monsters"
+	Locations Kind = "Locations"
+	Objects   Kind = "Objects"
 	Objectifs Kind = "Objectifs"
 )
 
@@ -125,24 +126,24 @@ func (m *Model) Update(msg tea.Msg) tea.Cmd {
 	key, ok := msg.(tea.KeyPressMsg)
 	if ok {
 		switch key.String() {
-		case "up":
+		case tui.KeyUp:
 			if m.currentIsChoice() {
 				m.previousChoice()
 				return nil
 			}
 			m.previousField()
 			return nil
-		case "down":
+		case tui.KeyDown:
 			if m.currentIsChoice() {
 				m.nextChoice()
 				return nil
 			}
 			m.nextField()
 			return nil
-		case "tab":
+		case tui.KeyTab:
 			m.nextField()
 			return nil
-		case "shift+tab":
+		case tui.KeyShiftTab:
 			m.previousField()
 			return nil
 		}

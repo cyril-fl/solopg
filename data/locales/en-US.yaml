@@ -124,6 +124,14 @@ oracle.very_likely:
   other: Very likely
 oracle.very_unlikly:
   other: Very unlikely
+codex.unknown_npc:
+  other: Unknown NPC
+codex.unknown_monster:
+  other: Unknown monster
+codex.unknown_location:
+  other: Unknown location
+codex.unknown_object:
+  other: Unknown object
 error.save_unconfigured:
   other: "Save function is not configured"
 error.oracle.not_found:

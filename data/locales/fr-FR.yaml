@@ -101,6 +101,14 @@ oracle.very_likely:
   other: Très probable
 oracle.very_unlikly:
   other: Très improbable
+codex.unknown_npc:
+  other: PNJ inconnu
+codex.unknown_monster:
+  other: Monstre inconnu
+codex.unknown_location:
+  other: Lieu inconnu
+codex.unknown_object:
+  other: Objet inconnu
 
 # Errors
 error.required_field:

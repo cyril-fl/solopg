@@ -3,7 +3,10 @@ package codex
 import (
 	"fmt"
 	"solopg/internal/domain/card/characters"
+	"solopg/internal/infrastructure/t"
 	"time"
+
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type MonstersTable struct {
@@ -15,7 +18,7 @@ func (m *MonstersTable) Summaries() []string {
 	summaries := make([]string, 0, len(m.Entries))
 	for _, entry := range m.Entries {
 		if entry.character == nil {
-			summaries = append(summaries, "Monstre inconnu")
+			summaries = append(summaries, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_monster"}))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.character.Name, entry.character.Description))
