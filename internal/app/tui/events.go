@@ -40,17 +40,17 @@ const (
 	KeyShiftTab = "shift+tab"
 
 	// Navigation keys
-	KeyEnter    = "enter"
-	KeyEsc      = "esc"
+	KeyEnter     = "enter"
+	KeyEsc       = "esc"
 	KeyBackspace = "backspace"
-	KeyTab      = "tab"
+	KeyTab       = "tab"
 
 	// Arrow keys
-	KeyUp       = "up"
-	KeyDown     = "down"
-	KeyLeft     = "left"
-	KeyRight    = "right"
+	KeyUp    = "up"
+	KeyDown  = "down"
+	KeyLeft  = "left"
+	KeyRight = "right"
 
 	// Other keys
-	EmptyKey    = ""
+	EmptyKey = ""
 )

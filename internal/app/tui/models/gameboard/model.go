@@ -3,7 +3,7 @@ package gameboard
 import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
-	"solopg/internal/app/tui/models/codexform"
+	"solopg/internal/app/tui/models/codex"
 	"solopg/internal/infrastructure/t"
 
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
@@ -27,10 +27,9 @@ type model struct {
 	oracleList  list.Model
 	codexList   list.Model
 	activeMenu  panelMenu
-	codexPage   viewport.Model
-	pageOpen    bool
-	formOpen    bool
-	form        codexform.Model
+
+	codexView CodexView
+
 
 	engine *game.Engine
 	save   func() error
@@ -87,9 +86,14 @@ func NewModel(params UiParams) model {
 		err:         nil,
 
 		oracleList: makeOracleModel(),
-		codexList:  makeCodexModel(),
+		codexList:  codex.MakeCodexListModel(panelWidth-4, codexMenuHeight),
 		activeMenu: oracleMenu,
-		codexPage:  viewport.New(viewport.WithWidth(30), viewport.WithHeight(5)),
+		codexView: CodexView{
+			page:  codexViewModel[viewport.Model]{
+				model: viewport.New(viewport.WithWidth(30), viewport.WithHeight(5)),
+				open:   false,
+			},
+		},
 
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -102,7 +106,7 @@ func (m model) Init() tea.Cmd {
 
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
 func (m model) HandlesEscape() bool {
-	return m.pageOpen
+	return m.codexView.form.open
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -111,38 +115,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		handleWindowResize(&m, msg)
 
 	case tea.KeyPressMsg:
-		if m.formOpen {
-			return handleCodexFormKey(m, msg)
+		if m.codexView.form.open {
+			return HandleCodexFormKey(m, msg)
 		}
 		switch msg.String() {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
 		case "ctrl+n":
-			if m.pageOpen {
-				return openCodexForm(m)
+			if m.codexView.page.open {
+				return OpenCodexForm(m)
 			}
 		case tui.KeyEnter:
-			if m.pageOpen {
+			if m.codexView.page.open {
 				return m, nil
 			}
 			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == oracleMenu {
 				return handleOracleRoll(m)
 			}
 			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == codexMenu {
-				return openCodexPage(m)
+				return OpenCodexPage(m)
 			}
 			return handleEnterInput(m)
 		case "up", "down":
-			if m.pageOpen {
-				return handleCodexPageNavigation(m, msg)
+			if m.codexView.page.open {
+				return HandleCodexPageNavigation(m, msg)
 			}
 			if m.showPanel && m.textarea.Value() == "" {
 				return handlePanelNavigation(m, msg)
 			}
 			return handleDefaultInput(m, msg)
 		case tui.KeyEsc:
-			if m.pageOpen {
-				m.pageOpen = false
+			if m.codexView.page.open {
+				m.codexView.page.open = false
 				return m, nil
 			}
 		default:

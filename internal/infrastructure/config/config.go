@@ -7,10 +7,10 @@ import (
 )
 
 type config struct {
-	Name     string      `yaml:"name"`
-	Verbose  bool        `yaml:"verbose"`
+	Name     string   `yaml:"name"`
+	Verbose  bool     `yaml:"verbose"`
 	I18n     t.Config `yaml:"i18n"`
-	Commands commands    `yaml:"commands"`
+	Commands commands `yaml:"commands"`
 }
 
 type commands struct {

@@ -16,11 +16,11 @@ import (
 func (m model) View() tea.View {
 	viewportView := m.viewport.View()
 	chatView := viewportView + "\n" + m.textarea.View()
-	if m.pageOpen {
-		chatView = m.codexPage.View()
+	if m.codexView.page.open {
+		chatView = m.codexView.page.model.View()
 	}
-	if m.formOpen {
-		chatView = m.form.View()
+	if m.codexView.form.open {
+		chatView = m.codexView.form.model.View()
 	}
 	if m.showPanel {
 		chatView = lipgloss.JoinHorizontal(
@@ -33,7 +33,7 @@ func (m model) View() tea.View {
 
 	v := tea.NewView(chatView)
 	c := m.textarea.Cursor()
-	if m.pageOpen || m.formOpen {
+	if m.codexView.page.open || m.codexView.form.open {
 		c = nil
 	}
 	if c != nil {
@@ -46,10 +46,10 @@ func (m model) View() tea.View {
 
 func (m model) GetFooter() []string {
 	footer := []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save"})}
-	if m.formOpen {
+	if m.codexView.form.open {
 		return append(footer, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "validate"}), t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "cancel"}))
 	}
-	if m.pageOpen {
+	if m.codexView.page.open {
 		footer = append(footer, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "add"}), t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "back_to_chat"}))
 	}
 	return footer
