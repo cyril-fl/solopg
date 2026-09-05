@@ -17,6 +17,44 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
+// - Model - //
+
+// - Submodels - //
+func makeDiceModel() list.Model {
+	options := gameplay.ListDices()
+
+	items := make([]list.Item, 0, len(options))
+	for _, option := range options {
+		items = append(items, tui.NewItem(option.GetName(), "", option))
+	}
+
+	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, diceMenuHeight)
+	tui.ConfigureList(&model)
+	return model
+}
+
+func makeOracleModel() list.Model {
+	items := make([]list.Item, 0)
+	for _, oracle := range gameplay.GetOracle() {
+		if oracle.Visible {
+			key := "oracle." + oracle.ID
+			name := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+				MessageID: key,
+				DefaultMessage: &goi18n.Message{
+					ID:    key,
+					Other: oracle.ID,
+				},
+			})
+			items = append(items, tui.NewItem(name, "", oracle))
+		}
+	}
+
+	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, oracleMenuHeight)
+	tui.ConfigureList(&model)
+	return model
+}
+
+// // // REFACTOR // // //
 type model struct {
 	viewport    viewport.Model
 	author      string
@@ -27,10 +65,8 @@ type model struct {
 	showPanel   bool
 	oracleList  list.Model
 	diceList    list.Model
-	codexList   list.Model
+	codex       codex.Model
 	activeMenu  panelMenu
-
-	codexView CodexView
 
 	engine *game.Engine
 	save   func() error
@@ -94,14 +130,8 @@ func NewModel(params UiParams) model {
 
 		oracleList: makeOracleModel(),
 		diceList:   makeDiceModel(),
-		codexList:  codex.MakeCodexListModel(panelWidth-4, codexMenuHeight),
+		codex:      codex.NewModel(params.Engine, panelWidth-4, codexMenuHeight),
 		activeMenu: oracleMenu,
-		codexView: CodexView{
-			page: codexViewModel[viewport.Model]{
-				model: viewport.New(viewport.WithWidth(30), viewport.WithHeight(5)),
-				open:  false,
-			},
-		},
 
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -112,30 +142,25 @@ func (m model) Init() tea.Cmd {
 	return textarea.Blink
 }
 
-// HandlesEscape lets the global router forward Escape while a Codex page is open.
-func (m model) HandlesEscape() bool {
-	return m.codexView.form.open
-}
-
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		handleWindowResize(&m, msg)
 
 	case tea.KeyPressMsg:
-		if m.codexView.form.open {
-			return HandleCodexFormKey(m, msg)
+		if m.codex.FormOpen() {
+			return m, m.codex.Update(msg)
 		}
 		switch msg.String() {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
 		case "ctrl+n":
-			if m.codexView.page.open {
-				return OpenCodexForm(m)
+			if m.codex.PageOpen() {
+				return m, m.codex.Update(msg)
 			}
 		case tui.KeyEnter:
-			if m.codexView.page.open {
-				return m, nil
+			if m.codex.PageOpen() {
+				return m, m.codex.Update(msg)
 			}
 			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == oracleMenu {
 				return handleOracleRoll(m)
@@ -144,21 +169,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return handleDiceRoll(m)
 			}
 			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == codexMenu {
-				return OpenCodexPage(m)
+				m.codex.OpenPage()
+				return m, nil
 			}
 			return handleEnterInput(m)
 		case "up", "down":
-			if m.codexView.page.open {
-				return HandleCodexPageNavigation(m, msg)
+			if m.codex.PageOpen() {
+				return m, m.codex.Update(msg)
 			}
 			if m.showPanel && m.textarea.Value() == "" {
 				return handlePanelNavigation(m, msg)
 			}
 			return handleDefaultInput(m, msg)
 		case tui.KeyEsc:
-			if m.codexView.page.open {
-				m.codexView.page.open = false
-				return m, nil
+			if m.codex.PageOpen() {
+				return m, m.codex.Update(msg)
 			}
 		default:
 			return handleDefaultInput(m, msg)
@@ -174,37 +199,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-// - Submodels - //
-func makeDiceModel() list.Model {
-	options := gameplay.ListDices()
-
-	items := make([]list.Item, 0, len(options))
-	for _, option := range options {
-		items = append(items, tui.NewItem(option.GetName(), "", option))
-	}
-
-	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, diceMenuHeight)
-	tui.ConfigureList(&model)
-	return model
-}
-
-func makeOracleModel() list.Model {
-	items := make([]list.Item, 0)
-	for _, oracle := range gameplay.GetOracle() {
-		if oracle.Visible {
-			key := "oracle." + oracle.ID
-			name := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
-				MessageID: key,
-				DefaultMessage: &goi18n.Message{
-					ID:    key,
-					Other: oracle.ID,
-				},
-			})
-			items = append(items, tui.NewItem(name, "", oracle))
-		}
-	}
-
-	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, oracleMenuHeight)
-	tui.ConfigureList(&model)
-	return model
+// HandlesEscape lets the global router forward Escape while a Codex page is open.
+func (m model) HandlesEscape() bool {
+	return m.codex.HandlesEscape()
 }

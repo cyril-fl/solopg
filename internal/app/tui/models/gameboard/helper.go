@@ -27,12 +27,8 @@ func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 	m.textarea.SetWidth(chatWidth)
 	m.oracleList.SetSize(panelWidth-4, oracleMenuHeight)
 	m.diceList.SetSize(panelWidth-4, diceMenuHeight)
-	m.codexList.SetSize(panelWidth-4, codexMenuHeight)
-	m.codexView.page.model.SetWidth(chatWidth)
-	m.codexView.page.model.SetHeight(max(0, msg.Height))
-	if m.codexView.form.open {
-		m.codexView.form.model.SetWidth(chatWidth)
-	}
+	m.codex.SetMenuSize(panelWidth-4, codexMenuHeight)
+	m.codex.SetSize(chatWidth, max(0, msg.Height))
 	// Reserve the input and the separator above it. The parent TUI already
 	// reserved the footer height before forwarding the window size.
 	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
@@ -53,7 +49,7 @@ const (
 	codexMenuHeight  = 6
 )
 
-// TODO refactor
+// TODO ----  refactor ----
 func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 	if m.activeMenu == oracleMenu {
 		atStart := m.oracleList.Index() == 0
@@ -79,9 +75,9 @@ func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 			m.oracleList.Select(len(m.oracleList.Items()) - 1)
 			return m, nil
 		}
-		if msg.String() == tui.KeyDown && atEnd && len(m.codexList.Items()) > 0 {
+		if msg.String() == tui.KeyDown && atEnd && m.codex.MenuItemsCount() > 0 {
 			m.activeMenu = codexMenu
-			m.codexList.Select(0)
+			m.codex.SelectMenu(0)
 			return m, nil
 		}
 		var cmd tea.Cmd
@@ -89,8 +85,8 @@ func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 		return m, cmd
 	}
 
-	atStart := m.codexList.Index() == 0
-	atEnd := m.codexList.Index() >= len(m.codexList.Items())-1
+	atStart := m.codex.MenuIndex() == 0
+	atEnd := m.codex.MenuIndex() >= m.codex.MenuItemsCount()-1
 	if msg.String() == tui.KeyUp && atStart && len(m.oracleList.Items()) > 0 {
 		m.activeMenu = diceMenu
 		m.diceList.Select(len(m.diceList.Items()) - 1)
@@ -99,9 +95,7 @@ func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 	if msg.String() == tui.KeyDown && atEnd {
 		return m, nil
 	}
-	var cmd tea.Cmd
-	m.codexList, cmd = m.codexList.Update(msg)
-	return m, cmd
+	return m, m.codex.UpdateMenu(msg)
 }
 
 func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
@@ -149,13 +143,9 @@ func handleEnterInput(m model) (model, tea.Cmd) {
 	return m, nil
 }
 
-// TODO refactor
-
-
-
 func handleDiceRoll(m model) (model, tea.Cmd) {
 	selected, ok := m.diceList.SelectedItem().(tui.Item[gameplay.Dice])
-	if !ok || selected.Value().Roll == nil {
+	if !ok {
 		return m, nil
 	}
 
