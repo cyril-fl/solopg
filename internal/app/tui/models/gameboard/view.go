@@ -27,7 +27,7 @@ func (m model) View() tea.View {
 			lipgloss.Top,
 			chatView,
 			strings.Repeat(" ", panelGap),
-			renderSidePanel(m.engine, lipgloss.Height(chatView), m.oracleList.View(), m.codexList.View()),
+			renderSidePanel(m.engine, lipgloss.Height(chatView), m.oracleList.View(), m.diceList.View(), m.codexList.View()),
 		)
 	}
 
@@ -55,17 +55,17 @@ func (m model) GetFooter() []string {
 	return footer
 }
 
-func renderSidePanel(engine *game.Engine, height int, oracleView, codexView string) string {
+func renderSidePanel(engine *game.Engine, height int, oracleView, diceView, codexView string) string {
 	var content strings.Builder
 
 	renderCharacterInfo(&content, engine)
 	renderLocationInfo(&content, engine)
 	renderStatsInfo(&content, engine)
 
-	return composeSidePanel(&content, height, oracleView, codexView)
+	return composeSidePanel(&content, height, oracleView, diceView, codexView)
 }
 
-func composeSidePanel(content *strings.Builder, height int, oracleView, codexView string) string {
+func composeSidePanel(content *strings.Builder, height int, oracleView, diceView, codexView string) string {
 	renderPanel := func(content string, height int) string {
 		return lipgloss.NewStyle().
 			Width(panelWidth-4).
@@ -80,7 +80,10 @@ func composeSidePanel(content *strings.Builder, height int, oracleView, codexVie
 	sideView := statsView
 
 	if oracleView != tui.EmptyKey {
-		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView, "\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "oracles"})+"\n", oracleView, "\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex"})+"\n", codexView)
+		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView,
+			"\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "oracles"})+"\n", oracleView,
+			"\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "dice"})+"\n", diceView,
+			"\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex"})+"\n", codexView)
 	}
 
 	return renderPanel(sideView, height)

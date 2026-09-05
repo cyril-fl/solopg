@@ -1,7 +1,7 @@
 name: "solopg"
 verbose: false
 i18n: 
-  default: "en"
+  default: "fr"
   dir: "data/locales"
   format: "yaml"
   locales: 

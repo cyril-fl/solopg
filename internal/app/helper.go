@@ -36,7 +36,6 @@ func runSession(db *mongo.Mongo) error {
 			Resolve: func(ctx *tui.Context, value any) error {
 				selected, ok := value.(*campaign.Campaign)
 				if !ok {
-					// return fmt.Errorf("unexpected save value %T", value)
 					return t.NewError(&i18n.LocalizeConfig{
 						MessageID: "error.unexpected_save_value",
 						TemplateData: map[string]any{
@@ -111,7 +110,6 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
-					// return fmt.Errorf("unexpected name value %T", value)
 					return t.NewError(&i18n.LocalizeConfig{
 						MessageID: "error.unexpected_name_value",
 						TemplateData: map[string]any{
@@ -128,7 +126,6 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				race, ok := value.(string)
 				if !ok {
-					// return fmt.Errorf("unexpected race value %T", value)
 					return t.NewError(&i18n.LocalizeConfig{
 						MessageID: "error.unexpected_race_value",
 						TemplateData: map[string]any{
@@ -145,7 +142,6 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				class, ok := value.(string)
 				if !ok {
-					// return fmt.Errorf("unexpected class value %T", value)
 					return t.NewError(&i18n.LocalizeConfig{
 						MessageID: "error.unexpected_class_value",
 						TemplateData: map[string]any{
@@ -178,7 +174,6 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				location, ok := value.(*locations.Location)
 				if !ok {
-					// return fmt.Errorf("unexpected location value %T", value)
 					return t.NewError(&i18n.LocalizeConfig{
 						MessageID: "error.unexpected_location_value",
 						TemplateData: map[string]any{

@@ -4,6 +4,7 @@ import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/codex"
+	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
 
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
@@ -25,11 +26,11 @@ type model struct {
 	err         error
 	showPanel   bool
 	oracleList  list.Model
+	diceList    list.Model
 	codexList   list.Model
 	activeMenu  panelMenu
 
 	codexView CodexView
-
 
 	engine *game.Engine
 	save   func() error
@@ -39,8 +40,14 @@ type panelMenu uint8
 
 const (
 	oracleMenu panelMenu = iota
+	diceMenu
 	codexMenu
 )
+
+type UiParams struct {
+	Engine *game.Engine
+	OnSave func() error
+}
 
 // NewModel returns the game view for embedding in the main TUI router.
 func NewModel(params UiParams) model {
@@ -86,12 +93,13 @@ func NewModel(params UiParams) model {
 		err:         nil,
 
 		oracleList: makeOracleModel(),
+		diceList:   makeDiceModel(),
 		codexList:  codex.MakeCodexListModel(panelWidth-4, codexMenuHeight),
 		activeMenu: oracleMenu,
 		codexView: CodexView{
-			page:  codexViewModel[viewport.Model]{
+			page: codexViewModel[viewport.Model]{
 				model: viewport.New(viewport.WithWidth(30), viewport.WithHeight(5)),
-				open:   false,
+				open:  false,
 			},
 		},
 
@@ -132,6 +140,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == oracleMenu {
 				return handleOracleRoll(m)
 			}
+			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == diceMenu {
+				return handleDiceRoll(m)
+			}
 			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == codexMenu {
 				return OpenCodexPage(m)
 			}
@@ -161,4 +172,39 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	return m, nil
+}
+
+// - Submodels - //
+func makeDiceModel() list.Model {
+	options := gameplay.ListDices()
+
+	items := make([]list.Item, 0, len(options))
+	for _, option := range options {
+		items = append(items, tui.NewItem(option.GetName(), "", option))
+	}
+
+	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, diceMenuHeight)
+	tui.ConfigureList(&model)
+	return model
+}
+
+func makeOracleModel() list.Model {
+	items := make([]list.Item, 0)
+	for _, oracle := range gameplay.GetOracle() {
+		if oracle.Visible {
+			key := "oracle." + oracle.ID
+			name := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+				MessageID: key,
+				DefaultMessage: &goi18n.Message{
+					ID:    key,
+					Other: oracle.ID,
+				},
+			})
+			items = append(items, tui.NewItem(name, "", oracle))
+		}
+	}
+
+	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, oracleMenuHeight)
+	tui.ConfigureList(&model)
+	return model
 }

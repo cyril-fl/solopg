@@ -32,6 +32,8 @@ oracles:
   other: ORACLES
 codex:
   other: CODEX
+dice:
+  other: DÉS
 character:
   other: "PERSONNAGE : "
 place:

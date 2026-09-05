@@ -1,7 +1,9 @@
 package gameboard
 
 import (
+	"fmt"
 	"solopg/internal/app/tui"
+	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
 	"strings"
 	"time"
@@ -24,6 +26,7 @@ func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 	m.viewport.SetWidth(chatWidth)
 	m.textarea.SetWidth(chatWidth)
 	m.oracleList.SetSize(panelWidth-4, oracleMenuHeight)
+	m.diceList.SetSize(panelWidth-4, diceMenuHeight)
 	m.codexList.SetSize(panelWidth-4, codexMenuHeight)
 	m.codexView.page.model.SetWidth(chatWidth)
 	m.codexView.page.model.SetHeight(max(0, msg.Height))
@@ -46,6 +49,7 @@ const (
 	panelGap         = 1
 	minimumChatWidth = 40
 	oracleMenuHeight = 1
+	diceMenuHeight   = 7
 	codexMenuHeight  = 6
 )
 
@@ -54,9 +58,9 @@ func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 	if m.activeMenu == oracleMenu {
 		atStart := m.oracleList.Index() == 0
 		atEnd := m.oracleList.Index() >= len(m.oracleList.Items())-1
-		if msg.String() == tui.KeyDown && atEnd && len(m.codexList.Items()) > 0 {
-			m.activeMenu = codexMenu
-			m.codexList.Select(0)
+		if msg.String() == tui.KeyDown && atEnd && len(m.diceList.Items()) > 0 {
+			m.activeMenu = diceMenu
+			m.diceList.Select(0)
 			return m, nil
 		}
 		if msg.String() == tui.KeyUp && atStart {
@@ -67,11 +71,29 @@ func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 		return m, cmd
 	}
 
+	if m.activeMenu == diceMenu {
+		atStart := m.diceList.Index() == 0
+		atEnd := m.diceList.Index() >= len(m.diceList.Items())-1
+		if msg.String() == tui.KeyUp && atStart && len(m.oracleList.Items()) > 0 {
+			m.activeMenu = oracleMenu
+			m.oracleList.Select(len(m.oracleList.Items()) - 1)
+			return m, nil
+		}
+		if msg.String() == tui.KeyDown && atEnd && len(m.codexList.Items()) > 0 {
+			m.activeMenu = codexMenu
+			m.codexList.Select(0)
+			return m, nil
+		}
+		var cmd tea.Cmd
+		m.diceList, cmd = m.diceList.Update(msg)
+		return m, cmd
+	}
+
 	atStart := m.codexList.Index() == 0
 	atEnd := m.codexList.Index() >= len(m.codexList.Items())-1
 	if msg.String() == tui.KeyUp && atStart && len(m.oracleList.Items()) > 0 {
-		m.activeMenu = oracleMenu
-		m.oracleList.Select(len(m.oracleList.Items()) - 1)
+		m.activeMenu = diceMenu
+		m.diceList.Select(len(m.diceList.Items()) - 1)
 		return m, nil
 	}
 	if msg.String() == tui.KeyDown && atEnd {
@@ -124,5 +146,50 @@ func handleEnterInput(m model) (model, tea.Cmd) {
 	m.textarea.Reset()
 	m.viewport.GotoBottom()
 
+	return m, nil
+}
+
+// TODO refactor
+
+
+
+func handleDiceRoll(m model) (model, tea.Cmd) {
+	selected, ok := m.diceList.SelectedItem().(tui.Item[gameplay.Dice])
+	if !ok || selected.Value().Roll == nil {
+		return m, nil
+	}
+
+	dice := selected.Value()
+	result := dice.Roll()
+	message := fmt.Sprintf("%s : %d", dice.GetName(), result)
+	m.engine.AddJournalEntry("Dice", message)
+	m.messages = append(m.messages, message)
+	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
+	m.viewport.GotoBottom()
+	return m, nil
+}
+
+func handleOracleRoll(m model) (model, tea.Cmd) {
+	selected, ok := m.oracleList.SelectedItem().(tui.Item[*gameplay.Oracle])
+	if !ok || selected.Value() == nil {
+		return m, nil
+	}
+
+	oracle := selected.Value()
+	result, err := gameplay.RollOracle[any](oracle)
+	if err != nil {
+		m.messages = append(m.messages, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.oracle_action", TemplateData: map[string]any{"Error": err}}))
+	} else {
+		critical := ""
+		if result.Critical {
+			critical = " (" + t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "critical"}) + ")"
+		}
+		message := fmt.Sprintf("Oracle %s — jet de %d : %v%s", oracle.ID, result.Roll, result.Result, critical)
+		m.engine.AddJournalEntry("Oracle", message)
+		m.messages = append(m.messages, message)
+	}
+
+	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
+	m.viewport.GotoBottom()
 	return m, nil
 }
