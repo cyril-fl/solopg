@@ -14,6 +14,54 @@ import (
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
+func handleEnterInput(m model) (model, tea.Cmd) {
+	input := m.textarea.Value()
+	if input == "" {
+		return m, nil
+	}
+
+	msg := m.senderStyle.Render(m.author + ": " + input)
+	m.engine.AddJournalEntry(m.author, input)
+
+	m.messages = append(m.messages, msg)
+
+	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
+	m.textarea.Reset()
+	m.viewport.GotoBottom()
+
+	return m, nil
+}
+
+func handleSaveInput(m model, msg tui.SaveMsg) (model, tea.Cmd) {
+	if msg.Err != nil {
+		m.err = msg.Err
+		m.messages = append(m.messages, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.save", TemplateData: map[string]any{"Error": msg.Err}}))
+	} else {
+		log := t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save.success", TemplateData: map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")}})
+
+		m.engine.Log(log)
+		m.messages = append(m.messages, log)
+		m.err = nil
+	}
+
+	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
+	m.viewport.GotoBottom()
+	return m, nil
+}
+
+func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
+	var cmd tea.Cmd
+	m.textarea, cmd = m.textarea.Update(msg)
+	return m, cmd
+}
+
+func handleCursorBlink(m model, msg cursor.BlinkMsg) (model, tea.Cmd) {
+	var cmd tea.Cmd
+	m.viewport, cmd = m.viewport.Update(msg)
+	return m, cmd
+}
+
+// TODO ----  refactor ----
 func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 	chatWidth := msg.Width
 	if msg.Width >= panelWidth+panelGap+minimumChatWidth {
@@ -49,7 +97,6 @@ const (
 	codexMenuHeight  = 6
 )
 
-// TODO ----  refactor ----
 func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 	if m.activeMenu == oracleMenu {
 		atStart := m.oracleList.Index() == 0
@@ -98,51 +145,6 @@ func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 	return m, m.codex.UpdateMenu(msg)
 }
 
-func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
-	var cmd tea.Cmd
-	m.textarea, cmd = m.textarea.Update(msg)
-	return m, cmd
-}
-
-func handleSaveInput(m model, msg tui.SaveMsg) (model, tea.Cmd) {
-	if msg.Err != nil {
-		m.err = msg.Err
-		m.messages = append(m.messages, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.save", TemplateData: map[string]any{"Error": msg.Err}}))
-	} else {
-		log := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save.success", TemplateData: map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")}})
-		m.engine.Log(log)
-		m.messages = append(m.messages, log)
-		m.err = nil
-	}
-
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-	m.viewport.GotoBottom()
-	return m, nil
-}
-
-func handleCursorBlink(m model, msg cursor.BlinkMsg) (model, tea.Cmd) {
-	var cmd tea.Cmd
-	m.viewport, cmd = m.viewport.Update(msg)
-	return m, cmd
-}
-
-func handleEnterInput(m model) (model, tea.Cmd) {
-	input := m.textarea.Value()
-	if input == "" {
-		return m, nil
-	}
-
-	msg := m.senderStyle.Render(m.author + ": " + input)
-	m.engine.AddJournalEntry(m.author, input)
-	m.messages = append(m.messages, msg)
-
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-	m.textarea.Reset()
-	m.viewport.GotoBottom()
-
-	return m, nil
-}
-
 func handleDiceRoll(m model) (model, tea.Cmd) {
 	selected, ok := m.diceList.SelectedItem().(tui.Item[gameplay.Dice])
 	if !ok {
@@ -150,12 +152,17 @@ func handleDiceRoll(m model) (model, tea.Cmd) {
 	}
 
 	dice := selected.Value()
+
 	result := dice.Roll()
+
 	message := fmt.Sprintf("%s : %d", dice.GetName(), result)
+
 	m.engine.AddJournalEntry("Dice", message)
 	m.messages = append(m.messages, message)
+
 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
 	m.viewport.GotoBottom()
+
 	return m, nil
 }
 
@@ -166,13 +173,15 @@ func handleOracleRoll(m model) (model, tea.Cmd) {
 	}
 
 	oracle := selected.Value()
+
 	result, err := gameplay.RollOracle[any](oracle)
+
 	if err != nil {
-		m.messages = append(m.messages, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.oracle_action", TemplateData: map[string]any{"Error": err}}))
+		m.messages = append(m.messages, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.oracle_action", TemplateData: map[string]any{"Error": err}}))
 	} else {
 		critical := ""
 		if result.Critical {
-			critical = " (" + t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "critical"}) + ")"
+			critical = " (" + t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "critical"}) + ")"
 		}
 		message := fmt.Sprintf("Oracle %s — jet de %d : %v%s", oracle.ID, result.Roll, result.Result, critical)
 		m.engine.AddJournalEntry("Oracle", message)
@@ -181,5 +190,6 @@ func handleOracleRoll(m model) (model, tea.Cmd) {
 
 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
 	m.viewport.GotoBottom()
+
 	return m, nil
 }

@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 	"solopg/internal/infrastructure/t"
+
+	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -13,7 +14,7 @@ import (
 
 func (m model) View() tea.View {
 	if m.err != nil {
-		errorLabel := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.label"})
+		errorLabel := t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.label"})
 		return tea.NewView(alignFooter(fmt.Sprintf("%s: %v", errorLabel, m.err), m.windowHeight(), mainFooter()))
 	}
 
@@ -28,7 +29,7 @@ func (m model) View() tea.View {
 
 // TODO: Modifier le footer pour qu'il devienne une "class" en soit.
 func mainFooter() []string {
-	return []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "quit"})}
+	return []string{t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "quit"})}
 }
 
 type HasFooter interface {

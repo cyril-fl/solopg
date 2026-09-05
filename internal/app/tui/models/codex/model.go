@@ -9,7 +9,6 @@ import (
 	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type Screen uint8
@@ -33,12 +32,13 @@ type Model struct {
 
 func NewModel(engine *game.Engine, width, menuHeight int) Model {
 	links := []CodexLink{
-		{name: localize("codex.npcs"), Kind: CodexNPCs},
-		{name: localize("codex.monsters"), Kind: CodexMonsters},
-		{name: localize("codex.locations"), Kind: CodexLocations},
-		{name: localize("codex.objects"), Kind: CodexObjects},
-		{name: localize("codex.objectives"), Kind: CodexObjectifs},
+		{name: t.Localize("codex.npcs"), Kind: CodexNPCs},
+		{name: t.Localize("codex.monsters"), Kind: CodexMonsters},
+		{name: t.Localize("codex.locations"), Kind: CodexLocations},
+		{name: t.Localize("codex.objects"), Kind: CodexObjects},
+		{name: t.Localize("codex.objectives"), Kind: CodexObjectifs},
 	}
+
 	items := make([]list.Item, 0, len(links))
 	for _, link := range links {
 		items = append(items, tui.NewItem(link.name, "", link))
@@ -73,12 +73,15 @@ func (m Model) View() string {
 }
 
 func (m *Model) SetSize(width, height int) {
-	m.menu.SetSize(width, height)
 	m.page.SetWidth(width)
 	m.page.SetHeight(height)
 	if m.FormOpen() {
 		m.form.SetWidth(width)
 	}
+}
+
+func (m *Model) SetMenuSize(width, height int) {
+	m.menu.SetSize(width, height)
 }
 
 func (m *Model) SelectMenu(index int) { m.menu.Select(index) }
@@ -195,20 +198,20 @@ func (m Model) formKind() codexform.Kind {
 		return codexform.Objectifs
 	}
 }
-/* TODO ne devrais pas appartenir a Code mais a T
+
+/*
+	TODO ne devrais pas appartenir a Code mais a T
+
 Localizer devrai eetre un objetc
-et exporter des fonction direct 
+et exporter des fonction direct
 
 var Localizer *Localizer
 
-func MustLocalize(lc *LocalizeConfig) string {
-	localized, err := Localize(lc)
-	if err != nil {
-		panic(err)
+	func MustLocalize(lc *LocalizeConfig) string {
+		localized, err := Localize(lc)
+		if err != nil {
+			panic(err)
+		}
+		return localized
 	}
-	return localized
-}
 */
-func localize(id string) string {
-	return t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: id})
-}

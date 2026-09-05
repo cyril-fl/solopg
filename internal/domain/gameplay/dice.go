@@ -10,7 +10,7 @@ import (
 // - Configuration & caching - //
 type yamlDiceConfig struct {
 	Name  string `yaml:"name"`
-	Sides int `yaml:"sides"`
+	Sides int    `yaml:"sides"`
 }
 
 const diceConfigFilePath = "data/systems/dice.yaml"
@@ -30,13 +30,13 @@ func loadDiceFromFile() error {
 
 // - Dice - //
 type Dice struct {
-	name string
+	name  string
 	sides int
 }
 
 func newDice(config yamlDiceConfig) Dice {
 	return Dice{
-		name: config.Name,
+		name:  config.Name,
 		sides: config.Sides,
 	}
 }

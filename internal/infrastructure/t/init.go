@@ -1,7 +1,6 @@
 package t
 
 import (
-	"errors"
 	"fmt"
 	"path/filepath"
 
@@ -11,13 +10,9 @@ import (
 )
 
 var (
-	bundle    *i18n.Bundle
-	Localizer *i18n.Localizer
+	bundle *i18n.Bundle
+	Local  *i18n.Localizer
 )
-
-func NewError(config *i18n.LocalizeConfig) error {
-	return errors.New(Localizer.MustLocalize(config))
-}
 
 func Init(cfg Config, requested string) error {
 	if err := cfg.Validate(); err != nil {
@@ -59,6 +54,6 @@ func Init(cfg Config, requested string) error {
 		return fmt.Errorf("invalid locale '%s': %w", selectedLocale.ISO, err)
 	}
 
-	Localizer = i18n.NewLocalizer(bundle, selectedTag.String(), defaultTag.String())
+	Local = i18n.NewLocalizer(bundle, selectedTag.String(), defaultTag.String())
 	return nil
 }

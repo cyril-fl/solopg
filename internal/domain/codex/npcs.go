@@ -18,7 +18,7 @@ func (n *NpcsTable) Summaries() []string {
 	summaries := make([]string, 0, len(n.Entries))
 	for _, entry := range n.Entries {
 		if entry.character == nil {
-			summaries = append(summaries, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_npc"}))
+			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_npc"}))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s - %s - %s", entry.character.Name, entry.character.Race, entry.character.Class, entry.character.Description))

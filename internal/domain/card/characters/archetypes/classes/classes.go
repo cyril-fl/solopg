@@ -11,17 +11,18 @@ type Class struct {
 	Bonus    []effects.Modifier `yaml:"bonus"`
 	ArmorSet string             `yaml:"armor_set"`
 }
+
 const classConfigFilePath = "data/systems/archetypes/class.yaml"
 
 // TODO optimiser class / races / ect avec des caches. Prendre exemple sur domain/gameplay/dice.go pour le cache et le load du fichier YAML
-/* TODO retirer les getter inutiles car les class sont exporter pour YAML ou faire un wrapper avec 
+/* TODO retirer les getter inutiles car les class sont exporter pour YAML ou faire un wrapper avec
 type YAMLClassConfig struct {
 	Name     string             `yaml:"name"`
 	Playable bool               `yaml:"playable"`
 	Bonus    []effects.Modifier `yaml:"bonus"`
 	ArmorSet string             `yaml:"armor_set"`
 }
-	
+
 type Class struct {
 	name     string             `yaml:"name"`
 	playable bool               `yaml:"playable"`

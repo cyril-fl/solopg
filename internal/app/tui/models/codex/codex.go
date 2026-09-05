@@ -38,11 +38,11 @@ const (
 
 func MakeCodexListModel(width int, height int) list.Model {
 	links := []CodexLink{
-		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.npcs"}), Kind: CodexNPCs},
-		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.monsters"}), Kind: CodexMonsters},
-		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.locations"}), Kind: CodexLocations},
-		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objects"}), Kind: CodexObjects},
-		{name: t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objectives"}), Kind: CodexObjectifs},
+		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.npcs"}), Kind: CodexNPCs},
+		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.monsters"}), Kind: CodexMonsters},
+		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.locations"}), Kind: CodexLocations},
+		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objects"}), Kind: CodexObjects},
+		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objectives"}), Kind: CodexObjectifs},
 	}
 	items := make([]list.Item, 0, len(links))
 	for _, link := range links {
@@ -175,7 +175,7 @@ func RenderCodexPage(engine *game.Engine, link CodexLink) string {
 		}
 	}
 	if len(entries) == 0 {
-		entries = []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.empty"})}
+		entries = []string{t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.empty"})}
 	}
 	return title + "\n\n" + strings.Join(entries, "\n\n")
 }

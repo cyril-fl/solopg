@@ -155,7 +155,7 @@ func fieldsFor(kind Kind) [][2]string {
 }
 
 func label(id string) string {
-	return t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: id})
+	return t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: id})
 }
 
 func (m *Model) SetWidth(width int) {

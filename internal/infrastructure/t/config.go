@@ -2,9 +2,12 @@ package t
 
 import (
 	"fmt"
+	"os"
+	"slices"
 	"solopg/types"
 )
 
+// -- Config -- //
 type Config struct {
 	Default string   `yaml:"default"`
 	Dir     string   `yaml:"dir"`
@@ -12,68 +15,8 @@ type Config struct {
 	Locales []Locale `yaml:"locales"`
 }
 
-type Format string
-
-const (
-	FormatJSON Format = "json"
-	FormatYAML Format = "yaml"
-)
-
-type Locale struct {
-	Code string `yaml:"code"`
-	ISO  string `yaml:"iso"`
-	Name string `yaml:"name"`
-	File string `yaml:"file"`
-}
-
-func (cfg Config) Validate() error {
-	if cfg.Dir == "" {
-		return fmt.Errorf("i18n directory is not specified")
-	}
-
-	if !cfg.Format.IsValid() {
-		return fmt.Errorf("invalid i18n format: %s", cfg.Format)
-	}
-
-	if len(cfg.Locales) == 0 {
-		return fmt.Errorf("no locales specified in i18n configuration")
-	}
-
-	localeCodes := make(types.Set[string])
-	for _, locale := range cfg.Locales {
-		if locale.Code == "" {
-			return fmt.Errorf("locale code is not specified for one of the locales")
-		}
-		if locale.ISO == "" {
-			return fmt.Errorf("locale ISO code is not specified for locale '%s'", locale.Code)
-		}
-		if locale.Name == "" {
-			return fmt.Errorf("locale name is not specified for locale '%s'", locale.Code)
-		}
-		if locale.File == "" {
-			return fmt.Errorf("locale file is not specified for locale '%s'", locale.Code)
-		}
-
-		if localeCodes.Has(locale.Code) {
-			return fmt.Errorf("duplicate locale code '%s'", locale.Code)
-		}
-		localeCodes.Add(locale.Code)
-	}
-
-	if !localeCodes.Has(cfg.Default) {
-		return fmt.Errorf("default locale '%s' is not in the list of available locales", cfg.Default)
-	}
-
-	return nil
-}
-
-func (f Format) IsValid() bool {
-	switch f {
-	case FormatJSON, FormatYAML:
-	default:
-		return false
-	}
-	return true
+func (cfg Config) DefaultLocale() (*Locale, error) {
+	return cfg.LocaleByCode(cfg.Default)
 }
 
 func (cfg Config) LocaleByCode(code string) (*Locale, error) {
@@ -86,6 +29,98 @@ func (cfg Config) LocaleByCode(code string) (*Locale, error) {
 	return nil, fmt.Errorf("locale '%s' not found", code)
 }
 
-func (cfg Config) DefaultLocale() (*Locale, error) {
-	return cfg.LocaleByCode(cfg.Default)
+func (cfg Config) Validate() error {
+	if err := isDirectoryValid(cfg.Dir); err != nil {
+		return err
+	}
+
+	if err := isFileFormatValid(cfg.Format); err != nil {
+		return err
+	}
+
+	if err := isLocalesConfigValid(cfg.Default, cfg.Locales); err != nil {
+		return err
+	}
+
+	return nil
 }
+
+// -- Validation -- //
+func isDirectoryValid(path string) error {
+	if path == "" {
+		return fmt.Errorf("i18n directory is not specified")
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		return fmt.Errorf("check i18n directory '%s': %w", path, err)
+	}
+
+	if !info.IsDir() {
+		return fmt.Errorf("i18n directory '%s' does not exist", path)
+	}
+
+	return nil
+}
+
+func isFileFormatValid(format Format) error {
+	if !slices.Contains([]Format{FormatJSON, FormatYAML}, format) {
+		return fmt.Errorf("invalid i18n format '%s', must be 'json' or 'yaml'", format)
+	}
+
+	return nil
+}
+
+func isLocalesConfigValid(defaultLocale string, locales []Locale) error {
+	localeSet := make(types.Set[string])
+
+	for _, locale := range locales {
+		if localeSet.Has(locale.Code) {
+			return fmt.Errorf("duplicate locale code '%s'", locale.Code)
+		}
+
+		if err := isLocaleValid(locale); err != nil {
+			return err
+		}
+
+		localeSet.Add(locale.Code)
+	}
+
+	if !localeSet.Has(defaultLocale) {
+		return fmt.Errorf("default locale '%s' is not in the list of available locales", defaultLocale)
+	}
+
+	return nil
+}
+
+func isLocaleValid(locale Locale) error {
+	if locale.Code == "" {
+		return fmt.Errorf("locale code is not specified for one of the locales")
+	}
+	if locale.ISO == "" {
+		return fmt.Errorf("locale ISO code is not specified for locale '%s'", locale.Code)
+	}
+	if locale.Name == "" {
+		return fmt.Errorf("locale name is not specified for locale '%s'", locale.Code)
+	}
+	if locale.File == "" {
+		return fmt.Errorf("locale file is not specified for locale '%s'", locale.Code)
+	}
+	return nil
+}
+
+// -- Locale -- //
+type Locale struct {
+	Code string `yaml:"code"`
+	ISO  string `yaml:"iso"`
+	Name string `yaml:"name"`
+	File string `yaml:"file"`
+}
+
+// -- Format -- //
+type Format string
+
+const (
+	FormatJSON Format = "json"
+	FormatYAML Format = "yaml"
+)

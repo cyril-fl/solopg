@@ -8,7 +8,7 @@ import (
 )
 
 func (m Model) View() string {
-	parts := []string{lipgloss.NewStyle().Bold(true).Render(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+	parts := []string{lipgloss.NewStyle().Bold(true).Render(t.Local.MustLocalize(&goi18n.LocalizeConfig{
 		MessageID:    "codex.add",
 		TemplateData: map[string]any{"Kind": string(m.kind)},
 	})), ""}

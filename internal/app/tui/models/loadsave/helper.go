@@ -11,7 +11,7 @@ import (
 
 func makeItems(data []campaign.Campaign) []list.Item {
 	items := []list.Item{
-		tui.NewItem[*campaign.Campaign](t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "new_save"}), "", nil),
+		tui.NewItem[*campaign.Campaign](t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "new_save"}), "", nil),
 	}
 
 	for _, s := range data {

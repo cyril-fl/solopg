@@ -17,7 +17,7 @@ func (o *ObjectifsTable) Summaries() []string {
 	summaries := make([]string, 0, len(o.Entries))
 	for i := range o.Entries {
 		if o.Entries[i].Title == "" {
-			summaries = append(summaries, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{
 				MessageID: "objective.number",
 				TemplateData: map[string]any{
 					"Number": i + 1,

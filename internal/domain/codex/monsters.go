@@ -18,7 +18,7 @@ func (m *MonstersTable) Summaries() []string {
 	summaries := make([]string, 0, len(m.Entries))
 	for _, entry := range m.Entries {
 		if entry.character == nil {
-			summaries = append(summaries, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_monster"}))
+			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_monster"}))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.character.Name, entry.character.Description))

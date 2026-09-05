@@ -47,7 +47,7 @@ func (c *Campaign) Title() string {
 }
 
 func (c *Campaign) Description() string {
-	return t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+	return t.Local.MustLocalize(&goi18n.LocalizeConfig{
 		MessageID: "campaign.description",
 		TemplateData: map[string]any{
 			"Location": c.CurrentLocation.Name,

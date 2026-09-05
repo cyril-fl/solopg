@@ -38,7 +38,7 @@ func makeOracleModel() list.Model {
 	for _, oracle := range gameplay.GetOracle() {
 		if oracle.Visible {
 			key := "oracle." + oracle.ID
-			name := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+			name := t.Local.MustLocalize(&goi18n.LocalizeConfig{
 				MessageID: key,
 				DefaultMessage: &goi18n.Message{
 					ID:    key,
@@ -88,7 +88,7 @@ type UiParams struct {
 // NewModel returns the game view for embedding in the main TUI router.
 func NewModel(params UiParams) model {
 	ta := textarea.New()
-	ta.Placeholder = t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.placeholder"})
+	ta.Placeholder = t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.placeholder"})
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
@@ -108,7 +108,7 @@ func NewModel(params UiParams) model {
 
 	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
 	// TODO voir pour set autre choses en fonction de message deja present ou non.
-	vp.SetContent(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.welcome"}))
+	vp.SetContent(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.welcome"}))
 	vp.KeyMap.Left.SetEnabled(false)
 	vp.KeyMap.Right.SetEnabled(false)
 

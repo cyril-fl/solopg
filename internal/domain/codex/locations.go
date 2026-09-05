@@ -18,7 +18,7 @@ func (l *LocationsTable) Summaries() []string {
 	summaries := make([]string, 0, len(l.Entries))
 	for _, entry := range l.Entries {
 		if entry.Location == nil {
-			summaries = append(summaries, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_location"}))
+			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_location"}))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))

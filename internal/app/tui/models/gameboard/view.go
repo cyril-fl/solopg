@@ -42,12 +42,12 @@ func (m model) View() tea.View {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save"})}
+	footer := []string{t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save"})}
 	if m.codex.FormOpen() {
-		return append(footer, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "validate"}), t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "cancel"}))
+		return append(footer, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "validate"}), t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "cancel"}))
 	}
 	if m.codex.PageOpen() {
-		footer = append(footer, t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "add"}), t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "back_to_chat"}))
+		footer = append(footer, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "add"}), t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "back_to_chat"}))
 	}
 	return footer
 }
@@ -78,21 +78,21 @@ func composeSidePanel(content *strings.Builder, height int, oracleView, diceView
 
 	if oracleView != tui.EmptyKey {
 		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView,
-			"\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "oracles"})+"\n", oracleView,
-			"\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "dice"})+"\n", diceView,
-			"\n"+t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex"})+"\n", codexView)
+			"\n"+t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "oracles"})+"\n", oracleView,
+			"\n"+t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "dice"})+"\n", diceView,
+			"\n"+t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex"})+"\n", codexView)
 	}
 
 	return renderPanel(sideView, height)
 }
 
 func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
-	var characterName = t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "character"})
+	var characterName = t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "character"})
 
 	isEngineNil := engine == nil || engine.State == nil
 
 	if isEngineNil || engine.State.Player == nil {
-		characterName += t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "unknown_player"})
+		characterName += t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "unknown_player"})
 	} else {
 		characterName += engine.State.Player.Name
 	}
@@ -102,12 +102,12 @@ func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
 }
 
 func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
-	var locationName = t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "place"})
+	var locationName = t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "place"})
 
 	isEngineNil := engine == nil || engine.State == nil
 
 	if isEngineNil || engine.State.CurrentLocation == nil {
-		locationName += t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "unknown_place"})
+		locationName += t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "unknown_place"})
 	} else {
 		locationName += engine.State.CurrentLocation.Name
 	}
@@ -117,14 +117,14 @@ func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
 }
 
 func renderStatsInfo(content *strings.Builder, engine *game.Engine) {
-	content.WriteString(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "stats_upper"}) + "\n")
+	content.WriteString(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "stats_upper"}) + "\n")
 
 	if engine == nil || engine.State == nil || engine.State.Player == nil {
-		content.WriteString(t.Localizer.MustLocalize(&goi18n.LocalizeConfig{MessageID: "no_stats"}))
+		content.WriteString(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "no_stats"}))
 	} else {
 		for _, stat := range effects.ListStats() {
 			key := "stat." + string(stat)
-			label := t.Localizer.MustLocalize(&goi18n.LocalizeConfig{
+			label := t.Local.MustLocalize(&goi18n.LocalizeConfig{
 				MessageID: key,
 				DefaultMessage: &goi18n.Message{
 					ID:    key,
