@@ -7,18 +7,30 @@ import (
 	"solopg/internal/infrastructure/yaml"
 )
 
-const fileAddress = "data/systems/stats.yaml"
+// TODO sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML
+type yamlStatsConfig struct {
+	Names     []Stat `yaml:"names"`
+	BaseStats Stats  `yaml:"baseStats"`
+}
 
-var config *statsConfig
+const effectConfigFilePath = "data/systems/stats.yaml"
+
+var cacheStatsConfig *yamlStatsConfig
+
+func loadStatsFromFile() error {
+	params, err := yaml.LoadFromFile[yamlStatsConfig](effectConfigFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to load stats from file: %w", err)
+	}
+
+	cacheStatsConfig = params
+
+	return nil
+}
 
 type Stat string
 
 type Stats map[Stat]int
-
-type statsConfig struct {
-	Names     []Stat `yaml:"names"`
-	BaseStats Stats  `yaml:"baseStats"`
-}
 
 type Modifier struct {
 	Stat  Stat
@@ -30,19 +42,8 @@ type Effect struct {
 	Modifier Modifier
 }
 
-func loadStatsFromFile() error {
-	params, err := yaml.LoadFromFile[statsConfig](fileAddress)
-	if err != nil {
-		return fmt.Errorf("failed to load stats from file: %w", err)
-	}
-
-	config = params
-
-	return nil
-}
-
 func ListStats() []Stat {
-	if config == nil {
+	if cacheStatsConfig == nil {
 		err := loadStatsFromFile()
 		if err != nil {
 			fmt.Printf("Error loading stats: %v\n", err)
@@ -50,11 +51,11 @@ func ListStats() []Stat {
 		}
 	}
 
-	return config.Names
+	return cacheStatsConfig.Names
 }
 
 func BaseStats() Stats {
-	if config == nil {
+	if cacheStatsConfig == nil {
 		err := loadStatsFromFile()
 		if err != nil {
 			fmt.Printf("Error loading stats: %v\n", err)
@@ -64,7 +65,7 @@ func BaseStats() Stats {
 
 	copy := make(Stats)
 
-	for stat, value := range config.BaseStats {
+	for stat, value := range cacheStatsConfig.BaseStats {
 		copy[stat] = value
 	}
 
