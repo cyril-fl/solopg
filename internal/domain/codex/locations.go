@@ -10,20 +10,6 @@ import (
 type LocationsTable struct {
 	*Table[LocationsEntry]
 }
-
-func (l *LocationsTable) Summaries() []string {
-	l.ensureTable()
-	summaries := make([]string, 0, len(l.Entries))
-	for _, entry := range l.Entries {
-		if entry.Location == nil {
-			summaries = append(summaries, t.Localize("codex.unknown_location"))
-			continue
-		}
-		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))
-	}
-	return summaries
-}
-
 type LocationsEntry struct {
 	Timestamp time.Time
 	Location  *locations.Location
@@ -41,6 +27,19 @@ func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 
 func (l *LocationsTable) ensureTable() {
 	ensureEmbeddedTable(&l.Table)
+}
+
+func (l *LocationsTable) Summaries() []string {
+	l.ensureTable()
+	summaries := make([]string, 0, len(l.Entries))
+	for _, entry := range l.Entries {
+		if entry.Location == nil {
+			summaries = append(summaries, t.Localize("codex.unknown_location"))
+			continue
+		}
+		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))
+	}
+	return summaries
 }
 
 func (l *LocationsTable) AddEntry(entry LocationsEntryTemplate) {

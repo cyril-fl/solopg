@@ -1,9 +1,9 @@
 package codexsidemenu
 
 import (
-	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/codexform"
+	"solopg/internal/domain/codex"
 	"solopg/internal/infrastructure/t"
 
 	"charm.land/bubbles/v2/list"
@@ -19,29 +19,38 @@ const (
 	ScreenForm
 )
 
-// Model owns the Codex menu and all Codex-specific screens and transitions.
+// -- Side panel menu -- //
 type Model struct {
-	// TODO : le model ne devrai pas avoir l'engine.
-	engine *game.Engine
-	menu   list.Model
-	page   viewport.Model
-	form   codexform.Model
-	screen Screen
-	active id
+	codex           *codex.Codex // TODO : degager l'engine.
+	addJournalEntry func(message string)
+	menu            list.Model
+	page            viewport.Model
+	form            codexform.Model
+	screen          Screen
+	active          id
 }
 
-// Side panel menu
-func NewModel(engine *game.Engine, width, menuHeight int) Model {
+type SideMenuParams struct {
+	Width  int
+	Height int
+	Codex  *codex.Codex
+	Logger func(message string)
+}
+
+func NewModel(params SideMenuParams) Model {
 	items := makeCodexList()
 
-	menu := list.New(items, list.NewDefaultDelegate(), width, menuHeight)
+	menu := list.New(items, list.NewDefaultDelegate(), params.Width, params.Height)
 	tui.ConfigureList(&menu)
 
+	codex := params.Codex.EnsureInitialized()
+
 	return Model{
-		engine: engine,
-		menu:   menu,
-		page:   viewport.New(viewport.WithWidth(width), viewport.WithHeight(menuHeight)),
-		screen: ScreenClosed,
+		codex:           codex,
+		addJournalEntry: params.Logger,
+		menu:            menu,
+		page:            viewport.New(viewport.WithWidth(params.Width), viewport.WithHeight(params.Height)),
+		screen:          ScreenClosed,
 	}
 }
 
@@ -63,15 +72,11 @@ func makeCodexList() []list.Item {
 	return items
 }
 
-
-
 // --
-
 func (m Model) MenuItemsCount() int { return len(m.menu.Items()) }
 func (m Model) PageOpen() bool      { return m.screen == ScreenPage }
 func (m Model) FormOpen() bool      { return m.screen == ScreenForm }
 func (m Model) HandlesEscape() bool { return m.FormOpen() }
-
 
 func (m *Model) SetSize(width, height int) {
 	m.page.SetWidth(width)
@@ -108,4 +113,3 @@ func (m *Model) Update(msg tea.Msg) tea.Cmd {
 	}
 	return nil
 }
-

@@ -122,7 +122,14 @@ func NewModel(params UiParams) model {
 
 		oracleList: makeOracleModel(),
 		diceList:   makeDiceModel(),
-		codex:      codexsidemenu.NewModel(params.Engine, panelWidth-4, codexMenuHeight),
+		codex: codexsidemenu.NewModel(codexsidemenu.SideMenuParams{
+			Width:  panelWidth - 4,
+			Height: codexMenuHeight,
+			Codex:  params.Engine.State.Codex.EnsureInitialized(),
+			Logger: func(message string) {
+				params.Engine.AddJournalEntry("Codex", message)
+			},
+		}),
 		activeMenu: oracleMenu,
 
 		engine: params.Engine,

@@ -1,7 +1,6 @@
 package codexsidemenu
 
 import (
-	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/infrastructure/t"
 	"strings"
@@ -36,7 +35,7 @@ func (m *Model) selectActivePage() {
 }
 
 func (m *Model) refreshPage() {
-	m.page.SetContent(RenderCodexPage(m.engine, link{id: m.active, name: m.pageTitle()}))
+	m.page.SetContent(m.renderCodexPage(link{id: m.active, name: m.pageTitle()}))
 }
 
 func (m Model) pageTitle() string {
@@ -61,24 +60,23 @@ func (m *Model) OpenPage() bool {
 	return true
 }
 
-func RenderCodexPage(engine *game.Engine, link link) string {
+func (m *Model) renderCodexPage(link link) string {
 	title := link.name
 	var entries []string
-	if engine != nil && engine.State != nil && engine.State.Codex != nil {
-		codexData := engine.State.Codex.EnsureInitialized()
-		switch link.id {
-		case CodexNPCs:
-			entries = codexData.NpcsTable.Summaries()
-		case CodexMonsters:
-			entries = codexData.MonstersTable.Summaries()
-		case CodexLocations:
-			entries = codexData.LocationsTable.Summaries()
-		case CodexObjects:
-			entries = codexData.ObjectsTable.Summaries()
-		case CodexObjectifs:
-			entries = codexData.ObjectifsTable.Summaries()
-		}
+
+	switch link.id {
+	case CodexNPCs:
+		entries = m.codex.NpcsTable.Summaries()
+	case CodexMonsters:
+		entries = m.codex.MonstersTable.Summaries()
+	case CodexLocations:
+		entries = m.codex.LocationsTable.Summaries()
+	case CodexObjects:
+		entries = m.codex.ObjectsTable.Summaries()
+	case CodexObjectifs:
+		entries = m.codex.ObjectifsTable.Summaries()
 	}
+
 	if len(entries) == 0 {
 		entries = []string{t.Localize("codex.empty")}
 	}

@@ -2,7 +2,6 @@ package codexsidemenu
 
 import tea "charm.land/bubbletea/v2"
 
-
 func (m *Model) SetMenuSize(width, height int) {
 	m.menu.SetSize(width, height)
 }

@@ -22,7 +22,7 @@ func (m *Model) updateForm(msg tea.Msg) tea.Cmd {
 			m.form.SetError(err)
 			return nil
 		}
-		if err := addCodexEntry(m.engine, result); err != nil {
+		if err := m.addCodexEntry(result); err != nil {
 			m.form.SetError(err)
 			return nil
 		}
