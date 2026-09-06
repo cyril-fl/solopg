@@ -7,6 +7,22 @@ import (
 	"solopg/types"
 )
 
+// -- Locale -- //
+type Locale struct {
+	Code string `yaml:"code"`
+	ISO  string `yaml:"iso"`
+	Name string `yaml:"name"`
+	File string `yaml:"file"`
+}
+
+// -- Format -- //
+type Format string
+
+const (
+	FormatJSON Format = "json"
+	FormatYAML Format = "yaml"
+)
+
 // -- Config -- //
 type Config struct {
 	Default string   `yaml:"default"`
@@ -15,11 +31,11 @@ type Config struct {
 	Locales []Locale `yaml:"locales"`
 }
 
-func (cfg Config) DefaultLocale() (*Locale, error) {
-	return cfg.LocaleByCode(cfg.Default)
+func (cfg Config) getDefaultLocale() (*Locale, error) {
+	return cfg.getLocaleByCode(cfg.Default)
 }
 
-func (cfg Config) LocaleByCode(code string) (*Locale, error) {
+func (cfg Config) getLocaleByCode(code string) (*Locale, error) {
 	for index := range cfg.Locales {
 		if cfg.Locales[index].Code == code {
 			return &cfg.Locales[index], nil
@@ -108,19 +124,3 @@ func isLocaleValid(locale Locale) error {
 	}
 	return nil
 }
-
-// -- Locale -- //
-type Locale struct {
-	Code string `yaml:"code"`
-	ISO  string `yaml:"iso"`
-	Name string `yaml:"name"`
-	File string `yaml:"file"`
-}
-
-// -- Format -- //
-type Format string
-
-const (
-	FormatJSON Format = "json"
-	FormatYAML Format = "yaml"
-)
