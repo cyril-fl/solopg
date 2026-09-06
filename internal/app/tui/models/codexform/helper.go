@@ -6,8 +6,6 @@ import (
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 	"strings"
-
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func (m *Model) nextField() {
@@ -77,23 +75,18 @@ func (m Model) Submit() (Result, error) {
 		required = "title"
 	}
 	if values[required] == "" {
-		return Result{}, t.NewError(&goi18n.LocalizeConfig{
-			MessageID: "error.required_field",
-			TemplateData: map[string]any{
-				"Field": fieldsFor(m.kind)[0][1],
-			},
-		})
+		return Result{}, t.NewError("error.required_field", map[string]any{"Field": fieldsFor(m.kind)[0][1]})
 	}
 	if m.kind == NPCs {
 		if values["class"] == "" || values["race"] == "" {
-			return Result{}, t.NewError(&goi18n.LocalizeConfig{MessageID: "error.class_race_required"})
+			return Result{}, t.NewError("error.class_race_required")
 		}
 	}
 	if m.kind == Monsters && values["race"] == "" {
-		return Result{}, t.NewError(&goi18n.LocalizeConfig{MessageID: "error.race_required"})
+		return Result{}, t.NewError("error.race_required")
 	}
 	if m.kind == Objects && values["category"] == "" {
-		return Result{}, t.NewError(&goi18n.LocalizeConfig{MessageID: "error.category_required"})
+		return Result{}, t.NewError("error.category_required")
 	}
 
 	return Result{Kind: m.kind, Values: values}, nil
@@ -155,7 +148,7 @@ func fieldsFor(kind Kind) [][2]string {
 }
 
 func label(id string) string {
-	return t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: id})
+	return t.Localize(id)
 }
 
 func (m *Model) SetWidth(width int) {

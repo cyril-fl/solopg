@@ -81,6 +81,7 @@ func initLocalizer(cfg Config, lang string, defaultLocale *Locale) error {
 	}
 
 	Local = i18n.NewLocalizer(bundle, tag.String(), defaultTag.String())
+	translator = &Translator{Local: Local}
 	return nil
 }
 

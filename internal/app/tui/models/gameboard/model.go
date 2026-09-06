@@ -3,11 +3,9 @@ package gameboard
 import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
-	"solopg/internal/app/tui/models/codex"
+	"solopg/internal/app/tui/models/codexsidemenu"
 	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
-
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/list"
@@ -38,13 +36,7 @@ func makeOracleModel() list.Model {
 	for _, oracle := range gameplay.GetOracle() {
 		if oracle.Visible {
 			key := "oracle." + oracle.ID
-			name := t.Local.MustLocalize(&goi18n.LocalizeConfig{
-				MessageID: key,
-				DefaultMessage: &goi18n.Message{
-					ID:    key,
-					Other: oracle.ID,
-				},
-			})
+			name := t.Localize(key)
 			items = append(items, tui.NewItem(name, "", oracle))
 		}
 	}
@@ -65,7 +57,7 @@ type model struct {
 	showPanel   bool
 	oracleList  list.Model
 	diceList    list.Model
-	codex       codex.Model
+	codex       codexsidemenu.Model
 	activeMenu  panelMenu
 
 	engine *game.Engine
@@ -88,7 +80,7 @@ type UiParams struct {
 // NewModel returns the game view for embedding in the main TUI router.
 func NewModel(params UiParams) model {
 	ta := textarea.New()
-	ta.Placeholder = t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.placeholder"})
+	ta.Placeholder = t.Localize("chat.placeholder")
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
@@ -108,7 +100,7 @@ func NewModel(params UiParams) model {
 
 	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
 	// TODO voir pour set autre choses en fonction de message deja present ou non.
-	vp.SetContent(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "chat.welcome"}))
+	vp.SetContent(t.Localize("chat.welcome"))
 	vp.KeyMap.Left.SetEnabled(false)
 	vp.KeyMap.Right.SetEnabled(false)
 
@@ -130,7 +122,7 @@ func NewModel(params UiParams) model {
 
 		oracleList: makeOracleModel(),
 		diceList:   makeDiceModel(),
-		codex:      codex.NewModel(params.Engine, panelWidth-4, codexMenuHeight),
+		codex:      codexsidemenu.NewModel(params.Engine, panelWidth-4, codexMenuHeight),
 		activeMenu: oracleMenu,
 
 		engine: params.Engine,

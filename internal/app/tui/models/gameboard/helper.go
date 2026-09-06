@@ -11,7 +11,6 @@ import (
 	"charm.land/bubbles/v2/cursor"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func handleEnterInput(m model) (model, tea.Cmd) {
@@ -35,9 +34,9 @@ func handleEnterInput(m model) (model, tea.Cmd) {
 func handleSaveInput(m model, msg tui.SaveMsg) (model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
-		m.messages = append(m.messages, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.save", TemplateData: map[string]any{"Error": msg.Err}}))
+		m.messages = append(m.messages, t.Localize("error.save", map[string]any{"Error": msg.Err}))
 	} else {
-		log := t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "save.success", TemplateData: map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")}})
+		log := t.Localize("save.success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
 
 		m.engine.Log(log)
 		m.messages = append(m.messages, log)
@@ -177,11 +176,11 @@ func handleOracleRoll(m model) (model, tea.Cmd) {
 	result, err := gameplay.RollOracle[any](oracle)
 
 	if err != nil {
-		m.messages = append(m.messages, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "error.oracle_action", TemplateData: map[string]any{"Error": err}}))
+		m.messages = append(m.messages, t.Localize("error.oracle_action", map[string]any{"Error": err}))
 	} else {
 		critical := ""
 		if result.Critical {
-			critical = " (" + t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "critical"}) + ")"
+			critical = " (" + t.Localize("critical") + ")"
 		}
 		message := fmt.Sprintf("Oracle %s — jet de %d : %v%s", oracle.ID, result.Roll, result.Result, critical)
 		m.engine.AddJournalEntry("Oracle", message)

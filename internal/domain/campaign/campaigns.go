@@ -9,7 +9,6 @@ import (
 	"solopg/internal/infrastructure/t"
 	"solopg/types/id"
 
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -47,12 +46,9 @@ func (c *Campaign) Title() string {
 }
 
 func (c *Campaign) Description() string {
-	return t.Local.MustLocalize(&goi18n.LocalizeConfig{
-		MessageID: "campaign.description",
-		TemplateData: map[string]any{
-			"Location": c.CurrentLocation.Name,
-			"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
-		},
+	return t.Localize("campaign.description", map[string]any{
+		"Location": c.CurrentLocation.Name,
+		"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
 	})
 }
 

@@ -1,9 +1,8 @@
-package codex
+package codexsidemenu
 
 import (
 	"fmt"
 	"solopg/internal/app/game"
-	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/codexform"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters"
@@ -15,49 +14,27 @@ import (
 	"solopg/internal/domain/codex"
 	"solopg/internal/infrastructure/t"
 	"strings"
-
-	"charm.land/bubbles/v2/list"
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
-// TODO refactor
-type CodexLink struct {
+type link struct {
+	id   id
 	name string
-	Kind CodexKind
 }
 
-type CodexKind uint8
+type id uint8
 
 const (
-	CodexNPCs CodexKind = iota
+	CodexNPCs id = iota
 	CodexMonsters
 	CodexLocations
 	CodexObjects
 	CodexObjectifs
 )
 
-func MakeCodexListModel(width int, height int) list.Model {
-	links := []CodexLink{
-		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.npcs"}), Kind: CodexNPCs},
-		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.monsters"}), Kind: CodexMonsters},
-		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.locations"}), Kind: CodexLocations},
-		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objects"}), Kind: CodexObjects},
-		{name: t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.objectives"}), Kind: CodexObjectifs},
-	}
-	items := make([]list.Item, 0, len(links))
-	for _, link := range links {
-		items = append(items, tui.NewItem(link.name, "", link))
-	}
-
-	model := list.New(items, list.NewDefaultDelegate(), width, height)
-	tui.ConfigureList(&model)
-
-	return model
-}
-
-func AddCodexEntry(engine *game.Engine, result codexform.Result) error {
+// TODO refactor
+func addCodexEntry(engine *game.Engine, result codexform.Result) error {
 	if engine == nil || engine.State == nil {
-		return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.game_unavailable"})
+		return t.NewError("error.game_unavailable")
 	}
 
 	codexData := engine.State.Codex
@@ -78,7 +55,7 @@ func AddCodexEntry(engine *game.Engine, result codexform.Result) error {
 	case codexform.Objectifs:
 		err = addObjectiveToCodex(codexData, values)
 	default:
-		err = t.NewError(&goi18n.LocalizeConfig{MessageID: "error.unknown_codex", TemplateData: map[string]any{"Kind": result.Kind}})
+		err = t.NewError("error.unknown_codex", map[string]any{"Kind": result.Kind})
 	}
 
 	if err != nil {
@@ -91,13 +68,13 @@ func AddCodexEntry(engine *game.Engine, result codexform.Result) error {
 
 func addNPCToCodex(result codexform.Result, codexData *codex.Codex, values map[string]string) error {
 	if result.Kind == codexform.NPCs && classes.FindByName(values["class"]) == nil {
-		return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.unknown_class", TemplateData: map[string]any{"Class": values["class"]}})
+		return t.NewError("error.unknown_class", map[string]any{"Class": values["class"]})
 	}
 	if races.FindByName(values["race"]) == nil {
-		return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.unknown_race", TemplateData: map[string]any{"Race": values["race"]}})
+		return t.NewError("error.unknown_race", map[string]any{"Race": values["race"]})
 	}
 	if result.Kind == codexform.Monsters && !races.FindByName(values["race"]).IsMonster() {
-		return t.NewError(&goi18n.LocalizeConfig{MessageID: "error.non_monster_race", TemplateData: map[string]any{"Race": values["race"]}})
+		return t.NewError("error.non_monster_race", map[string]any{"Race": values["race"]})
 	}
 	character, err := characters.New(characters.Template{
 		Name:        values["name"],
@@ -154,28 +131,4 @@ func addObjectToCodex(codexData *codex.Codex, values map[string]string) error {
 func addObjectiveToCodex(codexData *codex.Codex, values map[string]string) error {
 	codexData.ObjectifsTable.AddObjectif(values["title"], values["description"])
 	return nil
-}
-
-func RenderCodexPage(engine *game.Engine, link CodexLink) string {
-	title := link.name
-	var entries []string
-	if engine != nil && engine.State != nil && engine.State.Codex != nil {
-		codexData := engine.State.Codex.EnsureInitialized()
-		switch link.Kind {
-		case CodexNPCs:
-			entries = codexData.NpcsTable.Summaries()
-		case CodexMonsters:
-			entries = codexData.MonstersTable.Summaries()
-		case CodexLocations:
-			entries = codexData.LocationsTable.Summaries()
-		case CodexObjects:
-			entries = codexData.ObjectsTable.Summaries()
-		case CodexObjectifs:
-			entries = codexData.ObjectifsTable.Summaries()
-		}
-	}
-	if len(entries) == 0 {
-		entries = []string{t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.empty"})}
-	}
-	return title + "\n\n" + strings.Join(entries, "\n\n")
 }

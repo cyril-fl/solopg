@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"solopg/internal/infrastructure/t"
 	"time"
-
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type ObjectifsTable struct {
@@ -17,12 +15,7 @@ func (o *ObjectifsTable) Summaries() []string {
 	summaries := make([]string, 0, len(o.Entries))
 	for i := range o.Entries {
 		if o.Entries[i].Title == "" {
-			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{
-				MessageID: "objective.number",
-				TemplateData: map[string]any{
-					"Number": i + 1,
-				},
-			}))
+			summaries = append(summaries, t.Localize("objective.number", map[string]any{"Number": i + 1}))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", o.Entries[i].Title, o.Entries[i].Description))

@@ -38,6 +38,7 @@ const (
 	KeyQuit     = "ctrl+q"
 	KeySave     = "ctrl+s"
 	KeyShiftTab = "shift+tab"
+	KeyCtrlN    = "ctrl+n"
 
 	// Navigation keys
 	KeyEnter     = "enter"

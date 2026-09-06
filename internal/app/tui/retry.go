@@ -3,8 +3,6 @@ package tui
 import (
 	"solopg/internal/infrastructure/t"
 
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
-
 	"charm.land/bubbles/v2/list"
 )
 
@@ -57,8 +55,8 @@ func (s *RerollModel[T]) IsOutOfLimit() bool {
 
 func NewOptionsModel(options rerollOptions) list.Model {
 	items := []list.Item{
-		NewItem(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: options.true}), "", true),
-		NewItem(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: options.false}), "", false),
+		NewItem(t.Localize(options.true), "", true),
+		NewItem(t.Localize(options.false), "", false),
 	}
 
 	return newConfiguredList(items, 0, 0)
@@ -66,7 +64,7 @@ func NewOptionsModel(options rerollOptions) list.Model {
 
 func makeConfirmationModel(m list.Model) list.Model {
 	items := []list.Item{
-		NewItem(t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "accept"}), "", true),
+		NewItem(t.Localize("accept"), "", true),
 	}
 
 	return newConfiguredList(items, m.Width(), m.Height())

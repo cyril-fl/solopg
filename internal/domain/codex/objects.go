@@ -5,8 +5,6 @@ import (
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 	"time"
-
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type ObjectsTable struct {
@@ -18,7 +16,7 @@ func (o *ObjectsTable) Summaries() []string {
 	summaries := make([]string, 0, len(o.Entries))
 	for _, entry := range o.Entries {
 		if entry.object == nil {
-			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_object"}))
+			summaries = append(summaries, t.Localize("codex.unknown_object"))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.object.Name, entry.object.Description))

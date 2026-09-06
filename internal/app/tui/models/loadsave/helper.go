@@ -6,12 +6,11 @@ import (
 	"solopg/internal/infrastructure/t"
 
 	"charm.land/bubbles/v2/list"
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func makeItems(data []campaign.Campaign) []list.Item {
 	items := []list.Item{
-		tui.NewItem[*campaign.Campaign](t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "new_save"}), "", nil),
+		tui.NewItem[*campaign.Campaign](t.Localize("new_save"), "", nil),
 	}
 
 	for _, s := range data {

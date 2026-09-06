@@ -5,8 +5,6 @@ import (
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/infrastructure/t"
 	"time"
-
-	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type NpcsTable struct {
@@ -18,7 +16,7 @@ func (n *NpcsTable) Summaries() []string {
 	summaries := make([]string, 0, len(n.Entries))
 	for _, entry := range n.Entries {
 		if entry.character == nil {
-			summaries = append(summaries, t.Local.MustLocalize(&goi18n.LocalizeConfig{MessageID: "codex.unknown_npc"}))
+			summaries = append(summaries, t.Localize("codex.unknown_npc"))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s - %s - %s", entry.character.Name, entry.character.Race, entry.character.Class, entry.character.Description))
