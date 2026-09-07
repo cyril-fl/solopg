@@ -1,8 +1,8 @@
-package codexsidemenu
+package codexmenu
 
 import (
 	"fmt"
-	"solopg/internal/app/tui/models/codexform"
+	"solopg/internal/app/tui/models/gameboard/codexform"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/characters/archetypes/classes"

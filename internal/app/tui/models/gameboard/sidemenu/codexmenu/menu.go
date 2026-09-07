@@ -1,4 +1,4 @@
-package codexsidemenu
+package codexmenu
 
 import tea "charm.land/bubbletea/v2"
 

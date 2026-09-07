@@ -3,9 +3,11 @@ package gameboard
 import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
-	"solopg/internal/app/tui/models/codexsidemenu"
-	"solopg/internal/domain/gameplay"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/codexmenu"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/dicemenu"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/oraclemenu"
 	"solopg/internal/infrastructure/t"
+	"solopg/types/size"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/list"
@@ -16,58 +18,34 @@ import (
 )
 
 // - Model - //
-
-// - Submodels - //
-func makeDiceModel() list.Model {
-	options := gameplay.ListDices()
-
-	items := make([]list.Item, 0, len(options))
-	for _, option := range options {
-		items = append(items, tui.NewItem(option.GetName(), "", option))
-	}
-
-	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, diceMenuHeight)
-	tui.ConfigureList(&model)
-	return model
-}
-
-func makeOracleModel() list.Model {
-	items := make([]list.Item, 0)
-	for _, oracle := range gameplay.GetOracle() {
-		if oracle.Visible {
-			key := "oracle." + oracle.ID
-			name := t.Localize(key)
-			items = append(items, tui.NewItem(name, "", oracle))
-		}
-	}
-
-	model := list.New(items, list.NewDefaultDelegate(), panelWidth-4, oracleMenuHeight)
-	tui.ConfigureList(&model)
-	return model
-}
-
-// // // REFACTOR // // //
 type model struct {
-	viewport    viewport.Model
 	author      string
 	messages    []string
-	textarea    textarea.Model
 	senderStyle lipgloss.Style
-	err         error
-	showPanel   bool
-	oracleList  list.Model
-	diceList    list.Model
-	codex       codexsidemenu.Model
-	activeMenu  panelMenu
+
+	textarea  textarea.Model
+	viewport  viewport.Model
+	showPanel bool
+
+	activeMenu sideMenu
+
+	oracleMenu list.Model
+	diceMenu   list.Model
+	codexMenu  codexmenu.Model
+
+	menu           []MenuItem
+	activeMenuItem MenuItem
 
 	engine *game.Engine
 	save   func() error
+
+	err error
 }
 
-type panelMenu uint8
+type sideMenu uint8
 
 const (
-	oracleMenu panelMenu = iota
+	oracleMenu sideMenu = iota
 	diceMenu
 	codexMenu
 )
@@ -77,15 +55,65 @@ type UiParams struct {
 	OnSave func() error
 }
 
-// NewModel returns the game view for embedding in the main TUI router.
 func NewModel(params UiParams) model {
+	menuSize := size.Size{
+		Width:  panelWidth - 4,
+		Height: oracleMenuHeight,
+	}
+
+	oraclem := oraclemenu.NewMenuItem(menuSize)
+	dicem := dicemenu.NewMenuItem(menuSize)
+	codexm := codexmenu.NewMenuItem(codexmenu.SideMenuParams{
+		Size:  menuSize,
+		Codex: params.Engine.State.Codex.EnsureInitialized(),
+		// TODO faire en sorte remplacer logger par une cmd .
+		Logger: func(message string) {
+			params.Engine.AddJournalEntry("Codex", message)
+		},
+	})
+
+	return model{
+		author:      "Me",
+		messages:    initJournalContent(params.Engine),
+		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
+
+		textarea: initTextarea(),
+		viewport: initViewport(),
+
+		activeMenu: oracleMenu,
+
+		oracleMenu: oraclemenu.NewModel(menuSize),
+		diceMenu:   dicemenu.NewModel(menuSize),
+		codexMenu: codexmenu.NewModel(codexmenu.SideMenuParams{
+			Size:  menuSize,
+			Codex: params.Engine.State.Codex.EnsureInitialized(),
+			// TODO faire en sorte remplacer logger par une cmd .
+			Logger: func(message string) {
+				params.Engine.AddJournalEntry("Codex", message)
+			},
+		}),
+
+		engine: params.Engine,
+		save:   params.OnSave,
+
+		menu: []MenuItem{
+			oraclem,
+			dicem,
+			codexm,
+		},
+		activeMenuItem: oraclem,
+
+		err: nil,
+	}
+}
+
+func initTextarea() textarea.Model {
 	ta := textarea.New()
 	ta.Placeholder = t.Localize("chat.placeholder")
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
-	// TODO cherche ce que ca fait
-	// ta.Prompt = "┃ "
+	ta.Prompt = "┃ "
 	ta.CharLimit = 280
 
 	ta.SetWidth(30)
@@ -97,44 +125,29 @@ func NewModel(params UiParams) model {
 	ta.SetStyles(s)
 
 	ta.ShowLineNumbers = false
+	ta.KeyMap.InsertNewline.SetEnabled(false)
 
+	return ta
+}
+
+func initViewport() viewport.Model {
 	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
 	// TODO voir pour set autre choses en fonction de message deja present ou non.
 	vp.SetContent(t.Localize("chat.welcome"))
 	vp.KeyMap.Left.SetEnabled(false)
 	vp.KeyMap.Right.SetEnabled(false)
 
-	ta.KeyMap.InsertNewline.SetEnabled(false)
+	return vp
+}
 
-	journalContent := make([]string, 0, len(params.Engine.State.Journal.Entries))
+func initJournalContent(engine *game.Engine) []string {
+	journalContent := make([]string, 0, len(engine.State.Journal.Entries))
 
-	for _, entry := range params.Engine.State.Journal.Entries {
+	for _, entry := range engine.State.Journal.Entries {
 		journalContent = append(journalContent, entry.String())
 	}
 
-	return model{
-		textarea:    ta,
-		author:      "Me",
-		messages:    journalContent,
-		viewport:    vp,
-		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
-		err:         nil,
-
-		oracleList: makeOracleModel(),
-		diceList:   makeDiceModel(),
-		codex: codexsidemenu.NewModel(codexsidemenu.SideMenuParams{
-			Width:  panelWidth - 4,
-			Height: codexMenuHeight,
-			Codex:  params.Engine.State.Codex.EnsureInitialized(),
-			Logger: func(message string) {
-				params.Engine.AddJournalEntry("Codex", message)
-			},
-		}),
-		activeMenu: oracleMenu,
-
-		engine: params.Engine,
-		save:   params.OnSave,
-	}
+	return journalContent
 }
 
 func (m model) Init() tea.Cmd {
@@ -147,43 +160,51 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		handleWindowResize(&m, msg)
 
 	case tea.KeyPressMsg:
-		if m.codex.FormOpen() {
-			return m, m.codex.Update(msg)
-		}
+		// if m.codexMenu.FormOpen() {
+		// 	return m, m.codexMenu.Update(msg)
+		// }
 		switch msg.String() {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
-		case "ctrl+n":
-			if m.codex.PageOpen() {
-				return m, m.codex.Update(msg)
-			}
+		case tui.KeyCtrlN:
+			// if m.codexMenu.PageOpen() {
+			// 	return m, m.codexMenu.Update(msg)
+			// }
+			m.activeMenuItem.HandleCtrlN(msg)
+
 		case tui.KeyEnter:
-			if m.codex.PageOpen() {
-				return m, m.codex.Update(msg)
-			}
-			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == oracleMenu {
-				return handleOracleRoll(m)
-			}
-			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == diceMenu {
-				return handleDiceRoll(m)
-			}
-			if m.showPanel && m.textarea.Value() == "" && m.activeMenu == codexMenu {
-				m.codex.OpenPage()
-				return m, nil
-			}
-			return handleEnterInput(m)
-		case "up", "down":
-			if m.codex.PageOpen() {
-				return m, m.codex.Update(msg)
-			}
-			if m.showPanel && m.textarea.Value() == "" {
-				return handlePanelNavigation(m, msg)
-			}
-			return handleDefaultInput(m, msg)
+			m.activeMenuItem.HandleKeyEnter(msg)
+			// if m.codexMenu.PageOpen() {
+			// 	return m, m.codexMenu.Update(msg)
+			// }
+
+			// // if m.showPanel && m.textarea.Value() == "" {
+			// if m.activeMenu == oracleMenu {
+			// 	return handleOracleRoll(m)
+			// }
+
+			// if m.activeMenu == diceMenu {
+			// 	return handleDiceRoll(m)
+			// }
+			// if m.activeMenu == codexMenu {
+			// 	m.codexMenu.OpenPage()
+			// 	return m, nil
+			// }
+			// // }
+
+			// return handleEnterInput(m)
+		case tui.KeyUp, tui.KeyDown:
+			// m.activeMenuItem.HandleKeyArrow(msg)
+
+			// if m.codexMenu.PageOpen() {
+			// 	return m, m.codexMenu.Update(msg)
+			// }
+			return handlePanelNavigation(m, msg)
 		case tui.KeyEsc:
-			if m.codex.PageOpen() {
-				return m, m.codex.Update(msg)
-			}
+			m.activeMenuItem.HandleKeyEsc(msg)
+			// if m.codexMenu.PageOpen() {
+			// 	return m, m.codexMenu.Update(msg)
+			// }
 		default:
 			return handleDefaultInput(m, msg)
 		}
@@ -200,5 +221,5 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
 func (m model) HandlesEscape() bool {
-	return m.codex.HandlesEscape()
+	return m.codexMenu.HandlesEscape()
 }

@@ -14,49 +14,64 @@ import (
 
 func (m model) View() tea.View {
 	viewportView := m.viewport.View()
-	chatView := viewportView + "\n" + m.textarea.View()
-	if m.codex.PageOpen() || m.codex.FormOpen() {
-		chatView = m.codex.View()
-	}
-	if m.showPanel {
-		chatView = lipgloss.JoinHorizontal(
-			lipgloss.Top,
-			chatView,
-			strings.Repeat(" ", panelGap),
-			renderSidePanel(m.engine, lipgloss.Height(chatView), m.oracleList.View(), m.diceList.View(), m.codex.MenuView()),
-		)
+	baseView := viewportView + "\n" + m.textarea.View()
+
+	// TODO remplacer par un ShowView()
+	// if m.codexMenu.PageOpen() || m.codexMenu.FormOpen() {
+	// 	chatView = m.codexMenu.View()
+	// }
+
+	// if m.codexMenu.PageOpen() {
+	// 	baseView = m.codexMenu.View()
+	// }
+
+	// if m.showPanel {
+	baseView = lipgloss.JoinHorizontal(
+		lipgloss.Top,
+		baseView,
+		strings.Repeat(" ", panelGap),
+		renderSidePanel(m.engine, lipgloss.Height(baseView), m.oracleMenu.View(), m.diceMenu.View(), m.codexMenu.MenuView()),
+	)
+	// }
+
+	view := tea.NewView(baseView)
+	cursor := m.textarea.Cursor()
+
+	// if m.codexMenu.PageOpen() || m.codexMenu.FormOpen() {
+	// 	c = nil
+	// }
+
+	if m.codexMenu.PageOpen() {
+		cursor = nil
 	}
 
-	v := tea.NewView(chatView)
-	c := m.textarea.Cursor()
-	if m.codex.PageOpen() || m.codex.FormOpen() {
-		c = nil
+	if cursor != nil {
+		cursor.Y += lipgloss.Height(viewportView)
 	}
-	if c != nil {
-		c.Y += lipgloss.Height(viewportView)
-	}
-	v.Cursor = c
-	v.AltScreen = true
-	return v
+
+	view.Cursor = cursor
+	view.AltScreen = true
+	return view
 }
 
 func (m model) GetFooter() []string {
 	footer := []string{t.Localize("save")}
-	if m.codex.FormOpen() {
-		return append(footer, t.Localize("validate"), t.Localize("cancel"))
-	}
-	if m.codex.PageOpen() {
-		footer = append(footer, t.Localize("add"), t.Localize("back_to_chat"))
-	}
+	// if m.codexMenu.FormOpen() {
+	// 	return append(footer, t.Localize("validate"), t.Localize("cancel"))
+	// }
+	// if m.codexMenu.PageOpen() {
+	// 	footer = append(footer, t.Localize("add"), t.Localize("back_to_chat"))
+	// }
+	footer = append(footer, m.activeMenuItem.GetFooter()...)
 	return footer
 }
 
 func renderSidePanel(engine *game.Engine, height int, oracleView, diceView, codexView string) string {
 	var content strings.Builder
 
-	renderCharacterInfo(&content, engine)
-	renderLocationInfo(&content, engine)
-	renderStatsInfo(&content, engine)
+	getComponentCharacterInfo(&content, engine)
+	getComponentLocationInfo(&content, engine)
+	getComponentStatInfo(&content, engine)
 
 	return composeSidePanel(&content, height, oracleView, diceView, codexView)
 }
@@ -85,7 +100,7 @@ func composeSidePanel(content *strings.Builder, height int, oracleView, diceView
 	return renderPanel(sideView, height)
 }
 
-func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
+func getComponentCharacterInfo(content *strings.Builder, engine *game.Engine) {
 	var characterName = t.Localize("character")
 
 	isEngineNil := engine == nil || engine.State == nil
@@ -100,7 +115,7 @@ func renderCharacterInfo(content *strings.Builder, engine *game.Engine) {
 	content.WriteString("\n")
 }
 
-func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
+func getComponentLocationInfo(content *strings.Builder, engine *game.Engine) {
 	var locationName = t.Localize("place")
 
 	isEngineNil := engine == nil || engine.State == nil
@@ -115,7 +130,7 @@ func renderLocationInfo(content *strings.Builder, engine *game.Engine) {
 	content.WriteString("\n")
 }
 
-func renderStatsInfo(content *strings.Builder, engine *game.Engine) {
+func getComponentStatInfo(content *strings.Builder, engine *game.Engine) {
 	content.WriteString(t.Localize("stats_upper") + "\n")
 
 	if engine == nil || engine.State == nil || engine.State.Player == nil {

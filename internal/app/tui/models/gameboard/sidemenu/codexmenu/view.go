@@ -1,4 +1,4 @@
-package codexsidemenu
+package codexmenu
 
 import (
 	"solopg/internal/app/tui"
@@ -16,8 +16,8 @@ func (m Model) View() string {
 	switch m.screen {
 	case ScreenPage:
 		return m.page.View()
-	case ScreenForm:
-		return m.form.View()
+	// case ScreenForm:
+	// return m.form.View()
 	default:
 		return ""
 	}
