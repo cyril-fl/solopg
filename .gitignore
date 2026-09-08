@@ -1,1 +1,31 @@
+# Env & config locale
 .env
+
+# Binaires compilés
+solopg
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Fichiers de test
+*.test
+*.out
+
+# Dépendances vendorisées (si tu n'utilises pas vendor/)
+vendor/
+
+# Go workspace files
+go.work
+go.work.sum
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / autres éditeurs
+.idea/
+.vscode/
+.cursor/ 
+*.swp
