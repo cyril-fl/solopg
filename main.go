@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	"solopg/cmd"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	godotenv.Load()
 	cmd.Execute()
 }
-"terminal.integrated.defaultProfile.linux": "bash"
