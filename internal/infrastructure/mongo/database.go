@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -50,7 +51,7 @@ func Connect() (*Mongo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	database, err := open(ctx, "mongodb://localhost:27017", "solopg")
+	database, err := open(ctx, os.Getenv("MONGO_URI"), "solopg")
 	if err != nil {
 		return nil, err
 	}
