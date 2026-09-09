@@ -60,6 +60,10 @@ func (m *OracleMenuItem) SetOpen(open bool) {
 	m.isOpen = open
 }
 
+func (m *OracleMenuItem) GetView() string {
+	return ""
+}
+
 func (m *OracleMenuItem) GetFooter() []string {
 	return []string{t.Localize("roll")}
 }

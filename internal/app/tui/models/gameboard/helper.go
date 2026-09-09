@@ -1,9 +1,7 @@
 package gameboard
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
-	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
 	"strings"
 	"time"
@@ -72,10 +70,10 @@ func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 
 	m.viewport.SetWidth(chatWidth)
 	m.textarea.SetWidth(chatWidth)
-	m.oracleMenu.SetSize(panelWidth-4, oracleMenuHeight)
-	m.diceMenu.SetSize(panelWidth-4, diceMenuHeight)
-	m.codexMenu.SetMenuSize(panelWidth-4, codexMenuHeight)
-	m.codexMenu.SetSize(chatWidth, max(0, msg.Height))
+	// m.oracleMenu.SetSize(panelWidth-4, oracleMenuHeight)
+	// m.diceMenu.SetSize(panelWidth-4, diceMenuHeight)
+	// m.codexMenu.SetMenuSize(panelWidth-4, codexMenuHeight)
+	// m.codexMenu.SetSize(chatWidth, max(0, msg.Height))
 	// Reserve the input and the separator above it. The parent TUI already
 	// reserved the footer height before forwarding the window size.
 	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
@@ -96,73 +94,74 @@ const (
 	codexMenuHeight  = 6
 )
 
-func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
+// func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
 	//TODO trouver un moyen pour que ce soit en fonction de curent menu et que si on est a la fin ou au debut cuurent menu change.
-	
-	if m.activeMenu == oracleMenu {
-		atStart := m.oracleMenu.Index() == 0
-		atEnd := m.oracleMenu.Index() >= len(m.oracleMenu.Items())-1
-		if msg.String() == tui.KeyDown && atEnd && len(m.diceMenu.Items()) > 0 {
-			m.activeMenu = diceMenu
-			m.diceMenu.Select(0)
-			return m, nil
-		}
-		if msg.String() == tui.KeyUp && atStart {
-			return m, nil
-		}
-		var cmd tea.Cmd
-		m.oracleMenu, cmd = m.oracleMenu.Update(msg)
-		return m, cmd
-	}
+	// TODO s'occuper de ça en suite !
 
-	if m.activeMenu == diceMenu {
-		atStart := m.diceMenu.Index() == 0
-		atEnd := m.diceMenu.Index() >= len(m.diceMenu.Items())-1
-		if msg.String() == tui.KeyUp && atStart && len(m.oracleMenu.Items()) > 0 {
-			m.activeMenu = oracleMenu
-			m.oracleMenu.Select(len(m.oracleMenu.Items()) - 1)
-			return m, nil
-		}
-		if msg.String() == tui.KeyDown && atEnd && m.codexMenu.MenuItemsCount() > 0 {
-			m.activeMenu = codexMenu
-			m.codexMenu.SelectMenu(0)
-			return m, nil
-		}
-		var cmd tea.Cmd
-		m.diceMenu, cmd = m.diceMenu.Update(msg)
-		return m, cmd
-	}
+// 	if m.activeMenu == oracleMenu {
+// 		atStart := m.oracleMenu.Index() == 0
+// 		atEnd := m.oracleMenu.Index() >= len(m.oracleMenu.Items())-1
+// 		if msg.String() == tui.KeyDown && atEnd && len(m.diceMenu.Items()) > 0 {
+// 			m.activeMenu = diceMenu
+// 			m.diceMenu.Select(0)
+// 			return m, nil
+// 		}
+// 		if msg.String() == tui.KeyUp && atStart {
+// 			return m, nil
+// 		}
+// 		var cmd tea.Cmd
+// 		m.oracleMenu, cmd = m.oracleMenu.Update(msg)
+// 		return m, cmd
+// 	}
 
-	atStart := m.codexMenu.MenuIndex() == 0
-	atEnd := m.codexMenu.MenuIndex() >= m.codexMenu.MenuItemsCount()-1
-	if msg.String() == tui.KeyUp && atStart && len(m.oracleMenu.Items()) > 0 {
-		m.activeMenu = diceMenu
-		m.diceMenu.Select(len(m.diceMenu.Items()) - 1)
-		return m, nil
-	}
-	if msg.String() == tui.KeyDown && atEnd {
-		return m, nil
-	}
-	return m, m.codexMenu.UpdateMenu(msg)
-}
+// 	if m.activeMenu == diceMenu {
+// 		atStart := m.diceMenu.Index() == 0
+// 		atEnd := m.diceMenu.Index() >= len(m.diceMenu.Items())-1
+// 		if msg.String() == tui.KeyUp && atStart && len(m.oracleMenu.Items()) > 0 {
+// 			m.activeMenu = oracleMenu
+// 			m.oracleMenu.Select(len(m.oracleMenu.Items()) - 1)
+// 			return m, nil
+// 		}
+// 		// if msg.String() == tui.KeyDown && atEnd && m.codexMenu.MenuItemsCount() > 0 {
+// 		// 	m.activeMenu = codexMenu
+// 		// 	m.codexMenu.SelectMenu(0)
+// 		// 	return m, nil
+// 		// }
+// 		var cmd tea.Cmd
+// 		m.diceMenu, cmd = m.diceMenu.Update(msg)
+// 		return m, cmd
+// 	}
 
-func handleDiceRoll(m model) (model, tea.Cmd) {
-	selected, ok := m.diceMenu.SelectedItem().(tui.Item[gameplay.Dice])
-	if !ok {
-		return m, nil
-	}
+// 	// atStart := m.codexMenu.MenuIndex() == 0
+// 	// atEnd := m.codexMenu.MenuIndex() >= m.codexMenu.MenuItemsCount()-1
+// 	if msg.String() == tui.KeyUp && atStart && len(m.oracleMenu.Items()) > 0 {
+// 		m.activeMenu = diceMenu
+// 		m.diceMenu.Select(len(m.diceMenu.Items()) - 1)
+// 		return m, nil
+// 	}
+// 	if msg.String() == tui.KeyDown && atEnd {
+// 		return m, nil
+// 	}
+// 	return m, m.codexMenu.UpdateMenu(msg)
+// }
 
-	dice := selected.Value()
+// func handleDiceRoll(m model) (model, tea.Cmd) {
+// 	selected, ok := m.diceMenu.SelectedItem().(tui.Item[gameplay.Dice])
+// 	if !ok {
+// 		return m, nil
+// 	}
 
-	result := dice.Roll()
+// 	dice := selected.Value()
 
-	message := fmt.Sprintf("%s : %d", dice.GetName(), result)
+// 	result := dice.Roll()
 
-	m.engine.AddJournalEntry("Dice", message)
-	m.messages = append(m.messages, message)
+// 	message := fmt.Sprintf("%s : %d", dice.GetName(), result)
 
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-	m.viewport.GotoBottom()
+// 	m.engine.AddJournalEntry("Dice", message)
+// 	m.messages = append(m.messages, message)
 
-	return m, nil
-}
+// 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
+// 	m.viewport.GotoBottom()
+
+// 	return m, nil
+// }

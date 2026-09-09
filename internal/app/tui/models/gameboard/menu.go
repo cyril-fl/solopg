@@ -7,6 +7,7 @@ type MenuItem interface {
 	IsOpen() bool
 	SetOpen(bool)
 
+	GetView() string
 	GetFooter() []string
 
 	HandleKeyEnter(msg tea.Msg) error

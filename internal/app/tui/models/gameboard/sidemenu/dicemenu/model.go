@@ -56,6 +56,10 @@ func (m *DiceMenuItem) SetOpen(open bool) {
 	m.isOpen = open
 }
 
+func (m *DiceMenuItem) GetView() string {
+	return ""
+}
+
 func (m *DiceMenuItem) GetFooter() []string {
 	return []string{t.Localize("roll")}
 }

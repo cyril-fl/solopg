@@ -3,14 +3,12 @@ package gameboard
 import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
-	"solopg/internal/app/tui/models/gameboard/sidemenu/codexmenu"
 	"solopg/internal/app/tui/models/gameboard/sidemenu/dicemenu"
 	"solopg/internal/app/tui/models/gameboard/sidemenu/oraclemenu"
 	"solopg/internal/infrastructure/t"
 	"solopg/types/size"
 
 	"charm.land/bubbles/v2/cursor"
-	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/textarea"
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
@@ -23,15 +21,8 @@ type model struct {
 	messages    []string
 	senderStyle lipgloss.Style
 
-	textarea  textarea.Model
-	viewport  viewport.Model
-	showPanel bool
-
-	activeMenu sideMenu
-
-	oracleMenu list.Model
-	diceMenu   list.Model
-	codexMenu  codexmenu.Model
+	textarea textarea.Model
+	viewport viewport.Model
 
 	menu           []MenuItem
 	activeMenuItem MenuItem
@@ -41,14 +32,6 @@ type model struct {
 
 	err error
 }
-
-type sideMenu uint8
-
-const (
-	oracleMenu sideMenu = iota
-	diceMenu
-	codexMenu
-)
 
 type UiParams struct {
 	Engine *game.Engine
@@ -63,14 +46,14 @@ func NewModel(params UiParams) model {
 
 	oraclem := oraclemenu.NewMenuItem(menuSize)
 	dicem := dicemenu.NewMenuItem(menuSize)
-	codexm := codexmenu.NewMenuItem(codexmenu.SideMenuParams{
-		Size:  menuSize,
-		Codex: params.Engine.State.Codex.EnsureInitialized(),
-		// TODO faire en sorte remplacer logger par une cmd .
-		Logger: func(message string) {
-			params.Engine.AddJournalEntry("Codex", message)
-		},
-	})
+	// codexm := codexmenu.NewMenuItem(codexmenu.SideMenuParams{
+	// 	Size:  menuSize,
+	// 	Codex: params.Engine.State.Codex.EnsureInitialized(),
+	// 	// TODO faire en sorte remplacer logger par une cmd .
+	// 	Logger: func(message string) {
+	// 		params.Engine.AddJournalEntry("Codex", message)
+	// 	},
+	// })
 
 	return model{
 		author:      "Me",
@@ -80,26 +63,13 @@ func NewModel(params UiParams) model {
 		textarea: initTextarea(),
 		viewport: initViewport(),
 
-		activeMenu: oracleMenu,
-
-		oracleMenu: oraclemenu.NewModel(menuSize),
-		diceMenu:   dicemenu.NewModel(menuSize),
-		codexMenu: codexmenu.NewModel(codexmenu.SideMenuParams{
-			Size:  menuSize,
-			Codex: params.Engine.State.Codex.EnsureInitialized(),
-			// TODO faire en sorte remplacer logger par une cmd .
-			Logger: func(message string) {
-				params.Engine.AddJournalEntry("Codex", message)
-			},
-		}),
-
 		engine: params.Engine,
 		save:   params.OnSave,
 
 		menu: []MenuItem{
 			oraclem,
 			dicem,
-			codexm,
+			// codexm,
 		},
 		activeMenuItem: oraclem,
 
@@ -199,7 +169,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// if m.codexMenu.PageOpen() {
 			// 	return m, m.codexMenu.Update(msg)
 			// }
-			return handlePanelNavigation(m, msg)
+			// return handlePanelNavigation(m, msg)
 		case tui.KeyEsc:
 			m.activeMenuItem.HandleKeyEsc(msg)
 			// if m.codexMenu.PageOpen() {
@@ -220,6 +190,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
-func (m model) HandlesEscape() bool {
-	return m.codexMenu.HandlesEscape()
-}
+// func (m model) HandlesEscape() bool {
+// 	// return m.codexMenu.HandlesEscape()
+// }

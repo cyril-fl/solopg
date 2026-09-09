@@ -1,10 +1,8 @@
 package gameboard
 
 import (
-	"fmt"
 	"solopg/internal/app/game"
-	"solopg/internal/app/tui"
-	"solopg/internal/domain/card/effects"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/metadatasidemenu"
 	"solopg/internal/infrastructure/t"
 	"strings"
 
@@ -16,67 +14,52 @@ func (m model) View() tea.View {
 	viewportView := m.viewport.View()
 	baseView := viewportView + "\n" + m.textarea.View()
 
-	// TODO remplacer par un ShowView()
-	// if m.codexMenu.PageOpen() || m.codexMenu.FormOpen() {
-	// 	chatView = m.codexMenu.View()
-	// }
+	if m.activeMenuItem.IsOpen() {
+		baseView = m.activeMenuItem.GetView()
+	} else {
+		var menuTitles = []string{}
+		for _, menuItem := range m.menu {
+			menuTitles = append(menuTitles, menuItem.ID())
+		}
 
-	// if m.codexMenu.PageOpen() {
-	// 	baseView = m.codexMenu.View()
-	// }
-
-	// if m.showPanel {
-	baseView = lipgloss.JoinHorizontal(
-		lipgloss.Top,
-		baseView,
-		strings.Repeat(" ", panelGap),
-		renderSidePanel(m.engine, lipgloss.Height(baseView), m.oracleMenu.View(), m.diceMenu.View(), m.codexMenu.MenuView()),
-	)
-	// }
+		baseView = lipgloss.JoinHorizontal(
+			lipgloss.Top,
+			baseView,
+			strings.Repeat(" ", panelGap),
+			renderSidePanel(m.engine, lipgloss.Height(baseView), menuTitles...),
+		)
+	}
 
 	view := tea.NewView(baseView)
-	cursor := m.textarea.Cursor()
+	// cursor := m.textarea.Cursor()
 
 	// if m.codexMenu.PageOpen() || m.codexMenu.FormOpen() {
 	// 	c = nil
 	// }
 
-	if m.codexMenu.PageOpen() {
-		cursor = nil
-	}
+	// if m.codexMenu.PageOpen() {
+	// 	cursor = nil
+	// }
 
-	if cursor != nil {
-		cursor.Y += lipgloss.Height(viewportView)
-	}
+	// if cursor != nil {
+	// 	cursor.Y += lipgloss.Height(viewportView)
+	// }
 
-	view.Cursor = cursor
-	view.AltScreen = true
+	// view.Cursor = cursor
+	// view.AltScreen = true
 	return view
 }
 
 func (m model) GetFooter() []string {
 	footer := []string{t.Localize("save")}
-	// if m.codexMenu.FormOpen() {
-	// 	return append(footer, t.Localize("validate"), t.Localize("cancel"))
-	// }
-	// if m.codexMenu.PageOpen() {
-	// 	footer = append(footer, t.Localize("add"), t.Localize("back_to_chat"))
-	// }
-	footer = append(footer, m.activeMenuItem.GetFooter()...)
-	return footer
+	return append(footer, m.activeMenuItem.GetFooter()...)
 }
 
-func renderSidePanel(engine *game.Engine, height int, oracleView, diceView, codexView string) string {
+func renderSidePanel(engine *game.Engine, height int, Titles ...string) string {
 	var content strings.Builder
 
-	getComponentCharacterInfo(&content, engine)
-	getComponentLocationInfo(&content, engine)
-	getComponentStatInfo(&content, engine)
+	composeSidePanel(&content, engine)
 
-	return composeSidePanel(&content, height, oracleView, diceView, codexView)
-}
-
-func composeSidePanel(content *strings.Builder, height int, oracleView, diceView, codexView string) string {
 	renderPanel := func(content string, height int) string {
 		return lipgloss.NewStyle().
 			Width(panelWidth-4).
@@ -90,56 +73,20 @@ func composeSidePanel(content *strings.Builder, height int, oracleView, diceView
 	statsView := strings.TrimRight(content.String(), "\n")
 	sideView := statsView
 
-	if oracleView != tui.EmptyKey {
-		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView,
-			"\n"+t.Localize("oracles")+"\n", oracleView,
-			"\n"+t.Localize("dice")+"\n", diceView,
-			"\n"+t.Localize("codex")+"\n", codexView)
+	if len(Titles) > 0 {
+		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView)
+		for i, title := range Titles {
+			if i < len(Titles) {
+				sideView = lipgloss.JoinVertical(lipgloss.Left, sideView, "\n"+t.Localize(title))
+			}
+		}
 	}
 
 	return renderPanel(sideView, height)
 }
 
-func getComponentCharacterInfo(content *strings.Builder, engine *game.Engine) {
-	var characterName = t.Localize("character")
-
-	isEngineNil := engine == nil || engine.State == nil
-
-	if isEngineNil || engine.State.Player == nil {
-		characterName += t.Localize("unknown_player")
-	} else {
-		characterName += engine.State.Player.Name
-	}
-
-	content.WriteString(characterName)
-	content.WriteString("\n")
-}
-
-func getComponentLocationInfo(content *strings.Builder, engine *game.Engine) {
-	var locationName = t.Localize("place")
-
-	isEngineNil := engine == nil || engine.State == nil
-
-	if isEngineNil || engine.State.CurrentLocation == nil {
-		locationName += t.Localize("unknown_place")
-	} else {
-		locationName += engine.State.CurrentLocation.Name
-	}
-
-	content.WriteString(locationName)
-	content.WriteString("\n")
-}
-
-func getComponentStatInfo(content *strings.Builder, engine *game.Engine) {
-	content.WriteString(t.Localize("stats_upper") + "\n")
-
-	if engine == nil || engine.State == nil || engine.State.Player == nil {
-		content.WriteString(t.Localize("no_stats"))
-	} else {
-		for _, stat := range effects.ListStats() {
-			key := "stat." + string(stat)
-			label := t.Localize(key)
-			fmt.Fprintf(content, "%-10s %d\n", label, engine.State.Player.Stats[stat])
-		}
-	}
+func composeSidePanel(content *strings.Builder, engine *game.Engine) {
+	metadatasidemenu.GetCharacterInfo(content, engine)
+	metadatasidemenu.GetLocationInfo(content, engine)
+	metadatasidemenu.GetStatInfo(content, engine)
 }
