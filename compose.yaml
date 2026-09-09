@@ -6,7 +6,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./:/workspace:Z
+      - ./:/workspace:z
     command: sleep infinity
 
   solopg-mongo:
