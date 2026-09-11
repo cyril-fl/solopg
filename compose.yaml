@@ -1,20 +1,10 @@
 services:
-  solopg-go:
-    image: docker.io/library/golang:1.26
-    container_name: solopg-go
-    working_dir: /workspace
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./:/workspace:z
-    command: sleep infinity
-
   solopg-mongo:
     image: docker.io/library/mongo:latest
+    
     container_name: solopg-mongo
-    network_mode: "service:solopg-go"
-    depends_on:
-      - solopg-go
+    ports:
+      - "27017:27017"
     volumes:
       - mongo-data:/data/db
 

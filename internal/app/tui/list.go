@@ -1,6 +1,9 @@
 package tui
 
-import "charm.land/bubbles/v2/list"
+import (
+	"charm.land/bubbles/v2/list"
+	"charm.land/lipgloss/v2"
+)
 
 type Item[T any] struct {
 	title       string
@@ -28,4 +31,19 @@ func ConfigureList(menu *list.Model) {
 	menu.SetShowHelp(false)
 	menu.SetShowStatusBar(false)
 	menu.SetShowTitle(false)
+}
+
+func SetListFocus(menu *list.Model, focused bool) {
+	delegate := list.NewDefaultDelegate()
+	if !focused {
+		inactiveColor := lipgloss.Color("#777777")
+		delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.
+			Foreground(inactiveColor).
+			BorderForeground(inactiveColor)
+		delegate.Styles.SelectedDesc = delegate.Styles.SelectedDesc.
+			Foreground(inactiveColor).
+			BorderForeground(inactiveColor)
+	}
+
+	menu.SetDelegate(delegate)
 }

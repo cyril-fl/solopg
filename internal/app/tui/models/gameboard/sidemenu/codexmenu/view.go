@@ -1,23 +1,47 @@
 package codexmenu
 
-// func (m Model) MenuView() string { return m.menu.View() }
-// func (m Model) MenuIndex() int   { return m.menu.Index() }
+import (
+	"solopg/internal/infrastructure/t"
+
+	"charm.land/lipgloss/v2"
+)
+
+func (m *CodexMenu) GetMenuView() string {
+	title := lipgloss.NewStyle().Bold(true).Render(t.Localize(m.id))
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
+		title,
+		"",
+		m.list.View(),
+	)
+}
+
+// func (m Model) View() string {
+// 	// switch m.screen {
+// 	// case ScreenPage:
+// 	return m.viewport.View()
+// 	// case ScreenForm:
+// 	// return m.form.View()
+// 	// default:
+// 	// return ""
+// 	// }
+// }
+
+func (m *CodexMenu) GetView() string {
+	return "CODEX MENU VIEW"
+}
+
+
+func (m *CodexMenu) GetFooter() []string {
+	// return []string{t.Localize("add"), t.Localize("back_to_chat")}
+	return []string{}
+}
 
 /*
 TODO changer par currentParge.View()
 */
-func (m Model) View() string {
-	// switch m.screen {
-	// case ScreenPage:
-	return m.viewport.View()
-	// case ScreenForm:
-	// return m.form.View()
-	// default:
-	// return ""
-	// }
-}
 
-// w
+
 // -- page -- //
 // func (m *Model) selectActivePage() {
 // 	selected, ok := m.menu.SelectedItem().(tui.Item[link])
@@ -55,7 +79,3 @@ func (m Model) View() string {
 // 	}
 // 	return title + "\n\n" + strings.Join(entries, "\n\n")
 // }
-
-func (m *Model) GetView() string {
-	return m.View()
-}

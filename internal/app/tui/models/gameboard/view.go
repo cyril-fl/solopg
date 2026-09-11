@@ -10,27 +10,33 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
+const (
+	panelWidth       = 34
+	panelGap         = 1
+	oracleMenuHeight = 1
+)
+
 func (m model) View() tea.View {
-	viewportView := m.viewport.View()
-	baseView := viewportView + "\n" + m.textarea.View()
+	base := m.viewport.View() + "\n" + m.textarea.View()
 
-	if m.activeMenuItem.IsOpen() {
-		baseView = m.activeMenuItem.GetView()
-	} else {
-		var menuTitles = []string{}
-		for _, menuItem := range m.menu {
-			menuTitles = append(menuTitles, menuItem.ID())
-		}
+	if menu := m.getActiveItem(); menu != nil && menu.IsOpen() {
+		base = menu.GetView()
+	} 
 
-		baseView = lipgloss.JoinHorizontal(
-			lipgloss.Top,
-			baseView,
-			strings.Repeat(" ", panelGap),
-			renderSidePanel(m.engine, lipgloss.Height(baseView), menuTitles...),
-		)
+	var sidemenu = []string{}
+	for _, item := range m.menu {
+		sidemenu = append(sidemenu, item.GetMenuView())
 	}
 
-	view := tea.NewView(baseView)
+	composedView := lipgloss.JoinHorizontal(
+		lipgloss.Top,
+		base,
+		strings.Repeat(" ", panelGap),
+		renderSidePanel(m.engine, lipgloss.Height(base), sidemenu...),
+	)
+
+	view := tea.NewView(composedView)
+
 	// cursor := m.textarea.Cursor()
 
 	// if m.codexMenu.PageOpen() || m.codexMenu.FormOpen() {
@@ -47,28 +53,20 @@ func (m model) View() tea.View {
 
 	// view.Cursor = cursor
 	// view.AltScreen = true
+
 	return view
 }
 
 func (m model) GetFooter() []string {
 	footer := []string{t.Localize("save")}
-	return append(footer, m.activeMenuItem.GetFooter()...)
+	return append(footer, m.getActiveItem().GetFooter()...)
 }
 
+// -- Helper -- //
 func renderSidePanel(engine *game.Engine, height int, Titles ...string) string {
 	var content strings.Builder
 
 	composeSidePanel(&content, engine)
-
-	renderPanel := func(content string, height int) string {
-		return lipgloss.NewStyle().
-			Width(panelWidth-4).
-			Height(max(0, height-2)).
-			Padding(0, 1).
-			Border(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.Color("5")).
-			Render(content)
-	}
 
 	statsView := strings.TrimRight(content.String(), "\n")
 	sideView := statsView
@@ -83,6 +81,16 @@ func renderSidePanel(engine *game.Engine, height int, Titles ...string) string {
 	}
 
 	return renderPanel(sideView, height)
+}
+
+func renderPanel(content string, height int) string {
+	return lipgloss.NewStyle().
+		Width(panelWidth-4).
+		Height(max(0, height-2)).
+		Padding(0, 1).
+		Border(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("5")).
+		Render(content)
 }
 
 func composeSidePanel(content *strings.Builder, engine *game.Engine) {

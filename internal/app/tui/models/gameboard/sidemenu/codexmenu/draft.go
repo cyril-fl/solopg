@@ -1,7 +1,6 @@
 package codexmenu
 
 import (
-	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/codexform"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/characters"
@@ -10,64 +9,9 @@ import (
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/codex"
 	"solopg/internal/infrastructure/t"
-
-	tea "charm.land/bubbletea/v2"
 )
 
-// -- Side panel menu -- //
 
-// func (m Model) HandlesEscape() bool { return m.menu.isOpen() }
-
-// func (m *Model) SetSize(width, height int) {
-// 	m.viewport.SetWidth(width)
-// 	m.viewport.SetHeight(height)
-// 	// if m.FormOpen() {
-// 	// 	m.form.SetWidth(width)
-// 	// }
-// }
-
-func (m *Model) Update(msg tea.Msg) tea.Cmd {
-	// if m.FormOpen() {
-	// 	return m.updateForm(msg)
-	// }
-	if !m.menu.isOpen() {
-		return nil
-	}
-
-	key, ok := msg.(tea.KeyPressMsg)
-	if !ok {
-		return nil
-	}
-	switch key.String() {
-	case tui.KeyEsc:
-		// m.screen = ScreenClosed
-	// case tui.KeyCtrlN:
-	// m.form = codexform.New(m.formKind(), m.page.Width())
-	// m.screen = ScreenForm
-	case tui.KeyUp, tui.KeyDown:
-		// previous := m.menu.Index()
-		// m.UpdateMenu(msg)
-		// if previous != m.menu.Index() {
-		// m.selectActivePage()
-		// }
-	}
-	return nil
-}
-
-type link struct {
-	id   id
-	name string
-}
-
-type id uint8
-
-const (
-	CodexNPCs id = iota
-	CodexMonsters
-	CodexLocations
-	CodexObjects
-	CodexObjectifs
-)
 
 // TODO refactor
 // func (m *Model) addCodexEntry(result codexform.Result) error {

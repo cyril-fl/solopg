@@ -3,10 +3,7 @@ package gameboard
 import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
-	"solopg/internal/app/tui/models/gameboard/sidemenu/dicemenu"
-	"solopg/internal/app/tui/models/gameboard/sidemenu/oraclemenu"
-	"solopg/internal/infrastructure/t"
-	"solopg/types/size"
+	"solopg/internal/app/tui/models/gameboard/sidemenu"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/textarea"
@@ -18,14 +15,14 @@ import (
 // - Model - //
 type model struct {
 	author      string
-	messages    []string
+	journal    []string
 	senderStyle lipgloss.Style
 
 	textarea textarea.Model
 	viewport viewport.Model
 
-	menu           []MenuItem
-	activeMenuItem MenuItem
+	menu            []sidemenu.MenuItem
+	activeMenuIndex int
 
 	engine *game.Engine
 	save   func() error
@@ -39,25 +36,9 @@ type UiParams struct {
 }
 
 func NewModel(params UiParams) model {
-	menuSize := size.Size{
-		Width:  panelWidth - 4,
-		Height: oracleMenuHeight,
-	}
-
-	oraclem := oraclemenu.NewMenuItem(menuSize)
-	dicem := dicemenu.NewMenuItem(menuSize)
-	// codexm := codexmenu.NewMenuItem(codexmenu.SideMenuParams{
-	// 	Size:  menuSize,
-	// 	Codex: params.Engine.State.Codex.EnsureInitialized(),
-	// 	// TODO faire en sorte remplacer logger par une cmd .
-	// 	Logger: func(message string) {
-	// 		params.Engine.AddJournalEntry("Codex", message)
-	// 	},
-	// })
-
 	return model{
-		author:      "Me",
-		messages:    initJournalContent(params.Engine),
+		author:      initAuthor(params.Engine),
+		journal:    initJournal(params.Engine),
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 
 		textarea: initTextarea(),
@@ -66,58 +47,11 @@ func NewModel(params UiParams) model {
 		engine: params.Engine,
 		save:   params.OnSave,
 
-		menu: []MenuItem{
-			oraclem,
-			dicem,
-			// codexm,
-		},
-		activeMenuItem: oraclem,
+		menu:            initSideMenu(params.Engine),
+		activeMenuIndex: 0,
 
 		err: nil,
 	}
-}
-
-func initTextarea() textarea.Model {
-	ta := textarea.New()
-	ta.Placeholder = t.Localize("chat.placeholder")
-	ta.SetVirtualCursor(false)
-	ta.Focus()
-
-	ta.Prompt = "┃ "
-	ta.CharLimit = 280
-
-	ta.SetWidth(30)
-	ta.SetHeight(3)
-
-	// Remove cursor line styling
-	s := ta.Styles()
-	s.Focused.CursorLine = lipgloss.NewStyle()
-	ta.SetStyles(s)
-
-	ta.ShowLineNumbers = false
-	ta.KeyMap.InsertNewline.SetEnabled(false)
-
-	return ta
-}
-
-func initViewport() viewport.Model {
-	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
-	// TODO voir pour set autre choses en fonction de message deja present ou non.
-	vp.SetContent(t.Localize("chat.welcome"))
-	vp.KeyMap.Left.SetEnabled(false)
-	vp.KeyMap.Right.SetEnabled(false)
-
-	return vp
-}
-
-func initJournalContent(engine *game.Engine) []string {
-	journalContent := make([]string, 0, len(engine.State.Journal.Entries))
-
-	for _, entry := range engine.State.Journal.Entries {
-		journalContent = append(journalContent, entry.String())
-	}
-
-	return journalContent
 }
 
 func (m model) Init() tea.Cmd {
@@ -133,6 +67,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// if m.codexMenu.FormOpen() {
 		// 	return m, m.codexMenu.Update(msg)
 		// }
+		menu := m.getActiveItem()
+
 		switch msg.String() {
 		case tui.KeySave:
 			return m, saveCmd(m.save)
@@ -140,10 +76,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// if m.codexMenu.PageOpen() {
 			// 	return m, m.codexMenu.Update(msg)
 			// }
-			m.activeMenuItem.HandleCtrlN(msg)
+			menu.HandleCtrlN(msg)
 
 		case tui.KeyEnter:
-			m.activeMenuItem.HandleKeyEnter(msg)
+			menu.HandleKeyEnter(msg)
 			// if m.codexMenu.PageOpen() {
 			// 	return m, m.codexMenu.Update(msg)
 			// }
@@ -164,14 +100,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			// return handleEnterInput(m)
 		case tui.KeyUp, tui.KeyDown:
-			// m.activeMenuItem.HandleKeyArrow(msg)
-
-			// if m.codexMenu.PageOpen() {
-			// 	return m, m.codexMenu.Update(msg)
-			// }
-			// return handlePanelNavigation(m, msg)
+			direction := sidemenu.HandleKeyArrow(menu, msg)
+			return handleMenuDirection(m, direction)
 		case tui.KeyEsc:
-			m.activeMenuItem.HandleKeyEsc(msg)
+			menu.HandleKeyEsc(msg)
 			// if m.codexMenu.PageOpen() {
 			// 	return m, m.codexMenu.Update(msg)
 			// }
@@ -181,7 +113,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case cursor.BlinkMsg:
 		return handleCursorBlink(m, msg)
-
 	case tui.SaveMsg:
 		return handleSaveInput(m, msg)
 	}
