@@ -192,6 +192,14 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) {
 	m.journal = append(m.journal, message)
 }
 
+// Oracle Rolled
+func (m *model) handleOracleRolled(msg oraclemenu.Msg) {
+	message := fmt.Sprintf("Oracle rolled: %d, Result: %v, Critical: %t", msg.Result.Roll, msg.Result.Result, msg.Result.Critical)
+	
+	m.engine.AddJournalEntry("Oracle", message)
+	m.journal = append(m.journal, message)
+}
+
 // Window
 func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 	chatWidth := max(0, msg.Width-panelWidth-panelGap)

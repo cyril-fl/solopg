@@ -96,7 +96,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case codexmenu.Msg:
 		// return m, nil
 	case oraclemenu.Msg:
-		// return m, nil
+		m.handleOracleRolled(msg)
 	case dicemenu.Msg:
 		m.handleDiceRolled(msg)
 	case tui.SaveMsg:

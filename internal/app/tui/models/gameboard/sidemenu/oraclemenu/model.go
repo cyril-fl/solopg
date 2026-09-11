@@ -60,8 +60,25 @@ func (m *OracleMenu) SetList(list list.Model) {
 }
 
 func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
+	selected, ok := m.list.SelectedItem().(tui.Item[*gameplay.Oracle])
+	if !ok {
+		return func() tea.Msg {
+			return tui.ErrorMsg{Err: t.NewError("error.oracle_selection")}
+		}
+	}
+
+	oracle := selected.Value()	
+	rollResult, err := gameplay.RollOracle[any](oracle)
+	if err != nil {
+		return func() tea.Msg {
+			return tui.ErrorMsg{Err: err}
+		}
+	}
+
 	return func() tea.Msg {
-		return Msg{}
+		return Msg{
+			Result: rollResult,
+		}
 	}
 }
 func (m *OracleMenu) HandleKeyEsc(msg tea.Msg) error {
@@ -71,4 +88,6 @@ func (m *OracleMenu) HandleCtrlN(msg tea.Msg) error {
 	return nil
 }
 
-type Msg struct{}
+type Msg struct{
+	Result *gameplay.OracleResult[any]
+}

@@ -63,6 +63,7 @@ func ensureEmbeddedTable[E any](table **table[E]) {
 }
 
 // TODO ajouter un reel assert
+// TODO move ver la table plutot que ici
 func (codexData *Codex) AddLocation(values map[string]string) error {
 	location, err := locations.New(locations.Template{
 		Name:        values["name"],
