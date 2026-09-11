@@ -8,7 +8,7 @@ import (
 )
 
 type LocationsTable struct {
-	*Table[LocationsEntry]
+	*table[LocationsEntry]
 }
 type LocationsEntry struct {
 	Timestamp time.Time
@@ -21,12 +21,12 @@ type LocationsEntryTemplate struct {
 
 func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	return &LocationsTable{
-		Table: NewTable(entries),
+		table: NewTable(entries),
 	}
 }
 
 func (l *LocationsTable) ensureTable() {
-	ensureEmbeddedTable(&l.Table)
+	ensureEmbeddedTable(&l.table)
 }
 
 func (l *LocationsTable) Summaries() []string {
@@ -39,6 +39,11 @@ func (l *LocationsTable) Summaries() []string {
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))
 	}
+
+	if len(summaries) == 0 {
+		summaries = append(summaries, t.Localize("codex.no_locations"))
+	}
+
 	return summaries
 }
 

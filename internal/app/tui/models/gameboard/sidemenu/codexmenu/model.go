@@ -3,6 +3,7 @@ package codexmenu
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/codex"
+	"strings"
 
 	"solopg/types/size"
 
@@ -24,6 +25,7 @@ func NewSideMenu(params CodexMenuParams, focused bool) *CodexMenu {
 		list:    menu,
 	}
 }
+
 type CodexMenu struct {
 	id      string
 	focused bool
@@ -51,6 +53,7 @@ func (m *CodexMenu) IsOpen() bool {
 	}
 	return false
 }
+
 // SetOpen sets the open state of the CodexMenu. If open true, it does nothing. If open false, it closes all pages in the menu.
 func (m *CodexMenu) SetOpen(open bool) {
 	if open {
@@ -58,7 +61,7 @@ func (m *CodexMenu) SetOpen(open bool) {
 	}
 
 	for _, item := range m.list.Items() {
-	item, ok := item.(tui.Item[*CodexMenuItem])
+		item, ok := item.(tui.Item[*CodexMenuItem])
 		if page := item.Value(); ok {
 			page.isOpen = false
 		}
@@ -77,36 +80,38 @@ func (m *CodexMenu) SetList(list list.Model) {
 	m.list = list
 }
 
-func (m *CodexMenu) HandleKeyEnter(msg tea.Msg) error {
-    if item, ok := m.list.SelectedItem().(tui.Item[*CodexMenuItem]); ok {
+func (m *CodexMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
+	if item, ok := m.list.SelectedItem().(tui.Item[*CodexMenuItem]); ok {
 		page := item.Value()
 		m.handleOpenPage(page)
-    }
+	}
 
-    return nil
+	return func() tea.Msg {
+		return Msg{}
+	}
 }
 func (m *CodexMenu) HandleKeyEsc(msg tea.Msg) error {
 	return nil
 }
 
 func (m *CodexMenu) HandleCtrlN(msg tea.Msg) error {
+	m.SetOpen(false)
 	return nil
 }
-
 
 // Items
 type CodexMenuItem struct {
 	id              string
 	list            list.Model
 	isOpen          bool
-	table           any // *codex.Table[any]
+	table           codex.Table
 	addJournalEntry func(message string)
 }
 
 type SideMenuItemsParams struct {
-	id	string
+	id    string
 	Size  size.Size
-	Table any //*codex.Table[any]
+	Table codex.Table
 	// Logger func(message map[string]string) error
 }
 
@@ -115,13 +120,14 @@ func NewMenuItem(params SideMenuItemsParams) *CodexMenuItem {
 		id:     params.id,
 		isOpen: false,
 		// list:   menu,
-		table:  params.Table,
+		table: params.Table,
 		// addJournalEntry: params.Logger,
 	}
 }
 
-/*
-TODO=
-- page title getter 
-- open / close func
-*/
+func (m *CodexMenuItem) View() string {
+	return "Page: " + m.id + "\n\n" + strings.Join(m.table.Summaries(), "\n\n")
+}
+
+type Msg struct {
+}

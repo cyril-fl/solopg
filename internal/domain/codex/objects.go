@@ -8,7 +8,7 @@ import (
 )
 
 type ObjectsTable struct {
-	*Table[ObjectsEntry]
+	*table[ObjectsEntry]
 }
 
 func (o *ObjectsTable) Summaries() []string {
@@ -21,6 +21,11 @@ func (o *ObjectsTable) Summaries() []string {
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.object.Name, entry.object.Description))
 	}
+
+	if len(summaries) == 0 {
+		summaries = append(summaries, t.Localize("codex.no_objects"))
+	}
+
 	return summaries
 }
 
@@ -35,12 +40,12 @@ type ObjectsEntryTemplate struct {
 
 func NewObjectsTable(entries []ObjectsEntry) *ObjectsTable {
 	return &ObjectsTable{
-		Table: NewTable(entries),
+		table: NewTable(entries),
 	}
 }
 
 func (o *ObjectsTable) ensureTable() {
-	ensureEmbeddedTable(&o.Table)
+	ensureEmbeddedTable(&o.table)
 }
 
 func (o *ObjectsTable) AddEntry(entry ObjectsEntryTemplate) {

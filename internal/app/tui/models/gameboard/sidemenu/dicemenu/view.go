@@ -21,5 +21,7 @@ func (m *DiceMenu) GetView() string {
 }
 
 func (m *DiceMenu) GetFooter() []string {
-	return []string{}
+	return []string{
+		t.Localize("shift-open"),
+	}
 }

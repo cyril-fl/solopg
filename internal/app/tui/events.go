@@ -15,6 +15,10 @@ type SaveMsg struct {
 	Err error
 }
 
+type ErrorMsg struct {
+	Err error
+}
+
 // Errors
 var ErrCreationCancelled = errors.New("character creation cancelled")
 var ErrSelectionCancelled = errors.New("selection cancelled")
@@ -34,11 +38,12 @@ func NormalizeError(err error) error {
 // keys
 const (
 	// Control keys
-	KeyCtrlC    = "ctrl+c"
-	KeyQuit     = "ctrl+q"
-	KeySave     = "ctrl+s"
-	KeyShiftTab = "shift+tab"
-	KeyCtrlN    = "ctrl+n"
+	KeyCtrlC      = "ctrl+c"
+	KeyQuit       = "ctrl+q"
+	KeySave       = "ctrl+s"
+	KeyShiftTab   = "shift+tab"
+	KeyCtrlN      = "ctrl+n"
+	KeyShiftEnter = "shift+enter"
 
 	// Navigation keys
 	KeyEnter     = "enter"

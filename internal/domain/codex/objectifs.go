@@ -7,7 +7,7 @@ import (
 )
 
 type ObjectifsTable struct {
-	*Table[ObjectifsEntry]
+	*table[ObjectifsEntry]
 }
 
 func (o *ObjectifsTable) Summaries() []string {
@@ -20,6 +20,11 @@ func (o *ObjectifsTable) Summaries() []string {
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", o.Entries[i].Title, o.Entries[i].Description))
 	}
+
+	if len(summaries) == 0 {
+		summaries = append(summaries, t.Localize("codex.no_objectives"))
+	}
+
 	return summaries
 }
 
@@ -34,12 +39,12 @@ type ObjectifsEntryTemplate struct {
 
 func NewObjectifsTable(entries []ObjectifsEntry) *ObjectifsTable {
 	return &ObjectifsTable{
-		Table: NewTable(entries),
+		table: NewTable(entries),
 	}
 }
 
 func (o *ObjectifsTable) ensureTable() {
-	ensureEmbeddedTable(&o.Table)
+	ensureEmbeddedTable(&o.table)
 }
 
 func (o *ObjectifsTable) AddEntry(entry ObjectifsEntryTemplate) {

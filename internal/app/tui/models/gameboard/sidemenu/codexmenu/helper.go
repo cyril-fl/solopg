@@ -7,8 +7,8 @@ import (
 	"charm.land/bubbles/v2/list"
 )
 
-// -- Side panel menu -- //
-func makeCodexList(params CodexMenuParams) ([]list.Item) {
+// -- Side panel -- //
+func makeCodexList(params CodexMenuParams) []list.Item {
 	pages := []*CodexMenuItem{
 		NewMenuItem(SideMenuItemsParams{
 			id:    "codex.locations",
@@ -51,16 +51,29 @@ func makeCodexList(params CodexMenuParams) ([]list.Item) {
 	return items
 }
 
+// -- Getters & Setters -- //
+func (m *CodexMenu) getCurrentPage() *CodexMenuItem {
+	for _, item := range m.list.Items() {
+		page, ok := item.(tui.Item[*CodexMenuItem])
+		if !ok {
+			continue
+		}
+		if page.Value().isOpen {
+			return page.Value()
+		}
+	}
+	return nil
+}
+
 // -- Helper -- //
 func (m *CodexMenu) handleOpenPage(selected *CodexMenuItem) {
 	for _, item := range m.list.Items() {
 		item, ok := item.(tui.Item[*CodexMenuItem])
-		
+
 		if page := item.Value(); ok && page != selected {
 			page.isOpen = false
 		}
-	
+
 	}
 	selected.isOpen = true
 }
-

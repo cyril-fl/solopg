@@ -18,6 +18,8 @@ attempt:
   other: "Attempt:"
 error.label:
   other: Error
+shift-open:
+  other: "Ctrl+Enter: Open"
 save:
   other: "Ctrl+S: Save"
 validate:
@@ -166,3 +168,5 @@ error.unexpected_build_value:
   other: "Unexpected build value type: {{.Type}}"
 error.unexpected_location_value:
   other: "Unexpected location value type: {{.Type}}"
+error.page_not_found:
+  other: "Page not found"

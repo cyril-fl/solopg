@@ -1,4 +1,4 @@
-package metadatasidemenu
+package metadatamenu
 
 import (
 	"fmt"
@@ -39,7 +39,8 @@ func GetLocationInfo(content *strings.Builder, engine *game.Engine) {
 }
 
 func GetStatInfo(content *strings.Builder, engine *game.Engine) {
-	content.WriteString(t.Localize("stats_upper") + "\n")
+	content.WriteString(t.Localize("stats_upper"))
+	content.WriteString("\n")
 
 	if engine == nil || engine.State == nil || engine.State.Player == nil {
 		content.WriteString(t.Localize("no_stats"))

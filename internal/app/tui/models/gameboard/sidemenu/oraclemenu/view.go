@@ -21,5 +21,7 @@ func (m *OracleMenu) GetView() string {
 }
 
 func (m *OracleMenu) GetFooter() []string {
-	return []string{}
+	return []string{
+		t.Localize("shift-open"),
+	}
 }

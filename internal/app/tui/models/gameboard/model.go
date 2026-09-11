@@ -4,6 +4,10 @@ import (
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/codexmenu"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/dicemenu"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/oraclemenu"
+	"solopg/internal/infrastructure/t"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/textarea"
@@ -15,11 +19,11 @@ import (
 // - Model - //
 type model struct {
 	author      string
-	journal    []string
+	journal     []string
 	senderStyle lipgloss.Style
 
 	textarea textarea.Model
-	viewport viewport.Model
+	mainview viewport.Model
 
 	menu            []sidemenu.MenuItem
 	activeMenuIndex int
@@ -38,11 +42,11 @@ type UiParams struct {
 func NewModel(params UiParams) model {
 	return model{
 		author:      initAuthor(params.Engine),
-		journal:    initJournal(params.Engine),
+		journal:     initJournal(params.Engine),
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 
 		textarea: initTextarea(),
-		viewport: initViewport(),
+		mainview: initViewport(t.Localize("chat.welcome")),
 
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -61,66 +65,54 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		handleWindowResize(&m, msg)
+		m.handleWindowResize(msg)
 
 	case tea.KeyPressMsg:
-		// if m.codexMenu.FormOpen() {
-		// 	return m, m.codexMenu.Update(msg)
-		// }
-		menu := m.getActiveItem()
+		menu := m.getMenuActiveElement()
 
 		switch msg.String() {
-		case tui.KeySave:
-			return m, saveCmd(m.save)
-		case tui.KeyCtrlN:
-			// if m.codexMenu.PageOpen() {
-			// 	return m, m.codexMenu.Update(msg)
-			// }
-			menu.HandleCtrlN(msg)
-
+		// Global
 		case tui.KeyEnter:
-			menu.HandleKeyEnter(msg)
-			// if m.codexMenu.PageOpen() {
-			// 	return m, m.codexMenu.Update(msg)
-			// }
-
-			// // if m.showPanel && m.textarea.Value() == "" {
-			// if m.activeMenu == oracleMenu {
-			// 	return handleOracleRoll(m)
-			// }
-
-			// if m.activeMenu == diceMenu {
-			// 	return handleDiceRoll(m)
-			// }
-			// if m.activeMenu == codexMenu {
-			// 	m.codexMenu.OpenPage()
-			// 	return m, nil
-			// }
-			// // }
-
-			// return handleEnterInput(m)
+			m.handleEnterInput()
 		case tui.KeyUp, tui.KeyDown:
-			direction := sidemenu.HandleKeyArrow(menu, msg)
-			return handleMenuDirection(m, direction)
+			m.handleMenuDirection(msg)
+
+		// Subviews
+		case tui.KeyCtrlN:
+			menu.HandleCtrlN(msg)
 		case tui.KeyEsc:
 			menu.HandleKeyEsc(msg)
-			// if m.codexMenu.PageOpen() {
-			// 	return m, m.codexMenu.Update(msg)
-			// }
+
+		// Command
+		case tui.KeyShiftEnter:
+			return m, menu.HandleKeyShiftEnter(msg)
+		case tui.KeySave:
+			return m, saveCmd(m.save)
+
 		default:
 			return handleDefaultInput(m, msg)
 		}
 
-	case cursor.BlinkMsg:
-		return handleCursorBlink(m, msg)
+	case codexmenu.Msg:
+		// return m, nil
+	case oraclemenu.Msg:
+		// return m, nil
+	case dicemenu.Msg:
+		m.handleDiceRolled(msg)
 	case tui.SaveMsg:
-		return handleSaveInput(m, msg)
+		m.handleSaveInput(msg)
+	case cursor.BlinkMsg:
+		return m.handleCursorBlink(msg)
 	}
+
+	m.refreshViewport(true)
 
 	return m, nil
 }
 
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
-// func (m model) HandlesEscape() bool {
-// 	// return m.codexMenu.HandlesEscape()
-// }
+func (m model) HandlesEscape() bool {
+	// return m.codexMenu.HandlesEscape()
+	// TODO refactor la maniere dont on hndle escape
+	return true
+}

@@ -22,7 +22,7 @@ type MenuItem interface {
 	GetView() string
 	GetFooter() []string
 
-	HandleKeyEnter(msg tea.Msg) error
+	HandleKeyShiftEnter(msg tea.Msg) tea.Cmd
 	HandleKeyEsc(msg tea.Msg) error
 	HandleCtrlN(msg tea.Msg) error
 }

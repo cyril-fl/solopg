@@ -11,8 +11,6 @@ import (
 	"solopg/internal/infrastructure/t"
 )
 
-
-
 // TODO refactor
 // func (m *Model) addCodexEntry(result codexform.Result) error {
 // 	values := result.Values
@@ -67,58 +65,3 @@ func addNPCToCodex(result codexform.Result, codexData *codex.Codex, values map[s
 	}
 	return nil
 }
-
-// func (m *Model) SetMenuSize(width, height int) {
-// 	m.menu.SetSize(width, height)
-// }
-
-// func (m *Model) SelectMenu(index int) { m.menu.Select(index) }
-
-// func (m *Model) UpdateMenu(msg tea.Msg) tea.Cmd {
-// 	var cmd tea.Cmd
-// 	m.menu, cmd = m.menu.Update(msg)
-// 	return cmd
-// }
-
-// func (m *Model) updateForm(msg tea.Msg) tea.Cmd {
-// 	key, ok := msg.(tea.KeyPressMsg)
-// 	if ok && key.String() == tui.KeyEsc {
-// 		m.screen = ScreenPage
-// 		return nil
-// 	}
-// 	if ok && key.String() == tui.KeyEnter {
-// 		if m.form.AdvanceOnEnter() {
-// 			return nil
-// 		}
-// 		result, err := m.form.Submit()
-// 		if err != nil {
-// 			m.form.SetError(err)
-// 			return nil
-// 		}
-// 		if err := m.addCodexEntry(result); err != nil {
-// 			m.form.SetError(err)
-// 			return nil
-// 		}
-// 		m.screen = ScreenPage
-// 		m.refreshPage()
-// 		m.page.GotoTop()
-// 		return nil
-// 	}
-// 	m.form.SetError(nil)
-// 	return m.form.Update(msg)
-// }
-
-// func (m Model) formKind() codexform.Kind {
-// 	switch m.active {
-// 	case CodexNPCs:
-// 		return codexform.NPCs
-// 	case CodexMonsters:
-// 		return codexform.Monsters
-// 	case CodexLocations:
-// 		return codexform.Locations
-// 	case CodexObjects:
-// 		return codexform.Objects
-// 	default:
-// 		return codexform.Objectifs
-// 	}
-// }

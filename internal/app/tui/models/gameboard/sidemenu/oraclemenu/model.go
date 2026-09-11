@@ -59,8 +59,10 @@ func (m *OracleMenu) SetList(list list.Model) {
 	m.list = list
 }
 
-func (m *OracleMenu) HandleKeyEnter(msg tea.Msg) error {
-	return nil
+func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
+	return func() tea.Msg {
+		return Msg{}
+	}
 }
 func (m *OracleMenu) HandleKeyEsc(msg tea.Msg) error {
 	return nil
@@ -68,3 +70,5 @@ func (m *OracleMenu) HandleKeyEsc(msg tea.Msg) error {
 func (m *OracleMenu) HandleCtrlN(msg tea.Msg) error {
 	return nil
 }
+
+type Msg struct{}

@@ -3,6 +3,7 @@ package dicemenu
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/gameplay"
+	"solopg/internal/infrastructure/t"
 	"solopg/types/size"
 
 	"charm.land/bubbles/v2/list"
@@ -56,29 +57,23 @@ func (m *DiceMenu) SetList(list list.Model) {
 	m.list = list
 }
 
-func (m *DiceMenu) HandleKeyEnter(msg tea.Msg) error {
-// func handleDiceRoll(m model) (model, tea.Cmd) {
-// 	selected, ok := m.diceMenu.SelectedItem().(tui.Item[gameplay.Dice])
-// 	if !ok {
-// 		return m, nil
-// 	}
+func (m *DiceMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
+	selected, ok := m.list.SelectedItem().(tui.Item[gameplay.Dice])
+	if !ok {
+		return func() tea.Msg {
+			return tui.ErrorMsg{Err: t.NewError("error.dice_selection")}
+		}
+	}
 
-// 	dice := selected.Value()
-
-// 	result := dice.Roll()
-
-// 	message := fmt.Sprintf("%s : %d", dice.GetName(), result)
-
-// 	m.engine.AddJournalEntry("Dice", message)
-// 	m.messages = append(m.messages, message)
-
-// 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-// 	m.viewport.GotoBottom()
-
-// 	return m, nil
-// }
-	return nil
+	dice := selected.Value()
+	return func() tea.Msg {
+		return Msg{
+			Dice:  dice.GetName(),
+			Value: dice.Roll(),
+		}
+	}
 }
+
 func (m *DiceMenu) HandleKeyEsc(msg tea.Msg) error {
 	return nil
 }
@@ -86,3 +81,7 @@ func (m *DiceMenu) HandleCtrlN(msg tea.Msg) error {
 	return nil
 }
 
+type Msg struct {
+	Dice  string
+	Value int
+}

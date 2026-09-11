@@ -8,7 +8,7 @@ import (
 )
 
 type MonstersTable struct {
-	*Table[MonstersEntry]
+	*table[MonstersEntry]
 }
 
 func (m *MonstersTable) Summaries() []string {
@@ -21,6 +21,11 @@ func (m *MonstersTable) Summaries() []string {
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.character.Name, entry.character.Description))
 	}
+
+	if len(summaries) == 0 {
+		summaries = append(summaries, t.Localize("codex.no_monsters"))
+	}
+
 	return summaries
 }
 
@@ -35,12 +40,12 @@ type MonstersEntryTemplate struct {
 
 func NewMonstersTable(entries []MonstersEntry) *MonstersTable {
 	return &MonstersTable{
-		Table: NewTable(entries),
+		table: NewTable(entries),
 	}
 }
 
 func (m *MonstersTable) ensureTable() {
-	ensureEmbeddedTable(&m.Table)
+	ensureEmbeddedTable(&m.table)
 }
 
 func (m *MonstersTable) AddEntry(entry MonstersEntryTemplate) {

@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/internal/app/game"
-	"solopg/internal/app/tui/models/gameboard/sidemenu/metadatasidemenu"
+	"solopg/internal/app/tui/models/gameboard/sidemenu/metadatamenu"
 	"solopg/internal/infrastructure/t"
 	"strings"
 
@@ -17,11 +17,11 @@ const (
 )
 
 func (m model) View() tea.View {
-	base := m.viewport.View() + "\n" + m.textarea.View()
+	base := m.mainview.View()
 
-	if menu := m.getActiveItem(); menu != nil && menu.IsOpen() {
-		base = menu.GetView()
-	} 
+	if !m.isMenuActiveElementOpen() {
+		base += "\n" + m.textarea.View()
+	}
 
 	var sidemenu = []string{}
 	for _, item := range m.menu {
@@ -36,30 +36,36 @@ func (m model) View() tea.View {
 	)
 
 	view := tea.NewView(composedView)
-
-	// cursor := m.textarea.Cursor()
-
-	// if m.codexMenu.PageOpen() || m.codexMenu.FormOpen() {
-	// 	c = nil
-	// }
-
-	// if m.codexMenu.PageOpen() {
-	// 	cursor = nil
-	// }
-
-	// if cursor != nil {
-	// 	cursor.Y += lipgloss.Height(viewportView)
-	// }
-
-	// view.Cursor = cursor
-	// view.AltScreen = true
+	view.Cursor = getCursor(m)
+	view.AltScreen = true
 
 	return view
 }
 
 func (m model) GetFooter() []string {
 	footer := []string{t.Localize("save")}
-	return append(footer, m.getActiveItem().GetFooter()...)
+	return append(footer, m.getMenuActiveElement().GetFooter()...)
+}
+
+// -- Viewport -- //
+func (m *model) refreshViewport(resetPosition bool) {
+	var content string
+
+	if m.isMenuActiveElementOpen() {
+		content = m.getMenuActiveElement().GetView()
+	} else {
+		content = strings.Join(m.journal, "\n")
+	}
+
+	content = lipgloss.NewStyle().
+		Width(m.mainview.Width()).
+		Render(content)
+
+	m.mainview.SetContent(content)
+
+	if resetPosition {
+		m.mainview.GotoTop()
+	}
 }
 
 // -- Helper -- //
@@ -94,7 +100,18 @@ func renderPanel(content string, height int) string {
 }
 
 func composeSidePanel(content *strings.Builder, engine *game.Engine) {
-	metadatasidemenu.GetCharacterInfo(content, engine)
-	metadatasidemenu.GetLocationInfo(content, engine)
-	metadatasidemenu.GetStatInfo(content, engine)
+	metadatamenu.GetCharacterInfo(content, engine)
+	metadatamenu.GetLocationInfo(content, engine)
+	metadatamenu.GetStatInfo(content, engine)
+}
+
+func getCursor(m model) *tea.Cursor {
+	cursor := m.textarea.Cursor()
+	cursor.Y += lipgloss.Height(m.mainview.View())
+
+	if item := m.getMenuActiveElement(); item != nil && item.IsOpen() {
+		cursor = nil
+	}
+
+	return cursor
 }

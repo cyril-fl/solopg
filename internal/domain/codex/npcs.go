@@ -8,7 +8,7 @@ import (
 )
 
 type NpcsTable struct {
-	*Table[NpcsEntry]
+	*table[NpcsEntry]
 }
 
 func (n *NpcsTable) Summaries() []string {
@@ -21,6 +21,11 @@ func (n *NpcsTable) Summaries() []string {
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s - %s - %s", entry.character.Name, entry.character.Race, entry.character.Class, entry.character.Description))
 	}
+
+	if len(summaries) == 0 {
+		summaries = append(summaries, t.Localize("codex.no_npcs"))
+	}
+
 	return summaries
 }
 
@@ -35,12 +40,12 @@ type NpcsEntryTemplate struct {
 
 func NewNpcsTable(entries []NpcsEntry) *NpcsTable {
 	return &NpcsTable{
-		Table: NewTable(entries),
+		table: NewTable(entries),
 	}
 }
 
 func (n *NpcsTable) ensureTable() {
-	ensureEmbeddedTable(&n.Table)
+	ensureEmbeddedTable(&n.table)
 }
 
 // TODO: quand j'ajoute un NPC je dois verrfier qu'il abien des stat comme pour la creation du player

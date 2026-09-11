@@ -56,7 +56,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 	return c
 }
 
-func ensureEmbeddedTable[E any](table **Table[E]) {
+func ensureEmbeddedTable[E any](table **table[E]) {
 	if *table == nil {
 		*table = NewTable([]E{})
 	}
@@ -102,16 +102,20 @@ func (codexData *Codex) AddObjective(values map[string]string) error {
 }
 
 // -- Codex table -- //
-type Table[E any] struct {
+type table[E any] struct {
 	Entries []E
 }
 
-func NewTable[E any](entries []E) *Table[E] {
-	return &Table[E]{
+type Table interface {
+	Summaries() []string
+}
+
+func NewTable[E any](entries []E) *table[E] {
+	return &table[E]{
 		Entries: entries,
 	}
 }
 
-func (t *Table[E]) AddEntry(entry E) {
+func (t *table[E]) AddEntry(entry E) {
 	t.Entries = append(t.Entries, entry)
 }

@@ -165,8 +165,13 @@ error.unexpected_build_value:
   other: "Type de caractéristiques inattendu : {{.Type}}"
 error.unexpected_location_value:
   other: "Type de lieu inattendu : {{.Type}}"
+error.page_not_found:
+  other: "Page introuvable"
 
 unknown_player:
   other: Joueur inconnu
 unknown_place:
   other: Lieu inconnu
+
+shift-open:
+  other: "Ctrl+Entrée : Ouvrir"

@@ -1,6 +1,7 @@
 package gameboard
 
 import (
+	"fmt"
 	"solopg/internal/app/game"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
@@ -43,10 +44,10 @@ func initTextarea() textarea.Model {
 	return ta
 }
 
-func initViewport() viewport.Model {
+func initViewport(content string) viewport.Model {
 	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
-	// TODO voir pour set autre choses en fonction de message deja present ou non.
-	vp.SetContent(t.Localize("chat.welcome"))
+
+	vp.SetContent(content)
 	vp.KeyMap.Left.SetEnabled(false)
 	vp.KeyMap.Right.SetEnabled(false)
 
@@ -88,15 +89,20 @@ func initAuthor(engine *game.Engine) string {
 }
 
 // -- Getters & Setters -- //
-func (m *model) getActiveItem() sidemenu.MenuItem {
+func (m *model) getMenuActiveElement() sidemenu.MenuItem {
 	return m.menu[m.activeMenuIndex]
 }
 
+func (m *model) isMenuActiveElementOpen() bool {
+	return m.getMenuActiveElement().IsOpen()
+}
+
 // -- Handlers -- //
-func handleEnterInput(m model) (model, tea.Cmd) {
+// Input
+func (m *model) handleEnterInput() {
 	input := m.textarea.Value()
 	if input == "" {
-		return m, nil
+		return
 	}
 
 	msg := m.senderStyle.Render(m.author + ": " + input)
@@ -104,14 +110,12 @@ func handleEnterInput(m model) (model, tea.Cmd) {
 
 	m.journal = append(m.journal, msg)
 
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
+	m.mainview.SetContent(lipgloss.NewStyle().Width(m.mainview.Width()).Render(strings.Join(m.journal, "\n")))
 	m.textarea.Reset()
-	m.viewport.GotoBottom()
-
-	return m, nil
+	m.mainview.GotoBottom()
 }
 
-func handleSaveInput(m model, msg tui.SaveMsg) (model, tea.Cmd) {
+func (m *model) handleSaveInput(msg tui.SaveMsg) {
 	if msg.Err != nil {
 		m.err = msg.Err
 		m.journal = append(m.journal, t.Localize("error.save", map[string]any{"Error": msg.Err}))
@@ -123,24 +127,43 @@ func handleSaveInput(m model, msg tui.SaveMsg) (model, tea.Cmd) {
 		m.err = nil
 	}
 
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
-	m.viewport.GotoBottom()
-	return m, nil
+	m.mainview.SetContent(lipgloss.NewStyle().Width(m.mainview.Width()).Render(strings.Join(m.journal, "\n")))
+	m.mainview.GotoBottom()
 }
 
 func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
 	var cmd tea.Cmd
+
+	// TODO ajouter la fonction du side menu ici
+	// sideMenu := m.getMenuActiveElement()
+
+	// fmt.Println("Side menu is open %s, forwarding message to side menu", sideMenu.IsOpen())
+
+	// // if  {
+	// // 	// m.pageview, cmd = m.pageview.Update(msg)
+	// // 	return m, cmd
+	// // }
+
 	m.textarea, cmd = m.textarea.Update(msg)
 	return m, cmd
 }
 
-func handleCursorBlink(m model, msg cursor.BlinkMsg) (model, tea.Cmd) {
+func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 	var cmd tea.Cmd
-	m.viewport, cmd = m.viewport.Update(msg)
+	m.mainview, cmd = m.mainview.Update(msg)
 	return m, cmd
 }
 
-func handleMenuDirection(m model, msg sidemenu.Direction) (model, tea.Cmd) {
+// Side Menu Direction
+func (m *model) handleMenuDirection(key tea.KeyPressMsg) {
+	currentMenu := m.getMenuActiveElement()
+
+	direction := sidemenu.HandleKeyArrow(currentMenu, key)
+
+	m.updateMenuDirection(direction)
+}
+
+func (m *model) updateMenuDirection(msg sidemenu.Direction) {
 	previousMenuIndex := m.activeMenuIndex
 	menuLength := len(m.menu)
 
@@ -159,93 +182,29 @@ func handleMenuDirection(m model, msg sidemenu.Direction) (model, tea.Cmd) {
 		m.menu[previousMenuIndex].SetFocus(false)
 		m.menu[m.activeMenuIndex].SetFocus(true)
 	}
+}
+
+// Dice Rolled
+func (m *model) handleDiceRolled(msg dicemenu.Msg) {
+	message := fmt.Sprintf("%s : %d", msg.Dice, msg.Value)
+
+	m.engine.AddJournalEntry("Dice", message)
+	m.journal = append(m.journal, message)
+}
+
+// Window
+func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
+	chatWidth := max(0, msg.Width-panelWidth-panelGap)
+
+	m.mainview.SetWidth(chatWidth)
+
+	m.textarea.SetWidth(chatWidth)
+	m.mainview.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
+
+	if len(m.journal) > 0 {
+		m.mainview.SetContent(lipgloss.NewStyle().Width(m.mainview.Width()).Render(strings.Join(m.journal, "\n")))
+	}
+	m.mainview.GotoBottom()
 
 	return m, nil
 }
-
-func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
-	chatWidth := max(0, msg.Width-panelWidth-panelGap)
-
-	m.viewport.SetWidth(chatWidth)
-	m.textarea.SetWidth(chatWidth)
-	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
-
-	if len(m.journal) > 0 {
-		m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
-	}
-	m.viewport.GotoBottom()
-}
-
-
-
-// func handlePanelNavigation(m model, msg tea.KeyPressMsg) (model, tea.Cmd) {
-//TODO trouver un moyen pour que ce soit en fonction de curent menu et que si on est a la fin ou au debut cuurent menu change.
-// TODO s'occuper de ça en suite !
-
-// 	if m.activeMenu == oracleMenu {
-// 		atStart := m.oracleMenu.Index() == 0
-// 		atEnd := m.oracleMenu.Index() >= len(m.oracleMenu.Items())-1
-// 		if msg.String() == tui.KeyDown && atEnd && len(m.diceMenu.Items()) > 0 {
-// 			m.activeMenu = diceMenu
-// 			m.diceMenu.Select(0)
-// 			return m, nil
-// 		}
-// 		if msg.String() == tui.KeyUp && atStart {
-// 			return m, nil
-// 		}
-// 		var cmd tea.Cmd
-// 		m.oracleMenu, cmd = m.oracleMenu.Update(msg)
-// 		return m, cmd
-// 	}
-
-// 	if m.activeMenu == diceMenu {
-// 		atStart := m.diceMenu.Index() == 0
-// 		atEnd := m.diceMenu.Index() >= len(m.diceMenu.Items())-1
-// 		if msg.String() == tui.KeyUp && atStart && len(m.oracleMenu.Items()) > 0 {
-// 			m.activeMenu = oracleMenu
-// 			m.oracleMenu.Select(len(m.oracleMenu.Items()) - 1)
-// 			return m, nil
-// 		}
-// 		// if msg.String() == tui.KeyDown && atEnd && m.codexMenu.MenuItemsCount() > 0 {
-// 		// 	m.activeMenu = codexMenu
-// 		// 	m.codexMenu.SelectMenu(0)
-// 		// 	return m, nil
-// 		// }
-// 		var cmd tea.Cmd
-// 		m.diceMenu, cmd = m.diceMenu.Update(msg)
-// 		return m, cmd
-// 	}
-
-// 	// atStart := m.codexMenu.MenuIndex() == 0
-// 	// atEnd := m.codexMenu.MenuIndex() >= m.codexMenu.MenuItemsCount()-1
-// 	if msg.String() == tui.KeyUp && atStart && len(m.oracleMenu.Items()) > 0 {
-// 		m.activeMenu = diceMenu
-// 		m.diceMenu.Select(len(m.diceMenu.Items()) - 1)
-// 		return m, nil
-// 	}
-// 	if msg.String() == tui.KeyDown && atEnd {
-// 		return m, nil
-// 	}
-// 	return m, m.codexMenu.UpdateMenu(msg)
-// }
-
-// func handleDiceRoll(m model) (model, tea.Cmd) {
-// 	selected, ok := m.diceMenu.SelectedItem().(tui.Item[gameplay.Dice])
-// 	if !ok {
-// 		return m, nil
-// 	}
-
-// 	dice := selected.Value()
-
-// 	result := dice.Roll()
-
-// 	message := fmt.Sprintf("%s : %d", dice.GetName(), result)
-
-// 	m.engine.AddJournalEntry("Dice", message)
-// 	m.messages = append(m.messages, message)
-
-// 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.messages, "\n")))
-// 	m.viewport.GotoBottom()
-
-// 	return m, nil
-// }
