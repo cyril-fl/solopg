@@ -18,16 +18,7 @@ attempt:
   other: "Tentative :"
 error.label:
   other: Erreur
-save:
-  other: "Ctrl+S : Sauvegarder"
-validate:
-  other: "Entrée : Valider"
-cancel:
-  other: "Échap : Annuler"
-add:
-  other: "Ctrl+N : Ajouter"
-back_to_chat:
-  other: "Échap : Retour au chat"
+
 oracles:
   other: ORACLES
 codex:
@@ -173,5 +164,18 @@ unknown_player:
 unknown_place:
   other: Lieu inconnu
 
-shift-open:
-  other: "Ctrl+Entrée : Ouvrir"
+# Ctrl
+shift-enter:open:
+  other: "Shift+Entrée : Ouvrir"
+save:
+  other: "Ctrl+S : Sauvegarder"
+validate:
+  other: "Entrée : Valider"
+cancel:
+  other: "Échap : Annuler"
+shift-enter:add:
+  other: "Shift+Entrée : Ajouter"
+shift-enter:roll:
+  other: "Shift+Entrée : Lancer"
+back_to_chat:
+  other: "Échap : Retour au chat"

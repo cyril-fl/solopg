@@ -31,31 +31,52 @@ type MenuItem interface {
 type Direction string
 
 var (
-	PreviousMenu Direction = "previous"
-	NextMenu     Direction = "next"
+	Previous Direction = "previous"
+	Next     Direction = "next"
 	None         Direction = "none"
 )
+type Context struct {
+	Menu  MenuItem
+	CurrentMenuIndex int
+	SibblingCount	 int
+}
+
+func (m *Context) IsLastMenuElement() bool {
+	return m.CurrentMenuIndex == m.SibblingCount-1
+}
+
+func (m *Context) IsFirstMenuElement() bool {
+	return m.CurrentMenuIndex == 0
+}
 
 // -- Helper -- //
-func HandleKeyArrow(model MenuItem, key tea.KeyPressMsg) Direction {
-	menuLength := len(model.GetList().Items())
+func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) Direction {
+	menu := metadata.Menu
+	list := menu.GetList()
+	itemCount := len(list.Items())
 
-	previousIndex := model.GetList().Index()
-	newList, _ := model.GetList().Update(key)
+	previousIndex := list.Index()
+	updatedList, _ := list.Update(key)
 
-	model.SetList(newList)
-	newIndex := model.GetList().Index()
+	menu.SetList(updatedList)
+	currentIndex := list.Index()
 
 	switch key.String() {
 	case tui.KeyUp:
-		if isFirst := newIndex == 0; isFirst && previousIndex == 0 {
-			model.SetOpen(false)
-			return PreviousMenu
+		if metadata.IsFirstMenuElement() {
+			return None
+		}
+		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
+			menu.SetOpen(false)
+			return Previous
 		}
 	case tui.KeyDown:
-		if isLast := newIndex == menuLength-1; isLast && previousIndex == newIndex {
-			model.SetOpen(false)
-			return NextMenu
+		if metadata.IsLastMenuElement() {
+			return None
+		} 
+		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
+			menu.SetOpen(false)
+			return Next
 		}
 	}
 	return None

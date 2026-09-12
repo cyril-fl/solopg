@@ -9,35 +9,41 @@ import (
 
 // -- Side panel -- //
 func makeCodexList(params CodexMenuParams) []list.Item {
-	pages := []*CodexMenuItem{
-		NewMenuItem(SideMenuItemsParams{
+	pages := []*codexMenuItem{
+		newMenuItem(sideMenuItemsParams{
 			id:    "codex.locations",
-			Size:  params.Size,
-			Table: params.Codex.LocationsTable,
+			// size:  params.Size,
+			table: params.Codex.LocationsTable,
+			form: getLocationForm,
+
 			// Logger: params.Codex.AddLocation,
 		}),
-		NewMenuItem(SideMenuItemsParams{
+		newMenuItem(sideMenuItemsParams{
 			id:    "codex.npcs",
-			Size:  params.Size,
-			Table: params.Codex.NpcsTable,
+			// size:  params.Size,
+			table: params.Codex.NpcsTable,
+			form: getNpcForm,
 			// Logger: addNPCToCodex,
 		}),
-		NewMenuItem(SideMenuItemsParams{
+		newMenuItem(sideMenuItemsParams{
 			id:    "codex.monsters",
-			Size:  params.Size,
-			Table: params.Codex.MonstersTable,
+			// size:  params.Size,
+			table: params.Codex.MonstersTable,
+			form: getMonsterForm,
 			// Logger: addNPCToCodex,
 		}),
-		NewMenuItem(SideMenuItemsParams{
+		newMenuItem(sideMenuItemsParams{
 			id:    "codex.objects",
-			Size:  params.Size,
-			Table: params.Codex.ObjectsTable,
+			// size:  params.Size,
+			table: params.Codex.ObjectsTable,
+			form: getObjectForm,
 			// Logger: params.Codex.AddObject,
 		}),
-		NewMenuItem(SideMenuItemsParams{
+		newMenuItem(sideMenuItemsParams{
 			id:    "codex.objectives",
-			Size:  params.Size,
-			Table: params.Codex.ObjectifsTable,
+			// size:  params.Size,
+			table: params.Codex.ObjectifsTable,
+			form: getObjectifForm,
 			// Logger: params.Codex.AddObjective,
 		}),
 	}
@@ -52,9 +58,9 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 }
 
 // -- Getters & Setters -- //
-func (m *CodexMenu) getCurrentPage() *CodexMenuItem {
+func (m *codexMenu) getCurrentPage() *codexMenuItem {
 	for _, item := range m.list.Items() {
-		page, ok := item.(tui.Item[*CodexMenuItem])
+		page, ok := item.(tui.Item[*codexMenuItem])
 		if !ok {
 			continue
 		}
@@ -65,10 +71,25 @@ func (m *CodexMenu) getCurrentPage() *CodexMenuItem {
 	return nil
 }
 
+func (m *codexMenu) getSelectedPage() *codexMenuItem {
+	if item, ok := m.list.SelectedItem().(tui.Item[*codexMenuItem]); ok {
+		return item.Value()
+	}
+	return nil
+}
+
+func (m *codexMenuItem) setShowForm(show bool) {
+	m.showForm = show
+}
+
+func (m *codexMenuItem) toggleShowForm() {
+	m.showForm = !m.showForm
+}
+
 // -- Helper -- //
-func (m *CodexMenu) handleOpenPage(selected *CodexMenuItem) {
+func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 	for _, item := range m.list.Items() {
-		item, ok := item.(tui.Item[*CodexMenuItem])
+		item, ok := item.(tui.Item[*codexMenuItem])
 
 		if page := item.Value(); ok && page != selected {
 			page.isOpen = false

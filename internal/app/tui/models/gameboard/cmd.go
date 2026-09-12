@@ -17,10 +17,6 @@ func saveCmd(save func() error) tea.Cmd {
 }
 
 // TODO Add Ctrl Z ctrl Y pour s'il y a des fail de et miss click
-
-// TODO add un menu rool de the dice
-// Peut etre changer en ctrl maj 0 , 1; 2 ...
-
 // TODO il y a deja les orcle, je devrais qjouter une liste de mot clé.
 //  TODO gerer un systeme de combat
 // Et un systeme pour gerer les degat

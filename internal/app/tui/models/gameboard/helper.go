@@ -93,6 +93,14 @@ func (m *model) getMenuActiveElement() sidemenu.MenuItem {
 	return m.menu[m.activeMenuIndex]
 }
 
+func (m *model) isLastMenuElement() bool {
+	return m.activeMenuIndex == len(m.menu)-1 
+}
+
+func (m *model) isFirstMenuElement() bool {
+	return m.activeMenuIndex == 0 
+}
+
 func (m *model) isMenuActiveElementOpen() bool {
 	return m.getMenuActiveElement().IsOpen()
 }
@@ -139,10 +147,10 @@ func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
 
 	// fmt.Println("Side menu is open %s, forwarding message to side menu", sideMenu.IsOpen())
 
-	// // if  {
-	// // 	// m.pageview, cmd = m.pageview.Update(msg)
-	// // 	return m, cmd
-	// // }
+	// if  {
+	// 	// m.pageview, cmd = m.pageview.Update(msg)
+	// 	return m, cmd
+	// }
 
 	m.textarea, cmd = m.textarea.Update(msg)
 	return m, cmd
@@ -156,9 +164,11 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 
 // Side Menu Direction
 func (m *model) handleMenuDirection(key tea.KeyPressMsg) {
-	currentMenu := m.getMenuActiveElement()
-
-	direction := sidemenu.HandleKeyArrow(currentMenu, key)
+	direction := sidemenu.HandleKeyArrow(sidemenu.Context{
+		Menu:             m.getMenuActiveElement(),
+		CurrentMenuIndex: m.activeMenuIndex,
+		SibblingCount:    len(m.menu),
+	}, key)
 
 	m.updateMenuDirection(direction)
 }
@@ -168,11 +178,11 @@ func (m *model) updateMenuDirection(msg sidemenu.Direction) {
 	menuLength := len(m.menu)
 
 	switch msg {
-	case sidemenu.PreviousMenu:
+	case sidemenu.Previous:
 		if m.activeMenuIndex > 0 {
 			m.activeMenuIndex--
 		}
-	case sidemenu.NextMenu:
+	case sidemenu.Next:
 		if m.activeMenuIndex < menuLength-1 {
 			m.activeMenuIndex++
 		}
@@ -195,7 +205,7 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) {
 // Oracle Rolled
 func (m *model) handleOracleRolled(msg oraclemenu.Msg) {
 	message := fmt.Sprintf("Oracle rolled: %d, Result: %v, Critical: %t", msg.Result.Roll, msg.Result.Result, msg.Result.Critical)
-	
+
 	m.engine.AddJournalEntry("Oracle", message)
 	m.journal = append(m.journal, message)
 }

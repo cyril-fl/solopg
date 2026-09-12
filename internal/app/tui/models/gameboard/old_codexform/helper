@@ -130,23 +130,6 @@ func choicesFor(kind Kind, name string) []string {
 	}
 }
 
-func fieldsFor(kind Kind) [][2]string {
-	switch kind {
-	case NPCs:
-		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}, {"class", label("field.class")}, {"race", label("field.race")}}
-	case Monsters:
-		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}, {"race", label("field.race")}}
-	case Locations:
-		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}}
-	case Objects:
-		return [][2]string{{"name", label("field.name")}, {"description", label("field.description")}, {"category", label("field.category")}}
-	case Objectifs:
-		return [][2]string{{"title", label("field.title")}, {"description", label("field.description")}}
-	default:
-		return nil
-	}
-}
-
 func label(id string) string {
 	return t.Localize(id)
 }

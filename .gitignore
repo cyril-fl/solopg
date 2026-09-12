@@ -12,6 +12,7 @@ solopg
 # Fichiers de test
 *.test
 *.out
+__debug_bin*
 
 # Dépendances vendorisées (si tu n'utilises pas vendor/)
 vendor/
@@ -27,5 +28,6 @@ Thumbs.db
 # IDE / autres éditeurs
 .idea/
 .vscode/
+!.vscode/launch.json
 .cursor/ 
 *.swp

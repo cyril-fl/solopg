@@ -84,7 +84,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			menu.HandleKeyEsc(msg)
 
 		// Command
-		case tui.KeyShiftEnter:
+		case tui.KeyShiftEnter, "alt+enter":
 			return m, menu.HandleKeyShiftEnter(msg)
 		case tui.KeySave:
 			return m, saveCmd(m.save)

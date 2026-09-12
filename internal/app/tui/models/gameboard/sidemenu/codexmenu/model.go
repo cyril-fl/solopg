@@ -3,7 +3,7 @@ package codexmenu
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/codex"
-	"strings"
+	"solopg/internal/platform/form"
 
 	"solopg/types/size"
 
@@ -13,23 +13,17 @@ import (
 
 // -- CodexMenu -- //
 // Menu
-func NewSideMenu(params CodexMenuParams, focused bool) *CodexMenu {
+func NewSideMenu(params CodexMenuParams, focused bool) *codexMenu {
 	items := makeCodexList(params)
 	menu := list.New(items, list.NewDefaultDelegate(), params.Size.Width, params.Size.Height)
 	tui.ConfigureList(&menu)
 	tui.SetListFocus(&menu, focused)
 
-	return &CodexMenu{
+	return &codexMenu{
 		id:      "codex",
 		focused: focused,
 		list:    menu,
 	}
-}
-
-type CodexMenu struct {
-	id      string
-	focused bool
-	list    list.Model
 }
 
 type CodexMenuParams struct {
@@ -38,12 +32,19 @@ type CodexMenuParams struct {
 	// Logger func(message map[string]string) error
 }
 
-func (m *CodexMenu) ID() string {
+type codexMenu struct {
+	id      string
+	focused bool
+	list    list.Model
+}
+
+func (m *codexMenu) ID() string {
 	return m.id
 }
-func (m *CodexMenu) IsOpen() bool {
+
+func (m *codexMenu) IsOpen() bool {
 	for _, item := range m.list.Items() {
-		page, ok := item.(tui.Item[*CodexMenuItem])
+		page, ok := item.(tui.Item[*codexMenuItem])
 		if !ok {
 			continue
 		}
@@ -54,80 +55,92 @@ func (m *CodexMenu) IsOpen() bool {
 	return false
 }
 
-// SetOpen sets the open state of the CodexMenu. If open true, it does nothing. If open false, it closes all pages in the menu.
-func (m *CodexMenu) SetOpen(open bool) {
+// SetOpen sets the open state of the CodexMenu. If open true, @it does nothing. If open false, it closes all pages in the menu.
+func (m *codexMenu) SetOpen(open bool) {
 	if open {
 		return
 	}
 
 	for _, item := range m.list.Items() {
-		item, ok := item.(tui.Item[*CodexMenuItem])
+		item, ok := item.(tui.Item[*codexMenuItem])
 		if page := item.Value(); ok {
 			page.isOpen = false
+			page.showForm = false
 		}
 	}
 }
 
-func (m *CodexMenu) SetFocus(focused bool) {
+func (m *codexMenu) SetFocus(focused bool) {
 	m.focused = focused
 	tui.SetListFocus(&m.list, focused)
 }
 
-func (m *CodexMenu) GetList() list.Model {
+func (m *codexMenu) GetList() list.Model {
 	return m.list
 }
-func (m *CodexMenu) SetList(list list.Model) {
+
+func (m *codexMenu) SetList(list list.Model) {
 	m.list = list
 }
 
-func (m *CodexMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
-	if item, ok := m.list.SelectedItem().(tui.Item[*CodexMenuItem]); ok {
-		page := item.Value()
-		m.handleOpenPage(page)
+func (menu *codexMenu) GetFormFromCurrentPage() *form.Model {
+	if currentPage := menu.getCurrentPage(); currentPage != nil && menu.IsOpen() {
+		return currentPage.form()
+	}
+	return nil
+}
+
+func (m *codexMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
+	if currentPage := m.getCurrentPage(); currentPage != nil && m.IsOpen() {
+		currentPage.toggleShowForm()
+	}
+
+	if nextPage := m.getSelectedPage(); nextPage != nil {
+		m.handleOpenPage(nextPage)
 	}
 
 	return func() tea.Msg {
 		return Msg{}
 	}
 }
-func (m *CodexMenu) HandleKeyEsc(msg tea.Msg) error {
+func (m *codexMenu) HandleKeyEsc(msg tea.Msg) error {
 	return nil
 }
 
-func (m *CodexMenu) HandleCtrlN(msg tea.Msg) error {
-	m.SetOpen(false)
+func (m *codexMenu) HandleCtrlN(msg tea.Msg) error {
 	return nil
 }
 
 // Items
-type CodexMenuItem struct {
-	id              string
-	list            list.Model
-	isOpen          bool
-	table           codex.Table
-	addJournalEntry func(message string)
+type codexMenuItem struct {
+	id string
+	isOpen   bool
+	table codex.Table
+	
+	form  func() *form.Model
+	showForm bool
+	// addJournalEntry func(message string)
 }
 
-type SideMenuItemsParams struct {
+type sideMenuItemsParams struct {
 	id    string
-	Size  size.Size
-	Table codex.Table
+	table codex.Table
+	form  func() *form.Model
 	// Logger func(message map[string]string) error
 }
 
-func NewMenuItem(params SideMenuItemsParams) *CodexMenuItem {
-	return &CodexMenuItem{
-		id:     params.id,
-		isOpen: false,
-		// list:   menu,
-		table: params.Table,
+func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
+	return &codexMenuItem{
+		id:       params.id,
+		isOpen:   false,
+		table: params.table,
+		
+		form:  params.form,
+		showForm: false,
 		// addJournalEntry: params.Logger,
 	}
 }
 
-func (m *CodexMenuItem) View() string {
-	return "Page: " + m.id + "\n\n" + strings.Join(m.table.Summaries(), "\n\n")
-}
-
+// Message
 type Msg struct {
 }

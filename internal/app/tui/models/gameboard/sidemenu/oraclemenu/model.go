@@ -67,7 +67,7 @@ func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 		}
 	}
 
-	oracle := selected.Value()	
+	oracle := selected.Value()
 	rollResult, err := gameplay.RollOracle[any](oracle)
 	if err != nil {
 		return func() tea.Msg {
@@ -88,6 +88,6 @@ func (m *OracleMenu) HandleCtrlN(msg tea.Msg) error {
 	return nil
 }
 
-type Msg struct{
+type Msg struct {
 	Result *gameplay.OracleResult[any]
 }

@@ -18,18 +18,7 @@ attempt:
   other: "Attempt:"
 error.label:
   other: Error
-shift-open:
-  other: "Ctrl+Enter: Open"
-save:
-  other: "Ctrl+S: Save"
-validate:
-  other: "Enter: Validate"
-cancel:
-  other: "Esc: Cancel"
-add:
-  other: "Ctrl+N: Add"
-back_to_chat:
-  other: "Esc: Back to chat"
+
 oracles:
   other: ORACLES
 codex:
@@ -170,3 +159,21 @@ error.unexpected_location_value:
   other: "Unexpected location value type: {{.Type}}"
 error.page_not_found:
   other: "Page not found"
+
+
+  # Ctrl
+shift-enter:open:
+  other: "Shift+Enter: Open"
+save:
+  other: "Ctrl+S: Save"
+validate:
+  other: "Enter: Validate"
+cancel:
+  other: "Esc: Cancel"
+shift-enter:add:
+  other: "Shift+Enter: Add"
+shift-enter:roll:
+  other: "Shift+Enter: Roll"
+
+back_to_chat:
+  other: "Esc: Back to chat"
