@@ -19,7 +19,9 @@ func (m model) View() tea.View {
 		buildsChoiceStr[i] = fmt.Sprintf("%s: %d", label, modifier.Value)
 	}
 	content.WriteString(strings.Join(buildsChoiceStr, ", "))
-	content.WriteString(" " + t.Localize("attempt") + ": ")
+	content.WriteString(" ")
+	content.WriteString(t.Localize("attempt"))
+	content.WriteString(": ")
 	content.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 
 	content.WriteString("\n\n")

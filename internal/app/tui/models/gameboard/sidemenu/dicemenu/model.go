@@ -2,6 +2,7 @@ package dicemenu
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
 	"solopg/types/size"
@@ -10,6 +11,8 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// -- DiceMenu -- //
+// Menu
 func NewSideMenu(size size.Size, focused bool) *DiceMenu {
 	options := gameplay.ListDices()
 
@@ -35,6 +38,7 @@ type DiceMenu struct {
 	list    list.Model
 }
 
+// / Getters and Setters
 func (m *DiceMenu) ID() string {
 	return m.id
 }
@@ -57,6 +61,7 @@ func (m *DiceMenu) SetList(list list.Model) {
 	m.list = list
 }
 
+// / Handlers
 func (m *DiceMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 	selected, ok := m.list.SelectedItem().(tui.Item[gameplay.Dice])
 	if !ok {
@@ -74,13 +79,15 @@ func (m *DiceMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 	}
 }
 
-func (m *DiceMenu) HandleKeyEsc(msg tea.Msg) error {
-	return nil
-}
-func (m *DiceMenu) HandleCtrlN(msg tea.Msg) error {
-	return nil
+func (m *DiceMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	switch msg := params.Msg.(type) {
+	default:
+		return params.Delegate(msg)
+	}
+	return params.Model, nil
 }
 
+// Messages
 type Msg struct {
 	Dice  string
 	Value int

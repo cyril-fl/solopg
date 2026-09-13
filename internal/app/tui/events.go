@@ -37,14 +37,6 @@ func NormalizeError(err error) error {
 
 // keys
 const (
-	// Control keys
-	KeyCtrlC      = "ctrl+c"
-	KeyQuit       = "ctrl+q"
-	KeySave       = "ctrl+s"
-	KeyShiftTab   = "shift+tab"
-	KeyCtrlN      = "ctrl+n"
-	KeyShiftEnter = "shift+enter"
-
 	// Navigation keys
 	KeyEnter     = "enter"
 	KeyEsc       = "esc"
@@ -56,6 +48,17 @@ const (
 	KeyDown  = "down"
 	KeyLeft  = "left"
 	KeyRight = "right"
+
+	// Shortcut
+	ShortcutCtrlC    = "ctrl+c"
+	ShortcutCtrlQ    = "ctrl+q"
+	ShortcutCtrlN    = "ctrl+n"
+	ShortcutShiftTab = "shift+tab"
+
+	// Command keys
+	CmdShiftEnter = "shift+enter"
+	CmdAltEnter   = "alt+enter"
+	CmdCtrlS      = "ctrl+s"
 
 	// Other keys
 	EmptyKey = ""

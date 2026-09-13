@@ -1,22 +1,34 @@
 package field
 
-import "solopg/types/id"
+import (
+	"solopg/internal/infrastructure/t"
+	"solopg/types/id"
+
+	tea "charm.land/bubbletea/v2"
+)
 
 // -- Field -- //
 // Field represents a typed form field without exposing its concrete type.
 type Field interface {
 	ID() id.ID
 	Label() string
+	Focus() tea.Cmd
+	Blur()
+	IsFocused() bool
 	Value() any
 	Validate() error
+	Init() tea.Cmd
+	Update(msg tea.Msg) (tea.Model, tea.Cmd)
+	View() tea.View
 }
 
 type field[T any] struct {
-	id        id.ID
-	kind      kind
-	label     string
-	defaultvalue     T
-	validator func(T) error
+	id           id.ID
+	kind         kind
+	label        string
+	focus        bool
+	defaultvalue T
+	validator    func(T) error
 }
 
 type kind string
@@ -31,11 +43,11 @@ var (
 // newField creates a form field with an automatically generated identifier.
 func newField[T any](label string, kind kind, value T, validator func(T) error) field[T] {
 	return field[T]{
-		id:        id.New(),
-		kind:      kind,
-		label:     label,
-		defaultvalue:     value,
-		validator: validator,
+		id:           id.New(),
+		kind:         kind,
+		label:        label,
+		defaultvalue: value,
+		validator:    validator,
 	}
 }
 
@@ -44,7 +56,7 @@ func (f *field[T]) ID() id.ID {
 }
 
 func (f *field[T]) Label() string {
-	return f.label
+	return t.Localize(f.label)
 }
 
 func (f *field[T]) Validate() error {
@@ -53,4 +65,8 @@ func (f *field[T]) Validate() error {
 	}
 
 	return f.validator(f.defaultvalue)
+}
+
+func (f *field[T]) IsFocused() bool {
+	return f.focus
 }

@@ -92,13 +92,6 @@ func (m Model) Submit() (Result, error) {
 	return Result{Kind: m.kind, Values: values}, nil
 }
 
-func (m *Model) SetError(err error) {
-	if err == nil {
-		m.err = ""
-		return
-	}
-	m.err = err.Error()
-}
 
 func choicesFor(kind Kind, name string) []string {
 	switch name {
@@ -127,15 +120,5 @@ func choicesFor(kind Kind, name string) []string {
 		return []string{string(objects.Weapon), string(objects.Armor), string(objects.Potion)}
 	default:
 		return nil
-	}
-}
-
-func label(id string) string {
-	return t.Localize(id)
-}
-
-func (m *Model) SetWidth(width int) {
-	for i := range m.fields {
-		m.fields[i].input.SetWidth(max(10, width-18))
 	}
 }

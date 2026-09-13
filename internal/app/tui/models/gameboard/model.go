@@ -63,49 +63,37 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	menu := m.getMenuActiveElement()
+
+	return menu.HandleUpdate(sidemenu.UpdateParams{
+		Model:    m,
+		Msg:      msg,
+		Delegate: m.HandleUpdate,
+		Refresh:  m.refreshViewport,
+	})
+}
+
+func (m model) HandleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	// Tea messages
 	case tea.WindowSizeMsg:
-		m.handleWindowResize(msg)
-
+		return m.handleWindowResize(msg)
 	case tea.KeyPressMsg:
-		menu := m.getMenuActiveElement()
+		m.handleKeyPress(msg)
+		return m.handleCommand(msg)
 
-		switch msg.String() {
-		// Global
-		case tui.KeyEnter:
-			m.handleEnterInput()
-		case tui.KeyUp, tui.KeyDown:
-			m.handleMenuDirection(msg)
-
-		// Subviews
-		case tui.KeyCtrlN:
-			menu.HandleCtrlN(msg)
-		case tui.KeyEsc:
-			menu.HandleKeyEsc(msg)
-
-		// Command
-		case tui.KeyShiftEnter, "alt+enter":
-			return m, menu.HandleKeyShiftEnter(msg)
-		case tui.KeySave:
-			return m, saveCmd(m.save)
-
-		default:
-			return handleDefaultInput(m, msg)
-		}
-
+	// Cmd messages
 	case codexmenu.Msg:
-		// return m, nil
+		return m.handleCodexAction(msg)
 	case oraclemenu.Msg:
-		m.handleOracleRolled(msg)
+		return m.handleOracleRolled(msg)
 	case dicemenu.Msg:
-		m.handleDiceRolled(msg)
+		return m.handleDiceRolled(msg)
 	case tui.SaveMsg:
-		m.handleSaveInput(msg)
+		return m.handleSaveInput(msg)
 	case cursor.BlinkMsg:
 		return m.handleCursorBlink(msg)
 	}
-
-	m.refreshViewport(true)
 
 	return m, nil
 }

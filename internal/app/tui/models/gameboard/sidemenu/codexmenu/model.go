@@ -2,8 +2,10 @@ package codexmenu
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/codex"
 	"solopg/internal/platform/form"
+	"solopg/internal/platform/message"
 
 	"solopg/types/size"
 
@@ -38,6 +40,7 @@ type codexMenu struct {
 	list    list.Model
 }
 
+// / Getters and Setters
 func (m *codexMenu) ID() string {
 	return m.id
 }
@@ -85,11 +88,18 @@ func (m *codexMenu) SetList(list list.Model) {
 
 func (menu *codexMenu) GetFormFromCurrentPage() *form.Model {
 	if currentPage := menu.getCurrentPage(); currentPage != nil && menu.IsOpen() {
-		return currentPage.form()
+		return currentPage.form
 	}
 	return nil
 }
 
+func (menu *codexMenu) SetFormOnCurrentPage(form form.Model) {
+	if currentPage := menu.getCurrentPage(); currentPage != nil && menu.IsOpen() {
+		currentPage.form = &form
+	}
+}
+
+// / Handlers
 func (m *codexMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 	if currentPage := m.getCurrentPage(); currentPage != nil && m.IsOpen() {
 		currentPage.toggleShowForm()
@@ -103,12 +113,31 @@ func (m *codexMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 		return Msg{}
 	}
 }
-func (m *codexMenu) HandleKeyEsc(msg tea.Msg) error {
-	return nil
-}
 
-func (m *codexMenu) HandleCtrlN(msg tea.Msg) error {
-	return nil
+func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	// Arrow keys are translated by a field into form navigation messages.
+	// Those messages are sent back through the Bubble Tea update loop, so they
+	// must be routed to the form as well instead of being delegated globally.
+	switch params.Msg.(type) {
+	case message.FormNextField, message.FormPreviousField:
+		return m.delegateInputToForm(params)
+	}
+
+	switch msg := params.Msg.(type) {
+
+	case tea.KeyPressMsg:
+		switch msg.String() {
+		case tui.KeyEsc:
+			return m.handleKeyEsc(params)
+		case tui.KeyUp, tui.KeyDown:
+			return m.delegateInputToForm(params)
+		default:
+			return m.delegateInputToForm(params)
+		}
+	}
+
+	return params.Delegate(params.Msg)
+
 }
 
 // Items
@@ -117,7 +146,7 @@ type codexMenuItem struct {
 	isOpen bool
 	table  codex.Table
 
-	form     func() *form.Model
+	form     *form.Model
 	showForm bool
 	// addJournalEntry func(message string)
 }
@@ -135,7 +164,7 @@ func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 		isOpen: false,
 		table:  params.table,
 
-		form:     params.form,
+		form:     params.form(),
 		showForm: false,
 		// addJournalEntry: params.Logger,
 	}
@@ -143,4 +172,10 @@ func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 
 // Message
 type Msg struct {
+}
+
+func sendMsg() tea.Cmd {
+	return func() tea.Msg {
+		return Msg{}
+	}
 }

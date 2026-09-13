@@ -2,9 +2,11 @@ package codexmenu
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/infrastructure/t"
 
 	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
 )
 
 // -- Side panel -- //
@@ -97,4 +99,43 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 
 	}
 	selected.isOpen = true
+}
+
+func (m *codexMenu) handleKeyEsc(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	currentPage := m.getCurrentPage()
+
+	if currentPage == nil {
+		return params.Delegate(params.Msg)
+	}
+
+	if currentPage.showForm {
+		currentPage.toggleShowForm()
+		return params.Model, sendMsg()
+	}
+
+	if currentPage.isOpen {
+		currentPage.isOpen = false
+		return params.Model, sendMsg()
+	}
+
+	return params.Model, sendMsg()
+}
+
+func (m *codexMenu) delegateInputToForm(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	currentPage := m.getCurrentPage()
+
+	if currentPage == nil {
+		return params.Delegate(params.Msg)
+	}
+
+	if !currentPage.showForm {
+		return params.Delegate(params.Msg)
+	}
+
+	_, cmd := currentPage.form.Update(params.Msg)
+
+	return params.Model, tea.Batch(
+		cmd,
+		sendMsg(),
+	)
 }

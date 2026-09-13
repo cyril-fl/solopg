@@ -2,6 +2,7 @@ package oraclemenu
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
 	"solopg/types/size"
@@ -10,6 +11,8 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// -- OracleMenu -- //
+// Menu
 func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 	items := make([]list.Item, 0)
 	for _, oracle := range gameplay.GetOracle() {
@@ -37,6 +40,7 @@ type OracleMenu struct {
 	list    list.Model
 }
 
+// / Getters and Setters
 func (m *OracleMenu) ID() string {
 	return m.id
 }
@@ -59,6 +63,7 @@ func (m *OracleMenu) SetList(list list.Model) {
 	m.list = list
 }
 
+// / Handlers
 func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 	selected, ok := m.list.SelectedItem().(tui.Item[*gameplay.Oracle])
 	if !ok {
@@ -81,13 +86,16 @@ func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 		}
 	}
 }
-func (m *OracleMenu) HandleKeyEsc(msg tea.Msg) error {
-	return nil
-}
-func (m *OracleMenu) HandleCtrlN(msg tea.Msg) error {
-	return nil
+
+func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	switch msg := params.Msg.(type) {
+	default:
+		return params.Delegate(msg)
+	}
+	return params.Model, nil
 }
 
+// Messages
 type Msg struct {
 	Result *gameplay.OracleResult[any]
 }

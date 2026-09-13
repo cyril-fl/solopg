@@ -22,9 +22,11 @@ type MenuItem interface {
 	GetView() string
 	GetFooter() []string
 
+	// REFACTOR
 	HandleKeyShiftEnter(msg tea.Msg) tea.Cmd
-	HandleKeyEsc(msg tea.Msg) error
-	HandleCtrlN(msg tea.Msg) error
+	HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd
+
+	HandleUpdate(params UpdateParams) (tea.Model, tea.Cmd)
 }
 
 // Direction
@@ -48,6 +50,14 @@ func (m *Context) IsLastMenuElement() bool {
 
 func (m *Context) IsFirstMenuElement() bool {
 	return m.CurrentMenuIndex == 0
+}
+
+// Update
+type UpdateParams struct {
+	Model    tea.Model
+	Msg      tea.Msg
+	Delegate tui.DelegateUpdateFunc
+	Refresh  tui.RefreshViewFunc
 }
 
 // -- Helper -- //

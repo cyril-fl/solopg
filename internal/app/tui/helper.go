@@ -12,7 +12,7 @@ func (m model) handleEvent(msg tea.Msg) (model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 	case tea.KeyMsg:
 		switch msg.String() {
-		case KeyQuit:
+		case ShortcutCtrlQ:
 			return m, tea.Quit
 		case KeyEsc:
 			if current := m.steps.GetCurrentSubmodel(); current != nil {

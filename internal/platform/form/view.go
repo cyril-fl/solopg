@@ -1,13 +1,18 @@
 package form
 
-import "strings"
+import (
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
+)
 
-func (m *Model) View() string {
-	fields := make([]string, len(m.fields))
+func (m *Model) View() tea.View {
+	contents := make([]string, 0, len(m.fields))
 
-	for i, field := range m.fields {
-		fields[i] = field.Label() + ": " + field.Value().(string)
+	for _, f := range m.fields {
+		contents = append(contents, f.View().Content)
 	}
 
-	return "Form:\n" + strings.Join(fields, "\n")
+	return tea.NewView(
+		lipgloss.JoinVertical(lipgloss.Left, contents...),
+	)
 }

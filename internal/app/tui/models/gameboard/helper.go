@@ -123,7 +123,7 @@ func (m *model) handleEnterInput() {
 	m.mainview.GotoBottom()
 }
 
-func (m *model) handleSaveInput(msg tui.SaveMsg) {
+func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
 		m.journal = append(m.journal, t.Localize("error.save", map[string]any{"Error": msg.Err}))
@@ -137,9 +137,13 @@ func (m *model) handleSaveInput(msg tui.SaveMsg) {
 
 	m.mainview.SetContent(lipgloss.NewStyle().Width(m.mainview.Width()).Render(strings.Join(m.journal, "\n")))
 	m.mainview.GotoBottom()
+
+	m.refreshViewport(true)
+
+	return m, nil
 }
 
-func handleDefaultInput(m model, msg tea.Msg) (model, tea.Cmd) {
+func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	// TODO ajouter la fonction du side menu ici
@@ -162,8 +166,34 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 	return m, cmd
 }
 
+func (m *model) handleKeyPress(msg tea.KeyPressMsg) {
+	switch msg.String() {
+	case tui.KeyEnter:
+		m.handleEnterInput()
+	case tui.KeyUp, tui.KeyDown:
+		m.handleDirectionInput(msg)
+	default:
+		handleDefaultInput(m, msg)
+	}
+}
+
+func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
+	menu := m.getMenuActiveElement()
+
+	switch msg.String() {
+	case tui.CmdShiftEnter, tui.CmdAltEnter:
+		return m, menu.HandleKeyShiftEnter(msg)
+	case tui.CmdCtrlS:
+		return m, saveCmd(m.save)
+	}
+
+	m.refreshViewport(false)
+
+	return m, nil
+}
+
 // Side Menu Direction
-func (m *model) handleMenuDirection(key tea.KeyPressMsg) {
+func (m *model) handleDirectionInput(key tea.KeyPressMsg) {
 	direction := sidemenu.HandleKeyArrow(sidemenu.Context{
 		Menu:             m.getMenuActiveElement(),
 		CurrentMenuIndex: m.activeMenuIndex,
@@ -194,35 +224,61 @@ func (m *model) updateMenuDirection(msg sidemenu.Direction) {
 	}
 }
 
+// Codex Action
+func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
+	// Handle the codex action
+	m.refreshViewport(true)
+
+	return m, nil
+}
+
 // Dice Rolled
-func (m *model) handleDiceRolled(msg dicemenu.Msg) {
+func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 	message := fmt.Sprintf("%s : %d", msg.Dice, msg.Value)
 
 	m.engine.AddJournalEntry("Dice", message)
 	m.journal = append(m.journal, message)
+
+	m.refreshViewport(true)
+
+	return m, nil
 }
 
 // Oracle Rolled
-func (m *model) handleOracleRolled(msg oraclemenu.Msg) {
+func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
 	message := fmt.Sprintf("Oracle rolled: %d, Result: %v, Critical: %t", msg.Result.Roll, msg.Result.Result, msg.Result.Critical)
 
 	m.engine.AddJournalEntry("Oracle", message)
 	m.journal = append(m.journal, message)
+
+	m.refreshViewport(true)
+
+	return m, nil
 }
 
 // Window
 func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
-	chatWidth := max(0, msg.Width-panelWidth-panelGap)
-
-	m.mainview.SetWidth(chatWidth)
-
-	m.textarea.SetWidth(chatWidth)
-	m.mainview.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
-
-	if len(m.journal) > 0 {
-		m.mainview.SetContent(lipgloss.NewStyle().Width(m.mainview.Width()).Render(strings.Join(m.journal, "\n")))
-	}
-	m.mainview.GotoBottom()
+	refreshMainView(m, msg)
+	refreshMenuElement(m, msg)
 
 	return m, nil
+}
+
+func refreshMainView(m *model, msg tea.WindowSizeMsg) {
+	chatWidth := max(0, msg.Width-panelWidth-panelGap)
+
+	m.mainview.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
+	m.mainview.SetWidth(chatWidth)
+	m.textarea.SetWidth(chatWidth)
+
+	if len(m.journal) > 0 && !m.isMenuActiveElementOpen() {
+		m.mainview.SetContent(lipgloss.NewStyle().Width(m.mainview.Width()).Render(strings.Join(m.journal, "\n")))
+	}
+
+	m.mainview.GotoBottom()
+}
+
+func refreshMenuElement(m *model, msg tea.WindowSizeMsg) {
+	activeEl := m.getMenuActiveElement()
+	activeEl.HandleWindowResize(msg)
 }
