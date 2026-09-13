@@ -113,11 +113,11 @@ func (m *codexMenu) HandleCtrlN(msg tea.Msg) error {
 
 // Items
 type codexMenuItem struct {
-	id string
-	isOpen   bool
-	table codex.Table
-	
-	form  func() *form.Model
+	id     string
+	isOpen bool
+	table  codex.Table
+
+	form     func() *form.Model
 	showForm bool
 	// addJournalEntry func(message string)
 }
@@ -131,11 +131,11 @@ type sideMenuItemsParams struct {
 
 func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 	return &codexMenuItem{
-		id:       params.id,
-		isOpen:   false,
-		table: params.table,
-		
-		form:  params.form,
+		id:     params.id,
+		isOpen: false,
+		table:  params.table,
+
+		form:     params.form,
 		showForm: false,
 		// addJournalEntry: params.Logger,
 	}

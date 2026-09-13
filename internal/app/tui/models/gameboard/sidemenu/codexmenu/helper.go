@@ -11,39 +11,39 @@ import (
 func makeCodexList(params CodexMenuParams) []list.Item {
 	pages := []*codexMenuItem{
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.locations",
+			id: "codex.locations",
 			// size:  params.Size,
 			table: params.Codex.LocationsTable,
-			form: getLocationForm,
+			form:  getLocationForm,
 
 			// Logger: params.Codex.AddLocation,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.npcs",
+			id: "codex.npcs",
 			// size:  params.Size,
 			table: params.Codex.NpcsTable,
-			form: getNpcForm,
+			form:  getNpcForm,
 			// Logger: addNPCToCodex,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.monsters",
+			id: "codex.monsters",
 			// size:  params.Size,
 			table: params.Codex.MonstersTable,
-			form: getMonsterForm,
+			form:  getMonsterForm,
 			// Logger: addNPCToCodex,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.objects",
+			id: "codex.objects",
 			// size:  params.Size,
 			table: params.Codex.ObjectsTable,
-			form: getObjectForm,
+			form:  getObjectForm,
 			// Logger: params.Codex.AddObject,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.objectives",
+			id: "codex.objectives",
 			// size:  params.Size,
 			table: params.Codex.ObjectifsTable,
-			form: getObjectifForm,
+			form:  getObjectifForm,
 			// Logger: params.Codex.AddObjective,
 		}),
 	}

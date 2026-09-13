@@ -94,11 +94,11 @@ func (m *model) getMenuActiveElement() sidemenu.MenuItem {
 }
 
 func (m *model) isLastMenuElement() bool {
-	return m.activeMenuIndex == len(m.menu)-1 
+	return m.activeMenuIndex == len(m.menu)-1
 }
 
 func (m *model) isFirstMenuElement() bool {
-	return m.activeMenuIndex == 0 
+	return m.activeMenuIndex == 0
 }
 
 func (m *model) isMenuActiveElementOpen() bool {

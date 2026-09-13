@@ -33,12 +33,13 @@ type Direction string
 var (
 	Previous Direction = "previous"
 	Next     Direction = "next"
-	None         Direction = "none"
+	None     Direction = "none"
 )
+
 type Context struct {
-	Menu  MenuItem
+	Menu             MenuItem
 	CurrentMenuIndex int
-	SibblingCount	 int
+	SibblingCount    int
 }
 
 func (m *Context) IsLastMenuElement() bool {
@@ -73,7 +74,7 @@ func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) Direction {
 	case tui.KeyDown:
 		if metadata.IsLastMenuElement() {
 			return None
-		} 
+		}
 		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
 			menu.SetOpen(false)
 			return Next
