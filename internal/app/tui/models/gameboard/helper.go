@@ -109,6 +109,9 @@ func (m *model) isMenuActiveElementOpen() bool {
 // -- Handlers -- //
 // Input
 func (m *model) handleEnterInput() {
+	if m.isMenuActiveElementOpen() {
+		return
+	}
 	input := m.textarea.Value()
 	if input == "" {
 		return
@@ -179,11 +182,7 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) {
 }
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
-	menu := m.getMenuActiveElement()
-
 	switch msg.String() {
-	case tui.CmdShiftEnter, tui.CmdAltEnter:
-		return m, menu.HandleKeyShiftEnter(msg)
 	case tui.CmdCtrlS:
 		return m, saveCmd(m.save)
 	}
@@ -228,6 +227,8 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 // Codex Action
 func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
 	// Handle the codex action
+	_= msg
+
 	m.refreshViewport(true)
 
 	return m, nil

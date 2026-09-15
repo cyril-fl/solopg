@@ -10,12 +10,14 @@ import (
 // -- Form -- //
 type Model struct {
 	fields []field.Field
+	autoSubmit bool
 	err    []string
 }
 
 func New() *Model {
 	return &Model{
 		fields: make([]field.Field, 0),
+		autoSubmit: true,
 	}
 }
 
@@ -47,11 +49,26 @@ func (m *Model) SetError(err error) {
 	m.err = append(m.err, err.Error())
 }
 
-func (m *Model) Focus() *Model {
-	return m.FocusOnIndex(0)
+func (m *Model) EnableAutoSubmit() *Model {
+	return m.SetAutoSubmit(true)
 }
 
-func (m *Model) FocusOnIndex(index int) *Model {
+func (m *Model) DisableAutoSubmit() *Model {
+	return m.SetAutoSubmit(false)
+}
+
+func (m *Model) SetAutoSubmit(autoSubmit bool) *Model {
+	m.autoSubmit = autoSubmit
+	return m
+}
+
+
+
+func (m *Model) Focus() *Model {
+	return m.focusOnIndex(0)
+}
+
+func (m *Model) focusOnIndex(index int) *Model {
 	for _, f := range m.fields {
 		f.Blur()
 	}
@@ -80,8 +97,9 @@ func (m *Model) getCurrentFieldIndex() int {
 	return -1
 }
 
-func (m *Model) GetFields() []field.Field {
-	return m.fields
+func (m *Model) isLastField() bool {
+	currentIndex := m.getCurrentFieldIndex()
+	return currentIndex == len(m.fields)-1
 }
 
 // -- Tea Model Implementation --//
@@ -101,11 +119,12 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg.(type) {
 		case message.FormNextField:
-			return m.FocusOnIndex(currentIndex + 1), nil
+			if m.isLastField() && m.autoSubmit {
+				return m, message.SendFormMsg[message.FormSubmit]()
+			}
+			return m.focusOnIndex(currentIndex + 1), nil
 		case message.FormPreviousField:
-			return m.FocusOnIndex(currentIndex - 1), nil
-		case message.FormSubmit:
-			// fmt.Println("SubmitFormMsg received in codexMenu.HandleUpdate")
+			return m.focusOnIndex(currentIndex - 1), nil
 	}
 	
 	return m.updateFocusedField(msg)

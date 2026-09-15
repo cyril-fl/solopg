@@ -68,12 +68,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return menu.HandleUpdate(sidemenu.UpdateParams{
 		Model:    m,
 		Msg:      msg,
-		Delegate: m.HandleUpdate,
+		Delegate: m.handleUpdate,
 		Refresh:  m.refreshViewport,
 	})
 }
 
-func (m model) HandleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	// Tea messages
 	case tea.WindowSizeMsg:

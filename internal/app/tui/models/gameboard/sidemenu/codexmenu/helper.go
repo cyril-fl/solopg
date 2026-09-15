@@ -1,9 +1,11 @@
 package codexmenu
 
 import (
+	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/infrastructure/t"
+	"solopg/internal/platform/message"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -89,18 +91,6 @@ func (m *codexMenuItem) toggleShowForm() {
 }
 
 // -- Helper -- //
-func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
-	for _, item := range m.list.Items() {
-		item, ok := item.(tui.Item[*codexMenuItem])
-
-		if page := item.Value(); ok && page != selected {
-			page.isOpen = false
-		}
-
-	}
-	selected.isOpen = true
-}
-
 func (m *codexMenu) handleKeyEsc(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	currentPage := m.getCurrentPage()
 
@@ -119,6 +109,48 @@ func (m *codexMenu) handleKeyEsc(params sidemenu.UpdateParams) (tea.Model, tea.C
 	}
 
 	return params.Model, sendMsg()
+}
+
+func (m *codexMenu) handleKeyShiftEnter(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+    currentPage := m.getCurrentPage()
+
+    if currentPage != nil && m.IsOpen() {
+        if currentPage.showForm {
+            return params.Model, message.SendFormMsg[message.FormSubmit]()
+        }
+
+        currentPage.setShowForm(true)
+        return params.Model, sendMsg()
+    }
+
+    if selectedPage := m.getSelectedPage(); selectedPage != nil {
+        m.handleOpenPage(selectedPage)
+    }
+
+    return params.Model, sendMsg()
+}
+
+func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
+	for _, item := range m.list.Items() {
+		item, ok := item.(tui.Item[*codexMenuItem])
+
+		if page := item.Value(); ok && page != selected {
+			page.isOpen = false
+		}
+
+	}
+	selected.isOpen = true
+}
+
+
+func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	form := m.GetFormFromCurrentPage()
+	if form == nil {
+		return params.Model, nil
+	}
+	form.Validate()
+	fmt.Println("Form validation errors:", form)
+	return params.Model, nil
 }
 
 func (m *codexMenu) delegateInputToForm(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {

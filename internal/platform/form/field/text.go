@@ -11,6 +11,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
+// -- Field -- //
 type textField[T stringOrInt] struct {
 	field[T]
 	input textinput.Model
@@ -79,12 +80,19 @@ func (m *textField[T]) View() tea.View {
 		Render(m.Label())
 
 	input := m.input.View()
+	
+	err := ""
+	if m.err != nil {
+		err = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("1")).
+			Render(m.err.Error())
+	}
 
 	return tea.NewView(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
 			title,
-			"",
+			err,
 			input,
 		),
 	)

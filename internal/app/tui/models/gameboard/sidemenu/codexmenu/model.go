@@ -58,7 +58,6 @@ func (m *codexMenu) IsOpen() bool {
 	return false
 }
 
-// SetOpen sets the open state of the CodexMenu. If open true, @it does nothing. If open false, it closes all pages in the menu.
 func (m *codexMenu) SetOpen(open bool) {
 	if open {
 		return
@@ -100,44 +99,27 @@ func (menu *codexMenu) SetFormOnCurrentPage(form form.Model) {
 }
 
 // / Handlers
-func (m *codexMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
-	if currentPage := m.getCurrentPage(); currentPage != nil && m.IsOpen() {
-		currentPage.toggleShowForm()
-	}
-
-	if nextPage := m.getSelectedPage(); nextPage != nil {
-		m.handleOpenPage(nextPage)
-	}
-
-	return func() tea.Msg {
-		return Msg{}
-	}
-}
-
 func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	// Arrow keys are translated by a field into form navigation messages.
-	// Those messages are sent back through the Bubble Tea update loop, so they
-	// must be routed to the form as well instead of being delegated globally.
-	switch params.Msg.(type) {
+	switch msg := params.Msg.(type) {
 	case message.FormNextField, message.FormPreviousField:
 		return m.delegateInputToForm(params)
-	}
-
-	switch msg := params.Msg.(type) {
-
+	case message.FormSubmit:
+		return m.handleFormSubmit(params)
 	case tea.KeyPressMsg:
 		switch msg.String() {
 		case tui.KeyEsc:
 			return m.handleKeyEsc(params)
 		case tui.KeyUp, tui.KeyDown:
 			return m.delegateInputToForm(params)
+		case tui.KeyEnter:
+			return m.delegateInputToForm(params)
+		case tui.CmdShiftEnter:
+			return m.handleKeyShiftEnter(params)
 		default:
 			return m.delegateInputToForm(params)
 		}
 	}
-
 	return params.Delegate(params.Msg)
-
 }
 
 // Items
@@ -171,11 +153,11 @@ func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 }
 
 // Message
-type Msg struct {
-}
-
 func sendMsg() tea.Cmd {
 	return func() tea.Msg {
 		return Msg{}
 	}
+}
+
+type Msg struct {
 }

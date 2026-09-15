@@ -29,6 +29,7 @@ type field[T any] struct {
 	focus        bool
 	defaultvalue T
 	validator    func(T) error
+	err		  error
 }
 
 type kind string
@@ -64,7 +65,9 @@ func (f *field[T]) Validate() error {
 		return nil
 	}
 
-	return f.validator(f.defaultvalue)
+	f.err = f.validator(f.defaultvalue)
+	
+	return f.err
 }
 
 func (f *field[T]) IsFocused() bool {

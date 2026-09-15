@@ -23,12 +23,11 @@ type MenuItem interface {
 	GetView() string
 	GetFooter() []string
 
-	// REFACTOR
-	HandleKeyShiftEnter(msg tea.Msg) tea.Cmd
 	HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd
-
 	HandleUpdate(params UpdateParams) (tea.Model, tea.Cmd)
 }
+
+//-- Context - // 
 type Context struct {
 	Menu             MenuItem
 	CurrentMenuIndex int
@@ -43,7 +42,7 @@ func (m *Context) IsFirstMenuElement() bool {
 	return m.CurrentMenuIndex == 0
 }
 
-// Update
+//-- Update - //
 type UpdateParams struct {
 	Model    tea.Model
 	Msg      tea.Msg
@@ -52,49 +51,19 @@ type UpdateParams struct {
 }
 
 // -- Helper -- //
-// func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) Direction {
-// 	// Todo diviser le code en deux, ce qui gerer la drection, et ce qui gere les side effect. Ainsi on pouurait utiliser cette fonction aussi pour des liste normal ex les fomrulaire.
-// 	// Egalemnt deplacer cette nouvvele fonction dans "list"
-// 	menu := metadata.Menu
-// 	list := menu.GetList()
-// 	itemCount := len(list.Items())
-
-// 	previousIndex := list.Index()
-// 	updatedList, _ := list.Update(key)
-
-// 	menu.SetList(updatedList)
-// 	currentIndex := list.Index()
-
-// 	switch key.String() {
-// 	case tui.KeyUp:
-// 		if metadata.IsFirstMenuElement() {
-// 			return None
-// 		}
-// 		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
-// 			menu.SetOpen(false)
-// 			return Previous
-// 		}
-// 	case tui.KeyDown:
-// 		if metadata.IsLastMenuElement() {
-// 			return None
-// 		}
-// 		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
-// 			menu.SetOpen(false)
-// 			return Next
-// 		}
-// 	}
-// 	return None
-// }
-
 func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) direction.Direction {
-	list, direction := direction.GetListDirection(metadata.Menu.GetList(), key)
+	list, newdirection := direction.GetListDirection(metadata.Menu.GetList(), key)
 
 	metadata.Menu.SetList(list)
 
-	if !(metadata.IsFirstMenuElement() || metadata.IsLastMenuElement()) {
-		metadata.Menu.SetOpen(false)
-	}
+	isFirstElementToNext :=  metadata.IsFirstMenuElement() && newdirection == direction.Next
+	isLastElementToPrevious := metadata.IsLastMenuElement() && newdirection == direction.Previous
+	isBetweenElements := !(metadata.IsFirstMenuElement() || metadata.IsLastMenuElement())
 
-	return direction
+	if isFirstElementToNext || isBetweenElements || isLastElementToPrevious {
+		metadata.Menu.SetOpen(false)
+	} 
+
+	return newdirection
 }
 

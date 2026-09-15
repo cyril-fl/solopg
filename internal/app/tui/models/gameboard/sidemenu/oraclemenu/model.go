@@ -64,7 +64,7 @@ func (m *OracleMenu) SetList(list list.Model) {
 }
 
 // / Handlers
-func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
+func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	selected, ok := m.list.SelectedItem().(tui.Item[*gameplay.Oracle])
 	if !ok {
 		return func() tea.Msg {
@@ -89,6 +89,13 @@ func (m *OracleMenu) HandleKeyShiftEnter(msg tea.Msg) tea.Cmd {
 
 func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	switch msg := params.Msg.(type) {
+		case tea.KeyPressMsg:
+		switch msg.String() {
+			case tui.CmdShiftEnter, tui.CmdAltEnter:
+				return params.Model, m.handleKeyShiftEnter()
+		default:
+			return params.Delegate(msg)
+		}
 	default:
 		return params.Delegate(msg)
 	}
