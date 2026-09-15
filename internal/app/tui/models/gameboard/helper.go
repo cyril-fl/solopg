@@ -9,6 +9,7 @@ import (
 	"solopg/internal/app/tui/models/gameboard/sidemenu/dicemenu"
 	"solopg/internal/app/tui/models/gameboard/sidemenu/oraclemenu"
 	"solopg/internal/infrastructure/t"
+	"solopg/types/direction"
 	"solopg/types/size"
 	"strings"
 	"time"
@@ -203,16 +204,16 @@ func (m *model) handleDirectionInput(key tea.KeyPressMsg) {
 	m.updateMenuDirection(direction)
 }
 
-func (m *model) updateMenuDirection(msg sidemenu.Direction) {
+func (m *model) updateMenuDirection(msg direction.Direction) {
 	previousMenuIndex := m.activeMenuIndex
 	menuLength := len(m.menu)
 
 	switch msg {
-	case sidemenu.Previous:
+	case direction.Previous:
 		if m.activeMenuIndex > 0 {
 			m.activeMenuIndex--
 		}
-	case sidemenu.Next:
+	case direction.Next:
 		if m.activeMenuIndex < menuLength-1 {
 			m.activeMenuIndex++
 		}

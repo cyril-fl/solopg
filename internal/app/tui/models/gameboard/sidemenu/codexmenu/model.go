@@ -78,8 +78,8 @@ func (m *codexMenu) SetFocus(focused bool) {
 	tui.SetListFocus(&m.list, focused)
 }
 
-func (m *codexMenu) GetList() list.Model {
-	return m.list
+func (m *codexMenu) GetList() *list.Model {
+	return &m.list
 }
 
 func (m *codexMenu) SetList(list list.Model) {

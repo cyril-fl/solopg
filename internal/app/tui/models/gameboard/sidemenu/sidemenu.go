@@ -2,6 +2,7 @@ package sidemenu
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/types/direction"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -15,7 +16,7 @@ type MenuItem interface {
 
 	SetFocus(bool)
 
-	GetList() list.Model
+	GetList() *list.Model
 	SetList(list.Model)
 
 	GetMenuView() string
@@ -28,16 +29,6 @@ type MenuItem interface {
 
 	HandleUpdate(params UpdateParams) (tea.Model, tea.Cmd)
 }
-
-// Direction
-type Direction string
-
-var (
-	Previous Direction = "previous"
-	Next     Direction = "next"
-	None     Direction = "none"
-)
-
 type Context struct {
 	Menu             MenuItem
 	CurrentMenuIndex int
@@ -61,34 +52,49 @@ type UpdateParams struct {
 }
 
 // -- Helper -- //
-func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) Direction {
-	menu := metadata.Menu
-	list := menu.GetList()
-	itemCount := len(list.Items())
+// func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) Direction {
+// 	// Todo diviser le code en deux, ce qui gerer la drection, et ce qui gere les side effect. Ainsi on pouurait utiliser cette fonction aussi pour des liste normal ex les fomrulaire.
+// 	// Egalemnt deplacer cette nouvvele fonction dans "list"
+// 	menu := metadata.Menu
+// 	list := menu.GetList()
+// 	itemCount := len(list.Items())
 
-	previousIndex := list.Index()
-	updatedList, _ := list.Update(key)
+// 	previousIndex := list.Index()
+// 	updatedList, _ := list.Update(key)
 
-	menu.SetList(updatedList)
-	currentIndex := list.Index()
+// 	menu.SetList(updatedList)
+// 	currentIndex := list.Index()
 
-	switch key.String() {
-	case tui.KeyUp:
-		if metadata.IsFirstMenuElement() {
-			return None
-		}
-		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
-			menu.SetOpen(false)
-			return Previous
-		}
-	case tui.KeyDown:
-		if metadata.IsLastMenuElement() {
-			return None
-		}
-		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
-			menu.SetOpen(false)
-			return Next
-		}
+// 	switch key.String() {
+// 	case tui.KeyUp:
+// 		if metadata.IsFirstMenuElement() {
+// 			return None
+// 		}
+// 		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
+// 			menu.SetOpen(false)
+// 			return Previous
+// 		}
+// 	case tui.KeyDown:
+// 		if metadata.IsLastMenuElement() {
+// 			return None
+// 		}
+// 		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
+// 			menu.SetOpen(false)
+// 			return Next
+// 		}
+// 	}
+// 	return None
+// }
+
+func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) direction.Direction {
+	list, direction := direction.GetListDirection(metadata.Menu.GetList(), key)
+
+	metadata.Menu.SetList(list)
+
+	if !(metadata.IsFirstMenuElement() || metadata.IsLastMenuElement()) {
+		metadata.Menu.SetOpen(false)
 	}
-	return None
+
+	return direction
 }
+

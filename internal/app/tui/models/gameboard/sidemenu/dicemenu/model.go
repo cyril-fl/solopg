@@ -54,8 +54,8 @@ func (m *DiceMenu) SetFocus(focused bool) {
 	tui.SetListFocus(&m.list, focused)
 }
 
-func (m *DiceMenu) GetList() list.Model {
-	return m.list
+func (m *DiceMenu) GetList() *list.Model {
+	return &m.list
 }
 func (m *DiceMenu) SetList(list list.Model) {
 	m.list = list

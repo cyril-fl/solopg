@@ -56,8 +56,8 @@ func (m *OracleMenu) SetFocus(focused bool) {
 	tui.SetListFocus(&m.list, focused)
 }
 
-func (m *OracleMenu) GetList() list.Model {
-	return m.list
+func (m *OracleMenu) GetList() *list.Model {
+	return &m.list
 }
 func (m *OracleMenu) SetList(list list.Model) {
 	m.list = list
