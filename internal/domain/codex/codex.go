@@ -2,13 +2,15 @@ package codex
 
 import (
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/locations"
 	"solopg/internal/domain/card/objects"
 	"strings"
 )
 
 /*
-TODO: ajouter des méthodes pour chaque sous codex
+	TODO Ajouter des méthodes pour chaque sous codex
+	HIGH
 */
 // -- Codex -- //
 type Codex struct {
@@ -62,8 +64,14 @@ func ensureEmbeddedTable[E any](table **table[E]) {
 	}
 }
 
-// TODO ajouter un reel assert
-// TODO move ver la table plutot que ici
+/*
+ 	TODO ajouter un reel assert
+	TODO move ver la table plutot que ici
+	HIGH
+*/
+func (codexData *Codex) AddNPC(character *characters.Character) {
+	codexData.NpcsTable.AddNPC(character)
+}
 func (codexData *Codex) AddLocation(values map[string]string) error {
 	location, err := locations.New(locations.Template{
 		Name:        values["name"],

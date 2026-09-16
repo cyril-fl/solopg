@@ -2,7 +2,10 @@ package objects
 
 import "fmt"
 
-// TODO: upgrade to File driven approach if not needed in game logic
+/*
+	TODO upgrade to File driven approach if not needed in game logic
+	MEDIUM
+*/
 
 type Category string
 

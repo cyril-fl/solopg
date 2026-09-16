@@ -150,15 +150,9 @@ func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
 	var cmd tea.Cmd
 
-	// TODO ajouter la fonction du side menu ici
-	// sideMenu := m.getMenuActiveElement()
-
-	// fmt.Println("Side menu is open %s, forwarding message to side menu", sideMenu.IsOpen())
-
-	// if  {
-	// 	// m.pageview, cmd = m.pageview.Update(msg)
-	// 	return m, cmd
-	// }
+	if m.isMenuActiveElementOpen() {
+		return m, nil
+	}
 
 	m.textarea, cmd = m.textarea.Update(msg)
 	return m, cmd

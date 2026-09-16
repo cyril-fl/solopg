@@ -40,8 +40,12 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 			table: params.Codex.MonstersTable,
 			form:  getMonsterForm,
 			addEntryToCodex: func(message string) {
-
 				fmt.Println("Adding Monster to codex:", message)
+				/* 
+					TODO 
+				 	MEDIUM 
+					Faire passer les info pour post les nouvelle entrées
+				*/
 				// params.Codex.AddMonster,
 			},
 		}),

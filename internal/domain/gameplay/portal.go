@@ -5,8 +5,11 @@ import (
 	"solopg/internal/infrastructure/yaml"
 )
 
-// TODO add a cache.
-const basePath = "data/template/locations"
+/*
+	TODO add a cache.
+	MEDIUM
+*/
+	const basePath = "data/template/locations"
 
 func LoadPresetLocations() ([]locations.Location, error) {
 	folderName := basePath

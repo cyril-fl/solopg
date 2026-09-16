@@ -2,7 +2,10 @@ package attributes
 
 import "fmt"
 
-// TODO: upgrade to File driven approach if not needed il game logic
+/*
+	TODO upgrade to File driven approach if not needed il game logic
+	MEDIUM
+*/
 type Variety string
 
 const (

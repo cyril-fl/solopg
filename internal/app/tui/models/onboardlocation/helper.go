@@ -6,8 +6,11 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-/* TODO factoriser avec onboardforgecharacter/helper.go
-mais faire attention a la perte de controle du flux
+/* 
+	TODO
+	LOW
+	Factoriser avec onboardforgecharacter/helper.go
+	mais faire attention a la perte de controle du flux
 */
 
 func handleWindowResize(m *model, msg tea.WindowSizeMsg) {

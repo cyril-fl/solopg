@@ -22,8 +22,7 @@ func (m *codexMenu) GetMenuView() string {
 func (m *codexMenu) GetView() string {
 	page := m.getCurrentPage()
 	if page == nil {
-		// i18N
-		return "page not found"
+		return t.Localize("error.page_not_found")
 	}
 
 	return page.GetItemView()

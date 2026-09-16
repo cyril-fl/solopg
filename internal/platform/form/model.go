@@ -38,7 +38,10 @@ func (m *Model) Submit() {
 }
 
 func (m *Model) GetValuesAsString() string {
-	// TODO Implement a method to get the form values as a string representation
+	/*
+		TODO Implement a method to get the form values as a string representation
+		HIGH
+	*/
 	return "Form Values:..."
 }
 

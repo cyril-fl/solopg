@@ -125,6 +125,10 @@ codex.unknown_location:
   other: Unknown location
 codex.unknown_object:
   other: Unknown object
+
+# Errors
+error.page_not_found:
+  other: "Page not found"
 error.save_unconfigured:
   other: "Save function is not configured"
 error.oracle.not_found:
@@ -157,8 +161,6 @@ error.unexpected_build_value:
   other: "Unexpected build value type: {{.Type}}"
 error.unexpected_location_value:
   other: "Unexpected location value type: {{.Type}}"
-error.page_not_found:
-  other: "Page not found"
 
 
   # Ctrl

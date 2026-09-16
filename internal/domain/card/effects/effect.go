@@ -7,7 +7,10 @@ import (
 	"solopg/internal/infrastructure/yaml"
 )
 
-// TODO sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML
+/*
+	TODO sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML
+	MEDIUM
+*/
 type yamlStatsConfig struct {
 	Names     []Stat `yaml:"names"`
 	BaseStats Stats  `yaml:"baseStats"`

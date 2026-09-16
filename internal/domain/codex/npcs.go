@@ -48,8 +48,11 @@ func (n *NpcsTable) ensureTable() {
 	ensureEmbeddedTable(&n.table)
 }
 
-// TODO: quand j'ajoute un NPC je dois verrfier qu'il abien des stat comme pour la creation du player
-func (n *NpcsTable) AddEntry(entry NpcsEntryTemplate) {
+/*
+ TODO quand j'ajoute un NPC je dois verrfier qu'il abien des stat comme pour la creation du player
+ HIGH
+*/
+ func (n *NpcsTable) AddEntry(entry NpcsEntryTemplate) {
 	n.ensureTable()
 	n.Entries = append(n.Entries, NpcsEntry{
 		timestamp: time.Now().UTC(),

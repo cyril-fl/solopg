@@ -8,7 +8,11 @@ import (
 	"solopg/internal/platform/form/field"
 )
 
-// REFACTOR getNpcForm && getMonsterForm
+/*
+	REFACTOR
+	MEDIUM
+	getNpcForm && getMonsterForm
+*/
 func getNpcForm() *form.Model {
 	var raceItems []tui.Item[races.Race]
 	for _, i := range races.List() {
@@ -28,7 +32,11 @@ func getNpcForm() *form.Model {
 	).Focus()
 }
 
-// REFACTOR getMonsterForm && getNpcForm
+/*
+	REFACTOR
+	MEDIUM
+	getMonsterForm && getNpcForm
+*/
 func getMonsterForm() *form.Model {
 	var raceItems []tui.Item[races.Race]
 	for _, i := range races.List() {

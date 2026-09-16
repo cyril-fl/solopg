@@ -29,7 +29,11 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 		items = append(items, option)
 	}
 
-	// FIXME: mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
+	/*
+		FIXME Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
+
+		LOW
+	*/
 	options := list.New(items, list.NewDefaultDelegate(), 15, 10)
 	tui.ConfigureList(&options)
 	tui.SetListFocus(&options, false)
