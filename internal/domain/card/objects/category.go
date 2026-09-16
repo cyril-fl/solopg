@@ -3,13 +3,14 @@ package objects
 import "fmt"
 
 /*
-	TODO upgrade to File driven approach if not needed in game logic
-	MEDIUM
+	TODO
+	MEDIUM upgrade to File driven approach if not needed in game logic
 */
 
 type Category string
 
 const (
+	Objects Category = "object"
 	Weapon Category = "weapon"
 	Armor  Category = "armor"
 	Potion Category = "potion"
@@ -17,7 +18,7 @@ const (
 
 func (c Category) Validate() error {
 	switch c {
-	case Weapon, Armor, Potion:
+	case Objects, Weapon, Armor, Potion:
 		return nil
 	default:
 		return fmt.Errorf("invalid category: %s", c)

@@ -3,7 +3,6 @@ package game
 import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/locations"
-	"solopg/internal/domain/codex"
 	"solopg/types/id"
 )
 
@@ -48,9 +47,7 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 		return
 	}
 
-	e.State.Codex.LocationsTable.AddEntry(codex.LocationsEntryTemplate{
-		Location: newLocation,
-	})
+	e.State.Codex.LocationsTable.Add(newLocation)
 
 	e.Log("New location discovered: " + newLocation.Name)
 }

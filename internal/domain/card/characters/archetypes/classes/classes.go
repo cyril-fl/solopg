@@ -14,12 +14,12 @@ type Class struct {
 
 const classConfigFilePath = "data/systems/archetypes/class.yaml"
 
-
 /*
-	TODO optimiser class / races / ect avec des caches. Prendre exemple sur domain/gameplay/dice.go pour le cache et le load du fichier YAML
-	TODO retirer les getter inutiles car les class sont exporter pour YAML ou faire un wrapper avec
-	MEDIUM
-	
+TODO
+MEDIUM optimiser class / races / ect avec des caches. Prendre exemple sur domain/gameplay/dice.go pour le cache et le load du fichier YAML
+TODO
+MEDIUM retirer les getter inutiles car les class sont exporter pour YAML ou faire un wrapper avec
+
 	type YAMLClassConfig struct {
 		Name     string             `yaml:"name"`
 		Playable bool               `yaml:"playable"`

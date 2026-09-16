@@ -1,6 +1,7 @@
 package form
 
 import (
+	"errors"
 	"solopg/internal/platform/form/field"
 	"solopg/internal/platform/message"
 
@@ -25,56 +26,10 @@ func NewForm(fields ...field.Field) *Model {
 	return New().Add(fields...)
 }
 
+// -- Methods --//
+// Fields
 func (m *Model) Add(fields ...field.Field) *Model {
 	m.fields = append(m.fields, fields...)
-	return m
-}
-
-func (m *Model) Submit() {
-	m.Validate()
-	if len(m.err) > 0 {
-		return
-	}
-}
-
-func (m *Model) GetValuesAsString() string {
-	/*
-		TODO Implement a method to get the form values as a string representation
-		HIGH
-	*/
-	return "Form Values:..."
-}
-
-func (m *Model) Validate() {
-	for _, f := range m.fields {
-		if err := f.Validate(); err != nil {
-			m.SetError(err)
-		}
-	}
-}
-
-func (m *Model) SetError(err error) {
-	m.err = append(m.err, err)
-}
-
-func (m *Model) GetErrors() []error {
-	return m.err
-}
-
-func (m *Model) HasErrors() bool {
-	return len(m.err) > 0
-}
-
-func (m *Model) EnableAutoSubmit() *Model {
-	return m.SetAutoSubmit(true)
-}
-
-func (m *Model) DisableAutoSubmit() *Model {
-	return m.SetAutoSubmit(false)
-}
-
-func (m *Model) SetAutoSubmit(autoSubmit bool) *Model {
-	m.autoSubmit = autoSubmit
 	return m
 }
 
@@ -82,6 +37,85 @@ func (m *Model) Focus() *Model {
 	return m.focusOnIndex(0)
 }
 
+func (m *Model) Reset() *Model {
+	m.resetErrors()
+
+	for _, f := range m.fields {
+		f.Reset()
+		f.Blur()
+	}
+
+	return m.focusOnIndex(0)
+}
+
+// Input
+func (m *Model) GetValuesAsMappedString() map[string]string {
+	formValues := make(map[string]string)
+
+	for _, f := range m.fields {
+		formValues[f.ID()] = f.GetValueAsString()
+	}
+
+	return formValues
+}
+
+// Validation
+func (m *Model) Validate() *Model {
+	m.resetErrors()
+
+	hasErrors := false
+	for _, f := range m.fields {
+		if err := f.Validate(); err != nil {
+			f.SetError(err)
+			hasErrors = true
+		}
+	}
+
+	if hasErrors {
+		m.SetError(errors.New("form validation failed"))
+	}
+	
+	return m
+}
+
+func (m *Model) SetError(err error) {
+	m.err = append(m.err, err)
+}
+
+func (m *Model) GetError() error {
+	if len(m.err) > 0 {
+		return errors.Join(m.err...)
+	}
+
+	return nil
+}
+
+func (m *Model) HasErrors() bool {
+	return len(m.err) > 0
+}
+
+// Submit
+func (m *Model) Submit() *Model {
+	m.resetErrors()
+	m.Validate()
+
+	return m
+}
+
+func (m *Model) EnableAutoSubmit() *Model {
+	return m.setAutoSubmit(true)
+}
+
+func (m *Model) DisableAutoSubmit() *Model {
+	return m.setAutoSubmit(false)
+}
+
+func (m *Model) setAutoSubmit(autoSubmit bool) *Model {
+	m.autoSubmit = autoSubmit
+	return m
+}
+
+// -- Helper --//
 func (m *Model) focusOnIndex(index int) *Model {
 	for _, f := range m.fields {
 		f.Blur()
@@ -114,6 +148,13 @@ func (m *Model) getCurrentFieldIndex() int {
 func (m *Model) isLastField() bool {
 	currentIndex := m.getCurrentFieldIndex()
 	return currentIndex == len(m.fields)-1
+}
+
+func (m *Model) resetErrors() {
+	m.err = nil
+	for _, f := range m.fields {
+		f.ResetError()
+	}
 }
 
 // -- Tea Model Implementation --//

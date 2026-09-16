@@ -6,10 +6,10 @@ import (
 )
 
 /*
-	TODO add a cache.
-	MEDIUM
+TODO
+MEDIUM add a cache.
 */
-	const basePath = "data/template/locations"
+const basePath = "data/template/locations"
 
 func LoadPresetLocations() ([]locations.Location, error) {
 	folderName := basePath

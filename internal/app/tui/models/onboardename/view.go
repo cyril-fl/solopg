@@ -18,8 +18,8 @@ func (m model) View() tea.View {
 		lipgloss.JoinVertical(
 			lipgloss.Left,
 			/*
-				TODO verrifier pourquoi CREATE CHARACTER apparais pas sur les autre view
-				LOW
+				TODO
+				LOW verrifier pourquoi CREATE CHARACTER apparais pas sur les autre view
 			*/
 			title,
 			"",

@@ -8,8 +8,8 @@ import (
 )
 
 /*
-	TODO sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML
-	MEDIUM
+TODO
+MEDIUM sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML
 */
 type yamlStatsConfig struct {
 	Names     []Stat `yaml:"names"`

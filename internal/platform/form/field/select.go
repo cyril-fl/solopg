@@ -1,6 +1,7 @@
 package field
 
 import (
+	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/platform/message"
 	"solopg/types/direction"
@@ -17,10 +18,12 @@ type selectField[T any] struct {
 }
 
 type SelectTemplate[T any] struct {
+	ID           string
 	Label        string
 	Options      []tui.Item[T]
 	Defaultvalue T
 	Validator    func(T) error
+	Required     bool
 }
 
 func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
@@ -30,16 +33,15 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	}
 
 	/*
-		FIXME Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
-
-		LOW
+		FIXME
+		LOW Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
 	*/
 	options := list.New(items, list.NewDefaultDelegate(), 15, 10)
 	tui.ConfigureList(&options)
 	tui.SetListFocus(&options, false)
 
 	return &selectField[T]{
-		field:   newField(template.Label, Select, template.Defaultvalue, template.Validator),
+		field:   newField(template.ID, template.Label, Select, template.Defaultvalue, template.Validator, template.Required),
 		options: options,
 	}
 }
@@ -57,7 +59,40 @@ func (f *selectField[T]) Blur() {
 }
 
 func (f *selectField[T]) Value() any {
-	return f.defaultvalue
+	return f.options.SelectedItem().(tui.Item[T]).Value()
+}
+
+func (f *selectField[T]) GetValueAsString() string {
+	if f.Value() == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v", f.Value())
+}
+
+func (f *selectField[T]) Reset() {
+	f.ResetError()
+	f.Blur()
+	f.options.Select(0)
+}
+
+// FIXME: Ne fait pas arraitre l'erreur .
+func (f *selectField[T]) Validate() error {
+	if err := f.testRequireness(); err != nil {
+		return err
+	}
+
+	if v, ok := f.Value().(T); ok {
+		return f.validate(v)
+	}
+
+	return fmt.Errorf("invalid value type for field %s: expected %T, got %T", f.ID(), f.defaultvalue, f.Value())
+}
+
+func (f *selectField[T]) testRequireness() error {
+	if f.required && f.Value() == nil {
+		return fmt.Errorf("field %s is required", f.ID())
+	}
+	return nil
 }
 
 // -- Tea Model Implementation -- //
@@ -92,10 +127,10 @@ func (m *selectField[T]) View() tea.View {
 	options := m.options.View()
 
 	err := ""
-	if m.err != nil {
+	if m.GetError() != nil {
 		err = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("1")).
-			Render(m.err.Error())
+			Render(m.GetError().Error())
 	}
 
 	return tea.NewView(

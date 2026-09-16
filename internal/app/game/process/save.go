@@ -14,11 +14,7 @@ func SaveGame(db *mongo.Mongo, engine *game.Engine) error {
 		return err
 	}
 
-	err = db.RegisterArchives(archives)
-	if err != nil {
-		return err
-	}
-	return nil
+	return db.RegisterArchives(archives)
 }
 
 func NewSaveFunc(db *mongo.Mongo, engine *game.Engine) func() error {

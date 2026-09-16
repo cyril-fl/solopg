@@ -31,7 +31,10 @@ type CampaignData struct {
 }
 
 func NewState(data CampaignData) *State {
-	// TODO: Add a timer logic to register the time spent in the game and update the state accordingly.
+	/*
+		TODO
+		LOW Add a timer logic to register the time spent in the game and update the state accordingly.
+	*/
 	return &State{
 		Player:          data.Campaign.Player,
 		CurrentLocation: data.Campaign.CurrentLocation,

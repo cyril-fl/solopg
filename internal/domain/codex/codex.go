@@ -1,33 +1,26 @@
 package codex
 
 import (
-	"solopg/internal/domain/card/attributes"
-	"solopg/internal/domain/card/characters"
-	"solopg/internal/domain/card/locations"
-	"solopg/internal/domain/card/objects"
-	"strings"
+	"errors"
+	"fmt"
 )
 
-/*
-	TODO Ajouter des méthodes pour chaque sous codex
-	HIGH
-*/
 // -- Codex -- //
 type Codex struct {
 	NpcsTable      *NpcsTable
 	MonstersTable  *MonstersTable
 	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
-	ObjectifsTable *ObjectifsTable
+	ObjectifsTable *ObjectivesTable
 }
 
 func New() *Codex {
 	return &Codex{
 		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
-		MonstersTable:  NewMonstersTable([]MonstersEntry{}),
+		MonstersTable:  NewMonstersTable([]MonsterEntry{}),
 		LocationsTable: NewLocationsTable([]LocationsEntry{}),
-		ObjectsTable:   NewObjectsTable([]ObjectsEntry{}),
-		ObjectifsTable: NewObjectifsTable([]ObjectifsEntry{}),
+		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
+		ObjectifsTable: NewObjectivesTable([]ObjectifEntry{}),
 	}
 }
 
@@ -46,85 +39,46 @@ func (c *Codex) EnsureInitialized() *Codex {
 		c.ObjectsTable = NewObjectsTable(nil)
 	}
 	if c.ObjectifsTable == nil {
-		c.ObjectifsTable = NewObjectifsTable(nil)
+		c.ObjectifsTable = NewObjectivesTable(nil)
 	}
 
-	c.NpcsTable.ensureTable()
-	c.MonstersTable.ensureTable()
-	c.LocationsTable.ensureTable()
-	c.ObjectsTable.ensureTable()
-	c.ObjectifsTable.ensureTable()
+	c.NpcsTable.ensure()
+	c.MonstersTable.ensure()
+	c.LocationsTable.ensure()
+	c.ObjectsTable.ensure()
+	c.ObjectifsTable.ensure()
 
 	return c
 }
 
-func ensureEmbeddedTable[E any](table **table[E]) {
-	if *table == nil {
-		*table = NewTable([]E{})
-	}
-}
-
-/*
- 	TODO ajouter un reel assert
-	TODO move ver la table plutot que ici
-	HIGH
-*/
-func (codexData *Codex) AddNPC(character *characters.Character) {
-	codexData.NpcsTable.AddNPC(character)
-}
-func (codexData *Codex) AddLocation(values map[string]string) error {
-	location, err := locations.New(locations.Template{
-		Name:        values["name"],
-		Description: values["description"],
-		Rarity:      attributes.F,
-		Variety:     attributes.LocationCard,
-	})
-	if err != nil {
-		return err
-	}
-	codexData.LocationsTable.AddEntry(LocationsEntryTemplate{Location: location})
-	return nil
-}
-
-func (codexData *Codex) AddObject(values map[string]string) error {
-	category := objects.Category(strings.ToLower(values["category"]))
-	if err := category.Validate(); err != nil {
-		return err
-	}
-	object, err := objects.New(objects.Template{
-		Name:        values["name"],
-		Description: values["description"],
-		Rarity:      attributes.F,
-		Variety:     attributes.ArticleCard,
-		Category:    category,
-	})
-	if err != nil {
-		return err
-	}
-	codexData.ObjectsTable.AddObject(object)
-	return nil
-}
-
-func (codexData *Codex) AddObjective(values map[string]string) error {
-	codexData.ObjectifsTable.AddObjectif(values["title"], values["description"])
-	return nil
-}
-
 // -- Codex table -- //
-type table[E any] struct {
-	Entries []E
-}
-
 type Table interface {
 	Summaries() []string
+	AddFromMappedValues(values map[string]string) error
+	ensure()
 }
 
-func NewTable[E any](entries []E) *table[E] {
-	return &table[E]{
+type TableData[E any] struct {
+	name    string
+	Entries []E `bson:"entries"`
+}
+
+func newTable[E any](name string, entries []E) *TableData[E] {
+	return &TableData[E]{
+		name:    name,
 		Entries: entries,
 	}
 }
 
-func (t *table[E]) AddEntry(entry E) {
-	t.Entries = append(t.Entries, entry)
+func ensureEmbeddedTable[E any](name string, table **TableData[E]) {
+	if *table == nil {
+		*table = newTable(name, []E{})
+	}
+}
+
+func (t TableData[any]) formatAssertErrors(err []error) error {
+	return errors.Join(
+		fmt.Errorf("invalid %s:", t.name),
+		errors.Join(err...),
+	)
 }

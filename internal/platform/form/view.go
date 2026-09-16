@@ -12,6 +12,11 @@ func (m *Model) View() tea.View {
 		contents = append(contents, f.View().Content)
 	}
 
+	err := m.GetError()
+	if err != nil {
+		contents = append(contents, "\n"+err.Error())
+	}
+
 	return tea.NewView(
 		lipgloss.JoinVertical(lipgloss.Left, contents...),
 	)

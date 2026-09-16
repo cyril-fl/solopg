@@ -1,7 +1,6 @@
 package codexmenu
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/codex"
@@ -33,7 +32,6 @@ func NewSideMenu(params CodexMenuParams, focused bool) *codexMenu {
 type CodexMenuParams struct {
 	Size  size.Size
 	Codex *codex.Codex
-	// Logger func(message map[string]string) error
 }
 
 type codexMenu struct {
@@ -105,8 +103,7 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 	case message.FormSubmit:
 		return m.handleFormSubmit(params)
 	case message.FormError:
-		fmt.Println("Form validation error occurred.")
-		return params.Model, nil
+		return params.Model, sendMsg()
 
 	case tea.KeyPressMsg:
 		switch msg.String() {
@@ -122,6 +119,7 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 			return m.delegateInputToForm(params)
 		}
 	}
+
 	return params.Delegate(params.Msg)
 }
 
@@ -137,16 +135,14 @@ type codexMenuItem struct {
 	isOpen bool
 	table  codex.Table
 
-	form            *form.Model
-	showForm        bool
-	addEntryToCodex func(message string)
+	form     *form.Model
+	showForm bool
 }
 
 type sideMenuItemsParams struct {
-	id              string
-	table           codex.Table
-	form            func() *form.Model
-	addEntryToCodex func(message string)
+	id    string
+	table codex.Table
+	form  func() *form.Model
 }
 
 func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
@@ -155,9 +151,8 @@ func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 		isOpen: false,
 		table:  params.table,
 
-		form:            params.form(),
-		showForm:        false,
-		addEntryToCodex: params.addEntryToCodex,
+		form:     params.form(),
+		showForm: false,
 	}
 }
 

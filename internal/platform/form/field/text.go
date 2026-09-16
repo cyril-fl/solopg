@@ -1,8 +1,10 @@
 package field
 
 import (
+	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/platform/message"
+	"strings"
 
 	"strconv"
 
@@ -18,18 +20,20 @@ type textField[T stringOrInt] struct {
 }
 
 type TextTemplate[T stringOrInt] struct {
+	ID           string
 	Label        string
 	Input        textinput.Model
 	Defaultvalue T
 	Validator    func(T) error
+	Required     bool
 }
 
 func TextField[T stringOrInt](template TextTemplate[T]) *textField[T] {
 	input := textinput.New()
-	setValue(input, template.Defaultvalue)
+	setValue(&input, template.Defaultvalue)
 
 	return &textField[T]{
-		field: newField(template.Label, Input, template.Defaultvalue, template.Validator),
+		field: newField(template.ID, template.Label, Input, template.Defaultvalue, template.Validator, template.Required),
 		input: input,
 	}
 }
@@ -47,6 +51,38 @@ func (f *textField[T]) Blur() {
 
 func (f *textField[T]) Value() any {
 	return f.input.Value()
+}
+
+func (f *textField[T]) GetValueAsString() string {
+	if f.Value() == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v", f.Value())
+}
+
+func (f *textField[T]) Reset() {
+	f.ResetError()
+	f.Blur()
+	setValue(&f.input, f.defaultvalue)
+}
+
+func (f *textField[T]) Validate() error {
+	if err := f.testRequireness(); err != nil {
+		return err
+	}
+
+	if v, ok := f.Value().(T); ok {
+		return f.validate(v)
+	}
+
+	return fmt.Errorf("invalid value type for field %s: expected %T, got %T", f.ID(), f.defaultvalue, f.Value())
+}
+
+func (f *textField[T]) testRequireness() error {
+	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
+		return fmt.Errorf("field %s is required", f.ID())
+	}
+	return nil
 }
 
 // -- Tea Model Implementation -- //
@@ -82,10 +118,10 @@ func (m *textField[T]) View() tea.View {
 	input := m.input.View()
 
 	err := ""
-	if m.err != nil {
+	if m.GetError() != nil {
 		err = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("1")).
-			Render(m.err.Error())
+			Render(m.GetError().Error())
 	}
 
 	return tea.NewView(
@@ -103,7 +139,7 @@ type stringOrInt interface {
 	~string | ~int
 }
 
-func setValue[T stringOrInt](input textinput.Model, value T) {
+func setValue[T stringOrInt](input *textinput.Model, value T) {
 	switch v := any(value).(type) {
 	case string:
 		input.SetValue(v)

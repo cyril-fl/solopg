@@ -31,8 +31,7 @@ func Try() error {
 
 /*
 	TODO
-	LOW
-	# Étendre la CLI avec des commande comme:
+	LOW # Étendre la CLI avec des commande comme:
 
 	> Cli edit —config —locales [lang]
 		- d’autre argument pouvant être passé en fonction de la config par défaut.

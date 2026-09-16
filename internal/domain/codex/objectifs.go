@@ -6,12 +6,44 @@ import (
 	"time"
 )
 
-type ObjectifsTable struct {
-	*table[ObjectifsEntry]
+// -- Table --//
+type ObjectivesTable struct {
+	*TableData[ObjectifEntry]
+}
+type ObjectifEntry struct {
+	Timestamp   time.Time `bson:"timestamp"`
+	Title       string    `bson:"title"`
+	Description string    `bson:"description"`
 }
 
-func (o *ObjectifsTable) Summaries() []string {
-	o.ensureTable()
+var tableobjectives = "codex.objectives"
+
+func NewObjectivesTable(entries []ObjectifEntry) *ObjectivesTable {
+	return &ObjectivesTable{
+		TableData: newTable(t.Localize(tableobjectives), entries),
+	}
+}
+
+// -- Methods --//
+func (o *ObjectivesTable) Add(title, description string) {
+	o.Entries = append(o.Entries, ObjectifEntry{
+		Timestamp:   time.Now().UTC(),
+		Title:       title,
+		Description: description,
+	})
+}
+
+func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
+	if err := o.assertEntry(values); err != nil {
+		return err
+	}
+
+	o.Add(values["title"], values["description"])
+
+	return nil
+}
+
+func (o *ObjectivesTable) Summaries() []string {
 	summaries := make([]string, 0, len(o.Entries))
 	for i := range o.Entries {
 		if o.Entries[i].Title == "" {
@@ -28,37 +60,24 @@ func (o *ObjectifsTable) Summaries() []string {
 	return summaries
 }
 
-type ObjectifsEntry struct {
-	Timestamp   time.Time
-	Title       string
-	Description string
-}
+// -- Helper --//
+func (o *ObjectivesTable) assertEntry(values map[string]string) error {
+	var err []error
 
-type ObjectifsEntryTemplate struct {
-}
-
-func NewObjectifsTable(entries []ObjectifsEntry) *ObjectifsTable {
-	return &ObjectifsTable{
-		table: NewTable(entries),
+	if values["title"] == "" {
+		err = append(err, fmt.Errorf("title is required"))
 	}
+	if values["description"] == "" {
+		err = append(err, fmt.Errorf("description is required"))
+	}
+
+	if len(err) > 0 {
+		return o.formatAssertErrors(err)
+	}
+
+	return nil
 }
 
-func (o *ObjectifsTable) ensureTable() {
-	ensureEmbeddedTable(&o.table)
-}
-
-func (o *ObjectifsTable) AddEntry(entry ObjectifsEntryTemplate) {
-	o.ensureTable()
-	o.Entries = append(o.Entries, ObjectifsEntry{
-		Timestamp: time.Now().UTC(),
-	})
-}
-
-func (o *ObjectifsTable) AddObjectif(title, description string) {
-	o.ensureTable()
-	o.Entries = append(o.Entries, ObjectifsEntry{
-		Timestamp:   time.Now().UTC(),
-		Title:       title,
-		Description: description,
-	})
+func (o *ObjectivesTable) ensure() {
+	ensureEmbeddedTable(t.Localize(tableobjectives), &o.TableData)
 }

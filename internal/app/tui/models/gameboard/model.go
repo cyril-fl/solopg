@@ -103,8 +103,7 @@ func (m model) HandlesEscape() bool {
 	// return m.codexMenu.HandlesEscape()
 	/*
 		TODO
-		LOW
-		refactor la maniere dont on hndle escape
+		LOW refactor la maniere dont on hndle escape
 	*/
 	return true
 }

@@ -27,8 +27,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		/*
 			TODO
-			LOW
-			Standardizer les tea.WindowSizeMsg et tea.KeyMsg ainsi que leur retour
+			LOW Standardizer les tea.WindowSizeMsg et tea.KeyMsg ainsi que leur retour
 		*/
 		m.list.SetSize(msg.Width, max(0, msg.Height-3))
 		return m, nil

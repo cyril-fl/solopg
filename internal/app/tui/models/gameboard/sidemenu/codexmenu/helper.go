@@ -1,7 +1,6 @@
 package codexmenu
 
 import (
-	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/infrastructure/t"
@@ -16,58 +15,28 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 	pages := []*codexMenuItem{
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.locations",
-			// size:  params.Size,
 			table: params.Codex.LocationsTable,
 			form:  getLocationForm,
-			addEntryToCodex: func(message string) {
-				fmt.Println("Adding location to codex:", message)
-				// params.Codex.AddLocation,
-			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.npcs",
-			// size:  params.Size,
 			table: params.Codex.NpcsTable,
 			form:  getNpcForm,
-			addEntryToCodex: func(message string) {
-				fmt.Println("Adding NPC to codex:", message)
-				// params.Codex.AddNPC,
-			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.monsters",
-			// size:  params.Size,
 			table: params.Codex.MonstersTable,
 			form:  getMonsterForm,
-			addEntryToCodex: func(message string) {
-				fmt.Println("Adding Monster to codex:", message)
-				/* 
-					TODO 
-				 	MEDIUM 
-					Faire passer les info pour post les nouvelle entrées
-				*/
-				// params.Codex.AddMonster,
-			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.objects",
-			// size:  params.Size,
 			table: params.Codex.ObjectsTable,
 			form:  getObjectForm,
-			addEntryToCodex: func(message string) {
-				fmt.Println("Adding Item to codex:", message)
-				// params.Codex.AddObject,
-			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.objectives",
-			// size:  params.Size,
 			table: params.Codex.ObjectifsTable,
 			form:  getObjectifForm,
-			addEntryToCodex: func(message string) {
-				fmt.Println("Adding Objective to codex:", message)
-				// params.Codex.AddObjective,
-			},
 		}),
 	}
 
@@ -178,18 +147,16 @@ func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, t
 		return params.Model, nil
 	}
 
-	form.Validate()
+	form.Submit()
 
 	if form.HasErrors() {
-		return params.Model, message.SendFormMsg[message.FormError]()
+		return params.Model, message.SendErrorMsg(form.GetError())
 	}
 
 	return params.Model, m.handleFormPost()
 }
 
 func (m *codexMenu) handleFormPost() tea.Cmd {
-	fmt.Println("Form submitted successfully.")
-
 	currentPage := m.getCurrentPage()
 	if currentPage == nil {
 		return nil
@@ -200,8 +167,24 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 		return nil
 	}
 
-	currentPage.addEntryToCodex(form.GetValuesAsString())
+	err := currentPage.table.AddFromMappedValues(form.GetValuesAsMappedString())
+	if err != nil {
+		currentPage.form.SetError(err)
+		return message.SendErrorMsg(err)
+	}
 
+	currentPage.setShowForm(false)
+	form.Reset()
+	// currentPage.form = form
+	/*
+		TODO Next
+		HIGH
+		verrifier la mise a jour du codex
+		log ca dans le main view
+		enregistre les donne ddans la db avec un save
+
+		verrifier que tout est persister
+	*/
 	return sendMsg()
 }
 
