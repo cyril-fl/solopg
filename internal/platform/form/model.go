@@ -9,14 +9,14 @@ import (
 
 // -- Form -- //
 type Model struct {
-	fields []field.Field
+	fields     []field.Field
 	autoSubmit bool
-	err    []string
+	err        []error
 }
 
 func New() *Model {
 	return &Model{
-		fields: make([]field.Field, 0),
+		fields:     make([]field.Field, 0),
 		autoSubmit: true,
 	}
 }
@@ -37,6 +37,11 @@ func (m *Model) Submit() {
 	}
 }
 
+func (m *Model) GetValuesAsString() string {
+	// TODO Implement a method to get the form values as a string representation
+	return "Form Values:..."
+}
+
 func (m *Model) Validate() {
 	for _, f := range m.fields {
 		if err := f.Validate(); err != nil {
@@ -46,7 +51,15 @@ func (m *Model) Validate() {
 }
 
 func (m *Model) SetError(err error) {
-	m.err = append(m.err, err.Error())
+	m.err = append(m.err, err)
+}
+
+func (m *Model) GetErrors() []error {
+	return m.err
+}
+
+func (m *Model) HasErrors() bool {
+	return len(m.err) > 0
 }
 
 func (m *Model) EnableAutoSubmit() *Model {
@@ -61,8 +74,6 @@ func (m *Model) SetAutoSubmit(autoSubmit bool) *Model {
 	m.autoSubmit = autoSubmit
 	return m
 }
-
-
 
 func (m *Model) Focus() *Model {
 	return m.focusOnIndex(0)
@@ -118,15 +129,15 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	switch msg.(type) {
-		case message.FormNextField:
-			if m.isLastField() && m.autoSubmit {
-				return m, message.SendFormMsg[message.FormSubmit]()
-			}
-			return m.focusOnIndex(currentIndex + 1), nil
-		case message.FormPreviousField:
-			return m.focusOnIndex(currentIndex - 1), nil
+	case message.FormNextField:
+		if m.isLastField() && m.autoSubmit {
+			return m, message.SendFormMsg[message.FormSubmit]()
+		}
+		return m.focusOnIndex(currentIndex + 1), nil
+	case message.FormPreviousField:
+		return m.focusOnIndex(currentIndex - 1), nil
 	}
-	
+
 	return m.updateFocusedField(msg)
 }
 

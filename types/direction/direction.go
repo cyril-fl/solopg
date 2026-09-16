@@ -6,6 +6,7 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 )
+
 type Direction string
 
 var (
@@ -35,4 +36,3 @@ func GetListDirection(list *list.Model, key tea.KeyPressMsg) (list.Model, Direct
 
 	return updatedList, direction
 }
-

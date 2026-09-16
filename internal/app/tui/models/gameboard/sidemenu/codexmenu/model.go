@@ -1,12 +1,14 @@
 package codexmenu
 
 import (
+	"fmt"
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/codex"
 	"solopg/internal/platform/form"
 	"solopg/internal/platform/message"
 
+	"solopg/types/direction"
 	"solopg/types/size"
 
 	"charm.land/bubbles/v2/list"
@@ -47,11 +49,9 @@ func (m *codexMenu) ID() string {
 
 func (m *codexMenu) IsOpen() bool {
 	for _, item := range m.list.Items() {
-		page, ok := item.(tui.Item[*codexMenuItem])
-		if !ok {
+		if page, ok := item.(tui.Item[*codexMenuItem]); !ok {
 			continue
-		}
-		if page.Value().isOpen {
+		} else if page.Value().isOpen {
 			return true
 		}
 	}
@@ -66,8 +66,7 @@ func (m *codexMenu) SetOpen(open bool) {
 	for _, item := range m.list.Items() {
 		item, ok := item.(tui.Item[*codexMenuItem])
 		if page := item.Value(); ok {
-			page.isOpen = false
-			page.showForm = false
+			page.setOpen(false)
 		}
 	}
 }
@@ -105,6 +104,10 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 		return m.delegateInputToForm(params)
 	case message.FormSubmit:
 		return m.handleFormSubmit(params)
+	case message.FormError:
+		fmt.Println("Form validation error occurred.")
+		return params.Model, nil
+
 	case tea.KeyPressMsg:
 		switch msg.String() {
 		case tui.KeyEsc:
@@ -113,7 +116,7 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 			return m.delegateInputToForm(params)
 		case tui.KeyEnter:
 			return m.delegateInputToForm(params)
-		case tui.CmdShiftEnter:
+		case tui.CmdShiftEnter, tui.CmdAltEnter:
 			return m.handleKeyShiftEnter(params)
 		default:
 			return m.delegateInputToForm(params)
@@ -122,22 +125,28 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 	return params.Delegate(params.Msg)
 }
 
+func (m *codexMenu) HandleDirectionInput(direction direction.Direction) {
+	_ = direction
+
+	m.updatePageOnRedirection()
+}
+
 // Items
 type codexMenuItem struct {
 	id     string
 	isOpen bool
 	table  codex.Table
 
-	form     *form.Model
-	showForm bool
-	// addJournalEntry func(message string)
+	form            *form.Model
+	showForm        bool
+	addEntryToCodex func(message string)
 }
 
 type sideMenuItemsParams struct {
-	id    string
-	table codex.Table
-	form  func() *form.Model
-	// Logger func(message map[string]string) error
+	id              string
+	table           codex.Table
+	form            func() *form.Model
+	addEntryToCodex func(message string)
 }
 
 func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
@@ -146,9 +155,9 @@ func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 		isOpen: false,
 		table:  params.table,
 
-		form:     params.form(),
-		showForm: false,
-		// addJournalEntry: params.Logger,
+		form:            params.form(),
+		showForm:        false,
+		addEntryToCodex: params.addEntryToCodex,
 	}
 }
 

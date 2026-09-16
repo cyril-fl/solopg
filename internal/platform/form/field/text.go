@@ -80,7 +80,7 @@ func (m *textField[T]) View() tea.View {
 		Render(m.Label())
 
 	input := m.input.View()
-	
+
 	err := ""
 	if m.err != nil {
 		err = lipgloss.NewStyle().

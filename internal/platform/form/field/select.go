@@ -43,7 +43,7 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 // -- Field Implementation -- //
 func (f *selectField[T]) Focus() tea.Cmd {
 	f.focus = true
-	tui.SetListFocus(&f.options,true)
+	tui.SetListFocus(&f.options, true)
 	return nil
 }
 
@@ -63,16 +63,16 @@ func (m *selectField[T]) Init() tea.Cmd {
 
 func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-		case tea.WindowSizeMsg:
+	case tea.WindowSizeMsg:
 		m.options.SetSize(msg.Width, msg.Height)
-		case tea.KeyPressMsg:
-			switch msg.String() {
-				case tui.KeyUp, tui.KeyDown:
-					return m.handleDirection(msg)
-				case tui.KeyEnter:
-					return m, message.SendFormMsg[message.FormNextField]()
-			}
-		default:
+	case tea.KeyPressMsg:
+		switch msg.String() {
+		case tui.KeyUp, tui.KeyDown:
+			return m.handleDirection(msg)
+		case tui.KeyEnter:
+			return m, message.SendFormMsg[message.FormNextField]()
+		}
+	default:
 		newOptions, cmd := m.options.Update(msg)
 		m.options = newOptions
 		return m, cmd
@@ -86,7 +86,7 @@ func (m *selectField[T]) View() tea.View {
 		Render(m.Label())
 
 	options := m.options.View()
-	
+
 	err := ""
 	if m.err != nil {
 		err = lipgloss.NewStyle().
@@ -109,10 +109,10 @@ func (m *selectField[T]) handleDirection(msg tea.KeyPressMsg) (tea.Model, tea.Cm
 	updatedList, newdirection := direction.GetListDirection(&m.options, msg)
 	m.options = updatedList
 	switch newdirection {
-		case direction.Next:
-			return m, message.SendFormMsg[message.FormNextField]()
-		case direction.Previous:
-			return m, message.SendFormMsg[message.FormPreviousField]()
+	case direction.Next:
+		return m, message.SendFormMsg[message.FormNextField]()
+	case direction.Previous:
+		return m, message.SendFormMsg[message.FormPreviousField]()
 	}
 	return m, nil
 }

@@ -5,6 +5,7 @@ import (
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/gameplay"
 	"solopg/internal/infrastructure/t"
+	"solopg/types/direction"
 	"solopg/types/size"
 
 	"charm.land/bubbles/v2/list"
@@ -64,6 +65,8 @@ func (m *OracleMenu) SetList(list list.Model) {
 }
 
 // / Handlers
+func (m *OracleMenu) HandleDirectionInput(direction direction.Direction) {}
+
 func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	selected, ok := m.list.SelectedItem().(tui.Item[*gameplay.Oracle])
 	if !ok {
@@ -89,10 +92,10 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 
 func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	switch msg := params.Msg.(type) {
-		case tea.KeyPressMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
-			case tui.CmdShiftEnter, tui.CmdAltEnter:
-				return params.Model, m.handleKeyShiftEnter()
+		case tui.CmdShiftEnter, tui.CmdAltEnter:
+			return params.Model, m.handleKeyShiftEnter()
 		default:
 			return params.Delegate(msg)
 		}

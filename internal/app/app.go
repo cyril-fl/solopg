@@ -29,17 +29,17 @@ func Try() error {
 	return nil
 }
 
-/* TODO 
+/* TODO
 # Étendre la CLI avec des commande comme:
 
 > Cli edit —config —locales [lang]
 	- d’autre argument pouvant être passé en fonction de la config par défaut.
-> Cli edit —rulesset [rules] 
+> Cli edit —rulesset [rules]
 	- rules étant les class, races et autre document yaml
-> Cli reset —config … 
-	- Prend les meme argument que edit 
-	- ajoute —all, —save 
-		- trouver un truc genre —all-remember pour effacer tout sauf les save 
+> Cli reset —config …
+	- Prend les meme argument que edit
+	- ajoute —all, —save
+		- trouver un truc genre —all-remember pour effacer tout sauf les save
 
 Adapter un système comme « mole » avec des commande qui font les action rapide . Et une commande qui ouvre un genre de menu:
 

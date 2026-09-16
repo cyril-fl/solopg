@@ -194,13 +194,17 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 
 // Side Menu Direction
 func (m *model) handleDirectionInput(key tea.KeyPressMsg) {
+	currentMenu := m.getMenuActiveElement()
+
 	direction := sidemenu.HandleKeyArrow(sidemenu.Context{
-		Menu:             m.getMenuActiveElement(),
+		Menu:             currentMenu,
 		CurrentMenuIndex: m.activeMenuIndex,
 		SibblingCount:    len(m.menu),
 	}, key)
 
 	m.updateMenuDirection(direction)
+
+	currentMenu.HandleDirectionInput(direction)
 }
 
 func (m *model) updateMenuDirection(msg direction.Direction) {
@@ -227,7 +231,7 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 // Codex Action
 func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
 	// Handle the codex action
-	_= msg
+	_ = msg
 
 	m.refreshViewport(true)
 

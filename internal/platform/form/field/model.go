@@ -29,7 +29,7 @@ type field[T any] struct {
 	focus        bool
 	defaultvalue T
 	validator    func(T) error
-	err		  error
+	err          error
 }
 
 type kind string
@@ -66,7 +66,7 @@ func (f *field[T]) Validate() error {
 	}
 
 	f.err = f.validator(f.defaultvalue)
-	
+
 	return f.err
 }
 

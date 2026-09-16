@@ -19,36 +19,51 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 			// size:  params.Size,
 			table: params.Codex.LocationsTable,
 			form:  getLocationForm,
-
-			// Logger: params.Codex.AddLocation,
+			addEntryToCodex: func(message string) {
+				fmt.Println("Adding location to codex:", message)
+				// params.Codex.AddLocation,
+			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.npcs",
 			// size:  params.Size,
 			table: params.Codex.NpcsTable,
 			form:  getNpcForm,
-			// Logger: addNPCToCodex,
+			addEntryToCodex: func(message string) {
+				fmt.Println("Adding NPC to codex:", message)
+				// params.Codex.AddNPC,
+			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.monsters",
 			// size:  params.Size,
 			table: params.Codex.MonstersTable,
 			form:  getMonsterForm,
-			// Logger: addNPCToCodex,
+			addEntryToCodex: func(message string) {
+
+				fmt.Println("Adding Monster to codex:", message)
+				// params.Codex.AddMonster,
+			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.objects",
 			// size:  params.Size,
 			table: params.Codex.ObjectsTable,
 			form:  getObjectForm,
-			// Logger: params.Codex.AddObject,
+			addEntryToCodex: func(message string) {
+				fmt.Println("Adding Item to codex:", message)
+				// params.Codex.AddObject,
+			},
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id: "codex.objectives",
 			// size:  params.Size,
 			table: params.Codex.ObjectifsTable,
 			form:  getObjectifForm,
-			// Logger: params.Codex.AddObjective,
+			addEntryToCodex: func(message string) {
+				fmt.Println("Adding Objective to codex:", message)
+				// params.Codex.AddObjective,
+			},
 		}),
 	}
 
@@ -62,13 +77,13 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 }
 
 // -- Getters & Setters -- //
+// Codex menu
 func (m *codexMenu) getCurrentPage() *codexMenuItem {
 	for _, item := range m.list.Items() {
-		page, ok := item.(tui.Item[*codexMenuItem])
-		if !ok {
+
+		if page, ok := item.(tui.Item[*codexMenuItem]); !ok {
 			continue
-		}
-		if page.Value().isOpen {
+		} else if page.Value().isOpen {
 			return page.Value()
 		}
 	}
@@ -80,6 +95,17 @@ func (m *codexMenu) getSelectedPage() *codexMenuItem {
 		return item.Value()
 	}
 	return nil
+}
+
+// Codex menu iteme
+func (m *codexMenuItem) setOpen(open bool) {
+	if open {
+		m.isOpen = true
+		return
+	}
+
+	m.isOpen = false
+	m.showForm = false
 }
 
 func (m *codexMenuItem) setShowForm(show bool) {
@@ -112,22 +138,22 @@ func (m *codexMenu) handleKeyEsc(params sidemenu.UpdateParams) (tea.Model, tea.C
 }
 
 func (m *codexMenu) handleKeyShiftEnter(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-    currentPage := m.getCurrentPage()
+	currentPage := m.getCurrentPage()
 
-    if currentPage != nil && m.IsOpen() {
-        if currentPage.showForm {
-            return params.Model, message.SendFormMsg[message.FormSubmit]()
-        }
+	if currentPage != nil && m.IsOpen() {
+		if currentPage.showForm {
+			return params.Model, message.SendFormMsg[message.FormSubmit]()
+		}
 
-        currentPage.setShowForm(true)
-        return params.Model, sendMsg()
-    }
+		currentPage.setShowForm(true)
+		return params.Model, sendMsg()
+	}
 
-    if selectedPage := m.getSelectedPage(); selectedPage != nil {
-        m.handleOpenPage(selectedPage)
-    }
+	if selectedPage := m.getSelectedPage(); selectedPage != nil {
+		m.handleOpenPage(selectedPage)
+	}
 
-    return params.Model, sendMsg()
+	return params.Model, sendMsg()
 }
 
 func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
@@ -135,22 +161,53 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 		item, ok := item.(tui.Item[*codexMenuItem])
 
 		if page := item.Value(); ok && page != selected {
-			page.isOpen = false
+			page.setOpen(false)
 		}
 
 	}
-	selected.isOpen = true
+	selected.setOpen(true)
 }
-
 
 func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	form := m.GetFormFromCurrentPage()
 	if form == nil {
 		return params.Model, nil
 	}
+
 	form.Validate()
-	fmt.Println("Form validation errors:", form)
-	return params.Model, nil
+
+	if form.HasErrors() {
+		return params.Model, message.SendFormMsg[message.FormError]()
+	}
+
+	return params.Model, m.handleFormPost()
+}
+
+func (m *codexMenu) handleFormPost() tea.Cmd {
+	fmt.Println("Form submitted successfully.")
+
+	currentPage := m.getCurrentPage()
+	if currentPage == nil {
+		return nil
+	}
+
+	form := currentPage.form
+	if form == nil {
+		return nil
+	}
+
+	currentPage.addEntryToCodex(form.GetValuesAsString())
+
+	return sendMsg()
+}
+
+func (m *codexMenu) updatePageOnRedirection() {
+	currentPage := m.getCurrentPage()
+
+	if currentPage != nil && m.IsOpen() {
+		selected := m.getSelectedPage()
+		m.handleOpenPage(selected)
+	}
 }
 
 func (m *codexMenu) delegateInputToForm(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {

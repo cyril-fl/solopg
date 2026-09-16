@@ -25,9 +25,11 @@ type MenuItem interface {
 
 	HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd
 	HandleUpdate(params UpdateParams) (tea.Model, tea.Cmd)
+
+	HandleDirectionInput(direction direction.Direction)
 }
 
-//-- Context - // 
+// -- Context - //
 type Context struct {
 	Menu             MenuItem
 	CurrentMenuIndex int
@@ -42,7 +44,7 @@ func (m *Context) IsFirstMenuElement() bool {
 	return m.CurrentMenuIndex == 0
 }
 
-//-- Update - //
+// -- Update - //
 type UpdateParams struct {
 	Model    tea.Model
 	Msg      tea.Msg
@@ -56,14 +58,13 @@ func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) direction.Direction {
 
 	metadata.Menu.SetList(list)
 
-	isFirstElementToNext :=  metadata.IsFirstMenuElement() && newdirection == direction.Next
+	isFirstElementToNext := metadata.IsFirstMenuElement() && newdirection == direction.Next
 	isLastElementToPrevious := metadata.IsLastMenuElement() && newdirection == direction.Previous
 	isBetweenElements := !(metadata.IsFirstMenuElement() || metadata.IsLastMenuElement())
 
 	if isFirstElementToNext || isBetweenElements || isLastElementToPrevious {
 		metadata.Menu.SetOpen(false)
-	} 
+	}
 
 	return newdirection
 }
-
