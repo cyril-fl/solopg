@@ -3,7 +3,7 @@ package process
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/campaign"
-	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
@@ -49,7 +49,7 @@ func generateCharacter(ctx *tui.Context) (*characters.Character, error) {
 		Name:      ctx.SelectedName,
 		Race:      ctx.SelectedRace.GetName(),
 		Class:     ctx.SelectedClass.GetName(),
-		Rarity:    attributes.A,
+		Rarity:    rarity.Default(),
 		Stats:     getStatsFromContext(ctx),
 		Equipment: getArmorSetFromContext(ctx),
 		Inventory: []objects.Object{},

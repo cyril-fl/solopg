@@ -2,7 +2,7 @@ package codex
 
 import (
 	"fmt"
-	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/infrastructure/t"
 	"time"
@@ -45,7 +45,7 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 			TODO
 			LOW Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
 		*/
-		Rarity: attributes.A,
+		Rarity: rarity.Default(),
 		Race:   values["race"],
 		Class:  values["class"],
 	})

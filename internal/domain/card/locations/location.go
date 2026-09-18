@@ -5,6 +5,7 @@ import (
 
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/infrastructure/yaml"
 )
@@ -18,7 +19,7 @@ type Location struct {
 type Template struct {
 	Name        string
 	Description string
-	Rarity      attributes.Rarity
+	Rarity      rarity.Rarity
 	Variety     attributes.Variety
 	Effects     []effects.Effect
 }

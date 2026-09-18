@@ -1,6 +1,7 @@
 package app
 
 import (
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/mongo"
 	"solopg/internal/infrastructure/t"
@@ -24,7 +25,7 @@ func Start() error {
 
 func Try() error {
 
-	log.ParseJson(config.Current)
+	log.ParseJson(rarity.Default())
 
 	return nil
 }

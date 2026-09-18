@@ -1,27 +1,29 @@
 package card
 
 import (
+	"fmt"
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 )
 
 type Card struct {
 	attributes.Description
 
-	Rarity  attributes.Rarity
+	Rarity  rarity.Rarity
 	Variety attributes.Variety
 }
 
 type NewCardParams struct {
 	Name        string
 	Description string
-	Rarity      attributes.Rarity
+	Rarity      rarity.Rarity
 	Variety     attributes.Variety
 }
 
 func NewCard(params NewCardParams) (*Card, error) {
 	// Check Rarity
-	if err := params.Rarity.Validate(); err != nil {
-		return nil, err
+	if !params.Rarity.Validate() {
+		return nil, fmt.Errorf("invalid rarity: %s", params.Rarity)
 	}
 
 	// Check Variety

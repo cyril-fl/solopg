@@ -6,6 +6,7 @@ import (
 
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/effects"
@@ -28,7 +29,7 @@ type Character struct {
 type Template struct {
 	Name        string
 	Description string
-	Rarity      attributes.Rarity
+	Rarity      rarity.Rarity
 	Class       string
 	Race        string
 	Stats       effects.Stats

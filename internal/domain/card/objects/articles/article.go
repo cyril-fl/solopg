@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/yaml"
@@ -18,7 +19,7 @@ type Article struct {
 type Template struct {
 	Name        string
 	Description string
-	Rarity      attributes.Rarity
+	Rarity      rarity.Rarity
 	Variety     attributes.Variety
 	Category    objects.Category
 	Effects     []effects.Effect

@@ -40,3 +40,4 @@ structure_files:
   dice: "data/systems/dice.yaml"
   oracle: "data/template/systems/rules/oracles"
   portal: "data/template/locations"
+  rarity: "data/systems/rarirty.yaml"

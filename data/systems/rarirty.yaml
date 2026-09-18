@@ -1,10 +1,11 @@
-name: 
-- F
-- E
-- D
-- C
-- B
-- A
-- S
-- SS
-- SSS
+values: 
+  - F
+  - E
+  - D
+  - C
+  - B
+  - A
+  - S
+  - SS
+  - SSS
+default: F

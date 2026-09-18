@@ -34,6 +34,7 @@ type structureFiles struct {
 	Oracle string `yaml:"oracle"`
 	Dice   string `yaml:"dice"`
 	Portal string `yaml:"portal"`
+	Rarity string `yaml:"rarity"`
 }
 
 type arg struct {

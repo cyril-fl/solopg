@@ -5,6 +5,7 @@ import (
 
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/effects"
 )
 
@@ -19,7 +20,7 @@ type Object struct {
 type Template struct {
 	Name        string
 	Description string
-	Rarity      attributes.Rarity
+	Rarity      rarity.Rarity
 	Variety     attributes.Variety
 	Category    Category
 	Effects     []effects.Effect
