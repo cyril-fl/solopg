@@ -14,6 +14,7 @@ type config struct {
 }
 
 type commands struct {
+	Config 	commandParams `yaml:"config"`
 	Root    commandParams `yaml:"root"`
 	Run     commandParams `yaml:"run"`
 	Try     commandParams `yaml:"try"`

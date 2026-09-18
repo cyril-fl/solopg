@@ -14,6 +14,9 @@ i18n:
       name: Français
       file: "fr-FR.yaml"
 commands: 
+  config: 
+    use: "config"
+    short: "Display the configuration of SoloPG"
   root: 
     short: "SoloPG CLI"
     long: "SoloPG is a CLI to manage a solo RPG session in the terminal."
