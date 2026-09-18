@@ -1,29 +1,30 @@
-package gameplay
+package dice
 
 import (
 	"fmt"
 	"math/rand"
+	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"
 	"strconv"
 )
 
 // - Configuration & caching - //
-type yamlDiceConfig struct {
+type yamlConfig struct {
 	Name  string `yaml:"name"`
 	Sides int    `yaml:"sides"`
 }
 
-const diceConfigFilePath = "data/systems/dice.yaml"
+var fileConfigPath = config.Current.StructureFiles.Dice
 
-var cacheDiceConfig []yamlDiceConfig
+var cachedConfig []yamlConfig
 
-func loadDiceFromFile() error {
-	paramslist, err := yaml.LoadListFromFile[yamlDiceConfig](diceConfigFilePath)
+func loadFromFile() error {
+	paramslist, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
 		return fmt.Errorf("failed to load dice from file: %w", err)
 	}
 
-	cacheDiceConfig = paramslist
+	cachedConfig = paramslist
 
 	return nil
 }
@@ -34,7 +35,7 @@ type Dice struct {
 	sides int
 }
 
-func newDice(config yamlDiceConfig) Dice {
+func new(config yamlConfig) Dice {
 	return Dice{
 		name:  config.Name,
 		sides: config.Sides,
@@ -53,32 +54,34 @@ func (d Dice) GetSides() int {
 }
 
 func (d Dice) Roll() int {
-	return roll(d.sides)
+	return Roll(d.sides)
 }
 
-// - Dice collection - //
-func ListDices() []Dice {
-	if cacheDiceConfig == nil {
-		err := loadDiceFromFile()
+// - Collection - //
+func List() []Dice {
+	if cachedConfig == nil {
+		err := loadFromFile()
 		if err != nil {
 			fmt.Printf("Error loading dice: %v\n", err)
 			return nil
 		}
 	}
 
-	return makeDiceSet(cacheDiceConfig)
+	return makeSet(cachedConfig)
 }
 
-func makeDiceSet(dices []yamlDiceConfig) []Dice {
-	result := make([]Dice, 0, len(dices))
-	for _, dice := range dices {
-		result = append(result, newDice(dice))
+func makeSet(configs []yamlConfig) []Dice {
+	result := make([]Dice, 0, len(configs))
+
+	for _, config := range configs {
+		result = append(result, new(config))
 	}
+
 	return result
 }
 
 // - Helpers - //
-func roll(sides int) int {
+func Roll(sides int) int {
 	if sides <= 0 {
 		return 0
 	}

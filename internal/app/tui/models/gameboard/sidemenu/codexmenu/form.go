@@ -49,7 +49,7 @@ func getMonsterForm() *form.Form {
 	}
 
 	var classItems []tui.Item[string]
-	// TODO 
+	// TODO
 	// LOW creer un iteme avec "none" et value ""
 	for _, i := range classes.List() {
 		/*

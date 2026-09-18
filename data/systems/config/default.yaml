@@ -36,3 +36,7 @@ commands:
   version: 
     use: "version"
     short: "Display the version of SoloPG"
+structure_files:
+  dice: "data/systems/dice.yaml"
+  oracle: "data/template/systems/rules/oracles"
+  portal: "data/template/locations"

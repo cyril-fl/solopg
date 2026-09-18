@@ -7,14 +7,15 @@ import (
 )
 
 type config struct {
-	Name     string   `yaml:"name"`
-	Verbose  bool     `yaml:"verbose"`
-	I18n     t.Config `yaml:"i18n"`
-	Commands commands `yaml:"commands"`
+	Name           string         `yaml:"name"`
+	Verbose        bool           `yaml:"verbose"`
+	I18n           t.Config       `yaml:"i18n"`
+	Commands       commands       `yaml:"commands"`
+	StructureFiles structureFiles `yaml:"structure_files"`
 }
 
 type commands struct {
-	Config 	commandParams `yaml:"config"`
+	Config  commandParams `yaml:"config"`
 	Root    commandParams `yaml:"root"`
 	Run     commandParams `yaml:"run"`
 	Try     commandParams `yaml:"try"`
@@ -27,6 +28,12 @@ type commandParams struct {
 	Long    string `yaml:"long"`
 	Example string `yaml:"example"`
 	Args    []arg  `yaml:"args"`
+}
+
+type structureFiles struct {
+	Oracle string `yaml:"oracle"`
+	Dice   string `yaml:"dice"`
+	Portal string `yaml:"portal"`
 }
 
 type arg struct {

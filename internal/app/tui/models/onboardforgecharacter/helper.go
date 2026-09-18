@@ -3,7 +3,7 @@ package onboardforgecharacter
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/effects"
-	"solopg/internal/domain/gameplay"
+	"solopg/internal/domain/gameplay/oracle"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -40,7 +40,7 @@ func drowBuild() ([]effects.Modifier, error) {
 		return nil, err
 	}
 
-	build, err := generateCharacterBuild(oracle)
+	build, err := generateCharacterBuild(*oracle)
 	if err != nil {
 		return nil, err
 	}
@@ -48,16 +48,16 @@ func drowBuild() ([]effects.Modifier, error) {
 	return build, nil
 }
 
-func getStatGenerationOracle() (*gameplay.Oracle, error) {
-	return gameplay.GetOracleByID("stat_generation")
+func getStatGenerationOracle() (*oracle.Oracle, error) {
+	return oracle.GetByID("stat_generation")
 }
 
-func generateCharacterBuild(oracle *gameplay.Oracle) ([]effects.Modifier, error) {
+func generateCharacterBuild(rules oracle.Oracle) ([]effects.Modifier, error) {
 	statsList := effects.ListStats()
 	build := []effects.Modifier{}
 
 	for _, stat := range statsList {
-		roll, err := gameplay.RollOracle[int](oracle)
+		roll, err := oracle.Roll[int](rules)
 		if err != nil {
 			return nil, err
 		}

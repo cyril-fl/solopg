@@ -210,6 +210,6 @@ func (m *Form) updateFocusedField(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	newField, cmd := m.fields[index].Update(msg)
 	m.fields[index] = newField.(Field)
-	
+
 	return m, cmd
 }

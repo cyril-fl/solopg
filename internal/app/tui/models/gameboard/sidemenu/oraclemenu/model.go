@@ -3,7 +3,7 @@ package oraclemenu
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
-	"solopg/internal/domain/gameplay"
+	"solopg/internal/domain/gameplay/oracle"
 	"solopg/internal/infrastructure/t"
 	"solopg/types/direction"
 	"solopg/types/size"
@@ -16,11 +16,12 @@ import (
 // Menu
 func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 	items := make([]list.Item, 0)
-	for _, oracle := range gameplay.GetOracle() {
-		if oracle.Visible {
-			key := "oracle." + oracle.ID
+
+	for _, rules := range oracle.List() {
+		if rules.IsVisible() {
+			key := "oracle." + rules.ID()
 			name := t.Localize(key)
-			items = append(items, tui.NewItem(name, "", oracle))
+			items = append(items, tui.NewItem(name, "", rules))
 		}
 	}
 
@@ -68,15 +69,17 @@ func (m *OracleMenu) SetList(list list.Model) {
 func (m *OracleMenu) HandleDirectionInput(direction direction.Direction) {}
 
 func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
-	selected, ok := m.list.SelectedItem().(tui.Item[*gameplay.Oracle])
+	selected, ok := m.list.SelectedItem().(tui.Item[oracle.Oracle])
+
 	if !ok {
 		return func() tea.Msg {
 			return tui.ErrorMsg{Err: t.NewError("error.oracle_selection")}
 		}
 	}
 
-	oracle := selected.Value()
-	rollResult, err := gameplay.RollOracle[any](oracle)
+	rules := selected.Value()
+
+	rollResult, err := oracle.Roll[any](rules)
 	if err != nil {
 		return func() tea.Msg {
 			return tui.ErrorMsg{Err: err}
@@ -107,5 +110,5 @@ func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.
 
 // Messages
 type Msg struct {
-	Result *gameplay.OracleResult[any]
+	Result *oracle.Result[any]
 }
