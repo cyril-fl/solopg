@@ -4,7 +4,7 @@ import (
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/infrastructure/t"
-	"solopg/internal/platform/message"
+	"solopg/internal/platform/form"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -14,27 +14,27 @@ import (
 func makeCodexList(params CodexMenuParams) []list.Item {
 	pages := []*codexMenuItem{
 		newMenuItem(sideMenuItemsParams{
-			id: "codex.locations",
+			id:    "codex.locations",
 			table: params.Codex.LocationsTable,
 			form:  getLocationForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id: "codex.npcs",
+			id:    "codex.npcs",
 			table: params.Codex.NpcsTable,
 			form:  getNpcForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id: "codex.monsters",
+			id:    "codex.monsters",
 			table: params.Codex.MonstersTable,
 			form:  getMonsterForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id: "codex.objects",
+			id:    "codex.objects",
 			table: params.Codex.ObjectsTable,
 			form:  getObjectForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id: "codex.objectives",
+			id:    "codex.objectives",
 			table: params.Codex.ObjectifsTable,
 			form:  getObjectifForm,
 		}),
@@ -115,7 +115,7 @@ func (m *codexMenu) handleKeyShiftEnter(params sidemenu.UpdateParams) (tea.Model
 
 	if currentPage != nil && m.IsOpen() {
 		if currentPage.showForm {
-			return params.Model, message.SendFormMsg[message.FormSubmit]()
+			return params.Model, form.SendMsg[form.Validate]()
 		}
 
 		currentPage.setShowForm(true)
@@ -142,15 +142,15 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 }
 
 func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	form := m.GetFormFromCurrentPage()
-	if form == nil {
+	currentForm := m.GetFormFromCurrentPage()
+	if currentForm == nil {
 		return params.Model, nil
 	}
 
-	form.Submit()
+	currentForm.Submit()
 
-	if form.HasErrors() {
-		return params.Model, message.SendErrorMsg(form.GetError())
+	if currentForm.HasErrors() {
+		return params.Model, form.SendErrorMsg(currentForm.GetError())
 	}
 
 	return params.Model, m.handleFormPost()
@@ -162,27 +162,23 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 		return nil
 	}
 
-	form := currentPage.form
-	if form == nil {
+	currentForm := currentPage.form
+	if currentForm == nil {
 		return nil
 	}
 
-	err := currentPage.table.AddFromMappedValues(form.GetValuesAsMappedString())
+	err := currentPage.table.AddFromMappedValues(currentForm.GetValuesAsMappedString())
 	if err != nil {
 		currentPage.form.SetError(err)
-		return message.SendErrorMsg(err)
+		return form.SendErrorMsg(err)
 	}
 
 	currentPage.setShowForm(false)
-	form.Reset()
+	currentForm.Reset()
 	// currentPage.form = form
 	/*
-		TODO Next
-		HIGH
-		verrifier la mise a jour du codex
-		log ca dans le main view
-		enregistre les donne ddans la db avec un save
-
+		TODO
+		LOW log l'enregistrement du codex ca dans le main view et les log
 		verrifier que tout est persister
 	*/
 	return sendMsg()

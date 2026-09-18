@@ -5,7 +5,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-func (m *Model) View() tea.View {
+func (m *Form) View() tea.View {
 	contents := make([]string, 0, len(m.fields))
 
 	for _, f := range m.fields {

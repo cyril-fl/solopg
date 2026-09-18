@@ -18,7 +18,7 @@ type ObjectsTable struct {
 }
 
 type ObjectEntry struct {
-	Timestamp time.Time `bson:"timestamp"`
+	Timestamp time.Time       `bson:"timestamp"`
 	Object    *objects.Object `bson:"object"`
 }
 
@@ -47,12 +47,12 @@ func (o *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 		Name:        values["name"],
 		Description: values["description"],
 		/*
-		TODO
-		HIGH Refactor les object quand on va passer en Data driven partout
+			TODO
+			HIGH Refactor les object quand on va passer en Data driven partout
 		*/
-		Rarity:      attributes.A,
-		Variety:     attributes.ArticleCard,
-		Category:    objects.Objects,
+		Rarity:   attributes.A,
+		Variety:  attributes.ArticleCard,
+		Category: objects.Objects,
 		// ___
 	})
 
@@ -93,8 +93,8 @@ func (o *ObjectsTable) assertEntry(entry map[string]string) error {
 		err = append(err, fmt.Errorf("description is required"))
 	}
 	/*
-	TODO
-	MEDIUM quand tout sera fix ajouter ces champs dans le form
+		TODO
+		MEDIUM quand tout sera fix ajouter ces champs dans le form
 	*/
 	// if entry["rarity"] == "" {
 	// 	err = append(err, fmt.Errorf("rarity is required"))

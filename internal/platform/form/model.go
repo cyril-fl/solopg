@@ -2,42 +2,59 @@ package form
 
 import (
 	"errors"
-	"solopg/internal/platform/form/field"
-	"solopg/internal/platform/message"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 // -- Form -- //
-type Model struct {
-	fields     []field.Field
+type Form struct {
+	fields     []Field
 	autoSubmit bool
 	err        []error
 }
 
-func New() *Model {
-	return &Model{
-		fields:     make([]field.Field, 0),
+// Field represents a typed form field without exposing its concrete type.
+type Field interface {
+	ID() string
+	Label() string
+	Focus() tea.Cmd
+	Blur()
+	IsFocused() bool
+	Value() any
+	GetValueAsString() string
+	Reset()
+	Validate() error
+	SetError(err error)
+	GetError() error
+	ResetError()
+	Init() tea.Cmd
+	Update(msg tea.Msg) (tea.Model, tea.Cmd)
+	View() tea.View
+}
+
+func New() *Form {
+	return &Form{
+		fields:     make([]Field, 0),
 		autoSubmit: true,
 	}
 }
 
-func NewForm(fields ...field.Field) *Model {
+func NewForm(fields ...Field) *Form {
 	return New().Add(fields...)
 }
 
 // -- Methods --//
 // Fields
-func (m *Model) Add(fields ...field.Field) *Model {
+func (m *Form) Add(fields ...Field) *Form {
 	m.fields = append(m.fields, fields...)
 	return m
 }
 
-func (m *Model) Focus() *Model {
+func (m *Form) Focus() *Form {
 	return m.focusOnIndex(0)
 }
 
-func (m *Model) Reset() *Model {
+func (m *Form) Reset() *Form {
 	m.resetErrors()
 
 	for _, f := range m.fields {
@@ -49,7 +66,7 @@ func (m *Model) Reset() *Model {
 }
 
 // Input
-func (m *Model) GetValuesAsMappedString() map[string]string {
+func (m *Form) GetValuesAsMappedString() map[string]string {
 	formValues := make(map[string]string)
 
 	for _, f := range m.fields {
@@ -60,7 +77,7 @@ func (m *Model) GetValuesAsMappedString() map[string]string {
 }
 
 // Validation
-func (m *Model) Validate() *Model {
+func (m *Form) Validate() *Form {
 	m.resetErrors()
 
 	hasErrors := false
@@ -74,15 +91,15 @@ func (m *Model) Validate() *Model {
 	if hasErrors {
 		m.SetError(errors.New("form validation failed"))
 	}
-	
+
 	return m
 }
 
-func (m *Model) SetError(err error) {
+func (m *Form) SetError(err error) {
 	m.err = append(m.err, err)
 }
 
-func (m *Model) GetError() error {
+func (m *Form) GetError() error {
 	if len(m.err) > 0 {
 		return errors.Join(m.err...)
 	}
@@ -90,33 +107,33 @@ func (m *Model) GetError() error {
 	return nil
 }
 
-func (m *Model) HasErrors() bool {
+func (m *Form) HasErrors() bool {
 	return len(m.err) > 0
 }
 
 // Submit
-func (m *Model) Submit() *Model {
+func (m *Form) Submit() *Form {
 	m.resetErrors()
 	m.Validate()
 
 	return m
 }
 
-func (m *Model) EnableAutoSubmit() *Model {
+func (m *Form) EnableAutoSubmit() *Form {
 	return m.setAutoSubmit(true)
 }
 
-func (m *Model) DisableAutoSubmit() *Model {
+func (m *Form) DisableAutoSubmit() *Form {
 	return m.setAutoSubmit(false)
 }
 
-func (m *Model) setAutoSubmit(autoSubmit bool) *Model {
+func (m *Form) setAutoSubmit(autoSubmit bool) *Form {
 	m.autoSubmit = autoSubmit
 	return m
 }
 
 // -- Helper --//
-func (m *Model) focusOnIndex(index int) *Model {
+func (m *Form) focusOnIndex(index int) *Form {
 	for _, f := range m.fields {
 		f.Blur()
 	}
@@ -129,14 +146,14 @@ func (m *Model) focusOnIndex(index int) *Model {
 	return m
 }
 
-func (m *Model) getCurrentField() field.Field {
+func (m *Form) getCurrentField() Field {
 	if index := m.getCurrentFieldIndex(); index >= 0 && index < len(m.fields) {
 		return m.fields[index]
 	}
 	return nil
 }
 
-func (m *Model) getCurrentFieldIndex() int {
+func (m *Form) getCurrentFieldIndex() int {
 	for i, f := range m.fields {
 		if f.IsFocused() {
 			return i
@@ -145,12 +162,12 @@ func (m *Model) getCurrentFieldIndex() int {
 	return -1
 }
 
-func (m *Model) isLastField() bool {
+func (m *Form) isLastField() bool {
 	currentIndex := m.getCurrentFieldIndex()
 	return currentIndex == len(m.fields)-1
 }
 
-func (m *Model) resetErrors() {
+func (m *Form) resetErrors() {
 	m.err = nil
 	for _, f := range m.fields {
 		f.ResetError()
@@ -158,7 +175,7 @@ func (m *Model) resetErrors() {
 }
 
 // -- Tea Model Implementation --//
-func (m *Model) Init() tea.Cmd {
+func (m *Form) Init() tea.Cmd {
 	cmds := make([]tea.Cmd, 0, len(m.fields))
 	for _, f := range m.fields {
 		cmds = append(cmds, f.Init())
@@ -166,33 +183,33 @@ func (m *Model) Init() tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	currentIndex := m.getCurrentFieldIndex()
 	if currentIndex == -1 {
 		return m, nil
 	}
 
 	switch msg.(type) {
-	case message.FormNextField:
+	case NextField:
 		if m.isLastField() && m.autoSubmit {
-			return m, message.SendFormMsg[message.FormSubmit]()
+			return m, SendMsg[Validate]()
 		}
 		return m.focusOnIndex(currentIndex + 1), nil
-	case message.FormPreviousField:
+	case PreviousField:
 		return m.focusOnIndex(currentIndex - 1), nil
 	}
 
 	return m.updateFocusedField(msg)
 }
 
-func (m *Model) updateFocusedField(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Form) updateFocusedField(msg tea.Msg) (tea.Model, tea.Cmd) {
 	index := m.getCurrentFieldIndex()
 	if index < 0 {
 		return m, nil
 	}
 
 	newField, cmd := m.fields[index].Update(msg)
-	m.fields[index] = newField.(field.Field)
-
+	m.fields[index] = newField.(Field)
+	
 	return m, cmd
 }

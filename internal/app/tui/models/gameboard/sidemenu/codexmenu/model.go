@@ -5,7 +5,6 @@ import (
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
 	"solopg/internal/domain/codex"
 	"solopg/internal/platform/form"
-	"solopg/internal/platform/message"
 
 	"solopg/types/direction"
 	"solopg/types/size"
@@ -82,14 +81,14 @@ func (m *codexMenu) SetList(list list.Model) {
 	m.list = list
 }
 
-func (menu *codexMenu) GetFormFromCurrentPage() *form.Model {
+func (menu *codexMenu) GetFormFromCurrentPage() *form.Form {
 	if currentPage := menu.getCurrentPage(); currentPage != nil && menu.IsOpen() {
 		return currentPage.form
 	}
 	return nil
 }
 
-func (menu *codexMenu) SetFormOnCurrentPage(form form.Model) {
+func (menu *codexMenu) SetFormOnCurrentPage(form form.Form) {
 	if currentPage := menu.getCurrentPage(); currentPage != nil && menu.IsOpen() {
 		currentPage.form = &form
 	}
@@ -98,11 +97,11 @@ func (menu *codexMenu) SetFormOnCurrentPage(form form.Model) {
 // / Handlers
 func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	switch msg := params.Msg.(type) {
-	case message.FormNextField, message.FormPreviousField:
+	case form.NextField, form.PreviousField:
 		return m.delegateInputToForm(params)
-	case message.FormSubmit:
+	case form.Validate:
 		return m.handleFormSubmit(params)
-	case message.FormError:
+	case form.Error:
 		return params.Model, sendMsg()
 
 	case tea.KeyPressMsg:
@@ -135,14 +134,14 @@ type codexMenuItem struct {
 	isOpen bool
 	table  codex.Table
 
-	form     *form.Model
+	form     *form.Form
 	showForm bool
 }
 
 type sideMenuItemsParams struct {
 	id    string
 	table codex.Table
-	form  func() *form.Model
+	form  func() *form.Form
 }
 
 func newMenuItem(params sideMenuItemsParams) *codexMenuItem {

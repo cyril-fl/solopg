@@ -3,7 +3,7 @@ package field
 import (
 	"fmt"
 	"solopg/internal/app/tui"
-	"solopg/internal/platform/message"
+	"solopg/internal/platform/form"
 	"strings"
 
 	"strconv"
@@ -78,13 +78,6 @@ func (f *textField[T]) Validate() error {
 	return fmt.Errorf("invalid value type for field %s: expected %T, got %T", f.ID(), f.defaultvalue, f.Value())
 }
 
-func (f *textField[T]) testRequireness() error {
-	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
-		return fmt.Errorf("field %s is required", f.ID())
-	}
-	return nil
-}
-
 // -- Tea Model Implementation -- //
 func (m *textField[T]) Init() tea.Cmd {
 	return textinput.Blink
@@ -95,11 +88,11 @@ func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
 		case tui.KeyEnter:
-			return m, message.SendFormMsg[message.FormNextField]()
+			return m, form.SendMsg[form.NextField]()
 		case tui.KeyUp:
-			return m, message.SendFormMsg[message.FormPreviousField]()
+			return m, form.SendMsg[form.PreviousField]()
 		case tui.KeyDown:
-			return m, message.SendFormMsg[message.FormNextField]()
+			return m, form.SendMsg[form.NextField]()
 		default:
 			newInput, cmd := m.input.Update(msg)
 			m.input = newInput
@@ -146,4 +139,11 @@ func setValue[T stringOrInt](input *textinput.Model, value T) {
 	case int:
 		input.SetValue(strconv.Itoa(v))
 	}
+}
+
+func (f *textField[T]) testRequireness() error {
+	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
+		return fmt.Errorf("field %s is required", f.ID())
+	}
+	return nil
 }

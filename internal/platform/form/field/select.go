@@ -3,7 +3,7 @@ package field
 import (
 	"fmt"
 	"solopg/internal/app/tui"
-	"solopg/internal/platform/message"
+	"solopg/internal/platform/form"
 	"solopg/types/direction"
 
 	"charm.land/bubbles/v2/list"
@@ -75,7 +75,6 @@ func (f *selectField[T]) Reset() {
 	f.options.Select(0)
 }
 
-// FIXME: Ne fait pas arraitre l'erreur .
 func (f *selectField[T]) Validate() error {
 	if err := f.testRequireness(); err != nil {
 		return err
@@ -109,7 +108,7 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tui.KeyUp, tui.KeyDown:
 			return m.handleDirection(msg)
 		case tui.KeyEnter:
-			return m, message.SendFormMsg[message.FormNextField]()
+			return m, form.SendMsg[form.NextField]()
 		}
 	default:
 		newOptions, cmd := m.options.Update(msg)
@@ -149,9 +148,9 @@ func (m *selectField[T]) handleDirection(msg tea.KeyPressMsg) (tea.Model, tea.Cm
 	m.options = updatedList
 	switch newdirection {
 	case direction.Next:
-		return m, message.SendFormMsg[message.FormNextField]()
+		return m, form.SendMsg[form.NextField]()
 	case direction.Previous:
-		return m, message.SendFormMsg[message.FormPreviousField]()
+		return m, form.SendMsg[form.PreviousField]()
 	}
 	return m, nil
 }

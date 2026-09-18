@@ -13,7 +13,7 @@ type LocationsTable struct {
 	*TableData[LocationsEntry]
 }
 type LocationsEntry struct {
-	Timestamp time.Time `bson:"timestamp"`
+	Timestamp time.Time           `bson:"timestamp"`
 	Location  *locations.Location `bson:"location"`
 }
 

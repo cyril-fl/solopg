@@ -18,7 +18,7 @@ type MonstersTable struct {
 }
 
 type MonsterEntry struct {
-	Timestamp time.Time `bson:"timestamp"`
+	Timestamp time.Time             `bson:"timestamp"`
 	Character *characters.Character `bson:"character"`
 }
 
@@ -51,11 +51,11 @@ func (m *MonstersTable) AddFromMappedValues(values map[string]string) error {
 		Name:        values["name"],
 		Description: values["description"],
 		/*
-		TODO 
-		LOW Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
+			TODO
+			LOW Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
 		*/
-		Rarity:      attributes.A, 
-		Race:        values["race"],
+		Rarity: attributes.A,
+		Race:   values["race"],
 		// Class:       values["class"],
 	})
 

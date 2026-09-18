@@ -11,9 +11,9 @@ type Category string
 
 const (
 	Objects Category = "object"
-	Weapon Category = "weapon"
-	Armor  Category = "armor"
-	Potion Category = "potion"
+	Weapon  Category = "weapon"
+	Armor   Category = "armor"
+	Potion  Category = "potion"
 )
 
 func (c Category) Validate() error {
