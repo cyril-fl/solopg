@@ -4,20 +4,21 @@ import (
 	"fmt"
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 )
 
 type Card struct {
 	attributes.Description
 
 	Rarity  rarity.Rarity
-	Variety attributes.Variety
+	Variety variety.Variety
 }
 
 type NewCardParams struct {
 	Name        string
 	Description string
 	Rarity      rarity.Rarity
-	Variety     attributes.Variety
+	Variety     variety.Variety
 }
 
 func NewCard(params NewCardParams) (*Card, error) {
@@ -27,8 +28,8 @@ func NewCard(params NewCardParams) (*Card, error) {
 	}
 
 	// Check Variety
-	if err := params.Variety.Validate(); err != nil {
-		return nil, err
+	if !params.Variety.Validate() {
+		return nil, fmt.Errorf("invalid variety: %s", params.Variety)
 	}
 
 	return &Card{

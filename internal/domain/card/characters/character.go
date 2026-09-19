@@ -5,8 +5,8 @@ import (
 	"slices"
 
 	"solopg/internal/domain/card"
-	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
 	"solopg/internal/domain/card/effects"
@@ -44,7 +44,7 @@ func New(params Template) (*Character, error) {
 		Name:        params.Name,
 		Description: params.Description,
 		Rarity:      params.Rarity,
-		Variety:     attributes.CharacterCard,
+		Variety:     variety.MakeDefault("character_card"),
 	})
 
 	if err != nil {
@@ -53,10 +53,6 @@ func New(params Template) (*Character, error) {
 
 	if newCard == nil {
 		return nil, fmt.Errorf("failed to create new card for character")
-	}
-
-	if newCard.Variety != attributes.CharacterCard {
-		return nil, fmt.Errorf("invalid card variety for character: %s", newCard.Variety)
 	}
 
 	if params.Class != "" && !slices.Contains(classes.ListNames(), params.Class) {

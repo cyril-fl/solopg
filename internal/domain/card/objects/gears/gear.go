@@ -3,8 +3,8 @@ package gears
 import (
 	"fmt"
 
-	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/yaml"
@@ -42,7 +42,7 @@ type Template struct {
 	Name        string
 	Description string
 	Rarity      rarity.Rarity
-	Variety     attributes.Variety
+	Variety     variety.Variety
 	Category    objects.Category
 	Attributes  objects.Attribute
 	Effects     []effects.Effect

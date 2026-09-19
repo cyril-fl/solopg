@@ -2,8 +2,8 @@ package codex
 
 import (
 	"fmt"
-	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/locations"
 	"solopg/internal/infrastructure/t"
 	"time"
@@ -43,13 +43,13 @@ func (l *LocationsTable) AddFromMappedValues(values map[string]string) error {
 		Name:        values["name"],
 		Description: values["description"],
 		Rarity:      rarity.Default(),
-		Variety:     attributes.LocationCard,
+		Variety:     variety.MakeDefault("location_card"),
 	})
 
 	if err != nil {
 		return err
 	}
-
+	
 	l.Add(location)
 
 	return nil

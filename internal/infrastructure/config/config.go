@@ -35,6 +35,7 @@ type structureFiles struct {
 	Dice   string `yaml:"dice"`
 	Portal string `yaml:"portal"`
 	Rarity string `yaml:"rarity"`
+	Variety string `yaml:"variety"`
 }
 
 type arg struct {

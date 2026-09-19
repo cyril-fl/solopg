@@ -41,3 +41,4 @@ structure_files:
   oracle: "data/template/systems/rules/oracles"
   portal: "data/template/locations"
   rarity: "data/systems/rarirty.yaml"
+  variety: "data/systems/variety.yaml"

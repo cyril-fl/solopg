@@ -2,8 +2,8 @@ package codex
 
 import (
 	"fmt"
-	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 	"time"
@@ -52,7 +52,7 @@ func (o *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 			HIGH Refactor les object quand on va passer en Data driven partout
 		*/
 		Rarity:   rarity.Default(),
-		Variety:  attributes.ArticleCard,
+		Variety:  variety.MakeDefault("article_card"), // TODO: Change this to the correct variety based on your requirements
 		Category: objects.Objects,
 		// ___
 	})

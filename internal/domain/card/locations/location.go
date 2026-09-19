@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"solopg/internal/domain/card"
-	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/effects"
 	"solopg/internal/infrastructure/yaml"
 )
@@ -20,7 +20,7 @@ type Template struct {
 	Name        string
 	Description string
 	Rarity      rarity.Rarity
-	Variety     attributes.Variety
+	Variety     variety.Variety
 	Effects     []effects.Effect
 }
 
@@ -52,6 +52,12 @@ func FromFile(fileAddress string) (*Location, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	/*
+	TODO
+	LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
+	*/
+	params.Variety = variety.MakeDefault(string(params.Variety))
 
 	return New(*params)
 }

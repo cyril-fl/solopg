@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"solopg/internal/domain/card"
-	"solopg/internal/domain/card/attributes"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/effects"
 )
 
@@ -21,7 +21,7 @@ type Template struct {
 	Name        string
 	Description string
 	Rarity      rarity.Rarity
-	Variety     attributes.Variety
+	Variety     variety.Variety
 	Category    Category
 	Effects     []effects.Effect
 	Pod         int
@@ -44,9 +44,9 @@ func New(params Template) (*Object, error) {
 		return nil, fmt.Errorf("failed to create new card for item")
 	}
 
-	if newCard.Variety != attributes.ArticleCard && newCard.Variety != attributes.EquipmentCard {
-		return nil, fmt.Errorf("invalid card variety for item: %s", newCard.Variety)
-	}
+	// if newCard.Variety != attributes.ArticleCard && newCard.Variety != attributes.EquipmentCard {
+	// 	return nil, fmt.Errorf("invalid card variety for item: %s", newCard.Variety)
+	// }
 
 	// Check Category
 	if err := params.Category.Validate(); err != nil {
