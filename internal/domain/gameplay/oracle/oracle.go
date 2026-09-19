@@ -37,13 +37,13 @@ var folderConfigPath = config.Current.StructureFiles.Oracle
 var cachedConfig []yamlConfig
 
 func load() error {
-	folderFiles, err := loadFromFolder()
+	folderContents, err := loadFromFolder()
 	if err != nil {
 		return err
 	}
 
 	errs := []error{}
-	for _, file := range folderFiles {
+	for _, file := range folderContents {
 		filepath := fmt.Sprintf("%s/%s", folderConfigPath, file)
 
 		if err := loadFromFile(filepath); err != nil {
@@ -70,21 +70,21 @@ func loadFromFolder() ([]string, error) {
 }
 
 func loadFromFile(fileAddress string) error {
-	oracle, err := yaml.LoadFromFile[yamlConfig](fileAddress)
+	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
 		return t.NewError("error.oracle.load", map[string]any{"Error": err})
 	}
 
-	if oracle.Dice <= 0 {
-		return t.NewError("error.oracle.invalid_dice", map[string]any{"ID": oracle.ID, "Dice": oracle.Dice})
+	if params.Dice <= 0 {
+		return t.NewError("error.oracle.invalid_dice", map[string]any{"ID": params.ID, "Dice": params.Dice})
 	}
 
-	if len(oracle.Intervals) == 0 {
-		return t.NewError("error.oracle.no_intervals", map[string]any{"ID": oracle.ID})
+	if len(params.Intervals) == 0 {
+		return t.NewError("error.oracle.no_intervals", map[string]any{"ID": params.ID})
 	}
 
-	cachedConfig = append(cachedConfig, *oracle)
+	cachedConfig = append(cachedConfig, *params)
 
 	return nil
 }

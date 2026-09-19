@@ -7,7 +7,6 @@ import (
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/attributes/variety"
-	"solopg/internal/infrastructure/yaml"
 )
 
 type Location struct {
@@ -25,7 +24,6 @@ type Template struct {
 }
 
 func New(params Template) (*Location, error) {
-	// Check Card
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,
 		Description: params.Description,
@@ -33,12 +31,8 @@ func New(params Template) (*Location, error) {
 		Variety:     params.Variety,
 	})
 
-	if err != nil {
-		return nil, err
-	}
-
 	if newCard == nil {
-		return nil, fmt.Errorf("failed to create new card for location")
+		return nil, fmt.Errorf("failed to create new card for location %s: %v", params.Name, err)
 	}
 
 	return &Location{
@@ -47,17 +41,3 @@ func New(params Template) (*Location, error) {
 	}, nil
 }
 
-func FromFile(fileAddress string) (*Location, error) {
-	params, err := yaml.LoadFromFile[Template](fileAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	/*
-	TODO
-	LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
-	*/
-	params.Variety = variety.MakeDefault(string(params.Variety))
-
-	return New(*params)
-}

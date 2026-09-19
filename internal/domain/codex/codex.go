@@ -3,13 +3,14 @@ package codex
 import (
 	"errors"
 	"fmt"
+	"solopg/internal/domain/card/locations"
 )
 
 // -- Codex -- //
 type Codex struct {
 	NpcsTable      *NpcsTable
 	BeastsTable  *BeastsTable
-	LocationsTable *LocationsTable
+	LocationsTable *locations.LocationsTable
 	ObjectsTable   *ObjectsTable
 	ObjectifsTable *ObjectivesTable
 }
@@ -18,7 +19,7 @@ func New() *Codex {
 	return &Codex{
 		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
 		BeastsTable:  NewBeastsTable([]BeastEntry{}),
-		LocationsTable: NewLocationsTable([]LocationsEntry{}),
+		LocationsTable: locations.NewLocationsTable([]locations.LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
 		ObjectifsTable: NewObjectivesTable([]ObjectifEntry{}),
 	}
@@ -33,7 +34,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 		c.BeastsTable = NewBeastsTable(nil)
 	}
 	if c.LocationsTable == nil {
-		c.LocationsTable = NewLocationsTable(nil)
+		c.LocationsTable = locations.NewLocationsTable(nil)
 	}
 	if c.ObjectsTable == nil {
 		c.ObjectsTable = NewObjectsTable(nil)
@@ -42,11 +43,11 @@ func (c *Codex) EnsureInitialized() *Codex {
 		c.ObjectifsTable = NewObjectivesTable(nil)
 	}
 
-	c.NpcsTable.ensure()
-	c.BeastsTable.ensure()
-	c.LocationsTable.ensure()
-	c.ObjectsTable.ensure()
-	c.ObjectifsTable.ensure()
+	c.NpcsTable.Ensure()
+	c.BeastsTable.Ensure()
+	c.LocationsTable.Ensure()
+	c.ObjectsTable.Ensure()
+	c.ObjectifsTable.Ensure()
 
 	return c
 }
@@ -55,7 +56,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 type Table interface {
 	Summaries() []string
 	AddFromMappedValues(values map[string]string) error
-	ensure()
+	Ensure()
 }
 
 type TableData[E any] struct {

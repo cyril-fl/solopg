@@ -99,6 +99,6 @@ func (n *NpcsTable) assertEntry(entry map[string]string) error {
 	return nil
 }
 
-func (n *NpcsTable) ensure() {
+func (n *NpcsTable) Ensure() {
 	ensureEmbeddedTable(t.Localize(tablenpcs), &n.TableData)
 }

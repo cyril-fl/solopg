@@ -34,7 +34,7 @@ type structureFiles struct {
 	Dice   string `yaml:"dice"`
 	ObjectsCategory string `yaml:"objects_category"`
 	Oracle string `yaml:"oracle"`
-	Portal string `yaml:"portal"`
+	Locations string `yaml:"locations"`
 	Rarity string `yaml:"rarity"`
 	Stats  string `yaml:"stats"`
 	Variety string `yaml:"variety"`

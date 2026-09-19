@@ -102,3 +102,44 @@ func (s Stat) Validate() bool {
 func (m Modifier) String() string {
 	return fmt.Sprintf("%s: %d", m.Stat, m.Value)
 }
+
+// - Helpers - //
+type YamlEffectConfig struct {
+	Description YamlDescriptionConfig   `yaml:"description"`
+	Modifier    YamlModifierConfig      `yaml:"modifier"`
+}
+ 
+type YamlDescriptionConfig struct {
+	Name        string `yaml:"name"`
+	Description string `yaml:"description"`
+}
+
+type YamlModifierConfig struct {
+	Stat  Stat `yaml:"stat"`
+	Value int  `yaml:"value"`
+}
+
+func MakeEffectFromYamlConfigArray(yamlConfigs []YamlEffectConfig) []Effect {
+	effects := make([]Effect, 0, len(yamlConfigs))
+
+	for _, yamlConfig := range yamlConfigs {
+		effect := MakeEffectFromYamlConfig(yamlConfig)
+		effects = append(effects, effect)
+	}
+
+	return effects
+}
+
+
+func MakeEffectFromYamlConfig(yamlConfig YamlEffectConfig) Effect {
+	return Effect{
+		Description: attributes.Description{
+			Name:        yamlConfig.Description.Name,
+			Description: yamlConfig.Description.Description,
+		},
+		Modifier: Modifier{
+			Stat:  yamlConfig.Modifier.Stat,
+			Value: yamlConfig.Modifier.Value,
+		},
+	}
+}

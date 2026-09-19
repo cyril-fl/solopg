@@ -1,33 +1,36 @@
-package codex
+package locations
 
 import (
+	"errors"
 	"fmt"
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/attributes/variety"
-	"solopg/internal/domain/card/locations"
 	"solopg/internal/infrastructure/t"
 	"time"
 )
 
 // -- Table --//
 type LocationsTable struct {
-	*TableData[LocationsEntry]
+	name    string
+	Entries []LocationsEntry
 }
+
 type LocationsEntry struct {
 	Timestamp time.Time           `bson:"timestamp"`
-	Location  *locations.Location `bson:"location"`
+	Location  *Location `bson:"location"`
 }
 
 var tablelocations = "codex.locations"
 
 func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	return &LocationsTable{
-		TableData: newTable(t.Localize(tablelocations), entries),
+			name:    t.Localize(tablelocations),
+		Entries: entries,
 	}
 }
 
 // -- Methods --//
-func (l *LocationsTable) Add(location *locations.Location) {
+func (l *LocationsTable) Add(location *Location) {
 	l.Entries = append(l.Entries, LocationsEntry{
 		Timestamp: time.Now().UTC(),
 		Location:  location,
@@ -39,7 +42,7 @@ func (l *LocationsTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
-	location, err := locations.New(locations.Template{
+	location, err := New(Template{
 		Name:        values["name"],
 		Description: values["description"],
 		Rarity:      rarity.Default(),
@@ -101,6 +104,20 @@ func (l *LocationsTable) assertEntry(values map[string]string) error {
 	return nil
 }
 
-func (l *LocationsTable) ensure() {
-	ensureEmbeddedTable(t.Localize(tablelocations), &l.TableData)
+func (l *LocationsTable) Ensure() {
+	if l.name == "" {
+		l.name = t.Localize(tablelocations)
+	}
+	if l.Entries == nil {
+		l.Entries = []LocationsEntry{}
+	}
 }
+
+// TODO decoupler autrement
+func (l *LocationsTable) formatAssertErrors(err []error) error {
+	return errors.Join(
+		fmt.Errorf("invalid %s:", l.name),
+		errors.Join(err...),
+	)
+}
+	

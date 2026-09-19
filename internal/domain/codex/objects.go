@@ -111,6 +111,6 @@ func (o *ObjectsTable) assertEntry(entry map[string]string) error {
 	return nil
 }
 
-func (o *ObjectsTable) ensure() {
+func (o *ObjectsTable) Ensure() {
 	ensureEmbeddedTable(t.Localize(tableobject), &o.TableData)
 }

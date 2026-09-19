@@ -27,6 +27,12 @@ func loadFromFile() error {
 	return nil
 }
 
+func (c *yamlConfig) addValue(value Rarity) {
+	if !slices.Contains(c.Values, value) {
+		c.Values = append(c.Values, value)
+	}
+}
+
 // - Rarity - //
 type Rarity string
 
@@ -44,7 +50,7 @@ func List() []Rarity {
 func Default() Rarity {
 	if cachedConfig.Default == "" {
 		if err := loadFromFile(); err != nil || !cachedConfig.Default.Validate()  {
-			return ""
+			return MakeDefault("")
 		}
 	}
 
@@ -53,6 +59,24 @@ func Default() Rarity {
 
 func (r Rarity) Validate() bool {
 	return slices.Contains(List(), r)
+}
+
+func MakeDefault(defaultValue string) Rarity {
+	List()
+	cachedConfig.addValue(Rarity(defaultValue))
+	return Rarity(defaultValue)
+}
+
+func AssertWithDefault(provided string) Rarity {
+	if Assert(provided) {
+		return Rarity(provided)
+	}
+
+	return Default()
+}
+
+func Assert(provided string) bool {
+	return Rarity(provided).Validate()
 }
 
 func (r Rarity) String() string {

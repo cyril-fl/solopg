@@ -47,6 +47,21 @@ func List() []Variety {
 	return cachedConfig.Values
 }
 
+func (r Variety) Validate() bool {
+	return slices.Contains(List(), r)
+}
+
+func Default() Variety {
+	list := List()
+	
+	if len(list) == 0 {
+		return MakeDefault("card")
+	}
+
+	return list[0]
+}
+
+
 func MakeDefault(defaultValue string) Variety {
 	List()
 	cachedConfig.addValue(Variety(defaultValue))
@@ -54,15 +69,15 @@ func MakeDefault(defaultValue string) Variety {
 }
 
 func AssertWithDefault(provided string) Variety {
-	if Variety(provided).Validate() {
+	if Assert(provided) {
 		return Variety(provided)
 	}
 
-	return MakeDefault("card")
+	return Default()
 }
 
-func (r Variety) Validate() bool {
-	return slices.Contains(List(), r)
+func Assert(provided string) bool {
+	return Variety(provided).Validate()
 }
 
 func (r Variety) String() string {

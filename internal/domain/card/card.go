@@ -22,12 +22,10 @@ type NewCardParams struct {
 }
 
 func NewCard(params NewCardParams) (*Card, error) {
-	// Check Rarity
 	if !params.Rarity.Validate() {
 		return nil, fmt.Errorf("invalid rarity: %s", params.Rarity)
 	}
 
-	// Check Variety
 	if !params.Variety.Validate() {
 		return nil, fmt.Errorf("invalid variety: %s", params.Variety)
 	}

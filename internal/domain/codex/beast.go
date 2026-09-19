@@ -122,6 +122,6 @@ func (tb *BeastsTable) assertEntry(entry map[string]string) error {
 	return nil
 }
 
-func (tb *BeastsTable) ensure() {
+func (tb *BeastsTable) Ensure() {
 	ensureEmbeddedTable(t.Localize(tablebeast), &tb.TableData)
 }
