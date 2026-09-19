@@ -7,7 +7,7 @@ import (
 	"solopg/types"
 )
 
-// -- Locale -- //
+// - Locale - //
 type Locale struct {
 	Code string `yaml:"code"`
 	ISO  string `yaml:"iso"`
@@ -15,7 +15,7 @@ type Locale struct {
 	File string `yaml:"file"`
 }
 
-// -- Format -- //
+// - Format - //
 type Format string
 
 const (
@@ -23,7 +23,7 @@ const (
 	FormatYAML Format = "yaml"
 )
 
-// -- Config -- //
+// - Config - //
 type Config struct {
 	Default string   `yaml:"default"`
 	Dir     string   `yaml:"dir"`
@@ -61,7 +61,7 @@ func (cfg Config) Validate() error {
 	return nil
 }
 
-// -- Validation -- //
+// - Validation - //
 func isDirectoryValid(path string) error {
 	if path == "" {
 		return fmt.Errorf("i18n directory is not specified")

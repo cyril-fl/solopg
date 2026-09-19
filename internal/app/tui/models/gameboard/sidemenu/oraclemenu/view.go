@@ -7,7 +7,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// -- View -- //
+// - View - //
 func (m *OracleMenu) GetMenuView() string {
 	title := lipgloss.NewStyle().Bold(true).Render(t.Localize(m.id))
 	return lipgloss.JoinVertical(
@@ -28,7 +28,7 @@ func (m *OracleMenu) GetFooter() []string {
 	}
 }
 
-// -- Handlers --//
+// - Handlers --//
 func (m *OracleMenu) HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd {
 	// m.list.SetSize(msg.Width, msg.Height)
 	return nil

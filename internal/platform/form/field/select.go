@@ -11,7 +11,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// -- Field -- //
+// - Field - //
 type selectField[T any] struct {
 	field[T]
 	options list.Model
@@ -46,7 +46,7 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	}
 }
 
-// -- Field Implementation -- //
+// - Field Implementation - //
 func (f *selectField[T]) Focus() tea.Cmd {
 	f.focus = true
 	tui.SetListFocus(&f.options, true)
@@ -94,7 +94,7 @@ func (f *selectField[T]) testRequireness() error {
 	return nil
 }
 
-// -- Tea Model Implementation -- //
+// - Tea Model Implementation - //
 func (m *selectField[T]) Init() tea.Cmd {
 	return nil
 }
@@ -142,7 +142,7 @@ func (m *selectField[T]) View() tea.View {
 	)
 }
 
-// -- Helper -- //
+// - Helper - //
 func (m *selectField[T]) handleDirection(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	updatedList, newdirection := direction.GetListDirection(&m.options, msg)
 	m.options = updatedList

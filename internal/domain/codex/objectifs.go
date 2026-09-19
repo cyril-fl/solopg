@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// -- Table --//
+// - Table --//
 type ObjectivesTable struct {
 	*TableData[ObjectifEntry]
 }
@@ -24,7 +24,7 @@ func NewObjectivesTable(entries []ObjectifEntry) *ObjectivesTable {
 	}
 }
 
-// -- Methods --//
+// - Methods --//
 func (o *ObjectivesTable) Add(title, description string) {
 	o.Entries = append(o.Entries, ObjectifEntry{
 		Timestamp:   time.Now().UTC(),
@@ -60,7 +60,7 @@ func (o *ObjectivesTable) Summaries() []string {
 	return summaries
 }
 
-// -- Helper --//
+// - Helper --//
 func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 	var err []error
 

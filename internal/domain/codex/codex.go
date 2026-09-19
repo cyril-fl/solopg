@@ -6,7 +6,7 @@ import (
 	"solopg/internal/domain/card/locations"
 )
 
-// -- Codex -- //
+// - Codex - //
 type Codex struct {
 	NpcsTable      *NpcsTable
 	BeastsTable  *BeastsTable
@@ -52,7 +52,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 	return c
 }
 
-// -- Codex table -- //
+// - Codex table - //
 type Table interface {
 	Summaries() []string
 	AddFromMappedValues(values map[string]string) error

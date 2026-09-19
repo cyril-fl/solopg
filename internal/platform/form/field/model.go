@@ -5,7 +5,7 @@ import (
 	"solopg/internal/infrastructure/t"
 )
 
-// -- Field -- //
+// - Field - //
 type field[T any] struct {
 	id           string
 	kind         kind
@@ -38,7 +38,7 @@ func newField[T any](id, label string, kind kind, value T, validator func(T) err
 	}
 }
 
-// -- Methods --//
+// - Methods --//
 func (f *field[T]) ID() string {
 	return f.id
 }
@@ -63,7 +63,7 @@ func (f *field[T]) ResetError() {
 	f.err = nil
 }
 
-// -- Helper --//
+// - Helper --//
 func (f *field[T]) validate(value T) error {
 	if f.validator != nil {
 		err := f.validator(value)

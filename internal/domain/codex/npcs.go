@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// -- Table --//
+// - Table --//
 type NpcsTable struct {
 	*TableData[NpcsEntry]
 }
@@ -25,7 +25,7 @@ func NewNpcsTable(entries []NpcsEntry) *NpcsTable {
 	}
 }
 
-// -- Methods --//
+// - Methods --//
 func (n *NpcsTable) Add(character *characters.Character) {
 	n.Entries = append(n.Entries, NpcsEntry{
 		Timestamp: time.Now().UTC(),
@@ -76,7 +76,7 @@ func (n *NpcsTable) Summaries() []string {
 	return summaries
 }
 
-// -- Helper --//
+// - Helper --//
 func (n *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {

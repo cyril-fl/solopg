@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// -- Table --//
+// - Table --//
 type BeastsTable struct {
 	*TableData[BeastEntry]
 }
@@ -30,7 +30,7 @@ func NewBeastsTable(entries []BeastEntry) *BeastsTable {
 	}
 }
 
-// -- Methods --//
+// - Methods --//
 func (tb *BeastsTable) Add(character *characters.Character) {
 	tb.Entries = append(tb.Entries, BeastEntry{
 		Timestamp: time.Now().UTC(),
@@ -81,7 +81,7 @@ func (tb *BeastsTable) Summaries() []string {
 	return summaries
 }
 
-// -- Helper --//
+// - Helper --//
 func (tb *BeastsTable) assertEntry(entry map[string]string) error {
 	var err []error
 

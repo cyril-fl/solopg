@@ -21,7 +21,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// -- Init -- //
+// - Init - //
 func initTextarea() textarea.Model {
 	ta := textarea.New()
 	ta.Placeholder = t.Localize("chat.placeholder")
@@ -89,7 +89,7 @@ func initAuthor(engine *game.Engine) string {
 	return author
 }
 
-// -- Getters & Setters -- //
+// - Getters & Setters - //
 func (m *model) getMenuActiveElement() sidemenu.MenuItem {
 	return m.menu[m.activeMenuIndex]
 }
@@ -106,7 +106,7 @@ func (m *model) isMenuActiveElementOpen() bool {
 	return m.getMenuActiveElement().IsOpen()
 }
 
-// -- Handlers -- //
+// - Handlers - //
 // Input
 func (m *model) handleEnterInput() {
 	if m.isMenuActiveElementOpen() {

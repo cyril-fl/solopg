@@ -35,7 +35,7 @@ func Init(cfg Config, locale string) error {
 	return nil
 }
 
-// -- Bundle -- //
+// - Bundle - //
 func initBundle(cfg Config, defaultLocale *Locale) error {
 	tag, err := parseTag(defaultLocale)
 	if err != nil {
@@ -63,7 +63,7 @@ func loadLocaleFiles(bundle *i18n.Bundle, cfg Config) error {
 	return nil
 }
 
-// -- Localizer -- //
+// - Localizer - //
 func initLocalizer(cfg Config, lang string, defaultLocale *Locale) error {
 	locale, err := getLocale(cfg, lang, defaultLocale)
 	if err != nil {

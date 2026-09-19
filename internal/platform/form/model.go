@@ -6,7 +6,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// -- Form -- //
+// - Form - //
 type Form struct {
 	fields     []Field
 	autoSubmit bool
@@ -43,7 +43,7 @@ func NewForm(fields ...Field) *Form {
 	return New().Add(fields...)
 }
 
-// -- Methods --//
+// - Methods --//
 // Fields
 func (m *Form) Add(fields ...Field) *Form {
 	m.fields = append(m.fields, fields...)
@@ -132,7 +132,7 @@ func (m *Form) setAutoSubmit(autoSubmit bool) *Form {
 	return m
 }
 
-// -- Helper --//
+// - Helper --//
 func (m *Form) focusOnIndex(index int) *Form {
 	for _, f := range m.fields {
 		f.Blur()
@@ -174,7 +174,7 @@ func (m *Form) resetErrors() {
 	}
 }
 
-// -- Tea Model Implementation --//
+// - Tea Model Implementation --//
 func (m *Form) Init() tea.Cmd {
 	cmds := make([]tea.Cmd, 0, len(m.fields))
 	for _, f := range m.fields {

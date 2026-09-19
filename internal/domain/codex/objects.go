@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// -- Table --//
+// - Table --//
 /*
 TODO
 LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
@@ -31,7 +31,7 @@ func NewObjectsTable(entries []ObjectEntry) *ObjectsTable {
 	}
 }
 
-// -- Methods --//
+// - Methods --//
 func (o *ObjectsTable) Add(object *objects.Object) {
 	o.Entries = append(o.Entries, ObjectEntry{
 		Timestamp: time.Now().UTC(),
@@ -80,7 +80,7 @@ func (o *ObjectsTable) Summaries() []string {
 	return summaries
 }
 
-// -- Helper --//
+// - Helper --//
 func (o *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error
 

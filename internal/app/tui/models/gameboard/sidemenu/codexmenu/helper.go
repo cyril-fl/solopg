@@ -10,7 +10,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// -- Side panel -- //
+// - Side panel - //
 func makeCodexList(params CodexMenuParams) []list.Item {
 	pages := []*codexMenuItem{
 		newMenuItem(sideMenuItemsParams{
@@ -49,7 +49,7 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 	return items
 }
 
-// -- Getters & Setters -- //
+// - Getters & Setters - //
 // Codex menu
 func (m *codexMenu) getCurrentPage() *codexMenuItem {
 	for _, item := range m.list.Items() {
@@ -89,7 +89,7 @@ func (m *codexMenuItem) toggleShowForm() {
 	m.showForm = !m.showForm
 }
 
-// -- Helper -- //
+// - Helper - //
 func (m *codexMenu) handleKeyEsc(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	currentPage := m.getCurrentPage()
 

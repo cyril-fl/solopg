@@ -8,7 +8,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// -- View -- //
+// - View - //
 func (m *codexMenu) GetMenuView() string {
 	title := lipgloss.NewStyle().Bold(true).Render(t.Localize(m.id))
 	return lipgloss.JoinVertical(
@@ -50,7 +50,7 @@ func (m *codexMenu) GetFooter() []string {
 	return footer
 }
 
-// -- Handlers -- //
+// - Handlers - //
 func (m *codexMenu) HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd {
 	if form := m.GetFormFromCurrentPage(); form != nil {
 		form.Update(msg)

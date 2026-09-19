@@ -12,7 +12,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// -- DiceMenu -- //
+// - DiceMenu - //
 // Menu
 func NewSideMenu(size size.Size, focused bool) *DiceMenu {
 	options := dice.List()

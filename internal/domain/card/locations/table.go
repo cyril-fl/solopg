@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// -- Table --//
+// - Table --//
 type LocationsTable struct {
 	name    string
 	Entries []LocationsEntry
@@ -29,7 +29,7 @@ func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	}
 }
 
-// -- Methods --//
+// - Methods --//
 func (l *LocationsTable) Add(location *Location) {
 	l.Entries = append(l.Entries, LocationsEntry{
 		Timestamp: time.Now().UTC(),
@@ -85,7 +85,7 @@ func (l *LocationsTable) FindEntryByName(name string) *LocationsEntry {
 	return nil
 }
 
-// -- Helper --//
+// - Helper --//
 
 func (l *LocationsTable) assertEntry(values map[string]string) error {
 	var err []error

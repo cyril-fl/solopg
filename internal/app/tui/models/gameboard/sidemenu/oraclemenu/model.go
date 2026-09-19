@@ -12,7 +12,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// -- OracleMenu -- //
+// - OracleMenu - //
 // Menu
 func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 	items := make([]list.Item, 0)

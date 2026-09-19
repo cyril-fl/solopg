@@ -8,7 +8,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// -- Contract - //
+// - Contract - //
 type MenuItem interface {
 	ID() string
 	IsOpen() bool
@@ -29,7 +29,7 @@ type MenuItem interface {
 	HandleDirectionInput(direction direction.Direction)
 }
 
-// -- Context - //
+// - Context - //
 type Context struct {
 	Menu             MenuItem
 	CurrentMenuIndex int
@@ -44,7 +44,7 @@ func (m *Context) IsFirstMenuElement() bool {
 	return m.CurrentMenuIndex == 0
 }
 
-// -- Update - //
+// - Update - //
 type UpdateParams struct {
 	Model    tea.Model
 	Msg      tea.Msg
@@ -52,7 +52,7 @@ type UpdateParams struct {
 	Refresh  tui.RefreshViewFunc
 }
 
-// -- Helper -- //
+// - Helper - //
 func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) direction.Direction {
 	list, newdirection := direction.GetListDirection(metadata.Menu.GetList(), key)
 

@@ -13,7 +13,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// -- Field -- //
+// - Field - //
 type textField[T stringOrInt] struct {
 	field[T]
 	input textinput.Model
@@ -38,7 +38,7 @@ func TextField[T stringOrInt](template TextTemplate[T]) *textField[T] {
 	}
 }
 
-// -- Field Implementation -- //
+// - Field Implementation - //
 func (f *textField[T]) Focus() tea.Cmd {
 	f.focus = true
 	return f.input.Focus()
@@ -78,7 +78,7 @@ func (f *textField[T]) Validate() error {
 	return fmt.Errorf("invalid value type for field %s: expected %T, got %T", f.ID(), f.defaultvalue, f.Value())
 }
 
-// -- Tea Model Implementation -- //
+// - Tea Model Implementation - //
 func (m *textField[T]) Init() tea.Cmd {
 	return textinput.Blink
 }
@@ -127,7 +127,7 @@ func (m *textField[T]) View() tea.View {
 	)
 }
 
-// -- Helper -- //
+// - Helper - //
 type stringOrInt interface {
 	~string | ~int
 }

@@ -47,7 +47,7 @@ func (m model) GetFooter() []string {
 	return append(footer, m.getMenuActiveElement().GetFooter()...)
 }
 
-// -- Viewport -- //
+// - Viewport - //
 func (m *model) refreshViewport(resetPosition bool) {
 	var content string
 
@@ -68,7 +68,7 @@ func (m *model) refreshViewport(resetPosition bool) {
 	}
 }
 
-// -- Helper -- //
+// - Helper - //
 func renderSidePanel(engine *game.Engine, height int, Titles ...string) string {
 	var content strings.Builder
 

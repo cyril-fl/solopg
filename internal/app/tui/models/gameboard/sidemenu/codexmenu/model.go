@@ -13,7 +13,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// -- CodexMenu -- //
+// - CodexMenu - //
 // Menu
 func NewSideMenu(params CodexMenuParams, focused bool) *codexMenu {
 	items := makeCodexList(params)
