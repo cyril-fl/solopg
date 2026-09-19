@@ -9,12 +9,12 @@ import (
 )
 
 type Archives struct {
-	CampaignID id.ID            `bson:"campaignId" json:"campaignId"`
-	Codex      *codex.Codex     `bson:"codex" json:"codex"`
-	Journal    *Journal `bson:"journal" json:"journal"`
-	Log        *Journal `bson:"log" json:"log"`
-	CreatedAt  time.Time        `bson:"createdAt" json:"createdAt"`
-	UpdatedAt  time.Time        `bson:"updatedAt" json:"updatedAt"`
+	CampaignID id.ID        `bson:"campaignId" json:"campaignId"`
+	Codex      *codex.Codex `bson:"codex" json:"codex"`
+	Journal    *Journal     `bson:"journal" json:"journal"`
+	Log        *Journal     `bson:"log" json:"log"`
+	CreatedAt  time.Time    `bson:"createdAt" json:"createdAt"`
+	UpdatedAt  time.Time    `bson:"updatedAt" json:"updatedAt"`
 }
 
 type ArchivesTemplate struct {

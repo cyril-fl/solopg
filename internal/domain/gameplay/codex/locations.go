@@ -51,7 +51,7 @@ func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	tb.Add(location)
 
 	return nil
@@ -119,4 +119,3 @@ func (tb *LocationsTable) formatAssertErrors(err []error) error {
 		errors.Join(err...),
 	)
 }
-	

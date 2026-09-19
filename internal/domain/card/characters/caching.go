@@ -17,47 +17,41 @@ type yamlConfig struct {
 	Description string `yaml:"description"`
 	Rarity      string `yaml:"rarity"`
 	Variety     string `yaml:"variety"`
-	Class      string `yaml:"class"`
-	Race       string `yaml:"race"`
+	Class       string `yaml:"class"`
+	Race        string `yaml:"race"`
 	// Stats       []stats.YamlEffectConfig `yaml:"stats"`
 	// Equipment   []yaml.YamlGearConfig    `yaml:"equipment"`
 	// Inventory   []yaml.YamlObjectConfig  `yaml:"inventory"`
-	Wallet      wallet.Wallet  `yaml:"wallet"`
+	Wallet wallet.Wallet `yaml:"wallet"`
 }
 
 var folderConfigPath = config.Current.Documents.Folders.Characters
 
 var cachedConfig []yamlConfig
 
-func load()  error {
-	folderContents, err := loadFromSource()
+func loadFromSource() error {
+	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return err
+		return t.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
-	errs := []error{}
-	for _, file := range folderContents {
-		if err := loadFromFile(file); err != nil {
-			errs = append(errs, t.NewError("error.locations.load_file", map[string]any{"File": file, "Error": err}))
-			continue
-		}
-	}
-
-	if len(errs) > 0 {
+	if errs := handleLoadFromFiles(files); len(errs) > 0 {
 		return errors.Join(errs...)
 	}
 
 	return nil
 }
 
-func loadFromSource() ([]string, error) {
-	list, err := yaml.GetFilesFromSource(folderConfigPath, true)
-
-	if err != nil {
-		return nil, t.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+func handleLoadFromFiles(files []string) []error {
+	errs := []error{}
+	for _, file := range files {
+		if err := loadFromFile(file); err != nil {
+			errs = append(errs, fmt.Errorf("Error loading armor set from file %s: %v", file, err))
+			continue
+		}
 	}
 
-	return list, nil
+	return errs
 }
 
 func loadFromFile(fileAddress string) error {
@@ -67,8 +61,8 @@ func loadFromFile(fileAddress string) error {
 		return t.NewError("error.locations.load", map[string]any{"Error": err})
 	}
 	/*
-	TODO
-	LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
+		TODO
+		LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
 	*/
 	variety.MakeDefault(params.Variety)
 
@@ -80,8 +74,7 @@ func loadFromFile(fileAddress string) error {
 // - Collection - //
 func List() []Character {
 	if cachedConfig == nil {
-		err := load()
-		if err != nil {
+		if err := loadFromSource(); err != nil {
 			fmt.Printf("Error loading dice: %v\n", err)
 			return nil
 		}
@@ -109,13 +102,13 @@ func newFromYaml(config yamlConfig) *Character {
 		Rarity:      rarity.MakeDefault(config.Rarity),
 		Variety:     variety.MakeDefault(config.Variety),
 		// Stats:       stats.MakeStatsFromYamlConfig(config.Stats),
-		Wallet:      config.Wallet,
+		Wallet: config.Wallet,
 		// Equipment:   equipment.MakeArmorSetFromYamlConfig(config.Equipment),
 		// Inventory:   objects.MakeObjectArrayFromYamlConfig(config.Inventory),
 
-		/* 
-		TODO
-		HIGH implementer class et race 
+		/*
+			TODO
+			HIGH implementer class et race
 		*/
 	})
 

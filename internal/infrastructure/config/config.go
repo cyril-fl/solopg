@@ -7,11 +7,11 @@ import (
 )
 
 type config struct {
-	Name           string         `yaml:"name"`
-	Verbose        bool           `yaml:"verbose"`
-	I18n           t.Config       `yaml:"i18n"`
-	Commands       commands       `yaml:"commands"`
-	Documents 	structureDocument `yaml:"documents"`
+	Name      string            `yaml:"name"`
+	Verbose   bool              `yaml:"verbose"`
+	I18n      t.Config          `yaml:"i18n"`
+	Commands  commands          `yaml:"commands"`
+	Documents structureDocument `yaml:"documents"`
 }
 
 type commands struct {
@@ -32,23 +32,24 @@ type commandParams struct {
 
 type structureDocument struct {
 	Folders structureFolders `yaml:"folders"`
-	Files  structureFiles  `yaml:"files"`
+	Files   structureFiles   `yaml:"files"`
 }
 
 type structureFolders struct {
 	Characters string `yaml:"characters"`
-	Locations string `yaml:"locations"`
-	Oracle string `yaml:"oracle"`
+	Locations  string `yaml:"locations"`
+	Oracle     string `yaml:"oracle"`
 }
 
 type structureFiles struct {
-	Classes string `yaml:"classes"`
-	Dice   string `yaml:"dice"`
+	Classes         string `yaml:"classes"`
+	Dice            string `yaml:"dice"`
 	ObjectsCategory string `yaml:"objects_category"`
-	Races string `yaml:"races"`
-	Rarity string `yaml:"rarity"`
-	Stats  string `yaml:"stats"`
-	Variety string `yaml:"variety"`
+	Races           string `yaml:"races"`
+	Rarity          string `yaml:"rarity"`
+	Slots           string `yaml:"slots"`
+	Stats           string `yaml:"stats"`
+	Variety         string `yaml:"variety"`
 }
 
 type arg struct {

@@ -40,4 +40,3 @@ func New(params Template) (*Location, error) {
 		Effects: params.Effects,
 	}, nil
 }
-

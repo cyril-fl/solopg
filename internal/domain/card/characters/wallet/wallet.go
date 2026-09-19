@@ -1,7 +1,7 @@
 package wallet
 
 type Wallet struct {
-	Gold int `yaml:"gold"`
+	Gold   int `yaml:"gold"`
 	Silver int `yaml:"silver"`
 	Copper int `yaml:"copper"`
 }

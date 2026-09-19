@@ -8,7 +8,7 @@ import (
 // - Codex - //
 type Codex struct {
 	NpcsTable      *NpcsTable
-	BeastsTable  *BeastsTable
+	BeastsTable    *BeastsTable
 	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
 	ObjectifsTable *ObjectivesTable
@@ -17,7 +17,7 @@ type Codex struct {
 func New() *Codex {
 	return &Codex{
 		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
-		BeastsTable:  NewBeastsTable([]BeastEntry{}),
+		BeastsTable:    NewBeastsTable([]BeastEntry{}),
 		LocationsTable: NewLocationsTable([]LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
 		ObjectifsTable: NewObjectivesTable([]ObjectifEntry{}),

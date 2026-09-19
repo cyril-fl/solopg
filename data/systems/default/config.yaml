@@ -39,12 +39,13 @@ commands:
 documents:
   files:
     dice: "data/systems/dice.yaml"
-    objects_category: "data/systems/category.yaml"
+    objects_category: "data/systems/attributes/category.yaml"
     classes: "data/systems/archetypes/class.yaml"
     races: "data/systems/archetypes/races.yaml"
-    rarity: "data/systems/rarirty.yaml"
-    stats: "data/systems/stats.yaml"
-    variety: "data/systems/variety.yaml"
+    rarity: "data/systems/attributes/rarirty.yaml"
+    slots: "data/systems/attributes/slots.yaml"
+    stats: "data/systems/attributes/stats.yaml"
+    variety: "data/systems/attributes/variety.yaml"
   folders:
     characters: "data/template/characters"
     locations: "data/template/locations"

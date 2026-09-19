@@ -2,9 +2,9 @@ package codexmenu
 
 import (
 	"solopg/internal/app/tui"
+	"solopg/internal/domain/card/attributes/objectcategory"
 	"solopg/internal/domain/card/characters/classes"
 	"solopg/internal/domain/card/characters/races"
-	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 	"solopg/internal/platform/form"
 	"solopg/internal/platform/form/field"
@@ -25,7 +25,6 @@ func getNpcForm() *form.Form {
 		classItems = append(classItems, tui.NewItem(i.GetName(), "", i.GetName()))
 	}
 	// classItems = append(classItems, tui.NewItem("None", "", ""))
-
 
 	//
 	return form.NewForm(
@@ -51,12 +50,10 @@ func getBeastForm() *form.Form {
 		raceItems = append(raceItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
 	}
 
-	var classItems []tui.Item[string] 
+	var classItems []tui.Item[string]
 	// TODO
 	// HIGH implementer
 	// classItems = append(classItems, tui.NewItem("None", "", ""))
-
-
 
 	for _, i := range classes.List() {
 		/*
@@ -92,15 +89,14 @@ func getLocationForm() *form.Form {
 func getObjectForm() *form.Form {
 	var categoryItems []tui.Item[string]
 
-	if len(objects.ListCategory()) == 0 {
-		objects.MakeDefault("object")
+	if len(objectcategory.ListCategory()) == 0 {
+		objectcategory.MakeDefault("object")
 	}
 
-	for _, i := range  objects.ListCategory() {
+	for _, i := range objectcategory.ListCategory() {
 		categoryItems = append(categoryItems, tui.NewItem(t.Localize(i.String()), "", i.String()))
 	}
 
-	
 	return form.NewForm(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),

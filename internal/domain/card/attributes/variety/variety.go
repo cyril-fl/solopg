@@ -8,7 +8,7 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Values  []Variety `yaml:"values"`
+	Values []Variety `yaml:"values"`
 }
 
 var fileConfigPath = config.Current.Documents.Files.Variety
@@ -32,14 +32,12 @@ func (c *yamlConfig) addValue(value Variety) {
 	}
 }
 
-
 // - Variety - //
 type Variety string
 
 func List() []Variety {
 	if len(cachedConfig.Values) == 0 {
-		err := loadFromFile()
-		if err != nil {
+		if err := loadFromFile(); err != nil {
 			return nil
 		}
 	}
@@ -53,14 +51,13 @@ func (r Variety) Validate() bool {
 
 func Default() Variety {
 	list := List()
-	
+
 	if len(list) == 0 {
 		return MakeDefault("card")
 	}
 
 	return list[0]
 }
-
 
 func MakeDefault(defaultValue string) Variety {
 	List()

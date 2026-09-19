@@ -10,10 +10,10 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Name     string             `yaml:"name"`
-	Playable bool               `yaml:"playable"`
+	Name     string           `yaml:"name"`
+	Playable bool             `yaml:"playable"`
 	Bonus    []stats.Modifier `yaml:"bonus"`
-	ArmorSet string             `yaml:"armor_set"`
+	ArmorSet string           `yaml:"armor_set"`
 }
 
 var filePath = config.Current.Documents.Files.Classes
@@ -33,10 +33,10 @@ func loadFromFile() error {
 
 // - Class - //
 type Class struct {
-	name     string             `yaml:"name"`
-	playable bool               `yaml:"playable"`
+	name     string           `yaml:"name"`
+	playable bool             `yaml:"playable"`
 	bonus    []stats.Modifier `yaml:"bonus"`
-	armorSet string             `yaml:"armor_set"`
+	equipementName string           `yaml:"armor_set"`
 }
 
 func new(config yamlConfig) Class {
@@ -44,7 +44,7 @@ func new(config yamlConfig) Class {
 		name:     config.Name,
 		playable: config.Playable,
 		bonus:    config.Bonus,
-		armorSet: config.ArmorSet,
+		equipementName: config.ArmorSet,
 	}
 }
 
@@ -60,8 +60,8 @@ func (c Class) GetBonus() []stats.Modifier {
 	return c.bonus
 }
 
-func (c Class) GetArmorSet() string {
-	return c.armorSet
+func (c Class) GetEquipementName() string {
+	return c.equipementName
 }
 
 func Assert(provided string) bool {

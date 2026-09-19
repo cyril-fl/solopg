@@ -2,6 +2,7 @@ package codex
 
 import (
 	"fmt"
+	"solopg/internal/domain/card/attributes/objectcategory"
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/objects"
@@ -50,7 +51,7 @@ func (o *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 
 		Rarity:   rarity.Default(),
 		Variety:  variety.AssertWithDefault(values["variety"]),
-		Category: objects.AssertWithDefault(values["category"]),
+		Category: objectcategory.AssertWithDefault(values["category"]),
 		// ___
 	})
 

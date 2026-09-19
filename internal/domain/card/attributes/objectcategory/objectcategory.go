@@ -1,4 +1,4 @@
-package objects
+package objectcategory
 
 import (
 	"slices"
@@ -8,7 +8,7 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Values  []Category `yaml:"values"`
+	Values []Category `yaml:"values"`
 }
 
 var fileConfigPath = config.Current.Documents.Files.ObjectsCategory

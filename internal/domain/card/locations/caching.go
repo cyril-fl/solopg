@@ -13,10 +13,10 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-	Rarity      string `yaml:"rarity"`
-	Variety     string `yaml:"variety"`
+	Name        string                   `yaml:"name"`
+	Description string                   `yaml:"description"`
+	Rarity      string                   `yaml:"rarity"`
+	Variety     string                   `yaml:"variety"`
 	Effects     []stats.YamlEffectConfig `yaml:"effects"`
 }
 
@@ -24,7 +24,7 @@ var folderConfigPath = config.Current.Documents.Folders.Locations
 
 var cachedConfig []yamlConfig
 
-func load()  error {
+func load() error {
 	folderContents, err := loadFromFolder()
 	if err != nil {
 		return err
@@ -64,8 +64,8 @@ func loadFromFile(fileAddress string) error {
 		return t.NewError("error.locations.load", map[string]any{"Error": err})
 	}
 	/*
-	TODO
-	LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
+		TODO
+		LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
 	*/
 	variety.MakeDefault(params.Variety)
 

@@ -1,9 +1,10 @@
+set: adventurer
 name: Adventurer's sword
 description: A sharp blade for combat from the adventurer's set.
 rarity: E
 variety: equipment_card
 category: weapon
-attributes: 
+potency: 
   attack: 1
   defense: 0
 effects:

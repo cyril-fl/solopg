@@ -81,8 +81,8 @@ func GetFilesFromSource(folderPath string, recursive bool) ([]string, error) {
 
 		if !recursive {
 			continue
-		} 
-		
+		}
+
 		dirFiles, err := GetFilesFromSource(path, true)
 		if err != nil {
 			return files, err
@@ -93,7 +93,6 @@ func GetFilesFromSource(folderPath string, recursive bool) ([]string, error) {
 
 	return files, nil
 }
-
 
 func LoadFromFile[T any](fileAddress string) (*T, error) {
 	var params T

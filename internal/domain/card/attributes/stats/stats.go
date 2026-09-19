@@ -3,8 +3,7 @@ package stats
 import (
 	"fmt"
 	"slices"
-
-	"solopg/internal/domain/card/attributes"
+	"solopg/internal/domain/card/attributes/description"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"
 )
@@ -41,7 +40,7 @@ type Modifier struct {
 }
 
 type Effect struct {
-	attributes.Description
+	description.Description
 	Modifier Modifier
 }
 
@@ -99,17 +98,16 @@ func (s Stat) Validate() bool {
 	return slices.Contains(List(), s)
 }
 
-
 func (m Modifier) String() string {
 	return fmt.Sprintf("%s: %d", m.Stat, m.Value)
 }
 
 // - Helpers - //
 type YamlEffectConfig struct {
-	Description YamlDescriptionConfig   `yaml:"description"`
-	Modifier    YamlModifierConfig      `yaml:"modifier"`
+	Description YamlDescriptionConfig `yaml:"description"`
+	Modifier    YamlModifierConfig    `yaml:"modifier"`
 }
- 
+
 type YamlDescriptionConfig struct {
 	Name        string `yaml:"name"`
 	Description string `yaml:"description"`
@@ -131,10 +129,9 @@ func MakeEffectFromYamlConfigArray(yamlConfigs []YamlEffectConfig) []Effect {
 	return effects
 }
 
-
 func MakeEffectFromYamlConfig(yamlConfig YamlEffectConfig) Effect {
 	return Effect{
-		Description: attributes.Description{
+		Description: description.Description{
 			Name:        yamlConfig.Description.Name,
 			Description: yamlConfig.Description.Description,
 		},

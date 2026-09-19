@@ -49,7 +49,7 @@ func List() []Rarity {
 
 func Default() Rarity {
 	if cachedConfig.Default == "" {
-		if err := loadFromFile(); err != nil || !cachedConfig.Default.Validate()  {
+		if err := loadFromFile(); err != nil || !cachedConfig.Default.Validate() {
 			return MakeDefault("")
 		}
 	}

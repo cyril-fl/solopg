@@ -10,11 +10,11 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Name     string             `yaml:"name"`
-	Playable bool               `yaml:"playable"`
-	Beast    bool               `yaml:"beast"`
+	Name     string `yaml:"name"`
+	Playable bool   `yaml:"playable"`
+	Beast    bool   `yaml:"beast"`
 	// TODO verrifeir pour location si ce serait pas mieux quun yaml bricoler
-	Bonus    []stats.Modifier   `yaml:"bonus"`
+	Bonus []stats.Modifier `yaml:"bonus"`
 }
 
 var filePath = config.Current.Documents.Files.Races
@@ -36,7 +36,7 @@ func loadFromFile() error {
 type Race struct {
 	name     string
 	playable bool
-	beast  bool
+	beast    bool
 	bonus    []stats.Modifier
 }
 
@@ -66,7 +66,7 @@ func (r Race) GetBonus() []stats.Modifier {
 }
 
 func Assert(provided string) bool {
-	return provided != ""  || slices.Contains(ListNames(), provided) 
+	return provided != "" || slices.Contains(ListNames(), provided)
 }
 
 // - Collection - //
@@ -96,7 +96,6 @@ func FindByName(name string) *Race {
 	}
 	return nil
 }
-
 
 func makeSet(configs []yamlConfig) []Race {
 	result := make([]Race, 0, len(configs))

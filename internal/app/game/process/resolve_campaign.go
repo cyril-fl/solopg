@@ -6,9 +6,9 @@ import (
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/characters"
-	"solopg/internal/domain/card/characters/equipment"
 	"solopg/internal/domain/card/characters/wallet"
 	"solopg/internal/domain/card/objects"
+	"solopg/internal/domain/card/objects/equipment"
 	"solopg/internal/infrastructure/t"
 )
 
@@ -53,7 +53,7 @@ func generateCharacter(ctx *tui.Context) (*characters.Character, error) {
 		Class:     ctx.SelectedClass.GetName(),
 		Rarity:    rarity.Default(),
 		Stats:     getStatsFromContext(ctx),
-		Equipment: getArmorSetFromContext(ctx),
+		Equipment: getEquipementFromContext(ctx),
 		Inventory: []objects.Object{},
 		Wallet:    wallet.Wallet{},
 	})
@@ -65,14 +65,11 @@ func generateCharacter(ctx *tui.Context) (*characters.Character, error) {
 	return player, nil
 }
 
-func getArmorSetFromContext(ctx *tui.Context) equipment.ArmorSet {
-	setName := ctx.SelectedClass.GetArmorSet()
+func getEquipementFromContext(ctx *tui.Context) equipment.Equipment {
+	name := ctx.SelectedClass.GetEquipementName()
+	set := equipment.FindEquipementByName(name)
 
-	set := equipment.FindArmorSetByName(setName)
-
-	armorSet := equipment.NewArmorSet(set)
-
-	return armorSet
+	return equipment.NewSet(set)
 }
 
 func getStatsFromContext(ctx *tui.Context) stats.Stats {
