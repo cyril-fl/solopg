@@ -3,9 +3,8 @@ package tui
 import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/attributes/stats"
-	"solopg/internal/domain/card/characters/archetypes/classes"
-	"solopg/internal/domain/card/characters/archetypes/races"
-
+	"solopg/internal/domain/card/characters/classes"
+	"solopg/internal/domain/card/characters/races"
 	"solopg/internal/domain/card/locations"
 	"solopg/types/step"
 

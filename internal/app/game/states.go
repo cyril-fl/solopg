@@ -4,8 +4,7 @@ import (
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/characters"
 	"solopg/internal/domain/card/locations"
-	"solopg/internal/domain/codex"
-	"solopg/internal/domain/journal"
+	"solopg/internal/domain/gameplay/codex"
 	"time"
 )
 
@@ -13,8 +12,8 @@ type State struct {
 	Player          *characters.Character
 	CurrentLocation *locations.Location
 	Codex           *codex.Codex
-	Journal         *journal.Journal
-	Log             *journal.Journal
+	Journal         *campaign.Journal
+	Log             *campaign.Journal
 	Metadata        Metadata
 }
 type Metadata struct {

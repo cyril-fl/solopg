@@ -3,7 +3,7 @@ package codexmenu
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/app/tui/models/gameboard/sidemenu"
-	"solopg/internal/domain/codex"
+	"solopg/internal/domain/gameplay/codex"
 	"solopg/internal/platform/form"
 
 	"solopg/types/direction"

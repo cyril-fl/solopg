@@ -3,6 +3,7 @@ package stats
 import (
 	"fmt"
 	"slices"
+
 	"solopg/internal/domain/card/attributes"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"

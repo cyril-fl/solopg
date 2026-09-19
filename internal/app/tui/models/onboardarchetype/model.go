@@ -2,7 +2,7 @@ package onboardarchetype
 
 import (
 	"solopg/internal/app/tui"
-	"solopg/internal/domain/card/characters/archetypes"
+	"solopg/internal/domain/card/attributes/archetypes"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

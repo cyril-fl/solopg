@@ -2,8 +2,7 @@ package process
 
 import (
 	"solopg/internal/domain/campaign"
-	"solopg/internal/domain/codex"
-	"solopg/internal/domain/journal"
+	"solopg/internal/domain/gameplay/codex"
 	"solopg/internal/infrastructure/mongo"
 	"solopg/types/id"
 )
@@ -21,8 +20,8 @@ func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaig
 		archives = campaign.NewArchives(campaign.ArchivesTemplate{
 			CampaignID: campaignID,
 			Codex:      codex.New(),
-			Journal:    journal.New([]journal.Entry{}),
-			Log:        journal.New([]journal.Entry{}),
+			Journal:    campaign.NewJournal([]campaign.Entry{}),
+			Log:        campaign.NewJournal([]campaign.Entry{}),
 		})
 	}
 

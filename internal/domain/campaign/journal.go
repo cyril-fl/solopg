@@ -1,4 +1,4 @@
-package journal
+package campaign
 
 import (
 	"solopg/types/id"
@@ -16,7 +16,7 @@ type Entry struct {
 	Timestamp time.Time
 }
 
-func New(entries []Entry) *Journal {
+func NewJournal(entries []Entry) *Journal {
 	return &Journal{
 		Entries: entries,
 	}
@@ -24,7 +24,7 @@ func New(entries []Entry) *Journal {
 
 func (j *Journal) EnsureInitialized() *Journal {
 	if j == nil {
-		return New([]Entry{})
+		return NewJournal([]Entry{})
 	}
 
 	if j.Entries == nil {

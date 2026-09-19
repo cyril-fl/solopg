@@ -1,4 +1,4 @@
-package characters
+package equipment
 
 import (
 	"fmt"
@@ -46,41 +46,10 @@ func NewArmorSet(set []*gears.Gear) ArmorSet {
 
 	return armorSet
 }
-
-func (character *Character) EquipGearList(gear []*gears.Gear) {
-	if character == nil || gear == nil {
-		return
-	}
-
-	armorSet := NewArmorSet(gear)
-
-	character.Equipment = armorSet
-}
-
-func (character *Character) EquipGear(gear *gears.Gear) {
-	if character == nil || gear == nil {
-		return
-	}
-
-	switch gear.Slot {
-	case gears.Helmet:
-		character.Equipment.Helmet = gear
-	case gears.Chestplate:
-		character.Equipment.Chestplate = gear
-	case gears.Gauntlets:
-		character.Equipment.Gauntlets = gear
-	case gears.Greaves:
-		character.Equipment.Greaves = gear
-	case gears.Boots:
-		character.Equipment.Boots = gear
-	case gears.RightHand:
-		character.Equipment.RightHand = gear
-	case gears.LeftHand:
-		character.Equipment.LeftHand = gear
-	default:
-		fmt.Printf("Invalid equipment slot: %s\n", gear.Slot)
-	}
-}
+/*
+TODO
+MEDIUM refactor avec cache
+*/
 
 const armorSetFilePath = "data/template/armor_sets"
 

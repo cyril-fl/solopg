@@ -2,8 +2,8 @@ package codexmenu
 
 import (
 	"solopg/internal/app/tui"
-	"solopg/internal/domain/card/characters/archetypes/classes"
-	"solopg/internal/domain/card/characters/archetypes/races"
+	"solopg/internal/domain/card/characters/classes"
+	"solopg/internal/domain/card/characters/races"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 	"solopg/internal/platform/form"

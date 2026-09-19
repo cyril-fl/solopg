@@ -1,8 +1,7 @@
 package campaign
 
 import (
-	"solopg/internal/domain/codex"
-	"solopg/internal/domain/journal"
+	"solopg/internal/domain/gameplay/codex"
 	"solopg/types/id"
 	"time"
 
@@ -12,8 +11,8 @@ import (
 type Archives struct {
 	CampaignID id.ID            `bson:"campaignId" json:"campaignId"`
 	Codex      *codex.Codex     `bson:"codex" json:"codex"`
-	Journal    *journal.Journal `bson:"journal" json:"journal"`
-	Log        *journal.Journal `bson:"log" json:"log"`
+	Journal    *Journal `bson:"journal" json:"journal"`
+	Log        *Journal `bson:"log" json:"log"`
 	CreatedAt  time.Time        `bson:"createdAt" json:"createdAt"`
 	UpdatedAt  time.Time        `bson:"updatedAt" json:"updatedAt"`
 }
@@ -21,8 +20,8 @@ type Archives struct {
 type ArchivesTemplate struct {
 	CampaignID id.ID
 	Codex      *codex.Codex
-	Journal    *journal.Journal
-	Log        *journal.Journal
+	Journal    *Journal
+	Log        *Journal
 }
 
 func NewArchives(params ArchivesTemplate) *Archives {

@@ -1,4 +1,4 @@
-package characters
+package wallet
 
 type Wallet struct {
 	Gold   int

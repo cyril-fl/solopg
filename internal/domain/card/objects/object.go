@@ -35,12 +35,8 @@ func New(params Template) (*Object, error) {
 		Variety:     params.Variety,
 	})
 
-	if err != nil {
-		return nil, err
-	}
-
 	if newCard == nil {
-		return nil, fmt.Errorf("failed to create new card for item")
+		return nil, fmt.Errorf("failed to create new card for item %s: %v", params.Name, err)
 	}
 
 	// if newCard.Variety != attributes.ArticleCard && newCard.Variety != attributes.EquipmentCard {
