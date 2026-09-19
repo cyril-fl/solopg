@@ -1,11 +1,11 @@
 package app
 
 import (
-	"solopg/internal/domain/card/attributes/variety"
+	"fmt"
+	"solopg/internal/domain/card/characters/classes"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/mongo"
 	"solopg/internal/infrastructure/t"
-	"solopg/internal/platform/log"
 )
 
 func Start() error {
@@ -25,7 +25,17 @@ func Start() error {
 
 func Try() error {
 
-	log.ParseJson(variety.List())
+	classe := classes.List()
+	for _, race := range classe {
+		fmt.Printf("Race: %s, Playable: %t, Beast: %t, Bonus: %+v\n, Armor Set: %s", race.GetName(), race.IsPlayable(), race.GetBonus(), race.GetArmorSet())
+	}
+
+	// println("Try", config.Current.Documents.Folders.Characters)
+	// list, err := yaml.GetFilesFromSource(config.Current.Documents.Folders.Characters, true)
+	// if err != nil {
+	// 	return err
+	// }
+	// log.ParseJson(list)
 
 	return nil
 }

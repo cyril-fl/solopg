@@ -14,17 +14,17 @@ type yamlConfig struct {
 	Sides int    `yaml:"sides"`
 }
 
-var fileConfigPath = config.Current.StructureFiles.Dice
+var fileConfigPath = config.Current.Documents.Files.Dice
 
 var cachedConfig []yamlConfig
 
 func loadFromFile() error {
-	paramslist, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
+	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
 		return fmt.Errorf("failed to load dice from file: %w", err)
 	}
 
-	cachedConfig = paramslist
+	cachedConfig = params
 
 	return nil
 }
@@ -60,8 +60,7 @@ func (d Dice) Roll() int {
 // - Collection - //
 func List() []Dice {
 	if cachedConfig == nil {
-		err := loadFromFile()
-		if err != nil {
+		if err := loadFromFile(); err != nil {
 			fmt.Printf("Error loading dice: %v\n", err)
 			return nil
 		}

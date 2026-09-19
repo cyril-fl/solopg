@@ -3,6 +3,7 @@ package yaml
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -63,6 +64,36 @@ func GetFolderFiles(folderPath string) ([]string, error) {
 func GetFolderDirectories(folderPath string) ([]string, error) {
 	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
 }
+
+func GetFilesFromSource(folderPath string, recursive bool) ([]string, error) {
+	entries, err := os.ReadDir(folderPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var files []string
+	for _, entry := range entries {
+		path := filepath.Join(folderPath, entry.Name())
+		if !entry.IsDir() {
+			files = append(files, path)
+			continue
+		}
+
+		if !recursive {
+			continue
+		} 
+		
+		dirFiles, err := GetFilesFromSource(path, true)
+		if err != nil {
+			return files, err
+		}
+
+		files = append(files, dirFiles...)
+	}
+
+	return files, nil
+}
+
 
 func LoadFromFile[T any](fileAddress string) (*T, error) {
 	var params T

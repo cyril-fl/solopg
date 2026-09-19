@@ -13,7 +13,6 @@ import (
 	"solopg/internal/domain/card/characters/wallet"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/domain/card/objects/gears"
-	"solopg/internal/infrastructure/yaml"
 )
 
 type Character struct {
@@ -32,6 +31,7 @@ type Template struct {
 	Name        string
 	Description string
 	Rarity      rarity.Rarity
+	Variety     variety.Variety
 	Class       string
 	Race        string
 	Stats       stats.Stats
@@ -41,23 +41,27 @@ type Template struct {
 }
 
 func New(params Template) (*Character, error) {
+	if !params.Variety.Validate() {
+		params.Variety = variety.MakeDefault("character_card")
+	}
+
 	// Check Card
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,
 		Description: params.Description,
 		Rarity:      params.Rarity,
-		Variety:     variety.MakeDefault("character_card"),
+		Variety:     params.Variety,
 	})
 
 	if newCard == nil {
 		return nil, fmt.Errorf("failed to create new card for character %s: %v", params.Name, err)
 	}
 
-	if params.Class != "" && !slices.Contains(classes.ListNames(), params.Class) {
+	if !classes.Assert(params.Class) {
 		return nil, fmt.Errorf("invalid class for character: %s", params.Class)
 	}
 
-	// Check Race
+	// // Check Race
 	if !slices.Contains(races.ListNames(), params.Race) {
 		return nil, fmt.Errorf("invalid race for character: %s", params.Race)
 	}
@@ -106,19 +110,4 @@ func (character *Character) EquipGear(gear *gears.Gear) {
 	default:
 		fmt.Printf("Invalid equipment slot: %s\n", gear.Slot)
 	}
-}
-
-
-/*
-TODO
-MEDIUM refactor avec cache
-*/
-
-func FromFile(fileAddress string) (*Character, error) {
-	params, err := yaml.LoadFromFile[Template](fileAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	return New(*params)
 }

@@ -36,11 +36,16 @@ commands:
   version: 
     use: "version"
     short: "Display the version of SoloPG"
-structure_files:
-  dice: "data/systems/dice.yaml"
-  objects_category: "data/systems/category.yaml"
-  oracle: "data/template/systems/rules/oracles"
-  locations: "data/template/locations"
-  rarity: "data/systems/rarirty.yaml"
-  stats: "data/systems/stats.yaml"
-  variety: "data/systems/variety.yaml"
+documents:
+  files:
+    dice: "data/systems/dice.yaml"
+    objects_category: "data/systems/category.yaml"
+    classes: "data/systems/archetypes/class.yaml"
+    races: "data/systems/archetypes/races.yaml"
+    rarity: "data/systems/rarirty.yaml"
+    stats: "data/systems/stats.yaml"
+    variety: "data/systems/variety.yaml"
+  folders:
+    characters: "data/template/characters"
+    locations: "data/template/locations"
+    oracle: "data/template/rules/oracles"

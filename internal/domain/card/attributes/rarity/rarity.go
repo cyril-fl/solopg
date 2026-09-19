@@ -12,7 +12,7 @@ type yamlConfig struct {
 	Default Rarity   `yaml:"default"`
 }
 
-var fileConfigPath = config.Current.StructureFiles.Rarity
+var fileConfigPath = config.Current.Documents.Files.Rarity
 
 var cachedConfig yamlConfig
 

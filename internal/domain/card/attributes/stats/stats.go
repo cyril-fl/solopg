@@ -15,7 +15,7 @@ type yamlStatsConfig struct {
 	BaseStats Stats  `yaml:"baseStats"`
 }
 
-var fileConfigPath = config.Current.StructureFiles.Stats
+var fileConfigPath = config.Current.Documents.Files.Stats
 
 var cachedConfig *yamlStatsConfig
 

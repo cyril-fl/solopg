@@ -11,7 +11,7 @@ type config struct {
 	Verbose        bool           `yaml:"verbose"`
 	I18n           t.Config       `yaml:"i18n"`
 	Commands       commands       `yaml:"commands"`
-	StructureFiles structureFiles `yaml:"structure_files"`
+	Documents 	structureDocument `yaml:"documents"`
 }
 
 type commands struct {
@@ -30,11 +30,22 @@ type commandParams struct {
 	Args    []arg  `yaml:"args"`
 }
 
+type structureDocument struct {
+	Folders structureFolders `yaml:"folders"`
+	Files  structureFiles  `yaml:"files"`
+}
+
+type structureFolders struct {
+	Characters string `yaml:"characters"`
+	Locations string `yaml:"locations"`
+	Oracle string `yaml:"oracle"`
+}
+
 type structureFiles struct {
+	Classes string `yaml:"classes"`
 	Dice   string `yaml:"dice"`
 	ObjectsCategory string `yaml:"objects_category"`
-	Oracle string `yaml:"oracle"`
-	Locations string `yaml:"locations"`
+	Races string `yaml:"races"`
 	Rarity string `yaml:"rarity"`
 	Stats  string `yaml:"stats"`
 	Variety string `yaml:"variety"`
@@ -56,7 +67,7 @@ func init() {
 }
 
 func Load() (*config, error) {
-	current, err := yaml.LoadFromFile[config]("data/systems/config/default.yaml")
+	current, err := yaml.LoadFromFile[config]("data/systems/default/config.yaml")
 	if err != nil {
 		return nil, err
 	}

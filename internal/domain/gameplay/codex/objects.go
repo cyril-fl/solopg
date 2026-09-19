@@ -92,7 +92,7 @@ func (o *ObjectsTable) assertEntry(entry map[string]string) error {
 	}
 	/*
 		TODO
-		MEDIUM quand tout sera fix ajouter ces champs dans le form
+		HIGH quand tout sera fix ajouter ces champs dans le form
 	*/
 	// if entry["rarity"] == "" {
 	// 	err = append(err, fmt.Errorf("rarity is required"))

@@ -11,7 +11,7 @@ type yamlConfig struct {
 	Values  []Variety `yaml:"values"`
 }
 
-var fileConfigPath = config.Current.StructureFiles.Variety
+var fileConfigPath = config.Current.Documents.Files.Variety
 
 var cachedConfig yamlConfig
 

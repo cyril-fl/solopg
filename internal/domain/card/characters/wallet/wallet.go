@@ -1,9 +1,9 @@
 package wallet
 
 type Wallet struct {
-	Gold   int
-	Silver int
-	Copper int
+	Gold int `yaml:"gold"`
+	Silver int `yaml:"silver"`
+	Copper int `yaml:"copper"`
 }
 
 func NewWallet(gold, silver, copper int) Wallet {

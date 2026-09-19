@@ -1,61 +1,83 @@
 package classes
 
 import (
+	"fmt"
+	"slices"
 	"solopg/internal/domain/card/attributes/stats"
+	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"
 )
 
-type Class struct {
+// - Configuration & caching - //
+type yamlConfig struct {
 	Name     string             `yaml:"name"`
 	Playable bool               `yaml:"playable"`
 	Bonus    []stats.Modifier `yaml:"bonus"`
 	ArmorSet string             `yaml:"armor_set"`
 }
 
-const classConfigFilePath = "data/systems/archetypes/class.yaml"
+var filePath = config.Current.Documents.Files.Classes
 
-/*
-TODO
-MEDIUM optimiser class / races / ect avec des caches. Prendre exemple sur domain/gameplay/dice.go pour le cache et le load du fichier YAML
-TODO
-MEDIUM retirer les getter inutiles car les class sont exporter pour YAML ou faire un wrapper avec
+var cachedConfig []yamlConfig
 
-	type YAMLClassConfig struct {
-		Name     string             `yaml:"name"`
-		Playable bool               `yaml:"playable"`
-		Bonus    []effects.Modifier `yaml:"bonus"`
-		ArmorSet string             `yaml:"armor_set"`
+func loadFromFile() error {
+	params, err := yaml.LoadListFromFile[yamlConfig](filePath)
+	if err != nil {
+		return fmt.Errorf("failed to load races from file: %w", err)
 	}
 
-	type Class struct {
-		name     string             `yaml:"name"`
-		playable bool               `yaml:"playable"`
-		bonus    []effects.Modifier `yaml:"bonus"`
-		armorSet string             `yaml:"armor_set"`
+	cachedConfig = params
+
+	return nil
+}
+
+// - Class - //
+type Class struct {
+	name     string             `yaml:"name"`
+	playable bool               `yaml:"playable"`
+	bonus    []stats.Modifier `yaml:"bonus"`
+	armorSet string             `yaml:"armor_set"`
+}
+
+func new(config yamlConfig) Class {
+	return Class{
+		name:     config.Name,
+		playable: config.Playable,
+		bonus:    config.Bonus,
+		armorSet: config.ArmorSet,
 	}
-*/
+}
+
 func (c Class) GetName() string {
-	return c.Name
+	return c.name
 }
 
 func (c Class) IsPlayable() bool {
-	return c.Playable
+	return c.playable
 }
 
 func (c Class) GetBonus() []stats.Modifier {
-	return c.Bonus
+	return c.bonus
 }
 
 func (c Class) GetArmorSet() string {
-	return c.ArmorSet
+	return c.armorSet
 }
 
+func Assert(provided string) bool {
+	return provided == "" || slices.Contains(ListNames(), provided)
+}
+
+// - Collection - //
 func List() []Class {
-	list, err := yaml.LoadListFromFile[Class](classConfigFilePath)
-	if err != nil {
-		return nil
+	if cachedConfig == nil {
+		if err := loadFromFile(); err != nil {
+			fmt.Printf("Error loading classes: %v\n", err)
+			return nil
+		}
 	}
-	return list
+
+	return makeSet(cachedConfig)
 }
 
 func ListNames() []string {
@@ -73,4 +95,14 @@ func FindByName(name string) *Class {
 		}
 	}
 	return nil
+}
+
+func makeSet(configs []yamlConfig) []Class {
+	result := make([]Class, 0, len(configs))
+
+	for _, config := range configs {
+		result = append(result, new(config))
+	}
+
+	return result
 }

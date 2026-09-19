@@ -11,7 +11,7 @@ type yamlConfig struct {
 	Values  []Category `yaml:"values"`
 }
 
-var fileConfigPath = config.Current.StructureFiles.ObjectsCategory
+var fileConfigPath = config.Current.Documents.Files.ObjectsCategory
 
 var cachedConfig yamlConfig
 

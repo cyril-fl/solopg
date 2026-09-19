@@ -32,7 +32,7 @@ type Result[T any] struct {
 	Result   T    `yaml:"result"`
 }
 
-var folderConfigPath = config.Current.StructureFiles.Oracle
+var folderConfigPath = config.Current.Documents.Folders.Oracle
 
 var cachedConfig []yamlConfig
 
