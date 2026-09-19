@@ -12,7 +12,7 @@ import (
 
 /*
 REFACTOR
-MEDIUM getNpcForm && getMonsterForm
+MEDIUM getNpcForm && getBeastForm
 */
 func getNpcForm() *form.Form {
 	var raceItems []tui.Item[string]
@@ -36,14 +36,14 @@ func getNpcForm() *form.Form {
 
 /*
 REFACTOR
-MEDIUM getMonsterForm && getNpcForm
+MEDIUM getBeastForm && getNpcForm
 
-faire en sorte de n'ajouter que les classe de monstre ! pas les autres...
+faire en sorte de n'ajouter que les classe de betes ! pas les autres...
 */
-func getMonsterForm() *form.Form {
+func getBeastForm() *form.Form {
 	var raceItems []tui.Item[string]
 	for _, i := range races.List() {
-		if !i.IsMonster() {
+		if !i.IsBeast() {
 			continue
 		}
 		raceItems = append(raceItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
@@ -55,7 +55,7 @@ func getMonsterForm() *form.Form {
 	for _, i := range classes.List() {
 		/*
 			REFACTOR
-			MEDIUM faire en sorte d'adpter le isMonster de Race a cette sauce pour pour le sortir et l'appler comme attribues.A et ne plus laisser le choix, ou alors de faire en sorte qu'il n'y ai plusieur classe avec isMosnster true comme
+			MEDIUM faire en sorte d'adpter le isBeast de Race a cette sauce pour pour le sortir et l'appler comme attribues.A et ne plus laisser le choix, ou alors de faire en sorte qu'il n'y ai plusieur classe avec isMosnster true comme
 			- Humanoid
 			- Wyvern
 			- Beast
@@ -64,7 +64,7 @@ func getMonsterForm() *form.Form {
 
 			bien que s'a s'appenrente pas a une Class mais a des genre ./ race
 
-			regarder la conv avec GPT, et resumer, class pas obigatoire en somme. is monster devrais peu etre changer
+			regarder la conv avec GPT, et resumer, class pas obigatoire en somme. is beast devrais peu etre changer
 		*/
 		classItems = append(classItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
 	}
@@ -99,12 +99,6 @@ func getObjectForm() *form.Form {
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 		field.SelectField(field.SelectTemplate[string]{ID: "category", Label: "field.category", Options: categoryItems, Validator: nil, Required: true}),
-
-		/*
-			TODO
-			HIGH fix en meme temps que le data driven
-		*/
-		// field.SelectField(field.SelectTemplate[string]{ID: "category", Label: "field.category", Options: []tui.Item[string]{}, Validator: nil, Required: true}),
 	).Focus()
 }
 

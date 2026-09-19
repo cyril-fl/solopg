@@ -24,9 +24,9 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 			form:  getNpcForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.monsters",
-			table: params.Codex.MonstersTable,
-			form:  getMonsterForm,
+			id:    "codex.beasts",
+			table: params.Codex.BeastsTable,
+			form:  getBeastForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id:    "codex.objects",

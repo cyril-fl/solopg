@@ -69,8 +69,8 @@ error.unknown_class:
   other: "Unknown class: {{.Class}}"
 error.unknown_race:
   other: "Unknown race: {{.Race}}"
-error.non_monster_race:
-  other: "Race is not a monster race: {{.Race}}"
+error.non_beast_race:
+  other: "Race is not a beast race: {{.Race}}"
 error.unknown_codex:
   other: "Unknown Codex type: {{.Kind}}"
 codex.empty:
@@ -99,8 +99,8 @@ stat.social:
   other: Social
 codex.npcs:
   other: NPCs
-codex.monsters:
-  other: Monsters
+codex.beasts:
+  other: Beasts
 codex.locations:
   other: Locations
 codex.objects:
@@ -119,8 +119,8 @@ oracle.very_unlikly:
   other: Very unlikely
 codex.unknown_npc:
   other: Unknown NPC
-codex.unknown_monster:
-  other: Unknown monster
+codex.unknown_beast:
+  other: Unknown beast
 codex.unknown_location:
   other: Unknown location
 codex.unknown_object:

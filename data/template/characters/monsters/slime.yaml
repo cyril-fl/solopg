@@ -2,7 +2,7 @@ name: Slime
 description: A small, gelatinous creature that oozes around and attacks anything in its path.
 rarity: A
 variety: character_card
-class: Monster
+class: Beast
 race: Slime
 stats:
   health: 3

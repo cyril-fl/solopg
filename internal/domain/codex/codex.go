@@ -8,7 +8,7 @@ import (
 // -- Codex -- //
 type Codex struct {
 	NpcsTable      *NpcsTable
-	MonstersTable  *MonstersTable
+	BeastsTable  *BeastsTable
 	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
 	ObjectifsTable *ObjectivesTable
@@ -17,7 +17,7 @@ type Codex struct {
 func New() *Codex {
 	return &Codex{
 		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
-		MonstersTable:  NewMonstersTable([]MonsterEntry{}),
+		BeastsTable:  NewBeastsTable([]BeastEntry{}),
 		LocationsTable: NewLocationsTable([]LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
 		ObjectifsTable: NewObjectivesTable([]ObjectifEntry{}),
@@ -29,8 +29,8 @@ func (c *Codex) EnsureInitialized() *Codex {
 	if c.NpcsTable == nil {
 		c.NpcsTable = NewNpcsTable(nil)
 	}
-	if c.MonstersTable == nil {
-		c.MonstersTable = NewMonstersTable(nil)
+	if c.BeastsTable == nil {
+		c.BeastsTable = NewBeastsTable(nil)
 	}
 	if c.LocationsTable == nil {
 		c.LocationsTable = NewLocationsTable(nil)
@@ -43,7 +43,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 	}
 
 	c.NpcsTable.ensure()
-	c.MonstersTable.ensure()
+	c.BeastsTable.ensure()
 	c.LocationsTable.ensure()
 	c.ObjectsTable.ensure()
 	c.ObjectifsTable.ensure()

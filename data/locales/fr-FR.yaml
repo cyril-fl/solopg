@@ -76,8 +76,8 @@ stat.social:
   other: Social
 codex.npcs:
   other: PNJ
-codex.monsters:
-  other: Monstres
+codex.beasts:
+  other: Bêtes
 codex.locations:
   other: Lieux
 codex.objects:
@@ -96,8 +96,8 @@ oracle.very_unlikly:
   other: Très improbable
 codex.unknown_npc:
   other: PNJ inconnu
-codex.unknown_monster:
-  other: Monstre inconnu
+codex.unknown_beast:
+  other: Bête inconnu
 codex.unknown_location:
   other: Lieu inconnu
 codex.unknown_object:
@@ -120,8 +120,8 @@ error.unknown_class:
   other: "Classe inconnue : {{.Class}}"
 error.unknown_race:
   other: "Race inconnue : {{.Race}}"
-error.non_monster_race:
-  other: "La race n'est pas une race de monstre : {{.Race}}"
+error.non_beast_race:
+  other: "La race n'est pas une race de bête : {{.Race}}"
 error.unknown_codex:
   other: "Type de Codex inconnu : {{.Kind}}"
 error.save:

@@ -9,41 +9,37 @@ import (
 )
 
 // -- Table --//
-/*
-	TODO
-	LOW renommer en beast
-*/
-type MonstersTable struct {
-	*TableData[MonsterEntry]
+type BeastsTable struct {
+	*TableData[BeastEntry]
 }
 
-type MonsterEntry struct {
+type BeastEntry struct {
 	Timestamp time.Time             `bson:"timestamp"`
 	Character *characters.Character `bson:"character"`
 }
 
-var tablemonster = "codex.monsters"
+var tablebeast = "codex.beasts"
 
-func NewMonstersTable(entries []MonsterEntry) *MonstersTable {
+func NewBeastsTable(entries []BeastEntry) *BeastsTable {
 	if entries == nil {
-		entries = []MonsterEntry{}
+		entries = []BeastEntry{}
 	}
 
-	return &MonstersTable{
-		TableData: newTable(t.Localize(tablemonster), entries),
+	return &BeastsTable{
+		TableData: newTable(t.Localize(tablebeast), entries),
 	}
 }
 
 // -- Methods --//
-func (m *MonstersTable) Add(character *characters.Character) {
-	m.Entries = append(m.Entries, MonsterEntry{
+func (tb *BeastsTable) Add(character *characters.Character) {
+	tb.Entries = append(tb.Entries, BeastEntry{
 		Timestamp: time.Now().UTC(),
 		Character: character,
 	})
 }
 
-func (m *MonstersTable) AddFromMappedValues(values map[string]string) error {
-	if err := m.assertEntry(values); err != nil {
+func (tb *BeastsTable) AddFromMappedValues(values map[string]string) error {
+	if err := tb.assertEntry(values); err != nil {
 		return err
 	}
 
@@ -63,38 +59,38 @@ func (m *MonstersTable) AddFromMappedValues(values map[string]string) error {
 		return fmt.Errorf("failed to create character from mapped values: %w", err)
 	}
 
-	m.Add(character)
+	tb.Add(character)
 
 	return nil
 }
 
-func (m *MonstersTable) Summaries() []string {
-	summaries := make([]string, 0, len(m.Entries))
-	for _, entry := range m.Entries {
+func (tb *BeastsTable) Summaries() []string {
+	summaries := make([]string, 0, len(tb.Entries))
+	for _, entry := range tb.Entries {
 		if entry.Character == nil {
-			summaries = append(summaries, t.Localize("codex.unknown_monster"))
+			summaries = append(summaries, t.Localize("codex.unknown_beast"))
 			continue
 		}
 		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Character.Name, entry.Character.Description))
 	}
 
 	if len(summaries) == 0 {
-		summaries = append(summaries, t.Localize("codex.no_monsters"))
+		summaries = append(summaries, t.Localize("codex.no_beasts"))
 	}
 
 	return summaries
 }
 
 // -- Helper --//
-func (m *MonstersTable) assertEntry(entry map[string]string) error {
+func (tb *BeastsTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
-		err = append(err, fmt.Errorf("missing name for monster"))
+		err = append(err, fmt.Errorf("missing name for beast"))
 	}
 
 	if entry["description"] == "" {
-		err = append(err, fmt.Errorf("missing description for monster"))
+		err = append(err, fmt.Errorf("missing description for beast"))
 	}
 
 	/*
@@ -106,26 +102,26 @@ func (m *MonstersTable) assertEntry(entry map[string]string) error {
 		if races.FindByName(values["race"]) == nil {
 			return t.NewError("error.unknown_race", map[string]any{"Race": values["race"]})
 		}
-		if result.Kind == codexform.Monsters && !races.FindByName(values["race"]).IsMonster() {
-			return t.NewError("error.non_monster_race", map[string]any{"Race": values["race"]})
+		if result.Kind == codexform.Beasts && !races.FindByName(values["race"]).IsBeast) {
+			return t.NewError("error.non_beast_race", map[string]any{"Race": values["race"]})
 		}
 	*/
 
 	if entry["race"] == "" {
-		err = append(err, fmt.Errorf("missing race for monster"))
+		err = append(err, fmt.Errorf("missing race for beast"))
 	}
 
 	// if entry["class"] !== "" {
-	// 	err = append(err, fmt.Errorf("missing class for monster"))
+	// 	err = append(err, fmt.Errorf("missing class for beast"))
 	// }
 
 	if len(err) > 0 {
-		return m.formatAssertErrors(err)
+		return tb.formatAssertErrors(err)
 	}
 
 	return nil
 }
 
-func (m *MonstersTable) ensure() {
-	ensureEmbeddedTable(t.Localize(tablemonster), &m.TableData)
+func (tb *BeastsTable) ensure() {
+	ensureEmbeddedTable(t.Localize(tablebeast), &tb.TableData)
 }

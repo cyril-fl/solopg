@@ -45,6 +45,6 @@
 # Non-playable races
 - name: Merchant
   playable: false
-- name: Monster
+- name: Beast
   playable: false
 

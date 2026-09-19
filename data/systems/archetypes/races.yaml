@@ -41,7 +41,7 @@
     - stat: social
       value: -1
 
-# Monsters races
+# Beasts races
 - name: Slime
   playable: false
-  monster: true
+  beast: true
