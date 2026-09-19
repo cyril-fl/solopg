@@ -1,48 +1,47 @@
-package locations
+package codex
 
 import (
 	"errors"
 	"fmt"
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/attributes/variety"
+	"solopg/internal/domain/card/locations"
 	"solopg/internal/infrastructure/t"
 	"time"
 )
 
 // - Table --//
 type LocationsTable struct {
-	name    string
-	Entries []LocationsEntry
+	*TableData[LocationsEntry]
 }
 
 type LocationsEntry struct {
 	Timestamp time.Time           `bson:"timestamp"`
-	Location  *Location `bson:"location"`
+	Location  *locations.Location `bson:"location"`
 }
 
 var tablelocations = "codex.locations"
 
 func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	return &LocationsTable{
-			name:    t.Localize(tablelocations),
-		Entries: entries,
+		TableData: newTable(t.Localize(tablelocations), entries),
 	}
 }
 
 // - Methods --//
-func (l *LocationsTable) Add(location *Location) {
-	l.Entries = append(l.Entries, LocationsEntry{
+func (tb *LocationsTable) Add(location *locations.Location) {
+	tb.Entries = append(tb.Entries, LocationsEntry{
 		Timestamp: time.Now().UTC(),
 		Location:  location,
 	})
 }
 
-func (l *LocationsTable) AddFromMappedValues(values map[string]string) error {
-	if err := l.assertEntry(values); err != nil {
+func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
+	if err := tb.assertEntry(values); err != nil {
 		return err
 	}
 
-	location, err := New(Template{
+	location, err := locations.New(locations.Template{
 		Name:        values["name"],
 		Description: values["description"],
 		Rarity:      rarity.Default(),
@@ -53,14 +52,14 @@ func (l *LocationsTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 	
-	l.Add(location)
+	tb.Add(location)
 
 	return nil
 }
 
-func (l *LocationsTable) Summaries() []string {
-	summaries := make([]string, 0, len(l.Entries))
-	for _, entry := range l.Entries {
+func (tb *LocationsTable) Summaries() []string {
+	summaries := make([]string, 0, len(tb.Entries))
+	for _, entry := range tb.Entries {
 		if entry.Location == nil {
 			summaries = append(summaries, t.Localize("codex.unknown_location"))
 			continue
@@ -75,11 +74,11 @@ func (l *LocationsTable) Summaries() []string {
 	return summaries
 }
 
-func (l *LocationsTable) FindEntryByName(name string) *LocationsEntry {
+func (tb *LocationsTable) FindEntryByName(name string) *LocationsEntry {
 
-	for i, entry := range l.Entries {
+	for i, entry := range tb.Entries {
 		if entry.Location != nil && entry.Location.Name == name {
-			return &l.Entries[i]
+			return &tb.Entries[i]
 		}
 	}
 	return nil
@@ -87,7 +86,7 @@ func (l *LocationsTable) FindEntryByName(name string) *LocationsEntry {
 
 // - Helper --//
 
-func (l *LocationsTable) assertEntry(values map[string]string) error {
+func (tb *LocationsTable) assertEntry(values map[string]string) error {
 	var err []error
 
 	if values["name"] == "" {
@@ -98,25 +97,25 @@ func (l *LocationsTable) assertEntry(values map[string]string) error {
 	}
 
 	if len(err) > 0 {
-		return l.formatAssertErrors(err)
+		return tb.formatAssertErrors(err)
 	}
 
 	return nil
 }
 
-func (l *LocationsTable) Ensure() {
-	if l.name == "" {
-		l.name = t.Localize(tablelocations)
+func (tb *LocationsTable) Ensure() {
+	if tb.name == "" {
+		tb.name = t.Localize(tablelocations)
 	}
-	if l.Entries == nil {
-		l.Entries = []LocationsEntry{}
+	if tb.Entries == nil {
+		tb.Entries = []LocationsEntry{}
 	}
 }
 
-// TODO decoupler autrement
-func (l *LocationsTable) formatAssertErrors(err []error) error {
+// // TODO decoupler autrement
+func (tb *LocationsTable) formatAssertErrors(err []error) error {
 	return errors.Join(
-		fmt.Errorf("invalid %s:", l.name),
+		fmt.Errorf("invalid %s:", tb.name),
 		errors.Join(err...),
 	)
 }

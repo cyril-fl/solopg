@@ -3,6 +3,7 @@ package onboardlocation
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/locations"
+	"solopg/internal/domain/gameplay/portal"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -15,7 +16,7 @@ func NewModel() tea.Model {
 	return model{
 		reroll: tui.NewRerollModel(
 			tui.NewOptionsModel(tui.DefaultRerollOptions),
-			locations.Teleport,
+			portal.Teleport,
 			3,
 		),
 	}

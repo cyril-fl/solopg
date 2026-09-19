@@ -3,14 +3,13 @@ package codex
 import (
 	"errors"
 	"fmt"
-	"solopg/internal/domain/card/locations"
 )
 
 // - Codex - //
 type Codex struct {
 	NpcsTable      *NpcsTable
 	BeastsTable  *BeastsTable
-	LocationsTable *locations.LocationsTable
+	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
 	ObjectifsTable *ObjectivesTable
 }
@@ -19,7 +18,7 @@ func New() *Codex {
 	return &Codex{
 		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
 		BeastsTable:  NewBeastsTable([]BeastEntry{}),
-		LocationsTable: locations.NewLocationsTable([]locations.LocationsEntry{}),
+		LocationsTable: NewLocationsTable([]LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
 		ObjectifsTable: NewObjectivesTable([]ObjectifEntry{}),
 	}
@@ -34,7 +33,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 		c.BeastsTable = NewBeastsTable(nil)
 	}
 	if c.LocationsTable == nil {
-		c.LocationsTable = locations.NewLocationsTable(nil)
+		c.LocationsTable = NewLocationsTable(nil)
 	}
 	if c.ObjectsTable == nil {
 		c.ObjectsTable = NewObjectsTable(nil)
