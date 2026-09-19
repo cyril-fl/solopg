@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/characters"
+	"solopg/internal/domain/card/characters/classes"
+	"solopg/internal/domain/card/characters/races"
 	"solopg/internal/infrastructure/t"
 	"time"
 )
@@ -82,15 +84,16 @@ func (n *NpcsTable) assertEntry(entry map[string]string) error {
 	if entry["name"] == "" {
 		err = append(err, fmt.Errorf("name is empty"))
 	}
-	if entry["race"] == "" {
-		err = append(err, fmt.Errorf("race is empty"))
-	}
-	if entry["class"] == "" {
-		err = append(err, fmt.Errorf("class is empty"))
-	}
 	if entry["description"] == "" {
 		err = append(err, fmt.Errorf("description is empty"))
 	}
+	if !races.Assert(entry["race"]) {
+		err = append(err, fmt.Errorf("race is empty"))
+	}
+	if !classes.Assert(entry["class"]) {
+		err = append(err, fmt.Errorf("class is empty"))
+	}
+
 
 	if len(err) > 0 {
 		return n.formatAssertErrors(err)

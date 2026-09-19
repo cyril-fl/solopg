@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/characters"
+	"solopg/internal/domain/card/characters/classes"
+	"solopg/internal/domain/card/characters/races"
 	"solopg/internal/infrastructure/t"
 	"time"
 )
@@ -95,24 +97,17 @@ func (tb *BeastsTable) assertEntry(entry map[string]string) error {
 	/*
 		TODO
 		HIGH Implmenter ça dans le assert
-		if result.Kind == codexform.NPCs && classes.FindByName(values["class"]) == nil {
-			return t.NewError("error.unknown_class", map[string]any{"Class": values["class"]})
-		}
-		if races.FindByName(values["race"]) == nil {
-			return t.NewError("error.unknown_race", map[string]any{"Race": values["race"]})
-		}
 		if result.Kind == codexform.Beasts && !races.FindByName(values["race"]).IsBeast) {
 			return t.NewError("error.non_beast_race", map[string]any{"Race": values["race"]})
 		}
 	*/
 
-	if entry["race"] == "" {
+	if !races.Assert(entry["race"]) {
 		err = append(err, fmt.Errorf("missing race for beast"))
 	}
-
-	// if entry["class"] !== "" {
-	// 	err = append(err, fmt.Errorf("missing class for beast"))
-	// }
+	if !classes.Assert(entry["class"]) {
+		err = append(err, fmt.Errorf("missing class for beast"))
+	}
 
 	if len(err) > 0 {
 		return tb.formatAssertErrors(err)

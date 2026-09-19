@@ -24,7 +24,7 @@ func getNpcForm() *form.Form {
 	for _, i := range classes.List() {
 		classItems = append(classItems, tui.NewItem(i.GetName(), "", i.GetName()))
 	}
-	// classItems = append(classItems, tui.NewItem("None", "", ""))
+	classItems = append(classItems, tui.NewItem("None", "", ""))
 
 	//
 	return form.NewForm(
@@ -51,9 +51,7 @@ func getBeastForm() *form.Form {
 	}
 
 	var classItems []tui.Item[string]
-	// TODO
-	// HIGH implementer
-	// classItems = append(classItems, tui.NewItem("None", "", ""))
+	classItems = append(classItems, tui.NewItem("None", "", ""))
 
 	for _, i := range classes.List() {
 		/*

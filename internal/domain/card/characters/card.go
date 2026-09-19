@@ -43,6 +43,10 @@ func New(params Template) (*Character, error) {
 		params.Variety = variety.MakeDefault("character_card")
 	}
 
+	if !params.Rarity.Validate() {
+		params.Rarity = rarity.MakeDefault("")
+	}
+
 	newCard, err := card.NewCard(card.NewCardParams{
 		Name:        params.Name,
 		Description: params.Description,
