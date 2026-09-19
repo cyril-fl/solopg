@@ -14,42 +14,35 @@ import (
 REFACTOR
 MEDIUM getNpcForm && getBeastForm
 */
+// - NPC Form - //
 func getNpcForm() *form.Form {
+	return form.NewForm(
+		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
+		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: getNpcFormClass(), Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: getNpcFormRace(), Validator: nil, Required: true}),
+	).Focus()
+}
+
+func getNpcFormRace() []tui.Item[string] {
 	var raceItems []tui.Item[string]
 	for _, i := range races.List() {
 		raceItems = append(raceItems, tui.NewItem(i.GetName(), "", i.GetName()))
 	}
+	return raceItems
+}
 
+func getNpcFormClass() []tui.Item[string] {
 	var classItems []tui.Item[string]
 	for _, i := range classes.List() {
 		classItems = append(classItems, tui.NewItem(i.GetName(), "", i.GetName()))
 	}
 	classItems = append(classItems, tui.NewItem("None", "", ""))
-
-	//
-	return form.NewForm(
-		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
-		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: classItems, Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: raceItems, Validator: nil, Required: true}),
-	).Focus()
+	return classItems
 }
 
-/*
-REFACTOR
-MEDIUM getBeastForm && getNpcForm
-
-faire en sorte de n'ajouter que les classe de betes ! pas les autres...
-*/
+// - Beast Form - //
 func getBeastForm() *form.Form {
-	var raceItems []tui.Item[string]
-	for _, i := range races.List() {
-		if !i.IsBeast() {
-			continue
-		}
-		raceItems = append(raceItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
-	}
-
 	var classItems []tui.Item[string]
 	classItems = append(classItems, tui.NewItem("None", "", ""))
 
@@ -64,8 +57,10 @@ func getBeastForm() *form.Form {
 			- Elemental...
 
 			bien que s'a s'appenrente pas a une Class mais a des genre ./ race
-
 			regarder la conv avec GPT, et resumer, class pas obigatoire en somme. is beast devrais peu etre changer
+
+			est ce qu'un bete oourrais avoir un classe ? exemple un chien ne peu pas etre chasseur (quoi) mais un gobelin ?
+			reponse non car tout les chien ne sont pas chasseur , la partie bestiray est plus un pokedex, et npcs l'app contacte
 		*/
 		classItems = append(classItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
 	}
@@ -73,10 +68,23 @@ func getBeastForm() *form.Form {
 	return form.NewForm(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
-		// field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: classItems, Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: raceItems, Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: getBeastFormRace(), Validator: nil, Required: true}),
 	).Focus()
 }
+
+func getBeastFormRace() []tui.Item[string] {
+	var raceItems []tui.Item[string]
+
+	for _, i := range races.List() {
+		if i.IsBeast() {
+			raceItems = append(raceItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
+		}
+	}
+
+	return raceItems
+}
+
+// - Location Form - //
 func getLocationForm() *form.Form {
 	return form.NewForm(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
@@ -84,6 +92,7 @@ func getLocationForm() *form.Form {
 	).Focus()
 }
 
+// - Object Form - //
 func getObjectForm() *form.Form {
 	var categoryItems []tui.Item[string]
 
@@ -102,6 +111,7 @@ func getObjectForm() *form.Form {
 	).Focus()
 }
 
+// - Objectif Form - //
 func getObjectifForm() *form.Form {
 	return form.NewForm(
 		field.TextField(field.TextTemplate[string]{ID: "title", Label: "field.title", Validator: nil, Required: true}),

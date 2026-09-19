@@ -2,6 +2,7 @@ package form
 
 import (
 	"errors"
+	"solopg/internal/app/tui"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -189,7 +190,15 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	switch msg.(type) {
+	switch msg := msg.(type) {
+	case tea.KeyPressMsg:
+		switch msg.String() {
+			case tui.KeyTab:
+				return m, SendMsg[NextField]()
+			case tui.KeyShiftTab:
+				return m, SendMsg[PreviousField]()
+		}
+
 	case NextField:
 		if m.isLastField() && m.autoSubmit {
 			return m, SendMsg[Validate]()
