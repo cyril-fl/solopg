@@ -5,15 +5,15 @@ import (
 
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/attributes/variety"
-	"solopg/internal/domain/card/effects"
 	"solopg/internal/infrastructure/yaml"
 )
 
 type Location struct {
 	card.Card
 
-	Effects []effects.Effect
+	Effects []stats.Effect
 }
 
 type Template struct {
@@ -21,7 +21,7 @@ type Template struct {
 	Description string
 	Rarity      rarity.Rarity
 	Variety     variety.Variety
-	Effects     []effects.Effect
+	Effects     []stats.Effect
 }
 
 func New(params Template) (*Location, error) {

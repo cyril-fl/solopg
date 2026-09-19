@@ -3,7 +3,7 @@ package metadatamenu
 import (
 	"fmt"
 	"solopg/internal/app/game"
-	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/infrastructure/t"
 	"strings"
 )
@@ -45,7 +45,7 @@ func GetStatInfo(content *strings.Builder, engine *game.Engine) {
 	if engine == nil || engine.State == nil || engine.State.Player == nil {
 		content.WriteString(t.Localize("no_stats"))
 	} else {
-		for _, stat := range effects.ListStats() {
+		for _, stat := range stats.List() {
 			key := "stat." + string(stat)
 			label := t.Localize(key)
 			fmt.Fprintf(content, "%-10s %d\n", label, engine.State.Player.Stats[stat])

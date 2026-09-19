@@ -36,6 +36,7 @@ type structureFiles struct {
 	Oracle string `yaml:"oracle"`
 	Portal string `yaml:"portal"`
 	Rarity string `yaml:"rarity"`
+	Stats  string `yaml:"stats"`
 	Variety string `yaml:"variety"`
 }
 

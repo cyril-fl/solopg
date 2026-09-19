@@ -1,36 +1,35 @@
-package effects
+package stats
 
 import (
 	"fmt"
 	"slices"
 	"solopg/internal/domain/card/attributes"
+	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"
 )
 
-/*
-TODO
-MEDIUM sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML
-*/
+// - Configuration & caching - //
 type yamlStatsConfig struct {
 	Names     []Stat `yaml:"names"`
 	BaseStats Stats  `yaml:"baseStats"`
 }
 
-const effectConfigFilePath = "data/systems/stats.yaml"
+var fileConfigPath = config.Current.StructureFiles.Stats
 
-var cacheStatsConfig *yamlStatsConfig
+var cachedConfig *yamlStatsConfig
 
-func loadStatsFromFile() error {
-	params, err := yaml.LoadFromFile[yamlStatsConfig](effectConfigFilePath)
+func loadFromFile() error {
+	params, err := yaml.LoadFromFile[yamlStatsConfig](fileConfigPath)
 	if err != nil {
-		return fmt.Errorf("failed to load stats from file: %w", err)
+		return err
 	}
 
-	cacheStatsConfig = params
+	cachedConfig = params
 
 	return nil
 }
 
+// - Stats & Effects - //
 type Stat string
 
 type Stats map[Stat]int
@@ -45,21 +44,21 @@ type Effect struct {
 	Modifier Modifier
 }
 
-func ListStats() []Stat {
-	if cacheStatsConfig == nil {
-		err := loadStatsFromFile()
+func List() []Stat {
+	if cachedConfig == nil {
+		err := loadFromFile()
 		if err != nil {
 			fmt.Printf("Error loading stats: %v\n", err)
 			return nil
 		}
 	}
 
-	return cacheStatsConfig.Names
+	return cachedConfig.Names
 }
 
-func BaseStats() Stats {
-	if cacheStatsConfig == nil {
-		err := loadStatsFromFile()
+func GetBasic() Stats {
+	if cachedConfig == nil {
+		err := loadFromFile()
 		if err != nil {
 			fmt.Printf("Error loading stats: %v\n", err)
 			return nil
@@ -68,15 +67,11 @@ func BaseStats() Stats {
 
 	copy := make(Stats)
 
-	for stat, value := range cacheStatsConfig.BaseStats {
+	for stat, value := range cachedConfig.BaseStats {
 		copy[stat] = value
 	}
 
 	return copy
-}
-
-func (s Stat) Validate() bool {
-	return slices.Contains(ListStats(), s)
 }
 
 func (s *Stats) ApplyModifier(mod Modifier) {
@@ -98,6 +93,11 @@ func (s *Stats) ApplyModifiers(mods []Modifier) {
 		s.ApplyModifier(mod)
 	}
 }
+
+func (s Stat) Validate() bool {
+	return slices.Contains(List(), s)
+}
+
 
 func (m Modifier) String() string {
 	return fmt.Sprintf("%s: %d", m.Stat, m.Value)

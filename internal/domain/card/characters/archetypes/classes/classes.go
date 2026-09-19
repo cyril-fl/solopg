@@ -1,14 +1,14 @@
 package classes
 
 import (
-	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/infrastructure/yaml"
 )
 
 type Class struct {
 	Name     string             `yaml:"name"`
 	Playable bool               `yaml:"playable"`
-	Bonus    []effects.Modifier `yaml:"bonus"`
+	Bonus    []stats.Modifier `yaml:"bonus"`
 	ArmorSet string             `yaml:"armor_set"`
 }
 
@@ -42,7 +42,7 @@ func (c Class) IsPlayable() bool {
 	return c.Playable
 }
 
-func (c Class) GetBonus() []effects.Modifier {
+func (c Class) GetBonus() []stats.Modifier {
 	return c.Bonus
 }
 

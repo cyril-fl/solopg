@@ -2,7 +2,8 @@ package onboardforgecharacter
 
 import (
 	"solopg/internal/app/tui"
-	"solopg/internal/domain/card/effects"
+
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/gameplay/oracle"
 
 	tea "charm.land/bubbletea/v2"
@@ -34,7 +35,7 @@ func handleEnterInput(m model) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func drowBuild() ([]effects.Modifier, error) {
+func drowBuild() ([]stats.Modifier, error) {
 	oracle, err := getStatGenerationOracle()
 	if err != nil {
 		return nil, err
@@ -52,9 +53,9 @@ func getStatGenerationOracle() (*oracle.Oracle, error) {
 	return oracle.GetByID("stat_generation")
 }
 
-func generateCharacterBuild(rules oracle.Oracle) ([]effects.Modifier, error) {
-	statsList := effects.ListStats()
-	build := []effects.Modifier{}
+func generateCharacterBuild(rules oracle.Oracle) ([]stats.Modifier, error) {
+	statsList := stats.List()
+	build := []stats.Modifier{}
 
 	for _, stat := range statsList {
 		roll, err := oracle.Roll[int](rules)
@@ -64,7 +65,7 @@ func generateCharacterBuild(rules oracle.Oracle) ([]effects.Modifier, error) {
 
 		// jsonlog.JsonifiedLog(roll)
 
-		build = append(build, effects.Modifier{
+		build = append(build, stats.Modifier{
 			Stat:  stat,
 			Value: roll.Result,
 		})

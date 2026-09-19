@@ -2,13 +2,13 @@ package onboardforgecharacter
 
 import (
 	"solopg/internal/app/tui"
-	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/attributes/stats"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	reroll tui.RerollModel[[]effects.Modifier]
+	reroll tui.RerollModel[[]stats.Modifier]
 }
 
 func NewModel() tea.Model {

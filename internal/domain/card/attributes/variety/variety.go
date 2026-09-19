@@ -48,6 +48,7 @@ func List() []Variety {
 }
 
 func MakeDefault(defaultValue string) Variety {
+	List()
 	cachedConfig.addValue(Variety(defaultValue))
 	return Variety(defaultValue)
 }

@@ -1,9 +1,10 @@
 package archetypes
 
-import "solopg/internal/domain/card/effects"
+import "solopg/internal/domain/card/attributes/stats"
+
 
 type Archetype interface {
 	GetName() string
 	IsPlayable() bool
-	GetBonus() []effects.Modifier
+	GetBonus() []stats.Modifier
 }

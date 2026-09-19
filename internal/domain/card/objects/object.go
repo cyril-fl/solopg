@@ -2,18 +2,17 @@ package objects
 
 import (
 	"fmt"
-
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/attributes/variety"
-	"solopg/internal/domain/card/effects"
 )
 
 type Object struct {
 	card.Card
 
 	Category Category
-	Effects  []effects.Effect
+	Effects  []stats.Effect
 	Pod      int
 }
 
@@ -23,7 +22,7 @@ type Template struct {
 	Rarity      rarity.Rarity
 	Variety     variety.Variety
 	Category    Category
-	Effects     []effects.Effect
+	Effects     []stats.Effect
 	Pod         int
 }
 

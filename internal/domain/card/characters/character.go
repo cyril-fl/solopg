@@ -3,13 +3,12 @@ package characters
 import (
 	"fmt"
 	"slices"
-
 	"solopg/internal/domain/card"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/attributes/variety"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
-	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/yaml"
 )
@@ -19,7 +18,7 @@ type Character struct {
 
 	Class string
 	Race  string
-	Stats effects.Stats
+	Stats stats.Stats
 
 	Equipment ArmorSet
 	Inventory []objects.Object
@@ -32,7 +31,7 @@ type Template struct {
 	Rarity      rarity.Rarity
 	Class       string
 	Race        string
-	Stats       effects.Stats
+	Stats       stats.Stats
 	Wallet      Wallet
 	Equipment   ArmorSet
 	Inventory   []objects.Object

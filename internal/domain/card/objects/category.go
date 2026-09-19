@@ -51,6 +51,7 @@ TODO
 LOW Verrifier quelle autre concepet pourrait utiliser le "MakeDefault"
 */
 func MakeDefault(defaultValue string) Category {
+	ListCategory()
 	cachedConfig.addValue(Category(defaultValue))
 	return Category(defaultValue)
 }

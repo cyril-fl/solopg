@@ -9,7 +9,8 @@ import (
 
 /*
 TODO
-MEDIUM add a cache. a voir si pas deja fais dans Location !
+MEDIUM sinspirer de domain/gameplay/dice.go pour le cache et le load du fichier YAML 
+add a cache. a voir si pas deja fais dans Location !
 */
 // - Configuration & caching - //
 var fileConfigPath = config.Current.StructureFiles.Portal

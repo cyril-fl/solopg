@@ -1,7 +1,7 @@
 package races
 
 import (
-	"solopg/internal/domain/card/effects"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/infrastructure/yaml"
 )
 
@@ -11,7 +11,7 @@ type Race struct {
 	Name     string             `yaml:"name"`
 	Playable bool               `yaml:"playable"`
 	Beast  bool               `yaml:"beast"`
-	Bonus    []effects.Modifier `yaml:"bonus"`
+	Bonus    []stats.Modifier `yaml:"bonus"`
 }
 
 func (r Race) GetName() string {
@@ -26,7 +26,7 @@ func (r Race) IsBeast() bool {
 	return r.Beast
 }
 
-func (r Race) GetBonus() []effects.Modifier {
+func (r Race) GetBonus() []stats.Modifier {
 	return r.Bonus
 }
 

@@ -2,9 +2,10 @@ package tui
 
 import (
 	"solopg/internal/domain/campaign"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
-	"solopg/internal/domain/card/effects"
+
 	"solopg/internal/domain/card/locations"
 	"solopg/types/step"
 
@@ -23,7 +24,7 @@ type Context struct {
 	SelectedName     string
 	SelectedRace     *races.Race
 	SelectedClass    *classes.Class
-	SelectedBuild    []effects.Modifier
+	SelectedBuild    []stats.Modifier
 	SelectedLocation *locations.Location
 }
 

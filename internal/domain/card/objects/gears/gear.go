@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/attributes/variety"
-	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/yaml"
 )
@@ -45,7 +45,7 @@ type Template struct {
 	Variety     variety.Variety
 	Category    objects.Category
 	Attributes  objects.Attribute
-	Effects     []effects.Effect
+	Effects     []stats.Effect
 	Pod         int
 	Slot        Slot `yaml:"destinedslot"`
 }

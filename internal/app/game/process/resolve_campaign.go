@@ -4,8 +4,8 @@ import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/campaign"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/characters"
-	"solopg/internal/domain/card/effects"
 	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 )
@@ -73,21 +73,21 @@ func getArmorSetFromContext(ctx *tui.Context) characters.ArmorSet {
 	return armorSet
 }
 
-func getStatsFromContext(ctx *tui.Context) effects.Stats {
+func getStatsFromContext(ctx *tui.Context) stats.Stats {
 	modifiers := getModifiersFromContext(ctx)
 
-	baseStats := effects.BaseStats()
+	baseStats := stats.GetBasic()
 	baseStats.ApplyModifiers(modifiers)
 
 	return baseStats
 }
 
-func getModifiersFromContext(ctx *tui.Context) []effects.Modifier {
+func getModifiersFromContext(ctx *tui.Context) []stats.Modifier {
 	raceBoost := ctx.SelectedRace.GetBonus()
 	classBoost := ctx.SelectedClass.GetBonus()
 	build := ctx.SelectedBuild
 
-	modifiers := make([]effects.Modifier, 0, len(raceBoost)+len(classBoost)+len(build))
+	modifiers := make([]stats.Modifier, 0, len(raceBoost)+len(classBoost)+len(build))
 	modifiers = append(modifiers, raceBoost...)
 	modifiers = append(modifiers, classBoost...)
 	modifiers = append(modifiers, build...)

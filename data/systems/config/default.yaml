@@ -38,8 +38,9 @@ commands:
     short: "Display the version of SoloPG"
 structure_files:
   dice: "data/systems/dice.yaml"
+  objects_category: "data/systems/category.yaml"
   oracle: "data/template/systems/rules/oracles"
   portal: "data/template/locations"
   rarity: "data/systems/rarirty.yaml"
+  stats: "data/systems/stats.yaml"
   variety: "data/systems/variety.yaml"
-  objects_category: "data/systems/category.yaml"
