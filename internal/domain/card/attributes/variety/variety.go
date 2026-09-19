@@ -52,6 +52,14 @@ func MakeDefault(defaultValue string) Variety {
 	return Variety(defaultValue)
 }
 
+func AssertWithDefault(provided string) Variety {
+	if Variety(provided).Validate() {
+		return Variety(provided)
+	}
+
+	return MakeDefault("card")
+}
+
 func (r Variety) Validate() bool {
 	return slices.Contains(List(), r)
 }

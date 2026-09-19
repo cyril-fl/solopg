@@ -47,13 +47,10 @@ func (o *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	object, err := objects.New(objects.Template{
 		Name:        values["name"],
 		Description: values["description"],
-		/*
-			TODO
-			HIGH Refactor les object quand on va passer en Data driven partout
-		*/
+
 		Rarity:   rarity.Default(),
-		Variety:  variety.MakeDefault("article_card"), // TODO: Change this to the correct variety based on your requirements
-		Category: objects.Objects,
+		Variety:  variety.AssertWithDefault(values["variety"]),
+		Category: objects.AssertWithDefault(values["category"]),
 		// ___
 	})
 

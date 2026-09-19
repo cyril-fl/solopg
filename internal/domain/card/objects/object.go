@@ -49,8 +49,8 @@ func New(params Template) (*Object, error) {
 	// }
 
 	// Check Category
-	if err := params.Category.Validate(); err != nil {
-		return nil, err
+	if !params.Category.Validate() {
+		return nil, fmt.Errorf("invalid category for item: %s", params.Category)
 	}
 
 	return &Object{

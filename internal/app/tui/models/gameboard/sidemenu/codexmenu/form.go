@@ -4,6 +4,7 @@ import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/characters/archetypes/classes"
 	"solopg/internal/domain/card/characters/archetypes/races"
+	"solopg/internal/domain/card/objects"
 	"solopg/internal/infrastructure/t"
 	"solopg/internal/platform/form"
 	"solopg/internal/platform/form/field"
@@ -83,9 +84,22 @@ func getLocationForm() *form.Form {
 }
 
 func getObjectForm() *form.Form {
+	var categoryItems []tui.Item[string]
+
+	if len(objects.ListCategory()) == 0 {
+		objects.MakeDefault("object")
+	}
+
+	for _, i := range  objects.ListCategory() {
+		categoryItems = append(categoryItems, tui.NewItem(t.Localize(i.String()), "", i.String()))
+	}
+
+	
 	return form.NewForm(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "category", Label: "field.category", Options: categoryItems, Validator: nil, Required: true}),
+
 		/*
 			TODO
 			HIGH fix en meme temps que le data driven

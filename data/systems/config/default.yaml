@@ -42,3 +42,4 @@ structure_files:
   portal: "data/template/locations"
   rarity: "data/systems/rarirty.yaml"
   variety: "data/systems/variety.yaml"
+  objects_category: "data/systems/category.yaml"

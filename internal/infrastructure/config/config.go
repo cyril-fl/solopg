@@ -31,8 +31,9 @@ type commandParams struct {
 }
 
 type structureFiles struct {
-	Oracle string `yaml:"oracle"`
 	Dice   string `yaml:"dice"`
+	ObjectsCategory string `yaml:"objects_category"`
+	Oracle string `yaml:"oracle"`
 	Portal string `yaml:"portal"`
 	Rarity string `yaml:"rarity"`
 	Variety string `yaml:"variety"`
