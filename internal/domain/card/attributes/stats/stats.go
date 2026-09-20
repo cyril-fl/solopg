@@ -6,20 +6,21 @@ import (
 	"solopg/internal/domain/card/attributes/description"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"
+	"strings"
 )
 
 // - Configuration & caching - //
-type yamlStatsConfig struct {
+type yamlConfig struct {
 	Names     []Stat `yaml:"names"`
 	BaseStats Stats  `yaml:"baseStats"`
 }
 
 var fileConfigPath = config.Current.Documents.Files.Stats
 
-var cachedConfig *yamlStatsConfig
+var cachedConfig *yamlConfig
 
 func loadFromFile() error {
-	params, err := yaml.LoadFromFile[yamlStatsConfig](fileConfigPath)
+	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
 		return err
 	}
@@ -35,31 +36,24 @@ type Stat string
 type Stats map[Stat]int
 
 type Modifier struct {
-	Stat  Stat
-	Value int
+	Stat  Stat `yaml:"stat"`
+	Value int  `yaml:"value"`
 }
 
 type Effect struct {
-	description.Description
-	Modifier Modifier
+	description.Description `yaml:"description"`
+	Modifier                Modifier `yaml:"modifier"`
 }
 
-func List() []Stat {
-	if cachedConfig == nil {
-		err := loadFromFile()
-		if err != nil {
-			fmt.Printf("Error loading stats: %v\n", err)
-			return nil
-		}
-	}
-
-	return cachedConfig.Names
+func New(mods []Modifier) Stats {
+	s := make(Stats)
+	s.ApplyModifiers(mods)
+	return s
 }
 
 func GetBasic() Stats {
 	if cachedConfig == nil {
-		err := loadFromFile()
-		if err != nil {
+		if err := loadFromFile(); err != nil {
 			fmt.Printf("Error loading stats: %v\n", err)
 			return nil
 		}
@@ -79,8 +73,7 @@ func (s *Stats) ApplyModifier(mod Modifier) {
 		return
 	}
 
-	isValidStat := mod.Stat.Validate()
-	if !isValidStat {
+	if !mod.Stat.Validate() {
 		fmt.Printf("Invalid stat: %s\n", mod.Stat)
 		return
 	}
@@ -98,46 +91,35 @@ func (s Stat) Validate() bool {
 	return slices.Contains(List(), s)
 }
 
+func (s Stats) String() string {
+	if s == nil {
+		return ""
+	}
+
+	result := make([]string, 0, len(s))
+	for stat, value := range s {
+		result = append(result, fmt.Sprintf("%s: %d", stat, value))
+	}
+
+	return fmt.Sprintf("{%s}", strings.Join(result, ", "))
+}
+
+func (s Stat) String() string {
+	return string(s)
+}
+
 func (m Modifier) String() string {
 	return fmt.Sprintf("%s: %d", m.Stat, m.Value)
 }
 
-// - Helpers - //
-type YamlEffectConfig struct {
-	Description YamlDescriptionConfig `yaml:"description"`
-	Modifier    YamlModifierConfig    `yaml:"modifier"`
-}
-
-type YamlDescriptionConfig struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-}
-
-type YamlModifierConfig struct {
-	Stat  Stat `yaml:"stat"`
-	Value int  `yaml:"value"`
-}
-
-func MakeEffectFromYamlConfigArray(yamlConfigs []YamlEffectConfig) []Effect {
-	effects := make([]Effect, 0, len(yamlConfigs))
-
-	for _, yamlConfig := range yamlConfigs {
-		effect := MakeEffectFromYamlConfig(yamlConfig)
-		effects = append(effects, effect)
+// - Collection - //
+func List() []Stat {
+	if cachedConfig == nil {
+		if err := loadFromFile(); err != nil {
+			fmt.Printf("Error loading stats: %v\n", err)
+			return nil
+		}
 	}
 
-	return effects
-}
-
-func MakeEffectFromYamlConfig(yamlConfig YamlEffectConfig) Effect {
-	return Effect{
-		Description: description.Description{
-			Name:        yamlConfig.Description.Name,
-			Description: yamlConfig.Description.Description,
-		},
-		Modifier: Modifier{
-			Stat:  yamlConfig.Modifier.Stat,
-			Value: yamlConfig.Modifier.Value,
-		},
-	}
+	return cachedConfig.Names
 }

@@ -19,8 +19,24 @@ attempt:
 error.label:
   other: Error
 
+
+races.elves.description:
+  other: "Elves are known for their grace, agility, and affinity with nature. They have a long lifespan and are often skilled in magic and archery."
+races.humans.description:
+  other: "Humans are the most adaptable and versatile of all races. They can thrive in any environment and are known for their resilience and determination."
+races.dwarves.description:
+  other: "Dwarves are stout and hardy, known for their craftsmanship and mining skills. They have a strong sense of community and are often skilled warriors."
+races.slimes.description:
+  other: "Slimes are amorphous creatures that can take on various shapes and sizes."
+
 oracles:
   other: ORACLES
+oracles.encounter_easy:
+  other: "Easy"
+oracles.encounter_normal:
+  other: "Normal"
+oracles.encounter_hard:
+  other: "Hard"
 codex:
   other: CODEX
 dice:
@@ -53,6 +69,8 @@ field.category:
   other: "Category (weapon/armor/potion)"
 field.title:
   other: Title
+field.encounter:
+  other: Encounter
 error.required_field:
   other: "{{.Field}} is required"
 error.class_race_required:
@@ -99,8 +117,8 @@ stat.social:
   other: Social
 codex.npcs:
   other: NPCs
-codex.beasts:
-  other: Beasts
+codex.beastiary:
+  other: Beastiary
 codex.locations:
   other: Locations
 codex.objects:

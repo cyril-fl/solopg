@@ -1,7 +1,7 @@
 package app
 
 import (
-	"solopg/internal/domain/card/objects/equipment"
+	"solopg/internal/domain/card/characters"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/mongo"
 	"solopg/internal/infrastructure/t"
@@ -25,14 +25,16 @@ func Start() error {
 
 func Try() error {
 
-	armorset := equipment.FindEquipementByName("adventurer")
-	log.ParseJson(armorset)
+	// oracle.Log()
+	list := characters.List()
+
+	log.ParseJson(list)
 
 	return nil
 }
 
 /*
-	TODO LOW Étendre la CLI avec des commande comme:
+	BACKLOG Étendre la CLI avec des commande comme:
 
 	> Cli edit —config —locales [lang]
 		- d’autre argument pouvant être passé en fonction de la config par défaut.

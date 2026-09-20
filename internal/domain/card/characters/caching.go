@@ -4,8 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"solopg/internal/domain/card/attributes/rarity"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/attributes/variety"
+	"solopg/internal/domain/card/characters/classes"
 	"solopg/internal/domain/card/characters/wallet"
+	"solopg/internal/domain/card/objects"
+	"solopg/internal/domain/card/objects/equipment"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/t"
 	"solopg/internal/infrastructure/yaml"
@@ -13,16 +17,16 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-	Rarity      string `yaml:"rarity"`
-	Variety     string `yaml:"variety"`
-	Class       string `yaml:"class"`
-	Race        string `yaml:"race"`
-	// Stats       []stats.YamlEffectConfig `yaml:"stats"`
-	// Equipment   []yaml.YamlGearConfig    `yaml:"equipment"`
-	// Inventory   []yaml.YamlObjectConfig  `yaml:"inventory"`
-	Wallet wallet.Wallet `yaml:"wallet"`
+	Name        string              `yaml:"name"`
+	Description string              `yaml:"description"`
+	Rarity      string              `yaml:"rarity"`
+	Variety     string              `yaml:"variety"`
+	Class       string              `yaml:"class"`
+	Race        string              `yaml:"race"`
+	Stats       stats.Stats         `yaml:"stats"`
+	Equipment   equipment.Equipment `yaml:"equipment"`
+	Inventory   []objects.Object    `yaml:"inventory"`
+	Wallet      wallet.Wallet       `yaml:"wallet"`
 }
 
 var folderConfigPath = config.Current.Documents.Folders.Characters
@@ -60,9 +64,8 @@ func loadFromFile(fileAddress string) error {
 	if err != nil {
 		return t.NewError("error.locations.load", map[string]any{"Error": err})
 	}
-	/*
-		TODO LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
-	*/
+
+	// TODO LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
 	variety.MakeDefault(params.Variety)
 
 	cachedConfig = append(cachedConfig, *params)
@@ -95,19 +98,23 @@ func makeSet(configs []yamlConfig) []Character {
 }
 
 func newFromYaml(config yamlConfig) *Character {
+	class, err := classes.InsertIfIsnt(config.Class)
+	if err != nil {
+		fmt.Printf("Error inserting class: %v\n", err)
+		return nil
+	}
+
 	newLocation, err := New(Template{
 		Name:        config.Name,
 		Description: config.Description,
+		Class:       class.GetName(),
+		Race:        config.Race,
 		Rarity:      rarity.MakeDefault(config.Rarity),
 		Variety:     variety.MakeDefault(config.Variety),
-		// Stats:       stats.MakeStatsFromYamlConfig(config.Stats),
-		Wallet: config.Wallet,
-		// Equipment:   equipment.MakeArmorSetFromYamlConfig(config.Equipment),
-		// Inventory:   objects.MakeObjectArrayFromYamlConfig(config.Inventory),
-
-		/*
-			TODO HIGH implementer class et race
-		*/
+		Stats:       config.Stats,
+		Wallet:      config.Wallet,
+		Equipment:   config.Equipment,
+		Inventory:   config.Inventory,
 	})
 
 	if err != nil {

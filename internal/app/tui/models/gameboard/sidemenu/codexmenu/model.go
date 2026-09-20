@@ -135,6 +135,7 @@ type codexMenuItem struct {
 	table  codex.Table
 
 	form     *form.Form
+	newForm  func() *form.Form
 	showForm bool
 }
 
@@ -146,11 +147,10 @@ type sideMenuItemsParams struct {
 
 func newMenuItem(params sideMenuItemsParams) *codexMenuItem {
 	return &codexMenuItem{
-		id:     params.id,
-		isOpen: false,
-		table:  params.table,
-
-		form:     params.form(),
+		id:       params.id,
+		isOpen:   false,
+		table:    params.table,
+		newForm:  params.form,
 		showForm: false,
 	}
 }

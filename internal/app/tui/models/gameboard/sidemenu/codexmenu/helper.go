@@ -24,9 +24,9 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 			form:  getNpcForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
-			id:    "codex.beasts",
-			table: params.Codex.BeastsTable,
-			form:  getBeastForm,
+			id:    "codex.beastiary",
+			table: params.Codex.BeastiaryTable,
+			form:  getBeastiaryForm,
 		}),
 		newMenuItem(sideMenuItemsParams{
 			id:    "codex.objects",
@@ -118,6 +118,7 @@ func (m *codexMenu) handleKeyShiftEnter(params sidemenu.UpdateParams) (tea.Model
 			return params.Model, form.SendMsg[form.Validate]()
 		}
 
+		currentPage.form = currentPage.newForm()
 		currentPage.setShowForm(true)
 		return params.Model, sendMsg()
 	}
@@ -174,8 +175,7 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 	}
 
 	currentPage.setShowForm(false)
-	currentForm.Reset()
-	// currentPage.form = form
+	// currentForm.Reset()
 	/*
 		TODO LOW log l'enregistrement du codex ca dans le main view et les log
 		verrifier que tout est persister

@@ -50,3 +50,4 @@ documents:
     characters: "data/template/characters"
     locations: "data/template/locations"
     oracle: "data/template/rules/oracles"
+    encounters: "data/template/rules/oracles/encounter"

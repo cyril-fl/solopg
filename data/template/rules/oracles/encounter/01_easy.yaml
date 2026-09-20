@@ -1,0 +1,25 @@
+id: "encounter_easy"
+dice: 10
+type: "roll" # Oracle / Action / Test / Roll
+visible: false 
+intervals:
+  - min: 1
+    max: 1
+    critical: true
+    result: -2
+  - min: 2
+    max: 3
+    critical: false
+    result: -1
+  - min: 4
+    max: 7
+    critical: false
+    result: 0
+  - min: 8
+    max: 9
+    critical: false
+    result: 1
+  - min: 10
+    max: 10
+    critical: true
+    result: 2

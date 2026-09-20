@@ -3,28 +3,27 @@ package codexmenu
 import (
 	"solopg/internal/app/tui"
 	"solopg/internal/domain/card/attributes/objectcategory"
+	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/domain/card/characters/classes"
 	"solopg/internal/domain/card/characters/races"
+	"solopg/internal/domain/gameplay/oracle"
+	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/t"
 	"solopg/internal/platform/form"
 	"solopg/internal/platform/form/field"
 )
 
-/*
-REFACTOR
-MEDIUM getNpcForm && getBeastForm
-*/
 // - NPC Form - //
 func getNpcForm() *form.Form {
 	return form.NewForm(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: getNpcFormClass(), Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: getNpcFormRace(), Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: getFormClassOptions(), Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: getFormRaceOptions(), Validator: nil, Required: true}),
 	).Focus()
 }
 
-func getNpcFormRace() []tui.Item[string] {
+func getFormRaceOptions() []tui.Item[string] {
 	var raceItems []tui.Item[string]
 	for _, i := range races.List() {
 		raceItems = append(raceItems, tui.NewItem(i.GetName(), "", i.GetName()))
@@ -32,7 +31,7 @@ func getNpcFormRace() []tui.Item[string] {
 	return raceItems
 }
 
-func getNpcFormClass() []tui.Item[string] {
+func getFormClassOptions() []tui.Item[string] {
 	var classItems []tui.Item[string]
 	for _, i := range classes.List() {
 		classItems = append(classItems, tui.NewItem(i.GetName(), "", i.GetName()))
@@ -42,46 +41,47 @@ func getNpcFormClass() []tui.Item[string] {
 }
 
 // - Beast Form - //
-func getBeastForm() *form.Form {
-	var classItems []tui.Item[string]
-	classItems = append(classItems, tui.NewItem("None", "", ""))
-
-	for _, i := range classes.List() {
-		/*
-			REFACTOR
-			MEDIUM faire en sorte d'adpter le isBeast de Race a cette sauce pour pour le sortir et l'appler comme attribues.A et ne plus laisser le choix, ou alors de faire en sorte qu'il n'y ai plusieur classe avec isMosnster true comme
-			- Humanoid
-			- Wyvern
-			- Beast
-			- Undead
-			- Elemental...
-
-			bien que s'a s'appenrente pas a une Class mais a des genre ./ race
-			regarder la conv avec GPT, et resumer, class pas obigatoire en somme. is beast devrais peu etre changer
-
-			est ce qu'un bete oourrais avoir un classe ? exemple un chien ne peu pas etre chasseur (quoi) mais un gobelin ?
-			reponse non car tout les chien ne sont pas chasseur , la partie bestiray est plus un pokedex, et npcs l'app contacte
-		*/
-		classItems = append(classItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
-	}
-
-	return form.NewForm(
-		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
-		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: getBeastFormRace(), Validator: nil, Required: true}),
-	).Focus()
+func getBeastiaryForm() *form.Form {
+	statsFields := getFormStatsFields()
+	return form.
+		NewForm(
+			field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
+			field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
+			field.SelectField(field.SelectTemplate[string]{ID: "encounter", Label: "field.encounter", Options: getBestiaryFormOracle(), Validator: nil, Required: true}),
+		).
+		Add(statsFields...).
+		Focus()
 }
 
-func getBeastFormRace() []tui.Item[string] {
-	var raceItems []tui.Item[string]
-
-	for _, i := range races.List() {
-		if i.IsBeast() {
-			raceItems = append(raceItems, tui.NewItem(t.Localize(i.GetName()), "", i.GetName()))
-		}
+func getBestiaryFormOracle() []tui.Item[string] {
+	list, err := oracle.ListFromFolder(config.Current.Documents.Folders.Encounters)
+	if err != nil {
+		return nil
 	}
 
-	return raceItems
+	var oracleItems []tui.Item[string]
+	for _, i := range list {
+		oracleItems = append(oracleItems, tui.NewItem(t.Localize("oracles."+i), "", i))
+	}
+
+	return oracleItems
+}
+
+func getFormStatsFields() []form.Field {
+	fields := []form.Field{}
+
+	for _, i := range stats.List() {
+		f := field.TextField(field.TextTemplate[string]{
+			ID:           i.String(),
+			Label:        t.Localize(i.String()),
+			Validator:    nil,
+			Required:     false,
+			Defaultvalue: "",
+		})
+		fields = append(fields, f)
+	}
+
+	return fields
 }
 
 // - Location Form - //

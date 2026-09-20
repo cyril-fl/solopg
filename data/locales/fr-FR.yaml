@@ -19,8 +19,23 @@ attempt:
 error.label:
   other: Erreur
 
+races.elves.description:
+  other: "Les elfes sont connus pour leur grâce, leur agilité et leur affinité avec la nature. Ils ont une longue durée de vie et sont souvent habiles en magie et en tir à l'arc."
+races.humans.description:
+  other: "Les humains sont la race la plus adaptable et polyvalente. Ils peuvent prospérer dans n'importe quel environnement et sont connus pour leur résilience et leur détermination."
+races.dwarves.description:
+  other: "Les nains sont robustes et résistants, connus pour leur savoir-faire et leurs compétences en minage. Ils ont un fort sens de la communauté et sont souvent des guerriers compétents."
+races.slimes.description:
+  other: "Les slimes sont des créatures amorphes qui peuvent prendre diverses formes."
+
 oracles:
   other: ORACLES
+oracles.encounter_easy:
+  other: "Facile"
+oracles.encounter_normal:
+  other: "Normal"
+oracles.encounter_hard:
+  other: "Difficile"
 codex:
   other: CODEX
 dice:
@@ -50,6 +65,8 @@ field.category:
   other: "Catégorie (weapon/armor/potion)"
 field.title:
   other: Titre
+field.encounter:
+  other: Rencontre
 codex.add:
   other: "Ajouter — {{.Kind}}"
 codex.empty:
@@ -76,8 +93,8 @@ stat.social:
   other: Social
 codex.npcs:
   other: PNJ
-codex.beasts:
-  other: Bêtes
+codex.beastiary:
+  other: Bestiaire
 codex.locations:
   other: Lieux
 codex.objects:

@@ -42,13 +42,19 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 
 	character, err := characters.New(characters.Template{
 		Name:        values["name"],
+		// TODO HIGH dans la description a la main entrée les details de l'equipement ect enfin le faire un peu en RP QUOI
 		Description: values["description"],
+		Rarity:      rarity.Default(),
+		Race:        values["race"],
+		Class:       values["class"],
 		/*
-			TODO HIGH Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
+		TODO HIGH
+		Entrée les stats, s'inspirer de ce que je fais pour race
+		entre les stat le calculer comme le jouer
+		mais les details de l'equipemetn ect sont en text dans la description en mode lore.
+
+		la puissance serait calcler / representer par un jet de des dans un horacle , genre un perso badass hyper puissant serait jouer avec l'oracle legendary et un perso faible avec l'oracle common.
 		*/
-		Rarity: rarity.Default(),
-		Race:   values["race"],
-		Class:  values["class"],
 	})
 
 	if err != nil {
@@ -92,7 +98,6 @@ func (n *NpcsTable) assertEntry(entry map[string]string) error {
 	if !classes.Assert(entry["class"]) {
 		err = append(err, fmt.Errorf("class is empty"))
 	}
-
 
 	if len(err) > 0 {
 		return n.formatAssertErrors(err)

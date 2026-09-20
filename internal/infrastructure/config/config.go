@@ -39,6 +39,7 @@ type structureFolders struct {
 	Characters string `yaml:"characters"`
 	Locations  string `yaml:"locations"`
 	Oracle     string `yaml:"oracle"`
+	Encounters string `yaml:"encounters"`
 }
 
 type structureFiles struct {

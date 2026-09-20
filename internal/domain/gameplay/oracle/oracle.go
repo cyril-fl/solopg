@@ -3,11 +3,13 @@ package oracle
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
 
 	"solopg/internal/domain/gameplay/dice"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/t"
 	"solopg/internal/infrastructure/yaml"
+	"solopg/internal/platform/log"
 )
 
 // - Configuration & caching - //
@@ -36,37 +38,29 @@ var folderConfigPath = config.Current.Documents.Folders.Oracle
 
 var cachedConfig []yamlConfig
 
-func load() error {
-	folderContents, err := loadFromFolder()
+func loadFromSource() error {
+	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return err
+		return t.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
-	errs := []error{}
-	for _, file := range folderContents {
-		filepath := fmt.Sprintf("%s/%s", folderConfigPath, file)
-
-		if err := loadFromFile(filepath); err != nil {
-			errs = append(errs, t.NewError("error.oracle.load_file", map[string]any{"File": file, "Error": err}))
-			continue
-		}
-	}
-
-	if len(errs) > 0 {
+	if errs := handleLoadFromFiles(files); len(errs) > 0 {
 		return errors.Join(errs...)
 	}
 
 	return nil
 }
 
-func loadFromFolder() ([]string, error) {
-	list, err := yaml.GetFolderFiles(folderConfigPath)
-
-	if err != nil {
-		return nil, t.NewError("error.oracle.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+func handleLoadFromFiles(files []string) []error {
+	errs := []error{}
+	for _, file := range files {
+		if err := loadFromFile(file); err != nil {
+			errs = append(errs, fmt.Errorf("Error loading oracle set from file %s: %v", file, err))
+			continue
+		}
 	}
 
-	return list, nil
+	return errs
 }
 
 func loadFromFile(fileAddress string) error {
@@ -87,6 +81,29 @@ func loadFromFile(fileAddress string) error {
 	cachedConfig = append(cachedConfig, *params)
 
 	return nil
+}
+
+func ListFromFolder(path string) ([]string, error) {
+	list, err := yaml.GetFolderFiles(path)
+	if err != nil {
+		return nil, t.NewError("error.oracle.load_folder", map[string]any{"Folder": path, "Error": err})
+	}
+
+	errs := []error{}
+	oracles := []string{}
+	for _, file := range list {
+		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
+			errs = append(errs, fmt.Errorf("Error loading oracle from file %s: %v", file, err))
+		} else {
+			oracles = append(oracles, params.ID)
+		}
+	}
+
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return oracles, nil
 }
 
 // - Oracle - //
@@ -130,16 +147,19 @@ func (o Oracle) IsVisible() bool {
 
 // - Collection - //
 func List() []Oracle {
-
 	if cachedConfig == nil {
-		err := load()
-		if err != nil {
+		if err := loadFromSource(); err != nil {
 			fmt.Printf("Error loading oracles: %v\n", err)
 			return nil
 		}
 	}
 
 	return makeSet(cachedConfig)
+}
+
+func Log() {
+	loadFromSource()
+	log.ParseJson(cachedConfig)
 }
 
 func makeSet(configs []yamlConfig) []Oracle {

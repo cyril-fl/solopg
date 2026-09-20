@@ -2,7 +2,6 @@ package classes
 
 import (
 	"fmt"
-	"slices"
 	"solopg/internal/domain/card/attributes/stats"
 	"solopg/internal/infrastructure/config"
 	"solopg/internal/infrastructure/yaml"
@@ -31,41 +30,32 @@ func loadFromFile() error {
 	return nil
 }
 
-// - Class - //
-type Class struct {
-	name           string           `yaml:"name"`
-	playable       bool             `yaml:"playable"`
-	bonus          []stats.Modifier `yaml:"bonus"`
-	equipementName string           `yaml:"armor_set"`
-}
+func Has(value Template) bool {
+	new := New(value)
 
-func new(config yamlConfig) Class {
-	return Class{
-		name:           config.Name,
-		playable:       config.Playable,
-		bonus:          config.Bonus,
-		equipementName: config.ArmorSet,
+	for _, class := range List() {
+		if class.GetHash() == new.GetHash() {
+			return true
+		}
 	}
+	return false
 }
 
-func (c Class) GetName() string {
-	return c.name
-}
+func AddInConfig(value Template) error {
+	if Has(value) {
+		return fmt.Errorf("class already exists in config")
+	}
 
-func (c Class) IsPlayable() bool {
-	return c.playable
-}
+	new := yamlConfig{
+		Name:     value.Name,
+		Playable: value.Playable,
+		Bonus:    value.Bonus,
+		ArmorSet: value.EquipementName,
+	}
 
-func (c Class) GetBonus() []stats.Modifier {
-	return c.bonus
-}
+	cachedConfig = append(cachedConfig, new)
 
-func (c Class) GetEquipementName() string {
-	return c.equipementName
-}
-
-func Assert(provided string) bool {
-	return provided == "" || slices.Contains(ListNames(), provided)
+	return nil
 }
 
 // - Collection - //
@@ -97,12 +87,36 @@ func FindByName(name string) *Class {
 	return nil
 }
 
+func InsertIfIsnt(name string) (*Class, error) {
+	if class := FindByName(name); class != nil {
+		return class, nil
+	}
+
+	if err := AddInConfig(Template{
+		Name:     name,
+		Playable: true,
+	}); err != nil {
+		return nil, err
+	}
+
+	return FindByName(name), nil
+}
+
 func makeSet(configs []yamlConfig) []Class {
 	result := make([]Class, 0, len(configs))
 
 	for _, config := range configs {
-		result = append(result, new(config))
+		result = append(result, newFromYaml(config))
 	}
 
 	return result
+}
+
+func newFromYaml(config yamlConfig) Class {
+	return Class{
+		name:           config.Name,
+		playable:       config.Playable,
+		bonus:          config.Bonus,
+		equipementName: config.ArmorSet,
+	}
 }

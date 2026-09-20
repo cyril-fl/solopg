@@ -23,6 +23,12 @@ type Character struct {
 	Equipment equipment.Equipment
 	Inventory []objects.Object
 	Wallet    wallet.Wallet
+
+	/*
+	TODO LOW
+	Ajouter des "effet" au personnage, ce ne serait pas des effet comme une arme qui fais x ou y mais plus des stats comme un empoissenememnt ex lier a une potion au autre
+	ce serais aussi utiliser dans le formulaire de creation de perso pour simulier les effet d'un equipment qu'on a pas ecrit piece par piece.
+	*/
 }
 
 type Template struct {

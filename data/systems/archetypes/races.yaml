@@ -1,5 +1,6 @@
-# Playable races
+# Playable
 - name: Elf
+  description: "races.elves.description"
   playable: true
   bonus:
     - stat: health
@@ -14,6 +15,7 @@
       value: 1
 
 - name: Human
+  description: "races.humans.description"
   playable: true
   bonus:
     - stat: health
@@ -28,6 +30,7 @@
       value: 1
 
 - name: Dwarf
+  description: "races.dwarves.description"
   playable: true
   bonus:
     - stat: health
@@ -41,7 +44,7 @@
     - stat: social
       value: -1
 
-# Beasts races
+# Non-playable
 - name: Slime
+  description: "races.slimes.description"
   playable: false
-  beast: true
