@@ -14,16 +14,16 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Name        string            `yaml:"name"`
-	Description string            `yaml:"description"`
-	Set         string            `yaml:"set"`
-	Rarity      rarity.Rarity     `yaml:"rarity"`
-	Variety     variety.Variety   `yaml:"variety"`
-	Category    objectcategory.Category  `yaml:"category"`
-	Potency  potency.Value     `yaml:"potency"`
-	Effects     []stats.Effect    `yaml:"effects"`
-	Pod         int               `yaml:"pod"`
-	Slot        slot.Slot         `yaml:"destinedslot"`
+	Name        string                  `yaml:"name"`
+	Description string                  `yaml:"description"`
+	Set         string                  `yaml:"set"`
+	Rarity      rarity.Rarity           `yaml:"rarity"`
+	Variety     variety.Variety         `yaml:"variety"`
+	Category    objectcategory.Category `yaml:"category"`
+	Potency     potency.Value           `yaml:"potency"`
+	Effects     []stats.Effect          `yaml:"effects"`
+	Pod         int                     `yaml:"pod"`
+	Slot        slot.Slot               `yaml:"destinedslot"`
 }
 
 var folderConfigPath = "data/template/armor_sets"
@@ -98,7 +98,7 @@ func newFromYaml(config yamlConfig) *Gear {
 		Rarity:      config.Rarity,
 		Variety:     config.Variety,
 		Category:    config.Category,
-		Potency:  config.Potency,
+		Potency:     config.Potency,
 		Effects:     config.Effects,
 		Pod:         config.Pod,
 		Slot:        config.Slot,

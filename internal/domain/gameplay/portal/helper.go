@@ -6,11 +6,8 @@ import (
 	"solopg/internal/infrastructure/t"
 )
 
-/*
-TODO
-LOW voir si on peu pas rendre ca fn() *Location ou juste Location
-*/
 
+// TODO LOW voir si on peu pas rendre ca fn() *Location ou juste Location
 // - Portal - //
 func Teleport() (*locations.Location, error) {
 	list := locations.List()

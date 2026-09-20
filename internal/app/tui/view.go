@@ -26,8 +26,7 @@ func (m model) View() tea.View {
 }
 
 /*
-TODO
-LOW Modifier le footer pour qu'il devienne une "class" en soit.
+TODO LOW Modifier le footer pour qu'il devienne une "class" en soit.
 */
 func mainFooter() []string {
 	return []string{t.Localize("quit")}

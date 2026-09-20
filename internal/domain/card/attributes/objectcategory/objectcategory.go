@@ -47,8 +47,7 @@ func ListCategory() []Category {
 }
 
 /*
-TODO
-LOW Verrifier quelle autre concepet pourrait utiliser le "MakeDefault"
+TODO LOW Verrifier quelle autre concepet pourrait utiliser le "MakeDefault"
 */
 func MakeDefault(defaultValue string) Category {
 	ListCategory()

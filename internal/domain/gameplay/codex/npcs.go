@@ -44,8 +44,7 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 		Name:        values["name"],
 		Description: values["description"],
 		/*
-			TODO
-			HIGH Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
+			TODO HIGH Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
 		*/
 		Rarity: rarity.Default(),
 		Race:   values["race"],

@@ -1,7 +1,6 @@
 package codex
 
 import (
-	"errors"
 	"fmt"
 	"solopg/internal/domain/card/attributes/rarity"
 	"solopg/internal/domain/card/attributes/variety"
@@ -110,12 +109,4 @@ func (tb *LocationsTable) Ensure() {
 	if tb.Entries == nil {
 		tb.Entries = []LocationsEntry{}
 	}
-}
-
-// // TODO decoupler autrement
-func (tb *LocationsTable) formatAssertErrors(err []error) error {
-	return errors.Join(
-		fmt.Errorf("invalid %s:", tb.name),
-		errors.Join(err...),
-	)
 }

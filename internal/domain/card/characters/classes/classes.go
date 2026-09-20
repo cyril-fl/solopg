@@ -33,17 +33,17 @@ func loadFromFile() error {
 
 // - Class - //
 type Class struct {
-	name     string           `yaml:"name"`
-	playable bool             `yaml:"playable"`
-	bonus    []stats.Modifier `yaml:"bonus"`
+	name           string           `yaml:"name"`
+	playable       bool             `yaml:"playable"`
+	bonus          []stats.Modifier `yaml:"bonus"`
 	equipementName string           `yaml:"armor_set"`
 }
 
 func new(config yamlConfig) Class {
 	return Class{
-		name:     config.Name,
-		playable: config.Playable,
-		bonus:    config.Bonus,
+		name:           config.Name,
+		playable:       config.Playable,
+		bonus:          config.Bonus,
 		equipementName: config.ArmorSet,
 	}
 }

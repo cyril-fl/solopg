@@ -25,7 +25,6 @@ func Start() error {
 
 func Try() error {
 
-
 	armorset := equipment.FindEquipementByName("adventurer")
 	log.ParseJson(armorset)
 
@@ -33,8 +32,7 @@ func Try() error {
 }
 
 /*
-	TODO
-	LOW # Étendre la CLI avec des commande comme:
+	TODO LOW Étendre la CLI avec des commande comme:
 
 	> Cli edit —config —locales [lang]
 		- d’autre argument pouvant être passé en fonction de la config par défaut.

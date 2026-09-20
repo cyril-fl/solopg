@@ -12,8 +12,7 @@ import (
 
 // - Table --//
 /*
-TODO
-LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
+TODO LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
 */
 type ObjectsTable struct {
 	*TableData[ObjectEntry]
@@ -92,18 +91,17 @@ func (o *ObjectsTable) assertEntry(entry map[string]string) error {
 		err = append(err, fmt.Errorf("description is required"))
 	}
 	/*
-		TODO
-		HIGH quand tout sera fix ajouter ces champs dans le form
+		TODO HIGH quand tout sera fix ajouter ces champs dans le form
+		if entry["rarity"] == "" {
+			err = append(err, fmt.Errorf("rarity is required"))
+		}
+		if entry["variety"] == "" {
+			err = append(err, fmt.Errorf("variety is required"))
+		}
+		if entry["category"] == "" {
+			err = append(err, fmt.Errorf("category is required"))
+		}
 	*/
-	// if entry["rarity"] == "" {
-	// 	err = append(err, fmt.Errorf("rarity is required"))
-	// }
-	// if entry["variety"] == "" {
-	// 	err = append(err, fmt.Errorf("variety is required"))
-	// }
-	// if entry["category"] == "" {
-	// 	err = append(err, fmt.Errorf("category is required"))
-	// }
 
 	if len(err) > 0 {
 		return o.formatAssertErrors(err)

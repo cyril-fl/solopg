@@ -61,8 +61,7 @@ func loadFromFile(fileAddress string) error {
 		return t.NewError("error.locations.load", map[string]any{"Error": err})
 	}
 	/*
-		TODO
-		LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
+		TODO LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
 	*/
 	variety.MakeDefault(params.Variety)
 
@@ -107,8 +106,7 @@ func newFromYaml(config yamlConfig) *Character {
 		// Inventory:   objects.MakeObjectArrayFromYamlConfig(config.Inventory),
 
 		/*
-			TODO
-			HIGH implementer class et race
+			TODO HIGH implementer class et race
 		*/
 	})
 

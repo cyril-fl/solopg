@@ -49,8 +49,7 @@ func (tb *BeastsTable) AddFromMappedValues(values map[string]string) error {
 		Name:        values["name"],
 		Description: values["description"],
 		/*
-			TODO
-			HIGH Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
+			TODO HIGH Changer ca avec la File driven, peu etre la jouer au Dés avec un oracle ?
 		*/
 		Rarity: rarity.Default(),
 		Race:   values["race"],
@@ -95,8 +94,7 @@ func (tb *BeastsTable) assertEntry(entry map[string]string) error {
 	}
 
 	/*
-		TODO
-		HIGH Implmenter ça dans le assert
+		TODO HIGH Implmenter ça dans le assert
 		if result.Kind == codexform.Beasts && !races.FindByName(values["race"]).IsBeast) {
 			return t.NewError("error.non_beast_race", map[string]any{"Race": values["race"]})
 		}

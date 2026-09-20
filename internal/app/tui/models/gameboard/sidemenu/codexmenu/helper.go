@@ -177,8 +177,7 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 	currentForm.Reset()
 	// currentPage.form = form
 	/*
-		TODO
-		LOW log l'enregistrement du codex ca dans le main view et les log
+		TODO LOW log l'enregistrement du codex ca dans le main view et les log
 		verrifier que tout est persister
 	*/
 	return sendMsg()

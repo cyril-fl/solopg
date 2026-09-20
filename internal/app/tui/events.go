@@ -42,7 +42,7 @@ const (
 	KeyEsc       = "esc"
 	KeyBackspace = "backspace"
 	KeyTab       = "tab"
-	KeyShiftTab   = "shift+tab"
+	KeyShiftTab  = "shift+tab"
 
 	// Arrow keys
 	KeyUp    = "up"

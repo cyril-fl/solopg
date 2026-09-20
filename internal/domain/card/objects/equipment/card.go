@@ -52,8 +52,8 @@ func (set *Equipment) hasSlot(slot slot.Slot) bool {
 type Gear struct {
 	objects.Object
 
-	Potency  potency.Value
-	Slot       slot.Slot
+	Potency potency.Value
+	Slot    slot.Slot
 }
 
 type Template struct {
@@ -62,10 +62,10 @@ type Template struct {
 	Rarity      rarity.Rarity
 	Variety     variety.Variety
 	Category    objectcategory.Category
-	Potency  potency.Value
+	Potency     potency.Value
 	Effects     []stats.Effect
 	Pod         int
-	Slot        slot.Slot 
+	Slot        slot.Slot
 }
 
 func NewGear(params Template) (*Gear, error) {
@@ -94,8 +94,8 @@ func NewGear(params Template) (*Gear, error) {
 	}
 
 	return &Gear{
-		Object:     *newItem,
-		Potency:  params.Potency,
-		Slot:       params.Slot,
+		Object:  *newItem,
+		Potency: params.Potency,
+		Slot:    params.Slot,
 	}, nil
 }

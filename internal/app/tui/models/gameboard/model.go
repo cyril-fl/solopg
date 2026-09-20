@@ -101,9 +101,8 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
 func (m model) HandlesEscape() bool {
 	// return m.codexMenu.HandlesEscape()
-	/*
-		TODO
-		LOW refactor la maniere dont on hndle escape
-	*/
+	// TODO LOW refactor la maniere dont on hndle escape
+
+
 	return true
 }
