@@ -1,7 +1,7 @@
 package direction
 
 import (
-	"solopg/internal/app/tui"
+	"solopg/app/tui"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"solopg/internal/infrastructure/config"
-	"solopg/internal/platform/log"
+	"solopg/app/utils/log"
+	"solopg/config"
 
 	"github.com/spf13/cobra"
 )

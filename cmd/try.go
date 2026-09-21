@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"solopg/internal/app"
+	src "solopg/app"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ var tryCmd = &cobra.Command{
 	Long:    cmd.Try.Long,
 	Example: cmd.Try.Example,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return app.Try()
+		return src.Try()
 	},
 }
 

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"solopg/internal/infrastructure/config"
+	"solopg/config"
 
 	"github.com/spf13/cobra"
 )
