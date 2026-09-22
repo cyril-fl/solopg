@@ -1,5 +1,5 @@
 services:
-  solopg-app:
+  app:
     image: golang:latest
     working_dir: /app
     volumes:  
@@ -11,7 +11,7 @@ services:
       - .env.docker
     command: sleep infinity
 
-  solopg-mongo:
+  mongo:
     image: mongo:latest
     container_name: solopg-mongo
     ports:
@@ -24,12 +24,12 @@ services:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
 
-  solopg-compooss:
+  compooss:
     image: abdullahmia/compooss:latest
     ports:
         - "6969:3000"
     depends_on:
-        - solopg-mongo
+        - mongo
 
 volumes:
   mongo-data:
