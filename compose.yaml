@@ -1,13 +1,35 @@
 services:
+  solopg-app:
+    image: golang:latest
+    working_dir: /app
+    volumes:  
+      - .:/app
+    environment:
+      TERM: xterm-256color
+      COLORTERM: truecolor
+    env_file:
+      - .env.docker
+    command: sleep infinity
+
   solopg-mongo:
-    image: docker.io/library/mongo:latest
-    
+    image: mongo:latest
     container_name: solopg-mongo
     ports:
-      - "27017:27017"
+      - "${PORT:-27017}:27017"
+    # environment:
+    #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+    #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
+
+  solopg-compooss:
+    image: abdullahmia/compooss:latest
+    ports:
+        - "6969:3000"
+    depends_on:
+        - solopg-mongo
 
 volumes:
   mongo-data:

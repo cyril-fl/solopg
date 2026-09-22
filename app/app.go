@@ -14,12 +14,13 @@ func Start() error {
 		return err
 	}
 
-	db, err := mongo.Connect()
-	if err != nil {
-		return err
+	db := mongo.NewMongo()
+	db.Connect()
+	if db.HasErrors() {
+		return db.GetErrors()
 	}
 
-	defer mongo.Disconnect(db)
+	defer db.Disconnect()
 
 	return session.RunSession(db)
 }
