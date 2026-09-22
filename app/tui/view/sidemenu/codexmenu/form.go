@@ -16,6 +16,7 @@ func getNpcForm() *form.Form {
 			field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 			field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 			field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: getFormClassOptions(), Validator: nil, Required: true}),
+			// TODO un problme son load plusierus fois, verrifier si c'est un soucis de "code" ou juste la DB qui est corrompue
 			field.SelectField(field.SelectTemplate[string]{ID: "race", Label: "field.race", Options: getFormRaceOptions(), Validator: nil, Required: true}),
 			field.SelectField(field.SelectTemplate[string]{ID: "encounter", Label: "field.encounter", Options: getFormOracle(), Validator: nil, Required: true}),
 		).

@@ -6,7 +6,10 @@ import (
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/characters/classes"
 	"solopg/app/domain/card/characters/races"
+	"solopg/app/services/process/generatestats"
 	"solopg/app/services/t"
+	"strings"
+
 	"time"
 )
 
@@ -40,21 +43,28 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
+	generator := generatestats.NewStatsGenerator(values)
+	generator.GenerateFromValues(generatestats.GenerateParams{
+		Randomness: true,
+	})
+
+	if err := generator.GetError(); err != nil {
+		return fmt.Errorf("failed to generate stats from values: %w", err)
+	}
+
+	/*
+	NOTE Description should be a text field that describes the character in a RP way, and includes details 
+	about the character's equipment, abilities, and other relevant information. Power level should 
+	be calculated / represented by a dice roll in an oracle, for example:
+	a powerful character stats would be chosen with the legendary.
+	*/
 	character, err := characters.New(characters.Template{
 		Name: values["name"],
-		// TODO HIGH dans la description a la main entrée les details de l'equipement ect enfin le faire un peu en RP QUOI
 		Description: values["description"],
 		Rarity:      rarity.Default(),
 		Race:        values["race"],
 		Class:       values["class"],
-		/*
-			TODO HIGH
-			Entrée les stats, s'inspirer de ce que je fais pour race
-			entre les stat le calculer comme le jouer
-			mais les details de l'equipemetn ect sont en text dans la description en mode lore.
-
-			la puissance serait calcler / representer par un jet de des dans un horacle , genre un perso badass hyper puissant serait jouer avec l'oracle legendary et un perso faible avec l'oracle common.
-		*/
+		Stats:       generator.GetStats(),
 	})
 
 	if err != nil {
@@ -67,20 +77,30 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 }
 
 func (n *NpcsTable) Summaries() []string {
-	summaries := make([]string, 0, len(n.Entries))
+	content := strings.Builder{}
+
+	if len(n.Entries) == 0 {
+		content.WriteString(t.Localize("codex.no_npcs"))
+		return []string{content.String()}
+	}
+
 	for _, entry := range n.Entries {
 		if entry.Character == nil {
-			summaries = append(summaries, t.Localize("codex.unknown_npc"))
+			content.WriteString(t.Localize("codex.unknown_npc"))
+			content.WriteString("\n\n")
 			continue
 		}
-		summaries = append(summaries, fmt.Sprintf("%s — %s - %s - %s", entry.Character.Name, entry.Character.Race, entry.Character.Class, entry.Character.Description))
+		content.WriteString(entry.Character.Name)
+		content.WriteString(" - ")
+		content.WriteString(entry.Character.Race)
+		content.WriteString(" - ")
+		content.WriteString(entry.Character.Class)
+		content.WriteString("\n")
+		content.WriteString(entry.Character.Stats.String())
+		content.WriteString("\n\n")
 	}
 
-	if len(summaries) == 0 {
-		summaries = append(summaries, t.Localize("codex.no_npcs"))
-	}
-
-	return summaries
+	return []string{content.String()}
 }
 
 // - Helper --//

@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/characters/races"
-	"solopg/app/domain/gameplay/oracle"
+	"solopg/app/services/process/generatestats"
 	"solopg/app/services/t"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -55,11 +54,30 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
+	generator := generatestats.NewStatsGenerator(values)
+	generator.GenerateFromValues(generatestats.GenerateParams{
+		Randomness: false,
+	})
+
+	if err := generator.GetError(); err != nil {
+		return fmt.Errorf("failed to generate stats from values: %w", err)
+	}
+
+	/*
+	NOTE: Generated bonuses may be negative.
+	First of all, this is intentional and follows the following logic: 
+	`a Troll is stupid and therefore receives an Intelligence penalty.``
+
+	Then, this should not be handled by the process itself, but by the template 
+	selected with values["encounter"].
+
+	These are configurable in the /data/systems/rules/oracles/encounter directory.
+	*/
 	raw := races.Template{
 		Name:        values["name"],
 		Description: values["description"],
 		Playable:    false,
-		Bonus:       tb.makeBonusFromValues(values),
+		Bonus:       generator.GetModifiers(),
 	}
 
 	race := races.New(raw)
@@ -171,53 +189,4 @@ func getPreloadBeastiaryEntries() []BeastiaryEntry {
 	}
 
 	return slice
-}
-
-func (tb BeastiaryTable) makeBonusFromValues(values map[string]string) []stats.Modifier {
-	modifier := []stats.Modifier{}
-
-	oracle, err := oracle.GetByID(values["encounter"])
-	if err != nil {
-		fmt.Printf("Error getting oracle: %v\n", err)
-		return modifier
-	}
-
-	for _, stat := range stats.List() {
-		modifier = append(modifier, tb.handleStatValues(statValuesTemplate{
-			stat:     stat,
-			value:    values[stat.String()],
-			fallback: *oracle,
-		}))
-	}
-
-	return modifier
-}
-
-type statValuesTemplate struct {
-	stat     stats.Stat
-	value    string
-	fallback oracle.Oracle
-}
-
-func (tb BeastiaryTable) handleStatValues(params statValuesTemplate) stats.Modifier {
-	if bonus, err := strconv.Atoi(params.value); err == nil && params.value != "" {
-		return stats.Modifier{
-			Stat:  params.stat,
-			Value: bonus,
-		}
-	}
-
-	roll, err := oracle.Roll[int](params.fallback)
-	if err != nil {
-		fmt.Printf("Error rolling for stat %s: %v\n", params.stat.String(), err)
-		return stats.Modifier{
-			Stat:  params.stat,
-			Value: 0,
-		}
-	}
-
-	return stats.Modifier{
-		Stat:  params.stat,
-		Value: roll.Result,
-	}
 }

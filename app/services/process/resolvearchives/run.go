@@ -1,4 +1,4 @@
-package process
+package resolvearchives
 
 import (
 	"solopg/app/domain/campaign"
@@ -6,6 +6,8 @@ import (
 	"solopg/app/services/mongo"
 	"solopg/types/id"
 )
+
+
 
 func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaign.Archives, error) {
 	maybeArchives, err := db.LoadArchivesByCampaignID(campaignID)

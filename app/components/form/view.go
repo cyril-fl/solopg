@@ -24,6 +24,13 @@ func (m *Form) View() tea.View {
 }
 
 func (m *Form) EnsureFocusedFieldVisible(viewport *viewport.Model) {
+	/*
+	 REFACTOR MEDIUM 
+	 Faire en sorte que le forme EMETTE un event avec position ect qui soir recu par un e view port et qui gere le scroll
+	 plustot que l'etat actuel ou le form gere le scroll du viewport en le recevant en param 
+
+	 ... connard de GPT
+	*/
 	fieldsTop, fieldsHight := m.getFocusedFieldPosition(*viewport)
 	fieldsBottom := fieldsTop + fieldsHight
 

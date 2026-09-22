@@ -7,8 +7,10 @@ import (
 	"solopg/app/domain/card/characters/races"
 	"solopg/app/domain/card/locations"
 	"solopg/app/services/game"
-	"solopg/app/services/game/process"
 	"solopg/app/services/mongo"
+	"solopg/app/services/process"
+	"solopg/app/services/process/resolvearchives"
+	"solopg/app/services/process/resolvecampaign"
 	"solopg/app/services/t"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
@@ -68,12 +70,12 @@ func RunSession(db *mongo.Mongo) error {
 }
 
 func buildEngine(db *mongo.Mongo, ctx *tui.Context) (*game.Engine, error) {
-	resolvedCampaign, err := process.ResolveCampaignFromContext(ctx)
+	resolvedCampaign, err := resolvecampaign.ResolveCampaignFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	loadedArchives, err := process.LoadArchivesFromDbByCampaignID(db, resolvedCampaign.ID)
+	loadedArchives, err := resolvearchives.LoadArchivesFromDbByCampaignID(db, resolvedCampaign.ID)
 	if err != nil {
 		return nil, err
 	}

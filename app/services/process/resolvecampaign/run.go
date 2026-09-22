@@ -1,4 +1,4 @@
-package process
+package resolvecampaign
 
 import (
 	"solopg/app/domain/campaign"
