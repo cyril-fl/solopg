@@ -14,6 +14,8 @@ func Start() error {
 		return err
 	}
 
+	session.ClearTui()
+
 	db := mongo.NewMongo()
 	db.Connect()
 	if db.HasErrors() {

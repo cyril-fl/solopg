@@ -1,6 +1,8 @@
 package session
 
 import (
+	"os"
+	"os/exec"
 	"solopg/app/domain/campaign"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/characters/classes"
@@ -21,6 +23,12 @@ import (
 	"solopg/app/tui/view/onboarding/onboardforgecharacter"
 	"solopg/app/tui/view/onboarding/onboardlocation"
 )
+
+func ClearTui() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
 
 func RunSession(db *mongo.Mongo) error {
 	saves, err := db.LoadCampaign()
