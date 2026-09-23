@@ -12,7 +12,6 @@ import (
 
 type StatsGenerator struct {
 	values map[string]string
-	stat   stats.Stats
 	modifiers []stats.Modifier
 	entropy string
 	error  []error
@@ -26,7 +25,9 @@ func NewStatsGenerator(values map[string]string) *StatsGenerator {
 }
 // Getter & Setter
 func (sg *StatsGenerator) GetStats() stats.Stats {
-	return sg.stat
+	s := stats.GetBasic()
+	s.ApplyModifiers(sg.modifiers)
+	return s
 }
 
 func (sg *StatsGenerator) GetModifiers() []stats.Modifier {
@@ -52,10 +53,6 @@ func (sg *StatsGenerator) GenerateFromValues(params GenerateParams) {
 	if params.Randomness {
 		sg.makeRandomModifiersFromOracleValue()
 	}
-
-	sg.stat = stats.GetBasic()
-	sg.stat.ApplyModifiers(sg.modifiers)
-
 }
 
 func (sg *StatsGenerator) makeModifiersFromValuesWithFallback() {
@@ -94,7 +91,6 @@ func (sg *StatsGenerator) makeRandomModifiersFromOracleValue() {
 }
 
 func (sg *StatsGenerator) reset() {
-	sg.stat = nil
 	sg.modifiers = nil
 	sg.error = nil
 }
