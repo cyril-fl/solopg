@@ -23,6 +23,8 @@ func (m *Form) View() tea.View {
 	)
 }
 
+// SCROLL
+// DISABLED
 func (m *Form) EnsureFocusedFieldVisible(viewport *viewport.Model) {
 	/*
 	 REFACTOR MEDIUM 
@@ -52,6 +54,8 @@ func (m *Form) EnsureFocusedFieldVisible(viewport *viewport.Model) {
 	viewport.SetYOffset(viewportOffset)
 }
 
+// SCROLL
+// DISABLED
 func (m *Form) getFocusedFieldPosition(viewport viewport.Model) (int, int) {
 	top := 0
 

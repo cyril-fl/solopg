@@ -54,8 +54,9 @@ func (m *model) refreshViewport(resetPosition bool) {
 		Width(m.viewport.Width()).
 		Render(content)
 
-	m.viewport.SetContent(content)
-	m.settlePosition(resetPosition)
+	// SCROLL
+	// m.viewport.SetContent(content)
+	// m.settlePosition(resetPosition)
 }
 
 func (m *model) getContent() string {

@@ -59,7 +59,8 @@ func (m *codexMenu) HandleFieldBounds(viewport *viewport.Model) {
 		return
 	}
 
-	page.form.EnsureFocusedFieldVisible(viewport)
+	// SCROLL
+	// page.form.EnsureFocusedFieldVisible(viewport)
 }
 
 // - Handlers - //

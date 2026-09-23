@@ -119,8 +119,9 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 			return m.delegateInputToForm(params)
 		}
 
-	case tea.MouseWheelMsg:
-		return m.delegateInputToForm(params)
+	// SCROLL
+	// case tea.MouseWheelMsg:
+	// 	return m.delegateInputToForm(params)
 	}
 
 	return params.Delegate(params.Msg)

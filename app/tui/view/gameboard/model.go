@@ -1,7 +1,6 @@
 package gameboard
 
 import (
-	"solopg/app/components/form"
 	"solopg/app/services/game"
 	"solopg/app/services/t"
 	"solopg/app/tui"
@@ -81,14 +80,16 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.handleWindowResize(msg)
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case tui.KeyPgUp, tui.KeyPgDown:
-			return m.handleViewportScroll(msg)
+		// SCROLL
+		// case tui.KeyPgUp, tui.KeyPgDown:
+			// return m.handleViewportScroll(msg)
 		default:
 			m.handleKeyPress(msg)
 			return m.handleCommand(msg)
 		}
-	case tea.MouseWheelMsg:
-		return m.handleViewportScroll(msg)
+	// SCROLL
+	// case tea.MouseWheelMsg:
+		// return m.handleViewportScroll(msg)
 
 	// Cmd messages
 	case codexmenu.Msg:
@@ -100,9 +101,11 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tui.SaveMsg:
 		return m.handleSaveInput(msg)
 
-	case form.Scroll:
-		scroll := msg.Content
-		return m.handleViewportScroll(scroll)
+		
+	// SCROLL
+	// case form.Scroll:
+		// scroll := msg.Content
+		// return m.handleViewportScroll(scroll)
 
 	case cursor.BlinkMsg:
 		return m.handleCursorBlink(msg)
