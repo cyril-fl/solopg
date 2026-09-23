@@ -23,51 +23,28 @@ func (m *Form) View() tea.View {
 	)
 }
 
-// SCROLL
-// DISABLED
-func (m *Form) EnsureFocusedFieldVisible(viewport *viewport.Model) {
-	/*
-	 REFACTOR MEDIUM 
-	 Faire en sorte que le forme EMETTE un event avec position ect qui soir recu par un e view port et qui gere le scroll
-	 plustot que l'etat actuel ou le form gere le scroll du viewport en le recevant en param 
-
-	 ... connard de GPT
-	*/
-	fieldsTop, fieldsHight := m.getFocusedFieldPosition(*viewport)
-	fieldsBottom := fieldsTop + fieldsHight
-
-	viewportHeight := viewport.Height()
-	viewportOffset := viewport.YOffset()
-
-	if fieldsTop < 0 || viewportHeight <= 0 {
-		return
-	}
-
-	if fieldsTop < viewportOffset {
-		viewportOffset = fieldsTop
-	}
-
-	if fieldsBottom > viewportOffset+viewportHeight {
-		viewportOffset = fieldsTop + fieldsHight - viewportHeight
-	}
-
-	viewport.SetYOffset(viewportOffset)
-}
-
-// SCROLL
-// DISABLED
-func (m *Form) getFocusedFieldPosition(viewport viewport.Model) (int, int) {
+func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 	top := 0
 
 	for _, field := range m.fields {
 		content := lipgloss.NewStyle().Width(viewport.Width()).Render(field.View().Content)
 		height := lipgloss.Height(content)
 
-		top += height
-
-		if field.IsFocused() {
-			return top, height
+		if !field.IsFocused() {
+			top += height
+			continue
 		}
+
+		if m.GetError() != nil {
+			err := lipgloss.NewStyle().
+				Width(viewport.Width()).
+				Render("\n" + m.GetError().Error())
+
+			height += lipgloss.Height(err)
+		}
+
+		return top, height
+
 	}
 
 	return -1, 0

@@ -66,7 +66,22 @@ func (m *OracleMenu) SetList(list list.Model) {
 	m.list = list
 }
 
-// / Handlers
+// Handlers
+func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	switch msg := params.Msg.(type) {
+	case tea.KeyPressMsg:
+		switch msg.String() {
+		case tui.CmdShiftEnter, tui.CmdAltEnter:
+			return params.Model, m.handleKeyShiftEnter()
+		default:
+			return params.Delegate(msg)
+		}
+	default:
+		return params.Delegate(msg)
+	}
+	return params.Model, nil
+}
+
 func (m *OracleMenu) HandleDirectionInput(direction direction.Direction) {}
 
 func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
@@ -92,21 +107,6 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 			Result: rollResult,
 		}
 	}
-}
-
-func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	switch msg := params.Msg.(type) {
-	case tea.KeyPressMsg:
-		switch msg.String() {
-		case tui.CmdShiftEnter, tui.CmdAltEnter:
-			return params.Model, m.handleKeyShiftEnter()
-		default:
-			return params.Delegate(msg)
-		}
-	default:
-		return params.Delegate(msg)
-	}
-	return params.Model, nil
 }
 
 // Messages

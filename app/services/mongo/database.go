@@ -15,7 +15,7 @@ var env = NewEnvironment()
 type Mongo struct {
 	client   *mongo.Client
 	instance *mongo.Database
-	err	  []error
+	err      []error
 }
 
 func NewMongo() *Mongo {
@@ -23,7 +23,7 @@ func NewMongo() *Mongo {
 }
 
 // Dis.connection
-func (db *Mongo) Connect()  {
+func (db *Mongo) Connect() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -50,7 +50,7 @@ func (db *Mongo) open(ctx context.Context) {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(env.GetEnvURI()))
 	if err != nil {
 		db.setErrors(err)
-		return 
+		return
 	}
 
 	if err := client.Ping(ctx, nil); err != nil {

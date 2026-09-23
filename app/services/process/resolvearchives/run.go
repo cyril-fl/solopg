@@ -7,8 +7,6 @@ import (
 	"solopg/types/id"
 )
 
-
-
 func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaign.Archives, error) {
 	maybeArchives, err := db.LoadArchivesByCampaignID(campaignID)
 	if err != nil {

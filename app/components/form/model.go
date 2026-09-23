@@ -192,18 +192,7 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
-		switch msg.String() {
-		case tui.KeyTab:
-			return m, SendMsg[NextField]()
-		case tui.KeyShiftTab:
-			return m, SendMsg[PreviousField]()
-		// SCROLL
-		// case tui.KeyPgUp, tui.KeyPgDown:
-			// return m, SendScrollMsg(msg)
-		}
-	// SCROLL
-	// case tea.MouseWheelMsg:
-		// return m, SendScrollMsg(msg)
+		return m.handleKeyPressMsg(msg)
 	case NextField:
 		if m.isLastField() && m.autoSubmit {
 			return m, SendMsg[Validate]()
@@ -213,20 +202,26 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.focusOnIndex(currentIndex - 1), nil
 	}
 
-	return m , nil
-	// SCROLL
-	// return m.updateFocusedField(msg)
+	return m.updateFocusedField(msg)
+}
+func (m *Form) handleKeyPressMsg(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case tui.KeyTab:
+		return m, SendMsg[NextField]()
+	case tui.KeyShiftTab:
+		return m, SendMsg[PreviousField]()
+	}
+	return m.updateFocusedField(msg)
 }
 
-// SCROLL
-// func (m *Form) updateFocusedField(msg tea.Msg) (tea.Model, tea.Cmd) {
-// 	index := m.getCurrentFieldIndex()
-// 	if index < 0 {
-// 		return m, nil
-// 	}
+func (m *Form) updateFocusedField(msg tea.Msg) (tea.Model, tea.Cmd) {
+	index := m.getCurrentFieldIndex()
+	if index < 0 {
+		return m, nil
+	}
 
-// 	newField, cmd := m.fields[index].Update(msg)
-// 	m.fields[index] = newField.(Field)
+	newField, cmd := m.fields[index].Update(msg)
+	m.fields[index] = newField.(Field)
 
-// 	return m, cmd
-// }
+	return m, cmd
+}

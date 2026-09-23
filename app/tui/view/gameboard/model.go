@@ -69,7 +69,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		Model:    m,
 		Msg:      msg,
 		Delegate: m.handleUpdate,
-		Refresh:  m.refreshViewport,
+		Viewport: m.viewport,
 	})
 }
 
@@ -79,17 +79,8 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		return m.handleWindowResize(msg)
 	case tea.KeyPressMsg:
-		switch msg.String() {
-		// SCROLL
-		// case tui.KeyPgUp, tui.KeyPgDown:
-			// return m.handleViewportScroll(msg)
-		default:
-			m.handleKeyPress(msg)
-			return m.handleCommand(msg)
-		}
-	// SCROLL
-	// case tea.MouseWheelMsg:
-		// return m.handleViewportScroll(msg)
+		m.handleKeyPress(msg)
+		return m.handleCommand(msg)
 
 	// Cmd messages
 	case codexmenu.Msg:
@@ -98,19 +89,17 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.handleOracleRolled(msg)
 	case dicemenu.Msg:
 		return m.handleDiceRolled(msg)
+
 	case tui.SaveMsg:
 		return m.handleSaveInput(msg)
-
-		
-	// SCROLL
-	// case form.Scroll:
-		// scroll := msg.Content
-		// return m.handleViewportScroll(scroll)
+	case tui.ScrollMsg:
+		return m.handleViewportScroll(msg)
+	case tui.Refresh:
+		return m.refreshViewport(msg.Resize)
 
 	case cursor.BlinkMsg:
 		return m.handleCursorBlink(msg)
 	}
-
 	return m, nil
 }
 

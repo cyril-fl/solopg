@@ -142,9 +142,7 @@ func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
 	m.viewport.GotoBottom()
 
-	m.refreshViewport(true)
-
-	return m, nil
+	return m.refreshViewport(true)
 }
 
 func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
@@ -164,6 +162,7 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 	return m, cmd
 }
 
+// TODO merge key press & command
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) {
 	switch msg.String() {
 	case tui.KeyEnter:
@@ -178,12 +177,10 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) {
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
 	case tui.CmdCtrlS:
-		return m, saveCmd(m.save)
+		return m, tui.SendSaveMsg(m.save)
 	}
 
-	m.refreshViewport(false)
-
-	return m, nil
+	return m.refreshViewport(false)
 }
 
 // Side Menu Direction
@@ -224,12 +221,9 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 
 // Codex Action
 func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
-	// Handle the codex action
 	_ = msg
 
-	m.refreshViewport(false)
-
-	return m, nil
+	return m.refreshViewport(false)
 }
 
 // Dice Rolled
@@ -239,9 +233,7 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 	m.engine.AddJournalEntry("Dice", message)
 	m.journal = append(m.journal, message)
 
-	m.refreshViewport(true)
-
-	return m, nil
+	return m.refreshViewport(true)
 }
 
 // Oracle Rolled
@@ -251,9 +243,7 @@ func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
 	m.engine.AddJournalEntry("Oracle", message)
 	m.journal = append(m.journal, message)
 
-	m.refreshViewport(true)
-
-	return m, nil
+	return m.refreshViewport(true)
 }
 
 // Window
@@ -265,9 +255,28 @@ func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
-	var cmd tea.Cmd
-	m.viewport, cmd = m.viewport.Update(msg)
-	return m, cmd
+	scrollMsg, ok := msg.(tui.ScrollMsg)
+	if !ok {
+		return m, nil
+	}
+
+	top := scrollMsg.GetTop()
+	hight := scrollMsg.GetHeight()
+	bottom := scrollMsg.GetBottom()
+
+	v := &m.viewport
+	vHeight := v.Height()
+	vOffset := v.YOffset()
+
+	if rendered := vHeight > 0; !rendered {
+		return m, nil
+	} else if scrollUp := top < vOffset; scrollUp {
+		v.SetYOffset(top)
+	} else if scrollDown := bottom > vOffset+vHeight; scrollDown {
+		v.SetYOffset(top + hight - vHeight)
+	}
+
+	return m.refreshViewport(false)
 }
 
 func refreshMainView(m *model, msg tea.WindowSizeMsg) {

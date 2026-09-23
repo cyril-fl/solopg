@@ -4,7 +4,6 @@ import (
 	"solopg/app/services/t"
 	"strings"
 
-	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
@@ -30,13 +29,17 @@ func (m *codexMenu) GetView() string {
 }
 
 func (m *codexMenuItem) GetItemView() string {
-	page := "Page: " + t.Localize(m.id) + "\n\n"
+	page := m.GetPageHeader()
 
 	if m.showForm {
 		return page + m.form.View().Content
 	} else {
 		return page + strings.Join(m.table.Summaries(), "\n\n")
 	}
+}
+
+func (m *codexMenuItem) GetPageHeader() string {
+	return "Page: " + t.Localize(m.id) + "\n\n"
 }
 
 // Footer
@@ -50,17 +53,6 @@ func (m *codexMenu) GetFooter() []string {
 	}
 
 	return footer
-}
-
-// /Getters and Setters
-func (m *codexMenu) HandleFieldBounds(viewport *viewport.Model) {
-	page := m.getCurrentPage()
-	if page == nil || !page.showForm || page.form == nil {
-		return
-	}
-
-	// SCROLL
-	// page.form.EnsureFocusedFieldVisible(viewport)
 }
 
 // - Handlers - //

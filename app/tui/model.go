@@ -114,4 +114,3 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 type DelegateUpdateFunc func(msg tea.Msg) (tea.Model, tea.Cmd)
-type RefreshViewFunc func(bool)

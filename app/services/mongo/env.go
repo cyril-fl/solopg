@@ -15,8 +15,7 @@ type MongoEnvironment struct {
 }
 
 func NewEnvironment() *MongoEnvironment {
-	return &MongoEnvironment{
-	}
+	return &MongoEnvironment{}
 }
 
 func (env *MongoEnvironment) ReadEnv() {
@@ -29,7 +28,7 @@ func (env *MongoEnvironment) ReadEnv() {
 
 func (env *MongoEnvironment) GetEnvURI() string {
 	uri := cleanJoin("@", env.getCredentials(), env.getHostAt())
-	return cleanJoin("","mongodb://", uri)
+	return cleanJoin("", "mongodb://", uri)
 }
 
 func (env *MongoEnvironment) SetEnvURI() {
@@ -59,8 +58,8 @@ func (env *MongoEnvironment) getHostAt() string {
 	if env.port == "" {
 		env.port = "27017"
 	}
-	
-	return cleanJoin(":",env.host, env.port)
+
+	return cleanJoin(":", env.host, env.port)
 }
 
 func cleanJoin(sep string, parts ...string) string {

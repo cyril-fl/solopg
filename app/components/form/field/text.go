@@ -88,11 +88,20 @@ func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
 		case tui.KeyEnter:
-			return m, form.SendMsg[form.NextField]()
+			return m, tea.Sequence(
+				form.SendMsg[form.NextField](),
+				form.SendMsg[form.Scroll](),
+			)
 		case tui.KeyUp:
-			return m, form.SendMsg[form.PreviousField]()
+			return m, tea.Sequence(
+				form.SendMsg[form.PreviousField](),
+				form.SendMsg[form.Scroll](),
+			)
 		case tui.KeyDown:
-			return m, form.SendMsg[form.NextField]()
+			return m, tea.Sequence(
+				form.SendMsg[form.NextField](),
+				form.SendMsg[form.Scroll](),
+			)
 		default:
 			newInput, cmd := m.input.Update(msg)
 			m.input = newInput

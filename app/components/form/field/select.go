@@ -105,7 +105,10 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tui.KeyUp, tui.KeyDown:
 			return m.handleDirection(msg)
 		case tui.KeyEnter:
-			return m, form.SendMsg[form.NextField]()
+			return m, tea.Sequence(
+				form.SendMsg[form.NextField](),
+				form.SendMsg[form.Scroll](),
+			)
 		}
 	default:
 		newOptions, cmd := m.options.Update(msg)
@@ -145,9 +148,15 @@ func (m *selectField[T]) handleDirection(msg tea.KeyPressMsg) (tea.Model, tea.Cm
 	m.options = updatedList
 	switch newdirection {
 	case direction.Next:
-		return m, form.SendMsg[form.NextField]()
+		return m, tea.Sequence(
+			form.SendMsg[form.NextField](),
+			form.SendMsg[form.Scroll](),
+		)
 	case direction.Previous:
-		return m, form.SendMsg[form.PreviousField]()
+		return m, tea.Sequence(
+			form.SendMsg[form.PreviousField](),
+			form.SendMsg[form.Scroll](),
+		)
 	}
 	return m, nil
 }

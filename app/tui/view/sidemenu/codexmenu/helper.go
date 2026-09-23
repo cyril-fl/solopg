@@ -8,12 +8,14 @@ import (
 	"solopg/app/domain/card/characters/races"
 	"solopg/app/domain/gameplay/oracle"
 	"solopg/app/services/t"
+	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
 	"solopg/config"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // - Side panel - //
@@ -241,12 +243,32 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 	}
 
 	currentPage.setShowForm(false)
-	// currentForm.Reset()
 	/*
 		TODO LOW log l'enregistrement du codex ca dans le main view et les log
 		verrifier que tout est persister
 	*/
 	return sendMsg()
+}
+
+func (m *codexMenu) handleFormScroll(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	form := m.GetFormFromCurrentPage()
+	if form == nil {
+		return params.Model, nil
+	}
+
+	page := m.getCurrentPage()
+	pageHeader := lipgloss.NewStyle().
+		Width(params.Viewport.Width()).
+		Render(page.GetPageHeader())
+
+	viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
+	viewHight += lipgloss.Height(pageHeader)
+
+	return params.Model, tui.SendScrollMsg(viewTop, viewHight)
+}
+
+func (m *codexMenu) handleFormError(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	return params.Model, sendMsg()
 }
 
 func (m *codexMenu) delegateInputToForm(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {

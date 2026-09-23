@@ -48,15 +48,19 @@ func (m model) GetFooter() []string {
 }
 
 // - Viewport - //
-func (m *model) refreshViewport(resetPosition bool) {
+func (m *model) refreshViewport(resetPosition bool) (*model, tea.Cmd) {
 	content := m.getContent()
 	content = lipgloss.NewStyle().
 		Width(m.viewport.Width()).
 		Render(content)
 
-	// SCROLL
-	// m.viewport.SetContent(content)
-	// m.settlePosition(resetPosition)
+	m.viewport.SetContent(content)
+
+	if resetPosition {
+		m.viewport.GotoTop()
+	}
+
+	return m, nil
 }
 
 func (m *model) getContent() string {
@@ -65,16 +69,6 @@ func (m *model) getContent() string {
 	}
 
 	return strings.Join(m.journal, "\n")
-}
-
-func (m *model) settlePosition(resetPosition bool) {
-	if resetPosition {
-		m.viewport.GotoTop()
-	} else {
-		m.
-			getMenuActiveElement().
-			HandleFieldBounds(&m.viewport)
-	}
 }
 
 // - Helper - //

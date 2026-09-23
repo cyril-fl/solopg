@@ -11,18 +11,19 @@ import (
 )
 
 type StatsGenerator struct {
-	values map[string]string
+	values    map[string]string
 	modifiers []stats.Modifier
-	entropy string
-	error  []error
+	entropy   string
+	error     []error
 }
 
 func NewStatsGenerator(values map[string]string) *StatsGenerator {
 	return &StatsGenerator{
-		values: values,
+		values:  values,
 		entropy: "stat_generation",
 	}
 }
+
 // Getter & Setter
 func (sg *StatsGenerator) GetStats() stats.Stats {
 	s := stats.GetBasic()
@@ -44,12 +45,12 @@ func (sg *StatsGenerator) SetEntropy(entropy string) *StatsGenerator {
 }
 
 // Handlers
-// GenerateFromValues generates full build for character, based on provided values (class, race, stats and fallback oracle). 
+// GenerateFromValues generates full build for character, based on provided values (class, race, stats and fallback oracle).
 func (sg *StatsGenerator) GenerateFromValues(params GenerateParams) {
 	sg.reset()
 	sg.makeModifiersFromValuesWithFallback()
 	sg.makeModifiersFromAttributesValues()
-	
+
 	if params.Randomness {
 		sg.makeRandomModifiersFromOracleValue()
 	}
@@ -71,7 +72,7 @@ func (sg *StatsGenerator) makeModifiersFromValuesWithFallback() {
 	}
 }
 
-func (sg *StatsGenerator) makeModifiersFromAttributesValues() {	
+func (sg *StatsGenerator) makeModifiersFromAttributesValues() {
 	if class := classes.FindByName(sg.values["class"]); class != nil {
 		sg.modifiers = append(sg.modifiers, class.GetBonus()...)
 	}
@@ -147,6 +148,6 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 			Value: roll.Result,
 		})
 	}
-	
+
 	return modifiers, nil
 }

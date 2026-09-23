@@ -64,6 +64,21 @@ func (m *DiceMenu) SetList(list list.Model) {
 }
 
 // / Handlers
+func (m *DiceMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+	switch msg := params.Msg.(type) {
+	case tea.KeyPressMsg:
+		switch msg.String() {
+		case tui.CmdShiftEnter, tui.CmdAltEnter:
+			return params.Model, m.handleKeyShiftEnter()
+		default:
+			return params.Delegate(msg)
+		}
+	default:
+		return params.Delegate(msg)
+	}
+	return params.Model, nil
+}
+
 func (m *DiceMenu) HandleDirectionInput(direction direction.Direction) {}
 
 func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
@@ -81,21 +96,6 @@ func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
 			Value: dice.Roll(),
 		}
 	}
-}
-
-func (m *DiceMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	switch msg := params.Msg.(type) {
-	case tea.KeyPressMsg:
-		switch msg.String() {
-		case tui.CmdShiftEnter, tui.CmdAltEnter:
-			return params.Model, m.handleKeyShiftEnter()
-		default:
-			return params.Delegate(msg)
-		}
-	default:
-		return params.Delegate(msg)
-	}
-	return params.Model, nil
 }
 
 // Messages

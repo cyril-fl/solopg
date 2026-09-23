@@ -24,7 +24,6 @@ type MenuItem interface {
 	GetView() string
 	GetFooter() []string
 
-	HandleFieldBounds(viewport *viewport.Model)
 	HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd
 	HandleUpdate(params UpdateParams) (tea.Model, tea.Cmd)
 
@@ -51,7 +50,7 @@ type UpdateParams struct {
 	Model    tea.Model
 	Msg      tea.Msg
 	Delegate tui.DelegateUpdateFunc
-	Refresh  tui.RefreshViewFunc
+	Viewport viewport.Model
 }
 
 // - Helper - //

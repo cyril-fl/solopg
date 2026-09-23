@@ -64,14 +64,14 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	}
 
 	/*
-	NOTE: Generated bonuses may be negative.
-	First of all, this is intentional and follows the following logic: 
-	`a Troll is stupid and therefore receives an Intelligence penalty.``
+		NOTE: Generated bonuses may be negative.
+		First of all, this is intentional and follows the following logic:
+		`a Troll is stupid and therefore receives an Intelligence penalty.``
 
-	Then, this should not be handled by the process itself, but by the template 
-	selected with values["encounter"].
+		Then, this should not be handled by the process itself, but by the template
+		selected with values["encounter"].
 
-	These are configurable in the /data/systems/rules/oracles/encounter directory.
+		These are configurable in the /data/systems/rules/oracles/encounter directory.
 	*/
 	raw := races.Template{
 		Name:        values["name"],

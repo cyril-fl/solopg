@@ -103,7 +103,9 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 	case form.Validate:
 		return m.handleFormSubmit(params)
 	case form.Error:
-		return params.Model, sendMsg()
+		return m.handleFormError(params)
+	case form.Scroll:
+		return m.handleFormScroll(params)
 
 	case tea.KeyPressMsg:
 		switch msg.String() {
@@ -118,10 +120,6 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 		default:
 			return m.delegateInputToForm(params)
 		}
-
-	// SCROLL
-	// case tea.MouseWheelMsg:
-	// 	return m.delegateInputToForm(params)
 	}
 
 	return params.Delegate(params.Msg)
@@ -129,9 +127,15 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 
 func (m *codexMenu) HandleDirectionInput(direction direction.Direction) {
 	_ = direction
-
 	m.updatePageOnRedirection()
 }
+
+/*
+NOT-IMPLEMENTED-YET
+func (m *codexMenu) HandleScrollInput(viewport viewport.Model) viewport.Model {
+ 	return m.handleFormScrollInput(viewport)
+}
+*/
 
 // Items
 type codexMenuItem struct {

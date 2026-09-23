@@ -3,7 +3,6 @@ package dicemenu
 import (
 	"solopg/app/services/t"
 
-	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
@@ -34,5 +33,3 @@ func (m *DiceMenu) HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd {
 	// m.list.SetSize(msg.Width, msg.Height)
 	return nil
 }
-
-func (m *DiceMenu) HandleFieldBounds(viewport *viewport.Model) {}

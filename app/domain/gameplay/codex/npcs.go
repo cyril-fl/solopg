@@ -53,13 +53,13 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	}
 
 	/*
-	NOTE Description should be a text field that describes the character in a RP way, and includes details 
-	about the character's equipment, abilities, and other relevant information. Power level should 
-	be calculated / represented by a dice roll in an oracle, for example:
-	a powerful character stats would be chosen with the legendary.
+		NOTE Description should be a text field that describes the character in a RP way, and includes details
+		about the character's equipment, abilities, and other relevant information. Power level should
+		be calculated / represented by a dice roll in an oracle, for example:
+		a powerful character stats would be chosen with the legendary.
 	*/
 	character, err := characters.New(characters.Template{
-		Name: values["name"],
+		Name:        values["name"],
 		Description: values["description"],
 		Rarity:      rarity.Default(),
 		Race:        values["race"],
