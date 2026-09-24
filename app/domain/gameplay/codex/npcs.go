@@ -43,13 +43,13 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
-	generator := generatestats.NewStatsGenerator(values)
-	generator.GenerateFromValues(generatestats.GenerateParams{
+	generator := generatestats.NewGenerator(values)
+	generator.GenerateFromValues(generatestats.FromValuesParams{
 		Randomness: true,
 	})
 
-	if err := generator.GetError(); err != nil {
-		return fmt.Errorf("failed to generate stats from values: %w", err)
+	if generator.HasError() {
+		return fmt.Errorf("failed to generate stats from values: %w", generator.GetError())
 	}
 
 	/*

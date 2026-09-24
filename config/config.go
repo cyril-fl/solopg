@@ -80,3 +80,41 @@ func Load() (*config, error) {
 
 	return current, nil
 }
+
+/*
+TODO
+gerer le cas post buil avec un truc genre:
+	getPath -> if isDev = path actuell
+		else constructeur de path
+aussi faire en sorte de embeded config.yaml part defaut
+et de laisser un chemin pour configurer avec un yaml externe.
+creer une commande genre
+	CLI config --init
+et si je fait
+	CLI config --set [...args]
+je passe automatiquement par l'equivalent de
+	isInit ? -> si oui rien, puis config
+		-> si non init, puis config
+
+permtet de set les config direct une a une ou en batch.
+
+a voir si la config est editable en fichier .yaml ou embarque é editable avec Vim ect.
+je crois que ce serais le mieux
+
+BACKLOG Étendre la CLI avec des commande comme:
+
+> Cli edit —config —locales [lang]
+	- d’autre argument pouvant être passé en fonction de la config par défaut.
+> Cli edit —rulesset [rules]
+	- rules étant les class, races et autre document yaml
+> Cli reset —config …
+	- Prend les meme argument que edit
+	- ajoute —all, —save
+		- trouver un truc genre —all-remember pour effacer tout sauf les save
+
+Adapter un système comme « mole » avec des commande qui font les action rapide . Et une commande qui ouvre un genre de menu:
+
+> Cli config
+
+En vu de ça créer un doublon des data / config files avec justement un dossier comme « default », un dossier genre « user » et mette les deux dans une approche à la VS code config
+*/

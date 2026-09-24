@@ -2,8 +2,10 @@ package models
 
 import (
 	"solopg/app/services/t"
+	"solopg/app/tui"
 
 	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
 )
 
 type RerollModel[T any] struct {
@@ -51,6 +53,23 @@ func (s *RerollModel[T]) checkAttemptLimit() {
 
 func (s *RerollModel[T]) IsOutOfLimit() bool {
 	return s.Attempt >= s.Limit
+}
+
+func (s *RerollModel[T]) HandleEnterInput () tea.Cmd {
+	isSelected, ok := s.Options.SelectedItem().(Item[bool])
+	if !ok {
+		return nil
+	}
+
+	if isSelected.Value() || s.IsOutOfLimit() {
+		return  func() tea.Msg {
+			return tui.ResolutionMsg{Completed: true, Value: s.Value}
+		}
+	}
+
+	s.Reroll()
+
+	return nil
 }
 
 func NewOptionsModel(options rerollOptions) list.Model {

@@ -79,8 +79,7 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		return m.handleWindowResize(msg)
 	case tea.KeyPressMsg:
-		m.handleKeyPress(msg)
-		return m.handleCommand(msg)
+		return m.handleKeyPress(msg)
 
 	// Cmd messages
 	case codexmenu.Msg:

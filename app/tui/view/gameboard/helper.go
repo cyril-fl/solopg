@@ -162,8 +162,7 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 	return m, cmd
 }
 
-// TODO merge key press & command
-func (m *model) handleKeyPress(msg tea.KeyPressMsg) {
+func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
 	case tui.KeyEnter:
 		m.handleEnterInput()
@@ -172,6 +171,7 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) {
 	default:
 		handleDefaultInput(m, msg)
 	}
+	return m.handleCommand(msg)
 }
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {

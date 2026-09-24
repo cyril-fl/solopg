@@ -47,7 +47,8 @@ func ListCategory() []Category {
 }
 
 /*
-TODO LOW Verrifier quelle autre concepet pourrait utiliser le "MakeDefault"
+TODO LOW Verrifier ou "MakeDefault" pourrait être utile
+ex: Si la data vien d'une carte loader, c'est valider 
 */
 func MakeDefault(defaultValue string) Category {
 	ListCategory()

@@ -10,6 +10,11 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
+/*
+TODO LOW, trouver un meilleur moyen de gerer les sizes,
+trouver un moyen de les distibuer al'interieur des sous composant avec
+par exemple un contexte disponible, un peu comme Engine et States.
+*/
 const (
 	panelWidth       = 34
 	panelGap         = 1

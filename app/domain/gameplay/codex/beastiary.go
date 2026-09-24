@@ -54,13 +54,13 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
-	generator := generatestats.NewStatsGenerator(values)
-	generator.GenerateFromValues(generatestats.GenerateParams{
+	generator := generatestats.NewGenerator(values)
+	generator.GenerateFromValues(generatestats.FromValuesParams{
 		Randomness: false,
 	})
 
-	if err := generator.GetError(); err != nil {
-		return fmt.Errorf("failed to generate stats from values: %w", err)
+	if generator.HasError() {
+		return fmt.Errorf("failed to generate stats from values: %w", generator.GetError())
 	}
 
 	/*
@@ -95,7 +95,7 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 }
 
 /*
-TODO HIGH Modifier ca que ce soit un peu joli....
+TODO LOW Modifier ca que ce soit un peu joli....
 Creer un genre de "page dans codex avec une methode de rendu
 description
 viewport (mettre la liste et prevoir une fonction de la redu pour une enum ou un truc du genre)

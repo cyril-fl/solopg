@@ -10,43 +10,53 @@ import (
 	"strconv"
 )
 
-type StatsGenerator struct {
+type generator struct {
 	values    map[string]string
 	modifiers []stats.Modifier
-	entropy   string
+	oraclesId string
 	error     []error
 }
 
-func NewStatsGenerator(values map[string]string) *StatsGenerator {
-	return &StatsGenerator{
-		values:  values,
-		entropy: "stat_generation",
+func NewValuelessGenerator() *generator {
+	return &generator{
+		oraclesId: "stat_generation",
+	}
+}
+
+func NewGenerator(values map[string]string) *generator {
+	return &generator{
+		values:    values,
+		oraclesId: "stat_generation",
 	}
 }
 
 // Getter & Setter
-func (sg *StatsGenerator) GetStats() stats.Stats {
+func (sg *generator) GetStats() stats.Stats {
 	s := stats.GetBasic()
 	s.ApplyModifiers(sg.modifiers)
 	return s
 }
 
-func (sg *StatsGenerator) GetModifiers() []stats.Modifier {
+func (sg *generator) GetModifiers() []stats.Modifier {
 	return sg.modifiers
 }
 
-func (sg *StatsGenerator) GetError() error {
+func (sg *generator) GetError() error {
 	return errors.Join(sg.error...)
 }
 
-func (sg *StatsGenerator) SetEntropy(entropy string) *StatsGenerator {
-	sg.entropy = entropy
+func (sg *generator) HasError() bool {
+	return len(sg.error) > 0
+}
+
+func (sg *generator) SetOracleId(entropy string) *generator {
+	sg.oraclesId = entropy
 	return sg
 }
 
 // Handlers
 // GenerateFromValues generates full build for character, based on provided values (class, race, stats and fallback oracle).
-func (sg *StatsGenerator) GenerateFromValues(params GenerateParams) {
+func (sg *generator) GenerateFromValues(params FromValuesParams) {
 	sg.reset()
 	sg.makeModifiersFromValuesWithFallback()
 	sg.makeModifiersFromAttributesValues()
@@ -56,7 +66,12 @@ func (sg *StatsGenerator) GenerateFromValues(params GenerateParams) {
 	}
 }
 
-func (sg *StatsGenerator) makeModifiersFromValuesWithFallback() {
+func (sg *generator) GenerateFromOracle() {
+	sg.reset()
+	sg.makeRandomModifiersFromOracleValue()
+}
+
+func (sg *generator) makeModifiersFromValuesWithFallback() {
 	rules, err := oracle.GetByID(sg.values["encounter"])
 	if err != nil {
 		sg.error = append(sg.error, fmt.Errorf("failed to get oracle for encounter: %w", err))
@@ -72,7 +87,7 @@ func (sg *StatsGenerator) makeModifiersFromValuesWithFallback() {
 	}
 }
 
-func (sg *StatsGenerator) makeModifiersFromAttributesValues() {
+func (sg *generator) makeModifiersFromAttributesValues() {
 	if class := classes.FindByName(sg.values["class"]); class != nil {
 		sg.modifiers = append(sg.modifiers, class.GetBonus()...)
 	}
@@ -81,8 +96,8 @@ func (sg *StatsGenerator) makeModifiersFromAttributesValues() {
 	}
 }
 
-func (sg *StatsGenerator) makeRandomModifiersFromOracleValue() {
-	modifiers, err := makeModifiersFromOracle(sg.entropy)
+func (sg *generator) makeRandomModifiersFromOracleValue() {
+	modifiers, err := makeModifiersFromOracle(sg.oraclesId)
 	if err != nil {
 		sg.error = append(sg.error, fmt.Errorf("failed to generate random modifiers: %w", err))
 		return
@@ -91,13 +106,13 @@ func (sg *StatsGenerator) makeRandomModifiersFromOracleValue() {
 	sg.modifiers = append(sg.modifiers, modifiers...)
 }
 
-func (sg *StatsGenerator) reset() {
+func (sg *generator) reset() {
 	sg.modifiers = nil
 	sg.error = nil
 }
 
 // Helper
-type GenerateParams struct {
+type FromValuesParams struct {
 	Randomness bool
 }
 

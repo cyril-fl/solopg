@@ -243,10 +243,8 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 	}
 
 	currentPage.setShowForm(false)
-	/*
-		TODO LOW log l'enregistrement du codex ca dans le main view et les log
-		verrifier que tout est persister
-	*/
+	
+	// TODO MEDIUM Verrifier que tout soit bien logger et persister dans le logger, et dans le codex.
 	return sendMsg()
 }
 
