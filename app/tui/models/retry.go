@@ -55,14 +55,14 @@ func (s *RerollModel[T]) IsOutOfLimit() bool {
 	return s.Attempt >= s.Limit
 }
 
-func (s *RerollModel[T]) HandleEnterInput () tea.Cmd {
+func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 	isSelected, ok := s.Options.SelectedItem().(Item[bool])
 	if !ok {
 		return nil
 	}
 
 	if isSelected.Value() || s.IsOutOfLimit() {
-		return  func() tea.Msg {
+		return func() tea.Msg {
 			return tui.ResolutionMsg{Completed: true, Value: s.Value}
 		}
 	}

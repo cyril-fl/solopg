@@ -2,12 +2,10 @@ package tui
 
 import (
 	"fmt"
-	"strings"
 
 	"solopg/app/services/t"
 
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
 
 func (m model) View() tea.View {
@@ -43,20 +41,21 @@ func mergeFooter(current tea.Model) []string {
 }
 
 func alignFooter(content string, height int, footerParts []string) string {
-	footer := strings.Join(footerParts, " | ")
+	// footer := strings.Join(footerParts, " | ")
 
-	if height <= 0 {
-		return content + footer
-	}
+	// if height <= 0 {
+	// 	return content + footer
+	// }
 
-	footerHeight := lipgloss.Height(footer)
-	contentHeight := lipgloss.Height(content)
-	availableHeight := height - footerHeight
-	if contentHeight < availableHeight {
-		content += strings.Repeat("\n", availableHeight-contentHeight)
-	}
+	// footerHeight := lipgloss.Height(footer)
+	// contentHeight := lipgloss.Height(content)
+	// availableHeight := height - footerHeight
+	// if contentHeight < availableHeight {
+	// 	content += strings.Repeat("\n", availableHeight-contentHeight)
+	// }
 
-	return content + footer
+	// return content + footer
+	return content 
 }
 
 func (m model) windowHeight() int {

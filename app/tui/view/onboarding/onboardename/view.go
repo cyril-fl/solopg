@@ -1,29 +1,17 @@
 package onboardename
 
 import (
-	"solopg/app/services/t"
+	"solopg/app/components/page"
 
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
 
 func (m model) View() tea.View {
-	title := lipgloss.NewStyle().
-		Bold(true).
-		Render(t.Localize("create_character"))
+	page := page.NewPage(page.Template{
+		Title:    "create_character",
+		Subtitle: "name",
+		Body:     m.Input.View(),
+	})
 
-	input := m.Input.View()
-
-	return tea.NewView(
-		lipgloss.JoinVertical(
-			lipgloss.Left,
-			/*
-				TODO LOW verrifier pourquoi CREATE CHARACTER apparais pas sur les autre view
-			*/
-			title,
-			"",
-			t.Localize("name"),
-			input,
-		),
-	)
+	return page.View()
 }

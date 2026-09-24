@@ -17,11 +17,12 @@ const (
 )
 
 type model struct {
-	Step step
+	name string
 	list list.Model
+	Step step
 }
 
-func NewModel[T archetypes.Archetype](data []T) model {
+func NewModel[T archetypes.Archetype](name string, data []T) model {
 	items := make([]list.Item, 0, len(data))
 
 	for _, i := range data {
@@ -36,8 +37,9 @@ func NewModel[T archetypes.Archetype](data []T) model {
 	models.ConfigureList(&listModel)
 
 	return model{
-		Step: choiceStep,
+		name: name,
 		list: listModel,
+		Step: choiceStep,
 	}
 }
 

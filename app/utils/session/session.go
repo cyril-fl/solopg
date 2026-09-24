@@ -120,7 +120,7 @@ func onboardingSteps() []tui.Step {
 			},
 		},
 		{
-			Submodel: onboardarchetype.NewModel(races.List()),
+			Submodel: onboardarchetype.NewModel("race", races.List()),
 			Resolve: func(ctx *tui.Context, value any) error {
 				race, ok := value.(string)
 				if !ok {
@@ -131,7 +131,7 @@ func onboardingSteps() []tui.Step {
 			},
 		},
 		{
-			Submodel: onboardarchetype.NewModel(classes.List()),
+			Submodel: onboardarchetype.NewModel("class", classes.List()),
 			Resolve: func(ctx *tui.Context, value any) error {
 				class, ok := value.(string)
 				if !ok {
