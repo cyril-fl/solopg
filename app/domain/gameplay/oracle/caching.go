@@ -133,6 +133,22 @@ func List() []Oracle {
 	return makeSet(cachedConfig)
 }
 
+func Log() {
+	oracles := List()
+
+	for _, oracle := range oracles {
+		fmt.Printf("Oracle: %s \n", oracle.Name())
+		fmt.Printf("Dice: %d \n", oracle.dice)
+		fmt.Printf("Type: %s \n", oracle.typ)
+		fmt.Printf("Visible: %t \n", oracle.visible)
+		fmt.Println("Intervals:")
+		for _, interval := range oracle.intervals {
+			fmt.Printf("  - Min: %d, Max: %d, Critical: %t, Result: %v\n", interval.Min, interval.Max, interval.Critical, interval.Result)
+		}
+		fmt.Println()
+	}
+}
+
 func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {

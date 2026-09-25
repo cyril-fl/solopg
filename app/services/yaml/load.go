@@ -65,15 +65,30 @@ func GetFolderDirectories(folderPath string) ([]string, error) {
 	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
 }
 
-func GetFilesFromSource(folderPath string, recursive bool) ([]string, error) {
-	entries, err := os.ReadDir(folderPath)
+func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
+	info, err := os.Stat(sourcePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot access %q: %w", sourcePath, err)
 	}
 
-	var files []string
+	if !info.IsDir() {
+		return []string{sourcePath}, nil
+	}
+
+	return getFilesFromDirectoryRecursively(sourcePath, recursive)
+}
+
+func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]string, error) {
+	entries, err := os.ReadDir(folderPath)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read directory %q: %w", folderPath, err)
+	}
+
+	files := make([]string, 0, len(entries))
+
 	for _, entry := range entries {
 		path := filepath.Join(folderPath, entry.Name())
+
 		if !entry.IsDir() {
 			files = append(files, path)
 			continue
@@ -83,12 +98,12 @@ func GetFilesFromSource(folderPath string, recursive bool) ([]string, error) {
 			continue
 		}
 
-		dirFiles, err := GetFilesFromSource(path, true)
+		subFiles, err := getFilesFromDirectoryRecursively(path, true)
 		if err != nil {
-			return files, err
+			return nil, err
 		}
 
-		files = append(files, dirFiles...)
+		files = append(files, subFiles...)
 	}
 
 	return files, nil

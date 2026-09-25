@@ -1,13 +1,12 @@
 package src
 
 import (
-	"fmt"
-	"solopg/app/domain/gameplay/hint"
+	"solopg/app/domain/gameplay/oracle"
 	"solopg/app/services/mongo"
 	"solopg/app/services/t"
+	"solopg/app/utils/log"
 	"solopg/app/utils/session"
 	"solopg/config"
-	"strings"
 )
 
 func Start() error {
@@ -30,15 +29,15 @@ func Start() error {
 
 func Try() error {
 
-	// oracle.Log()
-	list := hint.List()
+	oracle.Log()
+	list := oracle.List()
 
-	for _, spark := range list {
-		fmt.Printf("Spark: %s \n", spark.Name())
-		newValues := strings.Join(spark.Values(), ", \n")
-		fmt.Println("Values: ", newValues)
-	}
-	// log.ParseJson()
+	// for _, spark := range list {
+	// 	fmt.Printf("Spark: %s \n", spark.Name())
+	// 	newValues := strings.Join(spark.Values(), ", \n")
+	// 	fmt.Println("Values: ", newValues)
+	// }
+	log.ParseJson(list)
 
 	return nil
 }
