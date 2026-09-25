@@ -20,7 +20,7 @@ func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 
 	for _, rules := range oracle.List() {
 		if rules.IsVisible() {
-			key := "oracle." + rules.ID()
+			key := "oracle." + rules.Name()
 			name := t.Localize(key)
 			items = append(items, models.NewItem(name, "", rules))
 		}

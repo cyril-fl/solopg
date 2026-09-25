@@ -7,6 +7,7 @@ import (
 	"solopg/app/tui/view/sidemenu"
 	"solopg/app/tui/view/sidemenu/codexmenu"
 	"solopg/app/tui/view/sidemenu/dicemenu"
+	"solopg/app/tui/view/sidemenu/hintmenu"
 	"solopg/app/tui/view/sidemenu/oraclemenu"
 
 	"charm.land/bubbles/v2/cursor"
@@ -84,10 +85,12 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Cmd messages
 	case codexmenu.Msg:
 		return m.handleCodexAction(msg)
-	case oraclemenu.Msg:
-		return m.handleOracleRolled(msg)
 	case dicemenu.Msg:
 		return m.handleDiceRolled(msg)
+	case hintmenu.Msg:
+		return m.handleHintRolled(msg)
+	case oraclemenu.Msg:
+		return m.handleOracleRolled(msg)
 
 	case tui.SaveMsg:
 		return m.handleSaveInput(msg)

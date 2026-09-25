@@ -15,6 +15,17 @@ type Locale struct {
 	File string `yaml:"file"`
 }
 
+/*
+TODO voir pour faire de add on et etendre les ficher ect voir comment on pourrais faire, de maniere a ajouter par
+exemple
+-error
+	-en
+	-fr
+- success
+	-en
+	-en
+de maniere a ensuite faire un reduce et creée un fichier unique et temporaire par langue mais permettre une meilleur gestions.
+*/
 // - Format - //
 type Format string
 

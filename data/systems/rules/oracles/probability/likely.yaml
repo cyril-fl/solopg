@@ -1,4 +1,4 @@
-id: "likely"
+name: "likely"
 dice: 20
 type: "oracle" # Oracle / Action / Test / Roll
 visible: true 

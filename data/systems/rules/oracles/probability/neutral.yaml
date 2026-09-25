@@ -1,4 +1,4 @@
-id: "neutral"
+name: "neutral"
 dice: 20
 type: "oracle" # Oracle / Action / Test / Roll
 visible: true 

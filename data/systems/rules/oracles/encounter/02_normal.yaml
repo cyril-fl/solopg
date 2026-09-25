@@ -1,4 +1,4 @@
-id: "encounter_normal"
+name: "encounter_normal"
 dice: 10
 type: "roll" # Oracle / Action / Test / Roll
 visible: false 

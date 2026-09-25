@@ -1,12 +1,13 @@
 package src
 
 import (
-	"solopg/app/domain/card/characters"
+	"fmt"
+	"solopg/app/domain/gameplay/hint"
 	"solopg/app/services/mongo"
 	"solopg/app/services/t"
-	"solopg/app/utils/log"
 	"solopg/app/utils/session"
 	"solopg/config"
+	"strings"
 )
 
 func Start() error {
@@ -30,9 +31,14 @@ func Start() error {
 func Try() error {
 
 	// oracle.Log()
-	list := characters.List()
+	list := hint.List()
 
-	log.ParseJson(list)
+	for _, spark := range list {
+		fmt.Printf("Spark: %s \n", spark.Name())
+		newValues := strings.Join(spark.Values(), ", \n")
+		fmt.Println("Values: ", newValues)
+	}
+	// log.ParseJson()
 
 	return nil
 }

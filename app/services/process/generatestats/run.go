@@ -72,7 +72,7 @@ func (sg *generator) GenerateFromOracle() {
 }
 
 func (sg *generator) makeModifiersFromValuesWithFallback() {
-	rules, err := oracle.GetByID(sg.values["encounter"])
+	rules, err := oracle.GetByName(sg.values["encounter"])
 	if err != nil {
 		sg.error = append(sg.error, fmt.Errorf("failed to get oracle for encounter: %w", err))
 		return
@@ -147,7 +147,7 @@ func makeModifierWithRandomFallback(params withFallbackTemplate) stats.Modifier 
 
 func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	var modifiers []stats.Modifier
-	rules, err := oracle.GetByID(id)
+	rules, err := oracle.GetByName(id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get stat generation oracle: %w", err)
 	}

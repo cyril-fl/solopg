@@ -8,6 +8,7 @@ import (
 	"solopg/app/tui/view/sidemenu"
 	"solopg/app/tui/view/sidemenu/codexmenu"
 	"solopg/app/tui/view/sidemenu/dicemenu"
+	"solopg/app/tui/view/sidemenu/hintmenu"
 	"solopg/app/tui/view/sidemenu/oraclemenu"
 	"solopg/types/direction"
 	"solopg/types/size"
@@ -74,6 +75,7 @@ func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
 	return []sidemenu.MenuItem{
 		oraclemenu.NewSideMenu(size, true),
 		dicemenu.NewSideMenu(size, false),
+		hintmenu.NewSideMenu(size, false),
 		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
 			Size:  size,
 			Codex: engine.State.Codex.EnsureInitialized(),
@@ -231,6 +233,16 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 	message := fmt.Sprintf("%s : %d", msg.Dice, msg.Value)
 
 	m.engine.AddJournalEntry("Dice", message)
+	m.journal = append(m.journal, message)
+
+	return m.refreshViewport(true)
+}
+
+// Hint Rolled
+func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
+	message := fmt.Sprintf("Hint rolled: %v", strings.Join(msg.Result, ", "))
+
+	m.engine.AddJournalEntry("Hint", message)
 	m.journal = append(m.journal, message)
 
 	return m.refreshViewport(true)

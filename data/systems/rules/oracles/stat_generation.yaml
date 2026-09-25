@@ -1,4 +1,4 @@
-id: "stat_generation"
+name: "stat_generation"
 dice: 10
 type: "roll" # Oracle / Action / Test / Roll
 visible: false 

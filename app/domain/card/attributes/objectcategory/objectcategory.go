@@ -35,7 +35,7 @@ func (c *yamlConfig) addValue(value Category) {
 // - Category - //
 type Category string
 
-func ListCategory() []Category {
+func List() []Category {
 	if len(cachedConfig.Values) == 0 {
 		err := loadFromFile()
 		if err != nil {
@@ -48,10 +48,10 @@ func ListCategory() []Category {
 
 /*
 TODO LOW Verrifier ou "MakeDefault" pourrait être utile
-ex: Si la data vien d'une carte loader, c'est valider 
+ex: Si la data vien d'une carte loader, c'est valider
 */
 func MakeDefault(defaultValue string) Category {
-	ListCategory()
+	List()
 	cachedConfig.addValue(Category(defaultValue))
 	return Category(defaultValue)
 }
@@ -65,7 +65,7 @@ func AssertWithDefault(provided string) Category {
 }
 
 func (r Category) Validate() bool {
-	return slices.Contains(ListCategory(), r)
+	return slices.Contains(List(), r)
 }
 
 func (r Category) String() string {

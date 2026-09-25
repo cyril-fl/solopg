@@ -47,7 +47,8 @@ documents:
     stats: "data/systems/attributes/stats.yaml"
     variety: "data/systems/attributes/variety.yaml"
   folders:
-    oracle: "data/systems/rules/oracles"
-    encounters: "data/systems/rules/oracles/encounter"
     characters: "data/template/characters"
+    encounters: "data/systems/rules/oracles/encounter"
+    hint: "data/template/hint"
     locations: "data/template/locations"
+    oracle: "data/systems/rules/oracles"

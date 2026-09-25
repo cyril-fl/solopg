@@ -48,11 +48,11 @@ func getLocationForm() *form.Form {
 func getObjectForm() *form.Form {
 	var categoryItems []models.Item[string]
 
-	if len(objectcategory.ListCategory()) == 0 {
+	if len(objectcategory.List()) == 0 {
 		objectcategory.MakeDefault("object")
 	}
 
-	for _, i := range objectcategory.ListCategory() {
+	for _, i := range objectcategory.List() {
 		categoryItems = append(categoryItems, models.NewItem(t.Localize(i.String()), "", i.String()))
 	}
 

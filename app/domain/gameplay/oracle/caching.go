@@ -8,13 +8,12 @@ import (
 	"solopg/app/domain/gameplay/dice"
 	"solopg/app/services/t"
 	"solopg/app/services/yaml"
-	"solopg/app/utils/log"
 	"solopg/config"
 )
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	ID        string     `yaml:"id"`
+	Name      string     `yaml:"name"`
 	Dice      int        `yaml:"dice"`
 	Type      string     `yaml:"type"`
 	Visible   bool       `yaml:"visible"`
@@ -71,11 +70,11 @@ func loadFromFile(fileAddress string) error {
 	}
 
 	if params.Dice <= 0 {
-		return t.NewError("error.oracle.invalid_dice", map[string]any{"ID": params.ID, "Dice": params.Dice})
+		return t.NewError("error.oracle.invalid_dice", map[string]any{"ID": params.Name, "Dice": params.Dice})
 	}
 
 	if len(params.Intervals) == 0 {
-		return t.NewError("error.oracle.no_intervals", map[string]any{"ID": params.ID})
+		return t.NewError("error.oracle.no_intervals", map[string]any{"ID": params.Name})
 	}
 
 	cachedConfig = append(cachedConfig, *params)
@@ -83,41 +82,18 @@ func loadFromFile(fileAddress string) error {
 	return nil
 }
 
-func ListFromFolder(path string) ([]string, error) {
-	list, err := yaml.GetFolderFiles(path)
-	if err != nil {
-		return nil, t.NewError("error.oracle.load_folder", map[string]any{"Folder": path, "Error": err})
-	}
-
-	errs := []error{}
-	oracles := []string{}
-	for _, file := range list {
-		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
-			errs = append(errs, fmt.Errorf("Error loading oracle from file %s: %v", file, err))
-		} else {
-			oracles = append(oracles, params.ID)
-		}
-	}
-
-	if len(errs) > 0 {
-		return nil, errors.Join(errs...)
-	}
-
-	return oracles, nil
-}
-
 // - Oracle - //
 type Oracle struct {
-	id        string
+	name      string
 	dice      int
 	typ       string
 	visible   bool
 	intervals []interval
 }
 
-func new(config yamlConfig) Oracle {
+func newFromYamlConfig(config yamlConfig) Oracle {
 	return Oracle{
-		id:        config.ID,
+		name:      config.Name,
 		dice:      config.Dice,
 		typ:       config.Type,
 		visible:   config.Visible,
@@ -125,20 +101,20 @@ func new(config yamlConfig) Oracle {
 	}
 }
 
-func GetByID(id string) (*Oracle, error) {
+func GetByName(name string) (*Oracle, error) {
 	oracles := List()
 
 	for _, oracle := range oracles {
-		if oracle.id == id {
+		if oracle.name == name {
 			return &oracle, nil
 		}
 	}
 
-	return nil, t.NewError("error.oracle.not_found", map[string]any{"ID": id})
+	return nil, t.NewError("error.oracle.not_found", map[string]any{"Name": name})
 }
 
-func (o Oracle) ID() string {
-	return o.id
+func (o Oracle) Name() string {
+	return o.name
 }
 
 func (o Oracle) IsVisible() bool {
@@ -157,16 +133,34 @@ func List() []Oracle {
 	return makeSet(cachedConfig)
 }
 
-func Log() {
-	loadFromSource()
-	log.ParseJson(cachedConfig)
+func ListFromFolder(path string) ([]string, error) {
+	list, err := yaml.GetFolderFiles(path)
+	if err != nil {
+		return nil, t.NewError("error.oracle.load_folder", map[string]any{"Folder": path, "Error": err})
+	}
+
+	errs := []error{}
+	oracles := []string{}
+	for _, file := range list {
+		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
+			errs = append(errs, fmt.Errorf("Error loading oracle from file %s: %v", file, err))
+		} else {
+			oracles = append(oracles, params.Name)
+		}
+	}
+
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return oracles, nil
 }
 
 func makeSet(configs []yamlConfig) []Oracle {
 	result := make([]Oracle, 0, len(configs))
 
 	for _, config := range configs {
-		result = append(result, new(config))
+		result = append(result, newFromYamlConfig(config))
 	}
 
 	return result
@@ -180,7 +174,7 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 			res, ok := interval.Result.(T)
 			if !ok {
 				return nil, t.NewError("error.oracle.invalid_result_type", map[string]any{
-					"ID": o.id, "Actual": fmt.Sprintf("%T", interval.Result), "Expected": fmt.Sprintf("%T", res),
+					"ID": o.name, "Actual": fmt.Sprintf("%T", interval.Result), "Expected": fmt.Sprintf("%T", res),
 				})
 			}
 
@@ -192,5 +186,5 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 		}
 	}
 
-	return nil, t.NewError("error.oracle.no_matching_interval", map[string]any{"ID": o.id, "Roll": value})
+	return nil, t.NewError("error.oracle.no_matching_interval", map[string]any{"ID": o.name, "Roll": value})
 }
