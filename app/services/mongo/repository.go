@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"solopg/app/domain/campaign"
-	"solopg/types/id"
+	"solopg/app/types/id"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

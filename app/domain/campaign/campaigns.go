@@ -7,7 +7,7 @@ import (
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/locations"
 	"solopg/app/services/t"
-	"solopg/types/id"
+	"solopg/app/types/id"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

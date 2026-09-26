@@ -2,7 +2,7 @@ package campaign
 
 import (
 	"solopg/app/domain/gameplay/codex"
-	"solopg/types/id"
+	"solopg/app/types/id"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"

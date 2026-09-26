@@ -6,7 +6,7 @@ import (
 	"solopg/app/domain/card/characters/classes"
 	"solopg/app/domain/card/characters/races"
 	"solopg/app/domain/card/locations"
-	"solopg/types/step"
+	"solopg/app/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )

@@ -3,7 +3,7 @@ package game
 import (
 	"solopg/app/domain/campaign"
 	"solopg/app/domain/card/locations"
-	"solopg/types/id"
+	"solopg/app/types/id"
 )
 
 type Engine struct {

@@ -2,7 +2,7 @@ package sidemenu
 
 import (
 	"solopg/app/tui"
-	"solopg/types/direction"
+	"solopg/app/types/direction"
 
 	"charm.land/bubbles/v2/list"
 	"charm.land/bubbles/v2/viewport"

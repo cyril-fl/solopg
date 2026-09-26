@@ -5,7 +5,7 @@ import (
 	"solopg/app/components/form"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
-	"solopg/types/direction"
+	"solopg/app/types/direction"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

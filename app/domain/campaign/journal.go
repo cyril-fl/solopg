@@ -1,7 +1,7 @@
 package campaign
 
 import (
-	"solopg/types/id"
+	"solopg/app/types/id"
 	"time"
 )
 

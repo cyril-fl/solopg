@@ -10,8 +10,8 @@ import (
 	"solopg/app/tui/view/sidemenu/dicemenu"
 	"solopg/app/tui/view/sidemenu/hintmenu"
 	"solopg/app/tui/view/sidemenu/oraclemenu"
-	"solopg/types/direction"
-	"solopg/types/size"
+	"solopg/app/types/direction"
+	"solopg/app/types/size"
 	"strings"
 	"time"
 

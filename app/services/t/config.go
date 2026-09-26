@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"solopg/types"
+	"solopg/app/types"
 
 	"golang.org/x/text/language"
 )

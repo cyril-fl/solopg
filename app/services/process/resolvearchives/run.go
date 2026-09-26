@@ -4,7 +4,7 @@ import (
 	"solopg/app/domain/campaign"
 	"solopg/app/domain/gameplay/codex"
 	"solopg/app/services/mongo"
-	"solopg/types/id"
+	"solopg/app/types/id"
 )
 
 func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaign.Archives, error) {

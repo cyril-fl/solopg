@@ -6,8 +6,8 @@ import (
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
-	"solopg/types/direction"
-	"solopg/types/size"
+	"solopg/app/types/direction"
+	"solopg/app/types/size"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
