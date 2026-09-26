@@ -38,7 +38,7 @@ type structureDocument struct {
 type structureFolders struct {
 	Characters string `yaml:"characters"`
 	Encounters string `yaml:"encounters"`
-	Hint      string `yaml:"hint"`
+	Hint       string `yaml:"hint"`
 	Locations  string `yaml:"locations"`
 	Oracle     string `yaml:"oracle"`
 }

@@ -13,7 +13,7 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Name   string  `yaml:"name"`
+	Name   string   `yaml:"name"`
 	Values []string `yaml:"values"`
 }
 
@@ -62,14 +62,14 @@ func loadFromFile(fileAddress string) error {
 
 // - Hint - //
 type Hint struct {
-	name string
+	name   string
 	values []string
 }
 
 func newFromYamlConfig(config yamlConfig) Hint {
 	return Hint{
-		name:      config.Name,
-		values:      config.Values,
+		name:   config.Name,
+		values: config.Values,
 	}
 }
 
@@ -126,7 +126,6 @@ func ListFromFolder(path string) ([]string, error) {
 
 	return hints, nil
 }
-
 
 func makeSet(configs []yamlConfig) []Hint {
 	result := make([]Hint, 0, len(configs))

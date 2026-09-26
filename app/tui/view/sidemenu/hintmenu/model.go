@@ -94,7 +94,7 @@ func (m *HintMenu) handleKeyShiftEnter() tea.Cmd {
 	_ = selected
 
 	spark := selected.Value()
-			
+
 	return func() tea.Msg {
 		return Msg{
 			Result: hint.Roll(spark),

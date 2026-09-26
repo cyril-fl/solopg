@@ -5,6 +5,8 @@ import (
 	"os"
 	"slices"
 	"solopg/types"
+
+	"golang.org/x/text/language"
 )
 
 // - Locale - //
@@ -15,17 +17,15 @@ type Locale struct {
 	File string `yaml:"file"`
 }
 
-/*
-TODO voir pour faire de add on et etendre les ficher ect voir comment on pourrais faire, de maniere a ajouter par
-exemple
--error
-	-en
-	-fr
-- success
-	-en
-	-en
-de maniere a ensuite faire un reduce et creée un fichier unique et temporaire par langue mais permettre une meilleur gestions.
-*/
+func (locale *Locale) parseTag() (language.Tag, error) {
+	tag, err := language.Parse(locale.ISO)
+	if err != nil {
+		return language.Tag{}, fmt.Errorf("invalid locale '%s': %w", locale.ISO, err)
+	}
+
+	return tag, nil
+}
+
 // - Format - //
 type Format string
 
@@ -42,8 +42,8 @@ type Config struct {
 	Locales []Locale `yaml:"locales"`
 }
 
-func (cfg Config) getDefaultLocale() (*Locale, error) {
-	return cfg.getLocaleByCode(cfg.Default)
+func (cfg Config) getDefaultLocale(defaultLocale string) (*Locale, error) {
+	return cfg.getLocaleByCode(defaultLocale)
 }
 
 func (cfg Config) getLocaleByCode(code string) (*Locale, error) {
@@ -54,6 +54,16 @@ func (cfg Config) getLocaleByCode(code string) (*Locale, error) {
 	}
 
 	return nil, fmt.Errorf("locale '%s' not found", code)
+}
+
+func (cfg Config) getLocaleByISO(iso string) (*Locale, error) {
+	for index := range cfg.Locales {
+		if cfg.Locales[index].ISO == iso {
+			return &cfg.Locales[index], nil
+		}
+	}
+
+	return nil, fmt.Errorf("locale '%s' not found", iso)
 }
 
 func (cfg Config) Validate() error {

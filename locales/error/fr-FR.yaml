@@ -1,0 +1,67 @@
+error.label:
+  other: Erreur
+
+error.oracle_action:
+  other: "Erreur oracle : {{.Error}}"
+
+# Errors
+error.page_not_found:
+  other: "Page introuvable"
+error.required_field:
+  other: "{{.Field}} est obligatoire"
+error.class_race_required:
+  other: "La classe et la race sont obligatoires"
+error.race_required:
+  other: "La race est obligatoire"
+error.category_required:
+  other: "La catégorie est obligatoire"
+error.game_unavailable:
+  other: "État du jeu indisponible"
+error.unknown_class:
+  other: "Classe inconnue : {{.Class}}"
+error.unknown_race:
+  other: "Race inconnue : {{.Race}}"
+error.non_beast_race:
+  other: "La race n'est pas une race de bête : {{.Race}}"
+error.unknown_codex:
+  other: "Type de Codex inconnu : {{.Kind}}"
+error.save:
+  other: "Erreur de sauvegarde : {{.Error}}"
+error.save_unconfigured:
+  other: "Fonction de sauvegarde non configurée"
+error.oracle.not_found:
+  other: "Oracle {{.ID}} introuvable"
+error.oracle.load_file:
+  other: "Erreur de chargement du fichier oracle {{.File}} : {{.Error}}"
+error.oracle.load_folder:
+  other: "Erreur de chargement du dossier oracle {{.Folder}} : {{.Error}}"
+error.oracle.load:
+  other: "Impossible de charger l'oracle : {{.Error}}"
+error.oracle.invalid_dice:
+  other: "L'oracle {{.ID}} a une valeur de dé incorrecte : {{.Dice}}"
+error.oracle.no_intervals:
+  other: "L'oracle {{.ID}} ne contient aucun intervalle"
+error.oracle.invalid_result_type:
+  other: "L'oracle {{.ID}} retourne {{.Actual}}, mais {{.Expected}} est attendu"
+error.oracle.no_matching_interval:
+  other: "Aucun intervalle de l'oracle {{.ID}} ne correspond au résultat {{.Roll}}"
+error.incomplete_character_creation:
+  other: "Le contexte de création du personnage est incomplet"
+error.unexpected_save_value:
+  other: "Type de sauvegarde inattendu : {{.Type}}"
+error.unexpected_name_value:
+  other: "Type de nom inattendu : {{.Type}}"
+error.unexpected_race_value:
+  other: "Type de race inattendu : {{.Type}}"
+error.unexpected_class_value:
+  other: "Type de classe inattendu : {{.Type}}"
+error.unexpected_build_value:
+  other: "Type de caractéristiques inattendu : {{.Type}}"
+error.unexpected_location_value:
+  other: "Type de lieu inattendu : {{.Type}}"
+
+
+unknown_player:
+  other: Joueur inconnu
+unknown_place:
+  other: Lieu inconnu

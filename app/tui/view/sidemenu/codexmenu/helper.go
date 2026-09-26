@@ -243,7 +243,7 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 	}
 
 	currentPage.setShowForm(false)
-	
+
 	// TODO MEDIUM Verrifier que tout soit bien logger et persister dans le logger, et dans le codex.
 	return sendMsg()
 }
