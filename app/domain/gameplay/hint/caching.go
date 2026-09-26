@@ -138,9 +138,9 @@ func makeSet(configs []yamlConfig) []Hint {
 }
 
 // - Helpers - //
-func Roll(h Hint) []string {
+func Roll(hint Hint) []string {
 	res := []string{}
-	values := h.Values()
+	values := hint.Values()
 
 	for i := 0; i < 3; i++ {
 		value := dice.Roll(len(values))

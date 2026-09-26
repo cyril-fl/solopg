@@ -34,6 +34,11 @@ const (
 	FormatYAML Format = "yaml"
 )
 
+var formatValidExtensions = map[Format][]string{
+	FormatJSON: {".json"},
+	FormatYAML: {".yaml", ".yml"},
+}
+
 // - Config - //
 type Config struct {
 	Default string   `yaml:"default"`

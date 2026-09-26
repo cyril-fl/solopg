@@ -40,20 +40,3 @@ Ces éléments pourrait également être créés en jeu et enregistrés en base 
 ```
 ⚠️⚠️⚠️ Attention : ces réglages sont actuellement globaux. Ainsi, un personnage nommé Jean ou une classe Orc définis dans les données seront communs à toutes vos parties.
 ```
-
-## Localisation
-
-Le multilingue est géré en jeu par i18n et les clés présentes dans les fichiers sont liées au fichiers de traductions.
-
-```yaml
-- name: Human
-  description: "races.humans.description"
-  playable: true
-  bonus:
-```
-
-Pour les éléments créés en jeu, s’ils nécessitent une localisation, il faudra appliquer le même schéma :
-
-1. En jeu, noter la valeurs à traduire sous fourme de clé i18n.
-2. Mettre à jour les fichiers de localisation.
-

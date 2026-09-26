@@ -240,7 +240,12 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 
 // Hint Rolled
 func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
-	message := fmt.Sprintf("Hint rolled: %v", strings.Join(msg.Result, ", "))
+	localized := make([]string, 0, len(msg.Result))
+	for _, hint := range msg.Result {
+		localized = append(localized, t.Localize(hint))
+	}
+
+	message := fmt.Sprintf("Hint rolled: %v", strings.Join(localized, ", "))
 
 	m.engine.AddJournalEntry("Hint", message)
 	m.journal = append(m.journal, message)

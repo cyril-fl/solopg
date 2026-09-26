@@ -1,0 +1,202 @@
+hint.sci-fi:
+  other: science-fiction
+hint.sci-fi.orbital_station:
+  other: station orbitale
+hint.sci-fi.android:
+  other: androïde
+hint.sci-fi.nebula:
+  other: nébuleuse
+hint.sci-fi.hyperspace:
+  other: hyperespace
+hint.sci-fi.colony:
+  other: colonie
+hint.sci-fi.cyborg:
+  other: cyborg
+hint.sci-fi.exoplanet:
+  other: exoplanète
+hint.sci-fi.mothership:
+  other: vaisseau-mère
+hint.sci-fi.clone:
+  other: clone
+hint.sci-fi.terraforming:
+  other: terraformage
+hint.sci-fi.artificial_intelligence:
+  other: intelligence artificielle
+hint.sci-fi.asteroid:
+  other: astéroïde
+hint.sci-fi.mercenary:
+  other: mercenaire
+hint.sci-fi.cryovault:
+  other: chambre cryogénique
+hint.sci-fi.megacity:
+  other: méga-cité
+hint.sci-fi.drone:
+  other: drone
+hint.sci-fi.xenobiologist:
+  other: xénobiologiste
+hint.sci-fi.spaceport:
+  other: port spatial
+hint.sci-fi.nanites:
+  other: nanites
+hint.sci-fi.quantum_jump:
+  other: saut quantique
+hint.sci-fi.pirate:
+  other: pirate
+hint.sci-fi.ocean_planet:
+  other: planète-océan
+hint.sci-fi.reactor:
+  other: réacteur
+hint.sci-fi.hologram:
+  other: hologramme
+hint.sci-fi.alien:
+  other: extraterrestre
+hint.sci-fi.probe:
+  other: sonde
+hint.sci-fi.wreck:
+  other: épave
+hint.sci-fi.artificial_gravity:
+  other: gravité artificielle
+hint.sci-fi.dome:
+  other: dôme
+hint.sci-fi.smuggler:
+  other: contrebandier
+hint.sci-fi.space_elevator:
+  other: ascenseur orbital
+hint.sci-fi.mutation:
+  other: mutation
+hint.sci-fi.robot:
+  other: robot
+hint.sci-fi.restricted_sector:
+  other: secteur interdit
+hint.sci-fi.spacesuit:
+  other: combinaison
+hint.sci-fi.pulsar:
+  other: pulsar
+hint.sci-fi.space_prison:
+  other: prison spatiale
+hint.sci-fi.plasma_weapon:
+  other: arme plasma
+hint.sci-fi.hive:
+  other: ruche
+hint.sci-fi.diplomat:
+  other: diplomate
+hint.sci-fi.scout_ship:
+  other: vaisseau éclaireur
+hint.sci-fi.singularity:
+  other: singularité
+hint.sci-fi.terraformer:
+  other: terraformeur
+hint.sci-fi.mining_colony:
+  other: colonie minière
+hint.sci-fi.teleporter:
+  other: téléporteur
+hint.sci-fi.parasite:
+  other: parasite
+hint.sci-fi.archive:
+  other: archive
+hint.sci-fi.asteroid_belt:
+  other: ceinture d'astéroïdes
+hint.sci-fi.synthetic:
+  other: synthétique
+hint.sci-fi.beacon:
+  other: balise
+hint.sci-fi.generator:
+  other: générateur
+hint.sci-fi.artificial_moon:
+  other: lune artificielle
+hint.sci-fi.mercury:
+  other: mercure
+hint.sci-fi.digital_consciousness:
+  other: conscience numérique
+hint.sci-fi.stasis:
+  other: stase
+hint.sci-fi.frigate:
+  other: frégate
+hint.sci-fi.shield:
+  other: bouclier
+hint.sci-fi.plasmid:
+  other: plasmide
+hint.sci-fi.ion_storm:
+  other: tempête ionique
+hint.sci-fi.corporate_district:
+  other: quartier corporate
+hint.sci-fi.abandoned_station:
+  other: station abandonnée
+hint.sci-fi.ancient_species:
+  other: espèce ancienne
+hint.sci-fi.virus:
+  other: virus
+hint.sci-fi.exoskeleton:
+  other: exosquelette
+hint.sci-fi.laboratory:
+  other: laboratoire
+hint.sci-fi.wormhole:
+  other: trou de ver
+hint.sci-fi.soldier:
+  other: soldat
+hint.sci-fi.nanoforge:
+  other: nanoforge
+hint.sci-fi.relay:
+  other: relais
+hint.sci-fi.quantum_oracle:
+  other: oracle quantique
+hint.sci-fi.prisoner:
+  other: prisonnier
+hint.sci-fi.artifact:
+  other: artefact
+hint.sci-fi.zero_gravity:
+  other: gravité zéro
+hint.sci-fi.satellite:
+  other: satellite
+hint.sci-fi.fighter:
+  other: chasseur
+hint.sci-fi.memory:
+  other: mémoire
+hint.sci-fi.desert_planet:
+  other: planète désert
+hint.sci-fi.bioweapon:
+  other: bioarme
+hint.sci-fi.network:
+  other: réseau
+hint.sci-fi.riot:
+  other: émeute
+hint.sci-fi.ghost_ship:
+  other: vaisseau fantôme
+hint.sci-fi.revolt:
+  other: révolte
+hint.sci-fi.terraformed:
+  other: terraformée
+hint.sci-fi.portal:
+  other: portail
+hint.sci-fi.tractor_beam:
+  other: rayon tracteur
+hint.sci-fi.cloner:
+  other: cloneur
+hint.sci-fi.lost_civilization:
+  other: civilisation perdue
+hint.sci-fi.capsule:
+  other: capsule
+hint.sci-fi.eclipse:
+  other: éclipse
+hint.sci-fi.cryochamber:
+  other: cryochambre
+hint.sci-fi.swarm:
+  other: essaim
+hint.sci-fi.distortion:
+  other: distorsion
+hint.sci-fi.comet:
+  other: comète
+hint.sci-fi.implant:
+  other: implant
+hint.sci-fi.contaminated_zone:
+  other: zone contaminée
+hint.sci-fi.embassy:
+  other: ambassade
+hint.sci-fi.starport:
+  other: starport
+hint.sci-fi.rift:
+  other: faille
+hint.sci-fi.signal:
+  other: signal
+hint.sci-fi.protocol:
+  other: protocole

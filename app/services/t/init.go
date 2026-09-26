@@ -3,6 +3,7 @@ package t
 import (
 	"fmt"
 	"path/filepath"
+	"slices"
 	"solopg/app/services/yaml"
 	"strings"
 
@@ -85,7 +86,9 @@ func loadLocaleFile(cfg Config) ([]string, error) {
 
 	assertedFiles := make([]string, 0)
 	for _, path := range files {
-		if !(filepath.Ext(path) == ".yaml" || filepath.Ext(path) == ".yml") {
+		extensions := formatValidExtensions[cfg.Format]
+
+		if !(slices.Contains(extensions, filepath.Ext(path))) {
 			continue
 		}
 
