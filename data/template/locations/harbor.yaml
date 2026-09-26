@@ -1,5 +1,5 @@
-name: Harbor
-description: A bustling harbor where merchants, sailors, and adventurers arrive from distant lands.
+name: location.harbor
+description: location.harbor.description
 rarity: E
 variety: location_card
 effects:

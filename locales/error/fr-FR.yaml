@@ -1,5 +1,13 @@
-error.label:
+error:
   other: Erreur
+
+error.onboarding:
+  other: "Le contexte de création du personnage est incomplet"
+
+
+
+### -----
+
 
 error.oracle_action:
   other: "Erreur oracle : {{.Error}}"
@@ -45,8 +53,6 @@ error.oracle.invalid_result_type:
   other: "L'oracle {{.ID}} retourne {{.Actual}}, mais {{.Expected}} est attendu"
 error.oracle.no_matching_interval:
   other: "Aucun intervalle de l'oracle {{.ID}} ne correspond au résultat {{.Roll}}"
-error.incomplete_character_creation:
-  other: "Le contexte de création du personnage est incomplet"
 error.unexpected_save_value:
   other: "Type de sauvegarde inattendu : {{.Type}}"
 error.unexpected_name_value:

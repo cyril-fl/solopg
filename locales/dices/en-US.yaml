@@ -1,0 +1,2 @@
+dice.roll:result:
+  other: "{{.Dice}} : {{.Value}}"

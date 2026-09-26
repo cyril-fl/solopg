@@ -2,8 +2,10 @@ package onboardarchetype
 
 import (
 	"solopg/app/domain/card/attributes/archetypes"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
+	"solopg/app/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -29,7 +31,8 @@ func NewModel[T archetypes.Archetype](data []T) model {
 			continue
 		}
 
-		items = append(items, models.NewItem(i.GetName(), "", i))
+		label := transform.Capitalize(i18n.Localize(i.GetName()))
+		items = append(items, models.NewItem(label, "", i))
 	}
 
 	listModel := list.New(items, list.NewDefaultDelegate(), 0, 0)
@@ -77,7 +80,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, func() tea.Msg {
 			return tui.ResolutionMsg{
 				Completed: true,
-				Value:     selectedItem.FilterValue(),
+				Value:     selectedItem,
 			}
 		}
 	}

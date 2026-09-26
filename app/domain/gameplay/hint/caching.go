@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"solopg/app/domain/gameplay/dice"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 	"solopg/config"
 )
@@ -26,7 +26,7 @@ func loadFromSource() error {
 	// Appliquer cette logique la au oracles dice ect...
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return t.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return i18n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -52,7 +52,7 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return t.NewError("error.hint.load", map[string]any{"Error": err})
+		return i18n.NewError("error.hint.load", map[string]any{"Error": err})
 	}
 
 	cachedConfig = append(cachedConfig, *params)
@@ -82,7 +82,7 @@ func GetByName(name string) (*Hint, error) {
 		}
 	}
 
-	return nil, t.NewError("error.hint.not_found", map[string]any{"Name": name})
+	return nil, i18n.NewError("error.hint.not_found", map[string]any{"Name": name})
 }
 
 func (o Hint) Name() string {
@@ -107,7 +107,7 @@ func List() []Hint {
 func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {
-		return nil, t.NewError("error.hint.load_folder", map[string]any{"Folder": path, "Error": err})
+		return nil, i18n.NewError("error.hint.load_folder", map[string]any{"Folder": path, "Error": err})
 	}
 
 	errs := []error{}

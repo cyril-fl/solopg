@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/services/game"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui/view/sidemenu/metadatamenu"
 	"strings"
 
@@ -48,7 +48,7 @@ func (m model) View() tea.View {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{t.Localize("save")}
+	footer := []string{i18n.Localize("save")}
 	return append(footer, m.getMenuActiveElement().GetFooter()...)
 }
 
@@ -77,24 +77,20 @@ func (m *model) getContent() string {
 }
 
 // - Helper - //
-func renderSidePanel(engine *game.Engine, height int, Titles ...string) string {
+func renderSidePanel(engine *game.Engine, height int, views ...string) string {
 	var content strings.Builder
 
 	composeSidePanel(&content, engine)
 
-	statsView := strings.TrimRight(content.String(), "\n")
-	sideView := statsView
-
-	if len(Titles) > 0 {
-		sideView = lipgloss.JoinVertical(lipgloss.Left, statsView)
-		for i, title := range Titles {
-			if i < len(Titles) {
-				sideView = lipgloss.JoinVertical(lipgloss.Left, sideView, "\n"+t.Localize(title))
-			}
-		}
+	statsview := strings.TrimRight(content.String(), "\n")
+	menuview := []string{}
+	for _, view := range views {
+		menuview = append(menuview, view)
 	}
 
-	return renderPanel(sideView, height)
+	verticalView := lipgloss.JoinVertical(lipgloss.Left, statsview, strings.Join(menuview, "\n"))
+
+	return renderPanel(verticalView, height)
 }
 
 func renderPanel(content string, height int) string {

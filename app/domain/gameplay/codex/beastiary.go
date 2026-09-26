@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/characters/races"
+	"solopg/app/services/i18n"
 	"solopg/app/services/process/generatestats"
-	"solopg/app/services/t"
 	"strings"
 	"time"
 )
@@ -17,8 +17,8 @@ type BeastiaryTable struct {
 }
 
 type BeastiaryEntry struct {
-	Timestamp time.Time  `bson:"timestamp"`
-	Race      races.Race `bson:"race"`
+	Timestamp time.Time   `bson:"timestamp"`
+	Race      *races.Race `bson:"race"`
 }
 
 var tablebeast = "codex.beastiary"
@@ -27,12 +27,12 @@ func NewBeastiaryTable(entries []BeastiaryEntry) *BeastiaryTable {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{
-		TableData: newTable(t.Localize(tablebeast), entries),
+		TableData: newTable(i18n.Localize(tablebeast), entries),
 	}
 }
 
 // - Methods --//
-func (tb *BeastiaryTable) Add(race races.Race) {
+func (tb *BeastiaryTable) Add(race *races.Race) {
 	tb.Entries = append(tb.Entries, BeastiaryEntry{
 		Timestamp: time.Now().UTC(),
 		Race:      race,
@@ -89,7 +89,7 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 		return fmt.Errorf("failed to save race: %w", err)
 	}
 
-	tb.Add(race)
+	tb.Add(&race)
 
 	return nil
 }
@@ -101,19 +101,25 @@ description
 viewport (mettre la liste et prevoir une fonction de la redu pour une enum ou un truc du genre)
 */
 func (tb *BeastiaryTable) Summaries() []string {
-	content := strings.Builder{}
-
 	if len(tb.Entries) == 0 {
-		content.WriteString(t.Localize("codex.no_beasts"))
-		return []string{content.String()}
+		return []string{i18n.Localize("codex.entry:empty")}
 	}
 
+	content := strings.Builder{}
 	for _, entry := range tb.Entries {
-		content.WriteString(entry.Race.GetName())
-		content.WriteString("\n")
-		content.WriteString(entry.Race.GetDescription())
-		content.WriteString("\n")
-		content.WriteString(stats.New(entry.Race.GetBonus()).String())
+		if entry.Race == nil {
+			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+		} else {
+			fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.beastiary:entry", map[string]any{
+				"Name":        i18n.Localize(entry.Race.GetName()),
+				"Description": i18n.Localize(entry.Race.GetDescription()),
+			}))
+
+			if len(entry.Race.GetBonus()) > 0 {
+				modifiersToStats := stats.New(entry.Race.GetBonus())
+				fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.entry:stats", modifiersToStats.MappedString()))
+			}
+		}
 		content.WriteString("\n\n")
 	}
 
@@ -140,7 +146,7 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 }
 
 func (tb *BeastiaryTable) Ensure() {
-	ensureEmbeddedTable(t.Localize(tablebeast), &tb.TableData)
+	ensureEmbeddedTable(i18n.Localize(tablebeast), &tb.TableData)
 	tb.syncWithConfig()
 }
 
@@ -179,7 +185,7 @@ func getPreloadBeastiaryEntries() []BeastiaryEntry {
 	for _, entry := range races.List() {
 		m[entry.Name] = BeastiaryEntry{
 			Timestamp: time.Now().UTC(),
-			Race:      entry,
+			Race:      &entry,
 		}
 	}
 

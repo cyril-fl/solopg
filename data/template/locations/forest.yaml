@@ -1,5 +1,5 @@
-name: Forest
-description: A dense forest filled with ancient trees, hidden paths, and lurking creatures.
+name: location.forest
+description: location.forest.description
 rarity: E
 variety: location_card
 effects:

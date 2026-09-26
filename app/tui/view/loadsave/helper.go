@@ -2,15 +2,16 @@ package loadsave
 
 import (
 	"solopg/app/domain/campaign"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui/models"
+	"solopg/app/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 )
 
 func makeItems(data []campaign.Campaign) []list.Item {
 	items := []list.Item{
-		models.NewItem[*campaign.Campaign](t.Localize("new_save"), "", nil),
+		models.NewItem[*campaign.Campaign](transform.Capitalize(i18n.Localize("save:new")), "", nil),
 	}
 
 	for _, s := range data {

@@ -6,8 +6,8 @@ import (
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/characters/classes"
 	"solopg/app/domain/card/characters/races"
+	"solopg/app/services/i18n"
 	"solopg/app/services/process/generatestats"
-	"solopg/app/services/t"
 	"strings"
 
 	"time"
@@ -26,20 +26,20 @@ var tablenpcs = "codex.npcs"
 
 func NewNpcsTable(entries []NpcsEntry) *NpcsTable {
 	return &NpcsTable{
-		TableData: newTable(t.Localize(tablenpcs), entries),
+		TableData: newTable(i18n.Localize(tablenpcs), entries),
 	}
 }
 
 // - Methods --//
-func (n *NpcsTable) Add(character *characters.Character) {
-	n.Entries = append(n.Entries, NpcsEntry{
+func (tb *NpcsTable) Add(character *characters.Character) {
+	tb.Entries = append(tb.Entries, NpcsEntry{
 		Timestamp: time.Now().UTC(),
 		Character: character,
 	})
 }
 
-func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
-	if err := n.assertEntry(values); err != nil {
+func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
+	if err := tb.assertEntry(values); err != nil {
 		return err
 	}
 
@@ -71,32 +71,31 @@ func (n *NpcsTable) AddFromMappedValues(values map[string]string) error {
 		return fmt.Errorf("failed to create character from mapped values: %w", err)
 	}
 
-	n.Add(character)
+	tb.Add(character)
 
 	return nil
 }
 
-func (n *NpcsTable) Summaries() []string {
-	content := strings.Builder{}
-
-	if len(n.Entries) == 0 {
-		content.WriteString(t.Localize("codex.no_npcs"))
-		return []string{content.String()}
+func (tb *NpcsTable) Summaries() []string {
+	if len(tb.Entries) == 0 {
+		return []string{i18n.Localize("codex.entry:empty")}
 	}
 
-	for _, entry := range n.Entries {
+	content := strings.Builder{}
+	for _, entry := range tb.Entries {
 		if entry.Character == nil {
-			content.WriteString(t.Localize("codex.unknown_npc"))
-			content.WriteString("\n\n")
+			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
 			continue
+		} else {
+			fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.npcs:entry", map[string]any{
+				"Name":  i18n.Localize(entry.Character.Name),
+				"Race":  i18n.Localize(entry.Character.Race),
+				"Class": i18n.Localize(entry.Character.Class),
+			}))
+
+			fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.entry:stats", entry.Character.Stats.MappedString()))
 		}
-		content.WriteString(entry.Character.Name)
-		content.WriteString(" - ")
-		content.WriteString(entry.Character.Race)
-		content.WriteString(" - ")
-		content.WriteString(entry.Character.Class)
-		content.WriteString("\n")
-		content.WriteString(entry.Character.Stats.String())
+
 		content.WriteString("\n\n")
 	}
 
@@ -104,7 +103,7 @@ func (n *NpcsTable) Summaries() []string {
 }
 
 // - Helper --//
-func (n *NpcsTable) assertEntry(entry map[string]string) error {
+func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {
 		err = append(err, fmt.Errorf("name is empty"))
@@ -120,12 +119,12 @@ func (n *NpcsTable) assertEntry(entry map[string]string) error {
 	}
 
 	if len(err) > 0 {
-		return n.formatAssertErrors(err)
+		return tb.formatAssertErrors(err)
 	}
 
 	return nil
 }
 
-func (n *NpcsTable) Ensure() {
-	ensureEmbeddedTable(t.Localize(tablenpcs), &n.TableData)
+func (tb *NpcsTable) Ensure() {
+	ensureEmbeddedTable(i18n.Localize(tablenpcs), &tb.TableData)
 }

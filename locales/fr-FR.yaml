@@ -1,124 +1,81 @@
-new_save:
-  other: Nouvelle sauvegarde
-create_character:
-  other: Creer un personnage
+# Reroll
+attempt:
+  other: "tentative"
+# - Options
+accept:
+  other: "accepter"
+reroll:
+  other: "relancer"
+
+# System
+onboarding:
+  other: "Creer un personnage"
+save:new:
+  other: "nouvelle sauvegarde"
+
+###
+
+
+
 name:
   other: "Nom:"
-quit:
-  other: "Ctrl+Q: Quitter"
-accept:
-  other: Accepter
-reroll:
-  other: Relancer
-location:
-  other: "Lieu :"
-stats:
-  other: "Stats :"
-attempt:
-  other: "Tentative :"
-error.label:
-  other: Erreur
 
-races.elves.description:
-  other: "Les elfes sont connus pour leur grâce, leur agilité et leur affinité avec la nature. Ils ont une longue durée de vie et sont souvent habiles en magie et en tir à l'arc."
-races.humans.description:
-  other: "Les humains sont la race la plus adaptable et polyvalente. Ils peuvent prospérer dans n'importe quel environnement et sont connus pour leur résilience et leur détermination."
-races.dwarves.description:
-  other: "Les nains sont robustes et résistants, connus pour leur savoir-faire et leurs compétences en minage. Ils ont un fort sens de la communauté et sont souvent des guerriers compétents."
-races.slimes.description:
-  other: "Les slimes sont des créatures amorphes qui peuvent prendre diverses formes."
 
-oracles:
-  other: ORACLES
+
+
+## todo deplacer ça ailler
 oracles.encounter_easy:
   other: "Facile"
 oracles.encounter_normal:
   other: "Normal"
 oracles.encounter_hard:
   other: "Difficile"
-codex:
-  other: CODEX
-dice:
-  other: DÉS
-character:
-  other: "PERSONNAGE : "
-place:
-  other: "LIEU : "
 
-stats_upper:
-  other: "STATS :"
-no_stats:
-  other: Aucune statistique
 chat.placeholder:
   other: "Envoyer un message..."
 chat.welcome:
   other: "Bienvenue dans le chat !\nÉcrivez un message puis appuyez sur Entrée pour l'envoyer."
 field.name:
-  other: Nom
+  other: "Nom"
 field.description:
-  other: Description
+  other: "Description"
 field.class:
-  other: Classe
+  other: "Classe"
 field.race:
-  other: Race
+  other: "Race"
 field.category:
   other: "Catégorie (weapon/armor/potion)"
 field.title:
-  other: Titre
+  other: "Titre"
 field.encounter:
-  other: Rencontre
+  other: "Rencontre"
 codex.add:
   other: "Ajouter — {{.Kind}}"
-codex.empty:
+codex.entry:empty:
   other: "Aucune entrée dans cette table."
 error.oracle_action:
   other: "Erreur oracle : {{.Error}}"
 critical:
-  other: Critique
+  other: "Critique"
 save.success:
   other: "Sauvegarde réussie à {{.Time}}"
 campaign.description:
   other: "Lieu : {{.Location}} | Mis à jour : {{.Updated}}"
 objective.number:
   other: "Objectif n°{{.Number}}"
-stat.health:
-  other: Santé
-stat.physical:
-  other: Physique
-stat.mental:
-  other: Mental
-stat.stamina:
-  other: Endurance
-stat.social:
-  other: Social
-codex.npcs:
-  other: PNJ
-codex.beastiary:
-  other: Bestiaire
-codex.locations:
-  other: Lieux
-codex.objects:
-  other: Objets
-codex.objectives:
-  other: Objectifs
+
+
 oracle.likely:
-  other: Probable
+  other: "Probable"
 oracle.unlikely:
-  other: Improbable
+  other: "Improbable"
 oracle.neutral:
-  other: Neutre
+  other: "Neutre"
 oracle.very_likely:
-  other: Très probable
+  other: "Très probable"
 oracle.very_unlikly:
-  other: Très improbable
-codex.unknown_npc:
-  other: PNJ inconnu
-codex.unknown_beast:
-  other: Bête inconnu
-codex.unknown_location:
-  other: Lieu inconnu
-codex.unknown_object:
-  other: Objet inconnu
+  other: "Très improbable"
+
   
 # Ctrl
 shift-enter:open:
@@ -135,3 +92,5 @@ shift-enter:roll:
   other: "Shift+Entrée : Lancer"
 back_to_chat:
   other: "Échap : Retour au chat"
+quit:
+  other: "Ctrl+Q: Quitter"

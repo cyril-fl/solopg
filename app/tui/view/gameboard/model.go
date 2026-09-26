@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/services/game"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/view/sidemenu"
 	"solopg/app/tui/view/sidemenu/codexmenu"
@@ -47,7 +47,7 @@ func NewModel(params UiParams) model {
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 
 		textarea: initTextarea(),
-		viewport: initViewport(t.Localize("chat.welcome")),
+		viewport: initViewport(i18n.Localize("chat.welcome")),
 
 		engine: params.Engine,
 		save:   params.OnSave,

@@ -8,7 +8,7 @@ import (
 	"solopg/app/domain/card/characters/wallet"
 	"solopg/app/domain/card/objects"
 	"solopg/app/domain/card/objects/equipment"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 )
 
@@ -30,7 +30,7 @@ func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 	isValidArgs := ctx.SelectedRace != nil && ctx.SelectedClass != nil && ctx.SelectedLocation != nil
 	if !isValidArgs {
-		return nil, t.NewError("error.incomplete_character_creation")
+		return nil, i18n.NewError("error.onboarding")
 	}
 
 	player, err := generateCharacter(ctx)

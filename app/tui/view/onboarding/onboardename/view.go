@@ -1,7 +1,7 @@
 package onboardename
 
 import (
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -10,7 +10,7 @@ import (
 func (m model) View() tea.View {
 	title := lipgloss.NewStyle().
 		Bold(true).
-		Render(t.Localize("create_character"))
+		Render(i18n.Localize("onboarding"))
 
 	input := m.Input.View()
 
@@ -22,7 +22,7 @@ func (m model) View() tea.View {
 			*/
 			title,
 			"",
-			t.Localize("name"),
+			i18n.Localize("name"),
 			input,
 		),
 	)

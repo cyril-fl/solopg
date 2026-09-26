@@ -1,4 +1,4 @@
-package t
+package i18n
 
 import (
 	"errors"
@@ -16,6 +16,10 @@ func lookupErrorMessage(id string, data ...map[string]any) string {
 }
 
 func lookupMessage(t *i18n.Localizer, id string, data ...map[string]any) string {
+	// if true {
+	// 	return fmt.Sprintf("{{%s}}", id)
+	// }
+
 	cfg := &i18n.LocalizeConfig{MessageID: id}
 	if len(data) > 0 {
 		cfg.TemplateData = data[0]

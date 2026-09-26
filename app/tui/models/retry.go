@@ -1,8 +1,9 @@
 package models
 
 import (
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
+	"solopg/app/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -74,8 +75,8 @@ func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 
 func NewOptionsModel(options rerollOptions) list.Model {
 	items := []list.Item{
-		NewItem(t.Localize(options.true), "", true),
-		NewItem(t.Localize(options.false), "", false),
+		NewItem(trueLabel(options), "", true),
+		NewItem(falseLabel(options), "", false),
 	}
 
 	return newConfiguredList(items, 0, 0)
@@ -83,7 +84,7 @@ func NewOptionsModel(options rerollOptions) list.Model {
 
 func makeConfirmationModel(m list.Model) list.Model {
 	items := []list.Item{
-		NewItem(t.Localize("accept"), "", true),
+		NewItem(trueLabel(DefaultRerollOptions), "", true),
 	}
 
 	return newConfiguredList(items, m.Width(), m.Height())
@@ -93,6 +94,14 @@ func newConfiguredList(items []list.Item, width, height int) list.Model {
 	model := list.New(items, list.NewDefaultDelegate(), width, height)
 	ConfigureList(&model)
 	return model
+}
+
+func trueLabel(options rerollOptions) string {
+	return transform.Capitalize(i18n.Localize(options.true))
+}
+
+func falseLabel(options rerollOptions) string {
+	return transform.Capitalize(i18n.Localize(options.false))
 }
 
 type rerollOptions struct {

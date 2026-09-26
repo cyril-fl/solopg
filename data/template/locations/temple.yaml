@@ -1,5 +1,5 @@
-name: Ancient Temple
-description: Forgotten ruins hiding relics, dangerous traps, and ancient knowledge.
+name: location.temple
+description: location.temple.description
 rarity: D
 variety: location_card
 effects:

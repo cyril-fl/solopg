@@ -40,3 +40,11 @@ func New(params Template) (*Location, error) {
 		Effects: params.Effects,
 	}, nil
 }
+
+func (l *Location) GetName() string {
+	return l.Description.Name
+}
+
+func (l *Location) GetDescription() string {
+	return l.Description.Description
+}

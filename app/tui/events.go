@@ -2,7 +2,7 @@ package tui
 
 import (
 	"errors"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -49,7 +49,7 @@ type SaveMsg struct {
 func SendSaveMsg(save func() error) tea.Cmd {
 	return func() tea.Msg {
 		if save == nil {
-			return SaveMsg{Err: t.NewError("error.save_unconfigured")}
+			return SaveMsg{Err: i18n.NewError("error.save_unconfigured")}
 		}
 		return SaveMsg{Err: save()}
 	}

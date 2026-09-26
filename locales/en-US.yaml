@@ -1,81 +1,71 @@
-new_save:
-  other: New save
-create_character:
-  other: Create character
+# Reroll 
+attempt:
+  other: "attempt"
+
+## - Options
+accept:
+  other: "accept"
+reroll:
+  other: "reroll"
+
+# System
+onboarding:
+  other: "Create character"
+save:new:
+  other: "new save"
+
+###
+
+
 name:
   other: "Name:"
-quit:
-  other: "Ctrl+Q: Quit"
-accept:
-  other: Accept
-reroll:
-  other: Reroll
-location:
-  other: "Location:"
-stats:
-  other: "Stats:"
-attempt:
-  other: "Attempt:"
 
 
-races.elves.description:
-  other: "Elves are known for their grace, agility, and affinity with nature. They have a long lifespan and are often skilled in magic and archery."
-races.humans.description:
-  other: "Humans are the most adaptable and versatile of all races. They can thrive in any environment and are known for their resilience and determination."
-races.dwarves.description:
-  other: "Dwarves are stout and hardy, known for their craftsmanship and mining skills. They have a strong sense of community and are often skilled warriors."
-races.slimes.description:
-  other: "Slimes are amorphous creatures that can take on various shapes and sizes."
 
-oracles:
-  other: ORACLES
+
+
+
+
+## todo deplacer ça ailler
 oracles.encounter_easy:
   other: "Easy"
 oracles.encounter_normal:
   other: "Normal"
 oracles.encounter_hard:
   other: "Hard"
-codex:
-  other: CODEX
-dice:
-  other: DICE
-character:
-  other: "CHARACTER: "
-place:
-  other: "PLACE: "
+
+
 unknown_player:
-  other: Unknown player
+  other: "Unknown player"
 unknown_place:
-  other: Unknown place
-stats_upper:
-  other: "STATS:"
+  other: "Unknown place"
+
 no_stats:
-  other: No stats
+  other: "No stats"
 chat.placeholder:
   other: "Send a message..."
 chat.welcome:
   other: "Welcome to the chat room!\nType a message and press Enter to send."
 field.name:
-  other: Name
+  other: "Name"
 field.description:
-  other: Description
+  other: "Description"
 field.class:
-  other: Class
+  other: "Class"
 field.race:
-  other: Race
+  other: "Race"
 field.category:
   other: "Category (weapon/armor/potion)"
 field.title:
-  other: Title
+  other: "Title"
 field.encounter:
-  other: Encounter
+  other: "Encounter"
 
-codex.empty:
-  other: "No entries in this table."
+
 error.oracle_action:
   other: "Oracle error: {{.Error}}"
 critical:
-  other: Critical
+  other: "Critical"
 error.save:
   other: "Save error: {{.Error}}"
 save.success:
@@ -84,44 +74,19 @@ campaign.description:
   other: "Location: {{.Location}} | Updated: {{.Updated}}"
 objective.number:
   other: "Objective #{{.Number}}"
-stat.health:
-  other: Health
-stat.physical:
-  other: Physical
-stat.mental:
-  other: Mental
-stat.stamina:
-  other: Stamina
-stat.social:
-  other: Social
-codex.npcs:
-  other: NPCs
-codex.beastiary:
-  other: Beastiary
-codex.locations:
-  other: Locations
-codex.objects:
-  other: Objects
-codex.objectives:
-  other: Objectives
+
+
+
 oracle.likely:
-  other: Likely
+  other: "Likely"
 oracle.unlikely:
-  other: Unlikely
+  other: "Unlikely"
 oracle.neutral:
-  other: Neutral
+  other: "Neutral"
 oracle.very_likely:
-  other: Very likely
+  other: "Very likely"
 oracle.very_unlikly:
-  other: Very unlikely
-codex.unknown_npc:
-  other: Unknown NPC
-codex.unknown_beast:
-  other: Unknown beast
-codex.unknown_location:
-  other: Unknown location
-codex.unknown_object:
-  other: Unknown object
+  other: "Very unlikely"
 
 
   # Ctrl
@@ -137,6 +102,8 @@ shift-enter:add:
   other: "Shift+Enter: Add"
 shift-enter:roll:
   other: "Shift+Enter: Roll"
+quit:
+  other: "Ctrl+Q: Quit"
 
 back_to_chat:
   other: "Esc: Back to chat"

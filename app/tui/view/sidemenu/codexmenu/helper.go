@@ -7,7 +7,7 @@ import (
 	"solopg/app/domain/card/characters/classes"
 	"solopg/app/domain/card/characters/races"
 	"solopg/app/domain/gameplay/oracle"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
@@ -51,7 +51,7 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 	items := make([]list.Item, 0, len(pages))
 
 	for _, page := range pages {
-		items = append(items, models.NewItem(t.Localize(page.id), "", page))
+		items = append(items, models.NewItem(i18n.Localize(page.id), "", page))
 	}
 
 	return items
@@ -187,7 +187,7 @@ func getFormOracle() []models.Item[string] {
 
 	var oracleItems []models.Item[string]
 	for _, i := range list {
-		oracleItems = append(oracleItems, models.NewItem(t.Localize("oracles."+i), "", i))
+		oracleItems = append(oracleItems, models.NewItem(i18n.Localize("oracles."+i), "", i))
 	}
 
 	return oracleItems
@@ -199,7 +199,7 @@ func getFormStatsFields() []form.Field {
 	for _, i := range stats.List() {
 		f := field.TextField(field.TextTemplate[string]{
 			ID:           i.String(),
-			Label:        t.Localize(i.String()),
+			Label:        i18n.Localize(i.String()),
 			Validator:    nil,
 			Required:     false,
 			Defaultvalue: "",

@@ -1,14 +1,14 @@
 package src
 
 import (
+	"solopg/app/services/i18n"
 	"solopg/app/services/mongo"
-	"solopg/app/services/t"
 	"solopg/app/utils/session"
 	"solopg/config"
 )
 
 func Start() error {
-	if err := t.Init(config.Current.I18n, ""); err != nil {
+	if err := i18n.Init(config.Current.I18n, ""); err != nil {
 		return err
 	}
 
@@ -27,7 +27,7 @@ func Start() error {
 
 func Try() error {
 
-	if err := t.Init(config.Current.I18n, ""); err != nil {
+	if err := i18n.Init(config.Current.I18n, ""); err != nil {
 		return err
 	}
 

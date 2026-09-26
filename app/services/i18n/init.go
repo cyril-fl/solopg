@@ -1,4 +1,4 @@
-package t
+package i18n
 
 import (
 	"fmt"
@@ -47,14 +47,14 @@ func Init(cfg Config, locale string) error {
 }
 
 // - Bundle - //
-func initBundle(cfg Config, defaultLocale *Locale) error {
+func initBundle(cfg Config, defaultLocale *locale) error {
 	tag, err := defaultLocale.parseTag()
 	if err != nil {
 		return err
 	}
 
 	bundle = i18n.NewBundle(tag)
-	bundle.RegisterUnmarshalFunc(string(FormatYAML), y.Unmarshal)
+	bundle.RegisterUnmarshalFunc(string(formatYAML), y.Unmarshal)
 
 	if err := registerLocaleFiles(bundle, cfg); err != nil {
 		return err
@@ -71,7 +71,7 @@ func registerLocaleFiles(bundle *i18n.Bundle, cfg Config) error {
 
 	for _, path := range files {
 		if _, err := bundle.LoadMessageFile(path); err != nil {
-			return fmt.Errorf("load message file '%s': %w", filepath.Base(path), err)
+			return fmt.Errorf("load message file '%s': %w", path, err)
 		}
 	}
 
@@ -105,7 +105,7 @@ func loadLocaleFile(cfg Config) ([]string, error) {
 }
 
 // - Localizer - //
-func newLocalizer(cfg Config, lang string, defaultLocale *Locale) (*i18n.Localizer, error) {
+func newLocalizer(cfg Config, lang string, defaultLocale *locale) (*i18n.Localizer, error) {
 	locale, err := getLocale(cfg, lang, defaultLocale)
 	if err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func newLocalizer(cfg Config, lang string, defaultLocale *Locale) (*i18n.Localiz
 	return i18n.NewLocalizer(bundle, tag.String(), defaultTag.String()), nil
 }
 
-func getLocale(cfg Config, lang string, defaultLocale *Locale) (*Locale, error) {
+func getLocale(cfg Config, lang string, defaultLocale *locale) (*locale, error) {
 	if lang == "" {
 		return defaultLocale, nil
 	}

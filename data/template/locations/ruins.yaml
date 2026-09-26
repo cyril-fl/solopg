@@ -1,0 +1,11 @@
+name: location.ruins
+description: location.ruins.description
+rarity: D
+variety: location_card
+effects:
+  - description:
+      name: Ancient wisdom
+      description: Increases mental by 1
+    modifier:
+      stat: mental
+      value: 1

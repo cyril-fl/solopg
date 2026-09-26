@@ -56,3 +56,11 @@ func New(params Template) (*Object, error) {
 		Pod:      params.Pod,
 	}, nil
 }
+
+func (o *Object) GetName() string {
+	return o.Description.Name
+}
+
+func (o *Object) GetDescription() string {
+	return o.Description.Description
+}

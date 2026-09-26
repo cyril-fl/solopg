@@ -10,7 +10,7 @@ import (
 	"solopg/app/domain/card/characters/wallet"
 	"solopg/app/domain/card/objects"
 	"solopg/app/domain/card/objects/equipment"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 	"solopg/config"
 )
@@ -36,7 +36,7 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return t.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return i18n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -62,7 +62,7 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return t.NewError("error.locations.load", map[string]any{"Error": err})
+		return i18n.NewError("error.locations.load", map[string]any{"Error": err})
 	}
 
 	/*

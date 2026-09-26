@@ -1,7 +1,8 @@
 package hintmenu
 
 import (
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
+	"solopg/app/utils/transform"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -9,7 +10,9 @@ import (
 
 // - View - //
 func (m *HintMenu) GetMenuView() string {
-	title := lipgloss.NewStyle().Bold(true).Render(t.Localize(m.id))
+	title := transform.Uppercase(i18n.Localize(m.id))
+	title = lipgloss.NewStyle().Bold(true).Render(title)
+
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		title,
@@ -24,7 +27,7 @@ func (m *HintMenu) GetView() string {
 
 func (m *HintMenu) GetFooter() []string {
 	return []string{
-		t.Localize("shift-enter:roll"),
+		i18n.Localize("shift-enter:roll"),
 	}
 }
 

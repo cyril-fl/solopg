@@ -104,6 +104,14 @@ func (s Stats) String() string {
 	return fmt.Sprintf("{%s}", strings.Join(result, ", "))
 }
 
+func (s Stats) MappedString() map[string]any {
+	m := make(map[string]any)
+	for stat, value := range s {
+		m[string(stat)] = value
+	}
+	return m
+}
+
 func (s Stat) String() string {
 	return string(s)
 }

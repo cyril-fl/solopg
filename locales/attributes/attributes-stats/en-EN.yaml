@@ -1,0 +1,10 @@
+stat.health:
+  other: health
+stat.physical:
+  other: physical
+stat.mental:
+  other: mental
+stat.stamina:
+  other: stamina
+stat.social:
+  other: social

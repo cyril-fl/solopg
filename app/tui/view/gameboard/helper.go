@@ -1,9 +1,8 @@
 package gameboard
 
 import (
-	"fmt"
 	"solopg/app/services/game"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/view/sidemenu"
 	"solopg/app/tui/view/sidemenu/codexmenu"
@@ -25,7 +24,7 @@ import (
 // - Init - //
 func initTextarea() textarea.Model {
 	ta := textarea.New()
-	ta.Placeholder = t.Localize("chat.placeholder")
+	ta.Placeholder = i18n.Localize("chat.placeholder")
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
@@ -132,9 +131,9 @@ func (m *model) handleEnterInput() {
 func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
-		m.journal = append(m.journal, t.Localize("error.save", map[string]any{"Error": msg.Err}))
+		m.journal = append(m.journal, i18n.Localize("error.save", map[string]any{"Error": msg.Err}))
 	} else {
-		log := t.Localize("save.success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
+		log := i18n.Localize("save.success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
 
 		m.engine.Log(log)
 		m.journal = append(m.journal, log)
@@ -230,7 +229,10 @@ func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
 
 // Dice Rolled
 func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
-	message := fmt.Sprintf("%s : %d", msg.Dice, msg.Value)
+	message := i18n.Localize("dice.roll:result", map[string]any{
+		"Dice":  msg.Dice,
+		"Value": msg.Value,
+	})
 
 	m.engine.AddJournalEntry("Dice", message)
 	m.journal = append(m.journal, message)
@@ -242,10 +244,12 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
 	localized := make([]string, 0, len(msg.Result))
 	for _, hint := range msg.Result {
-		localized = append(localized, t.Localize(hint))
+		localized = append(localized, i18n.Localize(hint))
 	}
 
-	message := fmt.Sprintf("Hint rolled: %v", strings.Join(localized, ", "))
+	message := i18n.Localize("hint.roll:result", map[string]any{
+		"Value": strings.Join(localized, ", "),
+	})
 
 	m.engine.AddJournalEntry("Hint", message)
 	m.journal = append(m.journal, message)
@@ -255,7 +259,11 @@ func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
 
 // Oracle Rolled
 func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
-	message := fmt.Sprintf("Oracle rolled: %d, Result: %v, Critical: %t", msg.Result.Roll, msg.Result.Result, msg.Result.Critical)
+	message := i18n.Localize("oracle.roll:result", map[string]any{
+		"Roll":     msg.Result.Roll,
+		"Value":    msg.Result.Result,
+		"Critical": msg.Result.Critical,
+	})
 
 	m.engine.AddJournalEntry("Oracle", message)
 	m.journal = append(m.journal, message)

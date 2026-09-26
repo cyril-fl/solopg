@@ -53,6 +53,7 @@ func (c *Codex) EnsureInitialized() *Codex {
 
 // - Codex table - //
 type Table interface {
+	// TODO Verrifier si [] String obligatoire
 	Summaries() []string
 	AddFromMappedValues(values map[string]string) error
 	Ensure()

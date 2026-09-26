@@ -2,7 +2,8 @@ package codex
 
 import (
 	"fmt"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
+	"strings"
 	"time"
 )
 
@@ -20,7 +21,7 @@ var tableobjectives = "codex.objectives"
 
 func NewObjectivesTable(entries []ObjectifEntry) *ObjectivesTable {
 	return &ObjectivesTable{
-		TableData: newTable(t.Localize(tableobjectives), entries),
+		TableData: newTable(i18n.Localize(tableobjectives), entries),
 	}
 }
 
@@ -43,21 +44,37 @@ func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
+// TODO refavtor tout ca en se basant sur object ect
 func (o *ObjectivesTable) Summaries() []string {
-	summaries := make([]string, 0, len(o.Entries))
-	for i := range o.Entries {
-		if o.Entries[i].Title == "" {
-			summaries = append(summaries, t.Localize("objective.number", map[string]any{"Number": i + 1}))
-			continue
+	if len(o.Entries) == 0 {
+		return []string{i18n.Localize("codex.entry:empty")}
+	}
+
+	content := strings.Builder{}
+	for i, entry := range o.Entries {
+		if entry.Title == "" {
+			content.WriteString(i18n.Localize("objective.number", map[string]any{"Number": i + 1}))
+		} else {
+			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Title), i18n.Localize(entry.Description))
 		}
-		summaries = append(summaries, fmt.Sprintf("%s — %s", o.Entries[i].Title, o.Entries[i].Description))
+		content.WriteString("\n\n")
 	}
 
-	if len(summaries) == 0 {
-		summaries = append(summaries, t.Localize("codex.no_objectives"))
-	}
+	return []string{content.String()}
+	// summaries := make([]string, 0, len(o.Entries))
+	// for i := range o.Entries {
+	// 	if o.Entries[i].Title == "" {
+	// 		summaries = append(summaries, i18n.Localize("objective.number", map[string]any{"Number": i + 1}))
+	// 		continue
+	// 	}
+	// 	summaries = append(summaries, fmt.Sprintf("%s — %s", i18n.Localize(o.Entries[i].Title), i18n.Localize(o.Entries[i].Description)))
+	// }
 
-	return summaries
+	// if len(summaries) == 0 {
+	// 	summaries = append(summaries, i18n.Localize("codex.no_objectives"))
+	// }
+
+	// return summaries
 }
 
 // - Helper --//
@@ -79,5 +96,5 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 }
 
 func (o *ObjectivesTable) Ensure() {
-	ensureEmbeddedTable(t.Localize(tableobjectives), &o.TableData)
+	ensureEmbeddedTable(i18n.Localize(tableobjectives), &o.TableData)
 }

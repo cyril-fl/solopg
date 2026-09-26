@@ -6,7 +6,8 @@ import (
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/objects"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
+	"strings"
 	"time"
 )
 
@@ -27,20 +28,20 @@ var tableobject = "codex.objects"
 
 func NewObjectsTable(entries []ObjectEntry) *ObjectsTable {
 	return &ObjectsTable{
-		TableData: newTable(t.Localize(tableobject), entries),
+		TableData: newTable(i18n.Localize(tableobject), entries),
 	}
 }
 
 // - Methods --//
-func (o *ObjectsTable) Add(object *objects.Object) {
-	o.Entries = append(o.Entries, ObjectEntry{
+func (tb *ObjectsTable) Add(object *objects.Object) {
+	tb.Entries = append(tb.Entries, ObjectEntry{
 		Timestamp: time.Now().UTC(),
 		Object:    object,
 	})
 }
 
-func (o *ObjectsTable) AddFromMappedValues(values map[string]string) error {
-	if err := o.assertEntry(values); err != nil {
+func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
+	if err := tb.assertEntry(values); err != nil {
 		return err
 	}
 
@@ -58,30 +59,31 @@ func (o *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 		return fmt.Errorf("failed to create object from mapped values: %w", err)
 	}
 
-	o.Add(object)
+	tb.Add(object)
 
 	return nil
 }
 
-func (o *ObjectsTable) Summaries() []string {
-	summaries := make([]string, 0, len(o.Entries))
-	for _, entry := range o.Entries {
+func (tb *ObjectsTable) Summaries() []string {
+	if len(tb.Entries) == 0 {
+		return []string{i18n.Localize("codex.entry:empty")}
+	}
+
+	content := strings.Builder{}
+	for _, entry := range tb.Entries {
 		if entry.Object == nil {
-			summaries = append(summaries, t.Localize("codex.unknown_object"))
-			continue
+			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+		} else {
+			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Object.GetName()), i18n.Localize(entry.Object.GetDescription()))
 		}
-		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Object.Name, entry.Object.Description))
+		content.WriteString("\n\n")
 	}
 
-	if len(summaries) == 0 {
-		summaries = append(summaries, t.Localize("codex.no_objects"))
-	}
-
-	return summaries
+	return []string{content.String()}
 }
 
 // - Helper --//
-func (o *ObjectsTable) assertEntry(entry map[string]string) error {
+func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
@@ -104,12 +106,12 @@ func (o *ObjectsTable) assertEntry(entry map[string]string) error {
 	*/
 
 	if len(err) > 0 {
-		return o.formatAssertErrors(err)
+		return tb.formatAssertErrors(err)
 	}
 
 	return nil
 }
 
-func (o *ObjectsTable) Ensure() {
-	ensureEmbeddedTable(t.Localize(tableobject), &o.TableData)
+func (tb *ObjectsTable) Ensure() {
+	ensureEmbeddedTable(i18n.Localize(tableobject), &tb.TableData)
 }

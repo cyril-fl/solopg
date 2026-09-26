@@ -1,5 +1,5 @@
-name: Mountain Pass
-description: A narrow path through towering mountains where every step tests your endurance.
+name: location.mountain
+description: location.mountain.description
 rarity: D
 variety: location_card
 effects:

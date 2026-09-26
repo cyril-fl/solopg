@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -12,7 +12,7 @@ import (
 
 func (m model) View() tea.View {
 	if m.err != nil {
-		errorLabel := t.Localize("error.label")
+		errorLabel := i18n.Localize("error")
 		return tea.NewView(alignFooter(fmt.Sprintf("%s: %v", errorLabel, m.err), m.windowHeight(), mainFooter()))
 	}
 
@@ -25,9 +25,9 @@ func (m model) View() tea.View {
 	return tea.NewView(alignFooter("", m.windowHeight(), mainFooter()))
 }
 
-// REFACTOR LOW Modifier le footer pour qu'il devienne une "class" en soit.Ò
+// REFACTOR LOW Modifier le footer pour qu'il devienne une "class" en soit.
 func mainFooter() []string {
-	return []string{t.Localize("quit")}
+	return []string{i18n.Localize("quit")}
 }
 
 type HasFooter interface {

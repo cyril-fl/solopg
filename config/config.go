@@ -2,14 +2,14 @@ package config
 
 import (
 	"fmt"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 )
 
 type config struct {
 	Name      string            `yaml:"name"`
 	Verbose   bool              `yaml:"verbose"`
-	I18n      t.Config          `yaml:"i18n"`
+	I18n      i18n.Config       `yaml:"i18n"`
 	Commands  commands          `yaml:"commands"`
 	Documents structureDocument `yaml:"documents"`
 }
@@ -83,7 +83,7 @@ func Load() (*config, error) {
 }
 
 /*
-TODO
+BACKLOG
 gerer le cas post buil avec un truc genre:
 	getPath -> if isDev = path actuell
 		else constructeur de path

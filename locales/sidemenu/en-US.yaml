@@ -1,0 +1,61 @@
+sidemenu.title:page:
+  other: "Page {{.Submenu}}"
+
+# --- Codex ---
+codex:
+  other: "codex"
+
+# Tables
+# Beastiary
+codex.beastiary:
+  other: "beastiary"
+
+# Locations
+codex.locations:
+  other: "locations"
+
+# NPCs
+codex.npcs:
+  other: "npcs"
+codex.npcs:entry:
+  other: "{{.Name}} - {{.Race}} - {{.Class}}"
+
+# Objectives
+codex.objectives:
+  other: "objectives"
+
+# Objects
+codex.objects:
+  other: "objects"
+
+# Messages
+codex.entry:empty:
+  other: "No entries in this table."
+codex.entry:stats:
+  other: "Health: {{.health}} | Mental: {{.mental}} | Physical: {{.physical}} | Social: {{.social}} | Stamina: {{.stamina}}"
+codex.entry:unknown:
+  other: "Unknown entry"
+
+# --- Character ---
+character:
+  other: "character"
+
+# --- Dice ---
+dice:
+  other: "dice"
+
+# --- Hint ---
+hint:
+  other: "hint"
+
+# --- Location ---
+location:
+  other: "location"
+
+# --- Oracles ---
+oracles:
+  other: "oracles"
+
+# --- Stats ---
+stats:
+  other: "stats"

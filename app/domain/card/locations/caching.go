@@ -6,7 +6,7 @@ import (
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 	"solopg/config"
 )
@@ -35,7 +35,7 @@ func load() error {
 		filepath := fmt.Sprintf("%s/%s", folderConfigPath, file)
 
 		if err := loadFromFile(filepath); err != nil {
-			errs = append(errs, t.NewError("error.locations.load_file", map[string]any{"File": file, "Error": err}))
+			errs = append(errs, i18n.NewError("error.locations.load_file", map[string]any{"File": file, "Error": err}))
 			continue
 		}
 	}
@@ -51,7 +51,7 @@ func loadFromFolder() ([]string, error) {
 	list, err := yaml.GetFolderFiles(folderConfigPath)
 
 	if err != nil {
-		return nil, t.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return nil, i18n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
 	return list, nil
@@ -61,7 +61,7 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return t.NewError("error.locations.load", map[string]any{"Error": err})
+		return i18n.NewError("error.locations.load", map[string]any{"Error": err})
 	}
 	// TODO LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
 	variety.MakeDefault(params.Variety)

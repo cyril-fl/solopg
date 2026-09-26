@@ -1,0 +1,12 @@
+class.warrior:
+  other: warrior
+class.mage:
+  other: mage
+class.thief:
+  other: thief
+class.merchant:
+  other: merchant
+class.beast:
+  other: beast
+
+  

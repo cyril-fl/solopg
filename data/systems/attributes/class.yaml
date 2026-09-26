@@ -1,5 +1,5 @@
 # Playable classes
-- name: Warrior
+- name: class.warrior
   playable: true
   bonus:
     - stat: health
@@ -13,7 +13,7 @@
     - stat: social
       value: 0
   armor_set: adventurer
-- name: Mage
+- name: class.mage
   playable: true
   bonus:
     - stat: health
@@ -27,7 +27,7 @@
     - stat: social
       value: 1
   armor_set: adventurer
-- name: Thief
+- name: class.thief
   playable: true
   bonus:
     - stat: health
@@ -43,8 +43,8 @@
   armor_set: adventurer
   
 # Non-playable races
-- name: Merchant
+- name: class.merchant
   playable: false
-- name: Beast
+- name: class.beast
   playable: false
 

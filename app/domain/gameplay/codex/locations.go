@@ -5,7 +5,8 @@ import (
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/locations"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
+	"strings"
 	"time"
 )
 
@@ -23,7 +24,7 @@ var tablelocations = "codex.locations"
 
 func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	return &LocationsTable{
-		TableData: newTable(t.Localize(tablelocations), entries),
+		TableData: newTable(i18n.Localize(tablelocations), entries),
 	}
 }
 
@@ -57,20 +58,21 @@ func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
 }
 
 func (tb *LocationsTable) Summaries() []string {
-	summaries := make([]string, 0, len(tb.Entries))
+	if len(tb.Entries) == 0 {
+		return []string{i18n.Localize("codex.entry:empty")}
+	}
+
+	content := strings.Builder{}
 	for _, entry := range tb.Entries {
 		if entry.Location == nil {
-			summaries = append(summaries, t.Localize("codex.unknown_location"))
-			continue
+			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+		} else {
+			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Location.GetName()), i18n.Localize(entry.Location.GetDescription()))
 		}
-		summaries = append(summaries, fmt.Sprintf("%s — %s", entry.Location.Name, entry.Location.Description))
+		content.WriteString("\n\n")
 	}
 
-	if len(summaries) == 0 {
-		summaries = append(summaries, t.Localize("codex.no_locations"))
-	}
-
-	return summaries
+	return []string{content.String()}
 }
 
 func (tb *LocationsTable) FindEntryByName(name string) *LocationsEntry {
@@ -104,7 +106,7 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 
 func (tb *LocationsTable) Ensure() {
 	if tb.name == "" {
-		tb.name = t.Localize(tablelocations)
+		tb.name = i18n.Localize(tablelocations)
 	}
 	if tb.Entries == nil {
 		tb.Entries = []LocationsEntry{}

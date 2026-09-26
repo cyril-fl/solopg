@@ -2,7 +2,7 @@ package oraclemenu
 
 import (
 	"solopg/app/domain/gameplay/oracle"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
@@ -21,7 +21,7 @@ func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 	for _, rules := range oracle.List() {
 		if rules.IsVisible() {
 			key := "oracle." + rules.Name()
-			name := t.Localize(key)
+			name := i18n.Localize(key)
 			items = append(items, models.NewItem(name, "", rules))
 		}
 	}
@@ -89,7 +89,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 
 	if !ok {
 		return func() tea.Msg {
-			return tui.ErrorMsg{Err: t.NewError("error.oracle_selection")}
+			return tui.ErrorMsg{Err: i18n.NewError("error.oracle_selection")}
 		}
 	}
 

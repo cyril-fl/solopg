@@ -1,4 +1,4 @@
-package t
+package i18n
 
 import (
 	"fmt"
@@ -9,15 +9,15 @@ import (
 	"golang.org/x/text/language"
 )
 
-// - Locale - //
-type Locale struct {
+// - locale - //
+type locale struct {
 	Code string `yaml:"code"`
 	ISO  string `yaml:"iso"`
 	Name string `yaml:"name"`
 	File string `yaml:"file"`
 }
 
-func (locale *Locale) parseTag() (language.Tag, error) {
+func (locale *locale) parseTag() (language.Tag, error) {
 	tag, err := language.Parse(locale.ISO)
 	if err != nil {
 		return language.Tag{}, fmt.Errorf("invalid locale '%s': %w", locale.ISO, err)
@@ -26,32 +26,32 @@ func (locale *Locale) parseTag() (language.Tag, error) {
 	return tag, nil
 }
 
-// - Format - //
-type Format string
+// - format - //
+type format string
 
 const (
-	FormatJSON Format = "json"
-	FormatYAML Format = "yaml"
+	formatJSON format = "json"
+	formatYAML format = "yaml"
 )
 
-var formatValidExtensions = map[Format][]string{
-	FormatJSON: {".json"},
-	FormatYAML: {".yaml", ".yml"},
+var formatValidExtensions = map[format][]string{
+	formatJSON: {".json"},
+	formatYAML: {".yaml", ".yml"},
 }
 
 // - Config - //
 type Config struct {
 	Default string   `yaml:"default"`
 	Dir     string   `yaml:"dir"`
-	Format  Format   `yaml:"format"`
-	Locales []Locale `yaml:"locales"`
+	Format  format   `yaml:"format"`
+	Locales []locale `yaml:"locales"`
 }
 
-func (cfg Config) getDefaultLocale(defaultLocale string) (*Locale, error) {
+func (cfg Config) getDefaultLocale(defaultLocale string) (*locale, error) {
 	return cfg.getLocaleByCode(defaultLocale)
 }
 
-func (cfg Config) getLocaleByCode(code string) (*Locale, error) {
+func (cfg Config) getLocaleByCode(code string) (*locale, error) {
 	for index := range cfg.Locales {
 		if cfg.Locales[index].Code == code {
 			return &cfg.Locales[index], nil
@@ -61,7 +61,7 @@ func (cfg Config) getLocaleByCode(code string) (*Locale, error) {
 	return nil, fmt.Errorf("locale '%s' not found", code)
 }
 
-func (cfg Config) getLocaleByISO(iso string) (*Locale, error) {
+func (cfg Config) getLocaleByISO(iso string) (*locale, error) {
 	for index := range cfg.Locales {
 		if cfg.Locales[index].ISO == iso {
 			return &cfg.Locales[index], nil
@@ -105,15 +105,15 @@ func isDirectoryValid(path string) error {
 	return nil
 }
 
-func isFileFormatValid(format Format) error {
-	if !slices.Contains([]Format{FormatJSON, FormatYAML}, format) {
-		return fmt.Errorf("invalid i18n format '%s', must be 'json' or 'yaml'", format)
+func isFileFormatValid(extension format) error {
+	if !slices.Contains([]format{formatJSON, formatYAML}, extension) {
+		return fmt.Errorf("invalid i18n format '%s', must be 'json' or 'yaml'", extension)
 	}
 
 	return nil
 }
 
-func isLocalesConfigValid(defaultLocale string, locales []Locale) error {
+func isLocalesConfigValid(defaultLocale string, locales []locale) error {
 	localeSet := make(types.Set[string])
 
 	for _, locale := range locales {
@@ -135,7 +135,7 @@ func isLocalesConfigValid(defaultLocale string, locales []Locale) error {
 	return nil
 }
 
-func isLocaleValid(locale Locale) error {
+func isLocaleValid(locale locale) error {
 	if locale.Code == "" {
 		return fmt.Errorf("locale code is not specified for one of the locales")
 	}

@@ -1,0 +1,64 @@
+sidemenu.title:page:
+  other: "Page {{.Submenu}}"
+
+# --- Codex ---
+codex:
+  other: "codex"
+
+# Tables
+# Beastiary
+codex.beastiary:
+  other: "bestiaire"
+codex.beastiary:entry:
+  other: "{{.Name}} - {{.Description}}"
+
+# Locations
+codex.locations:
+  other: "lieux"
+
+# NPCs
+codex.npcs:
+  other: "pnj"
+codex.npcs:entry:
+  other: "{{.Name}} - {{.Race}} - {{.Class}}"
+
+
+# Objectives
+codex.objectives:
+  other: "objectifs"
+
+# Objects
+codex.objects:
+  other: "objets"
+
+# Messages
+codex.entry:empty:
+  other: "Aucune entrée dans cette table."
+codex.entry:stats:
+  other: "Santé: {{.health}} | Mental: {{.mental}} | Physique: {{.physical}} | Social: {{.social}} | Endurance: {{.stamina}}"
+codex.entry:unknown:
+  other: "Entrée inconnue"
+
+# --- Character ---
+character:
+  other: "personnage"
+
+# --- Dice ---
+dice:
+  other: "dés"
+
+# --- Hint ---
+hint:
+  other: "indice"
+
+# --- Location ---
+location:
+  other: "lieu"
+
+# --- Oracles ---
+oracles:
+  other: "oracles"
+
+# --- Stats ---
+stats:
+  other: "stats"

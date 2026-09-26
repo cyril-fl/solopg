@@ -6,8 +6,9 @@ import (
 
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/locations"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/types/id"
+	"solopg/app/utils/transform"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -40,14 +41,14 @@ func New(params Template) *Campaign {
 func (c *Campaign) Title() string {
 	return fmt.Sprintf("%s | %s | %s",
 		c.Player.Name,
-		c.Player.Race,
-		c.Player.Class,
+		transform.Capitalize(i18n.Localize(c.Player.Race)),
+		transform.Capitalize(i18n.Localize(c.Player.Class)),
 	)
 }
 
 func (c *Campaign) Description() string {
-	return t.Localize("campaign.description", map[string]any{
-		"Location": c.CurrentLocation.Name,
+	return i18n.Localize("campaign.description", map[string]any{
+		"Location": i18n.Localize(c.CurrentLocation.Name),
 		"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
 	})
 }

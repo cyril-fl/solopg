@@ -1,5 +1,5 @@
-name: Tavern
-description: A cozy tavern where adventurers gather to share stories and enjoy a warm meal.
+name: location.tavern
+description: location.tavern.description
 rarity: E
 variety: location_card
 effects:

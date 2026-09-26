@@ -1,0 +1,2 @@
+oracle.roll:result:
+  other: "Oracle rolled: {{.Roll}}, Result: {{.Value}}, Critical: {{.Critical}}"

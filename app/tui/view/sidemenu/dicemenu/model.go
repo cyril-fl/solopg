@@ -2,7 +2,7 @@ package dicemenu
 
 import (
 	"solopg/app/domain/gameplay/dice"
-	"solopg/app/services/t"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
@@ -20,7 +20,7 @@ func NewSideMenu(size size.Size, focused bool) *DiceMenu {
 
 	items := make([]list.Item, 0, len(options))
 	for _, option := range options {
-		items = append(items, models.NewItem(option.GetName(), "", option))
+		items = append(items, models.NewItem(i18n.Localize(option.GetName()), "", option))
 	}
 
 	model := list.New(items, list.NewDefaultDelegate(), size.Width-4, size.Height)
@@ -85,7 +85,7 @@ func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
 	selected, ok := m.list.SelectedItem().(models.Item[dice.Dice])
 	if !ok {
 		return func() tea.Msg {
-			return tui.ErrorMsg{Err: t.NewError("error.dice_selection")}
+			return tui.ErrorMsg{Err: i18n.NewError("error.dice_selection")}
 		}
 	}
 

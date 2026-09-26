@@ -1,6 +1,10 @@
-
-error.label:
+error:
   other: Error
+
+error.onboarding:
+  other: "Incomplete character creation context"
+
+###
 error.game_unavailable:
   other: "Game state unavailable"
 error.unknown_class:
@@ -11,7 +15,7 @@ error.non_beast_race:
   other: "Race is not a beast race: {{.Race}}"
 error.unknown_codex:
   other: "Unknown Codex type: {{.Kind}}"
-codex.empty:
+codex.entry:empty:
   other: "No entries in this table."
 error.oracle_action:
   other: "Oracle error: {{.Error}}"
@@ -37,8 +41,7 @@ error.oracle.invalid_result_type:
   other: "Oracle {{.ID}} has an interval result of type {{.Actual}}, expected {{.Expected}}"
 error.oracle.no_matching_interval:
   other: "Oracle {{.ID}} has no interval matching roll {{.Roll}}"
-error.incomplete_character_creation:
-  other: "Incomplete character creation context"
+
 error.unexpected_save_value:
   other: "Unexpected save value type: {{.Type}}"
 error.unexpected_name_value:

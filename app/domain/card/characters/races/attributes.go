@@ -7,7 +7,6 @@ import (
 	"slices"
 	"solopg/app/domain/card/attributes/description"
 	"solopg/app/domain/card/attributes/stats"
-	"solopg/app/services/t"
 )
 
 // - Race - //
@@ -38,7 +37,7 @@ func (r Race) GetName() string {
 }
 
 func (r Race) GetDescription() string {
-	return t.Localize(r.Description.Description)
+	return r.Description.Description
 }
 
 func (r Race) IsPlayable() bool {
