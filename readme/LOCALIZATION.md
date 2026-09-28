@@ -2,11 +2,11 @@
 
 La localisation est gérée avec **i18n** et ses fichiers de traduction.
 
-## Organisation des fichiers
+## Organisation
 
-Les dossiers sont parcourus récursivement à partir de `Config.Dir`, afin de récupérer tous les fichiers présents sous ce répertoire avant de les filtrer.
+Les dossiers sont parcourus récursivement à partir de `Config.Dir`, afin de récupérer et filtrer les fichiers présents tout ses sous répertoire.
 
-Les fichiers peuvent être organisés dans autant de sous-dossiers que nécessaire, tant qu'il respecte à la fois le type et le nom attendus defini en `Config`.
+Les fichiers peuvent être organisés dans autant de sous-dossiers que nécessaire, tant qu'il respecte à la fois le type et le nom attendus defini dans `config.yaml`.
 
 Tout fichier ne correspondant pas à ces deux critères ne sera pas pris en compte.
 
@@ -15,7 +15,7 @@ Tout fichier ne correspondant pas à ces deux critères ne sera pas pris en comp
 Si certains éléments créés en jeu nécessitent une localisation, il faudra veiller à respecter les étapes suivantes:
 
 1. Noter les valeurs en jeu sous forme de clés i18n.
-   - ⚠️ Il n'est pas encore possible d'éditer une valeur directement en jeu.
+>⚠️ Il n'est pas encore possible d'éditer une valeur directement en jeu.
 2. Mettre à jour les fichiers de localisation correspondants.
 
 ### Exemple
@@ -67,7 +67,7 @@ hint.fantasy.enchanter:
 
 ## Configuration i18n
 
-Actuellement, i18n n'est pas configurable, mais a pour objectif de le devenir à terme via la ligne de commande.
+Actuellement, **i18n** n'est pas configurable, mais a pour objectif de le devenir à terme via la ligne de commande.
 
 ### Structure actuelle
 

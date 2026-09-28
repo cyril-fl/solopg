@@ -22,21 +22,19 @@ Bien que **solog** soit conçu comme un moteur et que la majorité des fichiers 
 - `variety`: `"data/systems/attributes/variety.yaml"`
 
 #### Dossiers
-- `oracle`: `"data/systems/rules/oracles"`
-- `encounters`: `"data/systems/rules/oracles/encounter"`
 - `characters`: `"data/template/characters"`
+- `encounters`: `"data/systems/rules/oracles/encounter"`
+- `hint`: `"data/template/hint"`
 - `locations`: `"data/template/locations"`
+- `oracle`: `"data/systems/rules/oracles"`
 
-```
-⚠️⚠️⚠️ Attention : étant en cours de développement, cette liste peut être devenue obsolète. Les données à jour sont situées dans `config.yaml`.
-```
 
-### Templates
+> ⚠️ Étant en cours de développement, cette liste peut être devenue obsolète. Les données à jour sont situées dans `config.yaml`.
 
-Contient des éléments préchargés, comme des personnes, des objets, des quêtes, etc... bien que entièrement optionnels.
+## Templates
+
+Bien que entièrement optionnels, il contient des éléments préchargés, comme des personnages, des objets, des quêtes, etc...
 
 Ces éléments pourrait également être créés en jeu et enregistrés en base de données mais *les templates* permettent actuellement une gestion plus fine, en ajoutant par exemple des équipements à un PNJ.
 
-```
-⚠️⚠️⚠️ Attention : ces réglages sont actuellement globaux. Ainsi, un personnage nommé Jean ou une classe Orc définis dans les données seront communs à toutes vos parties.
-```
+> ⚠️ Ces réglages sont actuellement globaux. Ainsi, un personnage nommé Jean ou une classe Orc définis dans les données seront communs à toutes vos parties.
