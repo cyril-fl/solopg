@@ -62,5 +62,6 @@ func setModified(s debug.BuildSetting) {
 }
 
 func String() string {
+	// FIXME fixe ça et le systeme de log de versions
 	return fmt.Sprintf("%s %s (%s, %s)", Current.Name, Version, Commit, Date)
 }

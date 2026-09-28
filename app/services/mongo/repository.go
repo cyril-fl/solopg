@@ -2,10 +2,10 @@ package mongo
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"solopg/app/domain/campaign"
+	"solopg/app/services/i18n"
 	"solopg/app/types/id"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -22,7 +22,11 @@ func loadFromCollection[T any](db *Mongo, collectionName string) ([]T, error) {
 
 	cursor, err := db.collection(collectionName).Find(ctx, bson.M{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to load %s: %w", collectionName, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.loading", map[string]any{
+			"Subject": collectionName,
+			"Error":   err,
+		})
 	}
 
 	defer cursor.Close(ctx)
@@ -30,7 +34,11 @@ func loadFromCollection[T any](db *Mongo, collectionName string) ([]T, error) {
 	var data []T
 
 	if err := cursor.All(ctx, &data); err != nil {
-		return nil, fmt.Errorf("failed to decode %s: %w", collectionName, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.loading", map[string]any{
+			"Subject": collectionName,
+			"Error":   err,
+		})
 	}
 
 	return data, nil
@@ -42,7 +50,11 @@ func loadFromCollectionByFilter[T any](db *Mongo, collectionName string, filter 
 
 	cursor, err := db.collection(collectionName).Find(ctx, filter)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load %s: %w", collectionName, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.loading", map[string]any{
+			"Subject": collectionName,
+			"Error":   err,
+		})
 	}
 
 	defer cursor.Close(ctx)
@@ -50,7 +62,11 @@ func loadFromCollectionByFilter[T any](db *Mongo, collectionName string, filter 
 	var data []T
 
 	if err := cursor.All(ctx, &data); err != nil {
-		return nil, fmt.Errorf("failed to decode %s: %w", collectionName, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.loading", map[string]any{
+			"Subject": collectionName,
+			"Error":   err,
+		})
 	}
 
 	return data, nil
@@ -87,7 +103,11 @@ func (db *Mongo) LoadCampaignByID(campaignID id.ID) (*campaign.Campaign, error) 
 	}
 
 	if len(campaigns) == 0 {
-		return nil, fmt.Errorf("campaign with ID %s not found", campaignID)
+		// i18N -- register
+		return nil, i18n.NewError("error.not_found.id", map[string]any{
+			"Subject": "Campaign",
+			"ID":      campaignID,
+		})
 	}
 
 	return &campaigns[0], nil
@@ -96,7 +116,10 @@ func (db *Mongo) LoadCampaignByID(campaignID id.ID) (*campaign.Campaign, error) 
 func (db *Mongo) RegisterCampaign(save *campaign.Campaign) error {
 	err := saveToCollection(db, campaignCollectionName, save)
 	if err != nil {
-		return fmt.Errorf("failed to save campaign: %w", err)
+		// i18N -- register
+		return i18n.NewError("error.unexpected:save", map[string]any{
+			"Error": err,
+		})
 	}
 
 	return nil
@@ -122,7 +145,10 @@ func (db *Mongo) LoadArchivesByCampaignID(campaignID id.ID) (*campaign.Archives,
 func (db *Mongo) RegisterArchives(archives *campaign.Archives) error {
 	err := saveToCollection(db, archivesCollectionName, archives)
 	if err != nil {
-		return fmt.Errorf("failed to save archives: %w", err)
+		// i18N -- register
+		return i18n.NewError("error.unexpected:save", map[string]any{
+			"Error": err,
+		})
 	}
 
 	return nil

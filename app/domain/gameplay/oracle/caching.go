@@ -8,6 +8,7 @@ import (
 	"solopg/app/domain/gameplay/dice"
 	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
+	"solopg/app/utils/transform"
 	"solopg/config"
 )
 
@@ -40,7 +41,12 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return i18n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		// i18N -- register
+		return i18n.NewError("error.loading:folder", map[string]any{
+			"Subject": i18n.Localize("oracle"),
+			"Folder":  folderConfigPath,
+			"Error":   err,
+		})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -54,7 +60,12 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
-			errs = append(errs, fmt.Errorf("Error loading oracle set from file %s: %v", file, err))
+			// i18N -- register
+			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
+				"Subject": i18n.Localize("oracle"),
+				"File":    file,
+				"Error":   err,
+			}))
 			continue
 		}
 	}
@@ -66,15 +77,27 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return i18n.NewError("error.oracle.load", map[string]any{"Error": err})
+		// i18N -- register
+		return i18n.NewError("error.loading", map[string]any{
+			"Subject": transform.Capitalize(i18n.Localize("oracle")),
+			"Error":   err,
+		})
 	}
 
 	if params.Dice <= 0 {
-		return i18n.NewError("error.oracle.invalid_dice", map[string]any{"ID": params.Name, "Dice": params.Dice})
+		// i18N -- register
+		return i18n.NewError("error.invalid", map[string]any{
+			"Subject":  transform.Capitalize(i18n.Localize("oracle")),
+			"Received": params.Name,
+		})
 	}
 
 	if len(params.Intervals) == 0 {
-		return i18n.NewError("error.oracle.no_intervals", map[string]any{"ID": params.Name})
+		// i18N -- register
+		return i18n.NewError("error.required", map[string]any{
+			"Subject":  transform.Capitalize(i18n.Localize("oracle")),
+			"Property": i18n.Localize("intervals"),
+		})
 	}
 
 	cachedConfig = append(cachedConfig, *params)
@@ -110,7 +133,11 @@ func GetByName(name string) (*Oracle, error) {
 		}
 	}
 
-	return nil, i18n.NewError("error.oracle.not_found", map[string]any{"Name": name})
+	// i18N -- register
+	return nil, i18n.NewError("error.not_found.id", map[string]any{
+		"Subject": transform.Capitalize(i18n.Localize("oracle")),
+		"ID":      name,
+	})
 }
 
 func (o Oracle) Name() string {
@@ -125,7 +152,12 @@ func (o Oracle) IsVisible() bool {
 func List() []Oracle {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			fmt.Printf("Error loading oracles: %v\n", err)
+			// i18N -- register
+
+			i18n.NewError("error.loading", map[string]any{
+				"Subject": transform.Capitalize(i18n.Localize("oracle")),
+				"Error":   err,
+			})
 			return nil
 		}
 	}
@@ -152,14 +184,24 @@ func Log() {
 func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {
-		return nil, i18n.NewError("error.oracle.load_folder", map[string]any{"Folder": path, "Error": err})
+		// i18N -- register
+		return nil, i18n.NewError("error.loading:folder", map[string]any{
+			"Subject": transform.Capitalize(i18n.Localize("oracle")),
+			"Folder":  path,
+			"Error":   err,
+		})
 	}
 
 	errs := []error{}
 	oracles := []string{}
 	for _, file := range list {
 		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
-			errs = append(errs, fmt.Errorf("Error loading oracle from file %s: %v", file, err))
+			// i18N -- register
+			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
+				"Subject": transform.Capitalize(i18n.Localize("oracle")),
+				"File":    file,
+				"Error":   err,
+			}))
 		} else {
 			oracles = append(oracles, params.Name)
 		}
@@ -189,8 +231,11 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 		if value >= interval.Min && value <= interval.Max {
 			res, ok := interval.Result.(T)
 			if !ok {
-				return nil, i18n.NewError("error.oracle.invalid_result_type", map[string]any{
-					"ID": o.name, "Actual": fmt.Sprintf("%T", interval.Result), "Expected": fmt.Sprintf("%T", res),
+				// i18N -- register
+				return nil, i18n.NewError("error.unexpected:value", map[string]any{
+					"Subject":  o.name,
+					"Expected": fmt.Sprintf("%T", res),
+					"Received": fmt.Sprintf("%T", interval.Result),
 				})
 			}
 
@@ -202,5 +247,9 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 		}
 	}
 
-	return nil, i18n.NewError("error.oracle.no_matching_interval", map[string]any{"ID": o.name, "Roll": value})
+	// i18N -- register
+	return nil, i18n.NewError("error.not_found.id", map[string]any{
+		"Subject": o.name,
+		"ID":      value,
+	})
 }

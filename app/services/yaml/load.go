@@ -11,15 +11,11 @@ import (
 func loadYAMLFromFile(fileAddress string, target any) error {
 	data, err := os.ReadFile(fileAddress)
 	if err != nil {
-		e := fmt.Errorf("read %s: %w", fileAddress, err)
-		fmt.Println(e)
-		return e
+		return fmt.Errorf("read %s: %w", fileAddress, err)
 	}
 
 	if err := yaml.Unmarshal(data, target); err != nil {
-		e := fmt.Errorf("unmarshal %s: %w", fileAddress, err)
-		fmt.Println(e)
-		return e
+		return fmt.Errorf("unmarshal %s: %w", fileAddress, err)
 	}
 
 	return nil
@@ -33,7 +29,7 @@ type wantedEntries struct {
 func getFolderEntries(folderPath string, wanted wantedEntries) ([]string, error) {
 	entries, err := os.ReadDir(folderPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%q: %w", folderPath, err)
 	}
 
 	var names []string
@@ -68,7 +64,7 @@ func GetFolderDirectories(folderPath string) ([]string, error) {
 func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
 	info, err := os.Stat(sourcePath)
 	if err != nil {
-		return nil, fmt.Errorf("cannot access %q: %w", sourcePath, err)
+		return nil, fmt.Errorf("%q: %w", sourcePath, err)
 	}
 
 	if !info.IsDir() {
@@ -81,7 +77,7 @@ func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
 func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]string, error) {
 	entries, err := os.ReadDir(folderPath)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read directory %q: %w", folderPath, err)
+		return nil, fmt.Errorf("%q: %w", folderPath, err)
 	}
 
 	files := make([]string, 0, len(entries))
@@ -100,7 +96,7 @@ func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]stri
 
 		subFiles, err := getFilesFromDirectoryRecursively(path, true)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%q: %w", path, err)
 		}
 
 		files = append(files, subFiles...)
@@ -112,7 +108,7 @@ func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]stri
 func LoadFromFile[T any](fileAddress string) (*T, error) {
 	var params T
 	if err := loadYAMLFromFile(fileAddress, &params); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("load %s: %w", fileAddress, err)
 	}
 
 	return &params, nil
@@ -121,7 +117,7 @@ func LoadFromFile[T any](fileAddress string) (*T, error) {
 func LoadListFromFile[T any](fileAddress string) ([]T, error) {
 	var params []T
 	if err := loadYAMLFromFile(fileAddress, &params); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unmarshal %s: %w", fileAddress, err)
 	}
 
 	return params, nil

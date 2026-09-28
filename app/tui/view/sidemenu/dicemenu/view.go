@@ -27,7 +27,7 @@ func (m *DiceMenu) GetView() string {
 
 func (m *DiceMenu) GetFooter() []string {
 	return []string{
-		i18n.Localize("shift-enter:roll"),
+		i18n.Localize("cmd.shift+enter:roll"),
 	}
 }
 

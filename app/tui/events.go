@@ -1,13 +1,10 @@
 package tui
 
 import (
-	"errors"
 	"solopg/app/services/i18n"
 
 	tea "charm.land/bubbletea/v2"
 )
-
-// BACKLOG gerer un systeme de combat et un systeme pour gerer les degat
 
 /*
 BACKLOG Add Ctrl Z ctrl Y pour s'il y a des fail de et miss click
@@ -49,7 +46,7 @@ type SaveMsg struct {
 func SendSaveMsg(save func() error) tea.Cmd {
 	return func() tea.Msg {
 		if save == nil {
-			return SaveMsg{Err: i18n.NewError("error.save_unconfigured")}
+			return SaveMsg{Err: i18n.NewError("error.not_found:on_save")}
 		}
 		return SaveMsg{Err: save()}
 	}
@@ -91,24 +88,14 @@ func SendRefreshMsg(resize bool) tea.Cmd {
 }
 
 // Errors
-
 type ErrorMsg struct {
 	Err error
 }
 
-var ErrCreationCancelled = errors.New("character creation cancelled")
-var ErrSelectionCancelled = errors.New("selection cancelled")
-
-func IsCancelled(err error) bool {
-	return errors.Is(err, ErrSelectionCancelled) ||
-		errors.Is(err, ErrCreationCancelled)
-}
-
-func NormalizeError(err error) error {
-	if IsCancelled(err) {
-		return nil
+func SendErrorMsg(err error) tea.Cmd {
+	return func() tea.Msg {
+		return ErrorMsg{Err: err}
 	}
-	return err
 }
 
 // keys

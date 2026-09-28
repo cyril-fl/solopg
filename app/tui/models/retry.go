@@ -20,7 +20,11 @@ type RerollModel[T any] struct {
 func NewRerollModel[T any](options list.Model, draw func() (T, error), limit int) RerollModel[T] {
 	value, err := draw()
 	if err != nil {
-		panic("Failed to draw initial value for RerollModel: " + err.Error())
+		// i18N -- register
+		panic(i18n.NewError("error.unexpected:action", map[string]any{
+			"Action": i18n.Localize("draw"),
+			"Error":  err,
+		}))
 	}
 
 	return RerollModel[T]{
@@ -35,7 +39,11 @@ func NewRerollModel[T any](options list.Model, draw func() (T, error), limit int
 func (s *RerollModel[T]) Reroll() {
 	value, err := s.Draw()
 	if err != nil {
-		panic("Failed to draw value for RerollModel: " + err.Error())
+		// i18N -- register
+		panic(i18n.NewError("error.unexpected:action", map[string]any{
+			"Action": i18n.Localize("draw"),
+			"Error":  err,
+		}))
 	}
 
 	s.Attempt++

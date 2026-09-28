@@ -6,6 +6,11 @@ codex:
   other: "codex"
 
 # Tables
+codex.entry:empty:
+  other: "Aucune entrée dans cette table."
+codex.entry:unknown:
+  other: "Entrée inconnue"
+  
 # Beastiary
 codex.beastiary:
   other: "bestiaire"
@@ -22,22 +27,15 @@ codex.npcs:
 codex.npcs:entry:
   other: "{{.Name}} - {{.Race}} - {{.Class}}"
 
-
 # Objectives
 codex.objectives:
   other: "objectifs"
+codex.objectives.number:
+  other: "Objectif n°{{.Number}}"
 
 # Objects
 codex.objects:
   other: "objets"
-
-# Messages
-codex.entry:empty:
-  other: "Aucune entrée dans cette table."
-codex.entry:stats:
-  other: "Santé: {{.health}} | Mental: {{.mental}} | Physique: {{.physical}} | Social: {{.social}} | Endurance: {{.stamina}}"
-codex.entry:unknown:
-  other: "Entrée inconnue"
 
 # --- Character ---
 character:
@@ -62,3 +60,7 @@ oracles:
 # --- Stats ---
 stats:
   other: "stats"
+stats.entry:
+  other: "Santé: {{.health}} | Mental: {{.mental}} | Physique: {{.physical}} | Social: {{.social}} | Endurance: {{.stamina}}"
+stats.entry:unknown:
+  other: "Aucune stat"

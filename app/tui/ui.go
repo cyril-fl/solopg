@@ -42,7 +42,10 @@ func (ui *Ui) Insert(steps ...Step) *Ui {
 }
 
 func (ui *Ui) Run() error {
-	ui.program = tea.NewProgram(newModel(ui.list))
+	model := newModel(ui.list)
+
+	ui.program = tea.NewProgram(&model)
 	_, err := ui.program.Run()
+
 	return err
 }

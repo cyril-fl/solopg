@@ -3,6 +3,7 @@ package characters
 import (
 	"errors"
 	"fmt"
+	"os"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
@@ -62,7 +63,11 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return i18n.NewError("error.locations.load", map[string]any{"Error": err})
+		// i18N -- register
+		return i18n.NewError("error.loading", map[string]any{
+			"Subject": i18n.Localize("location"),
+			"Error":   err,
+		})
 	}
 
 	/*
@@ -80,7 +85,11 @@ func loadFromFile(fileAddress string) error {
 func List() []Character {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			fmt.Printf("Error loading dice: %v\n", err)
+			// i18N -- register
+			i18n.NewError("error.loading", map[string]any{
+				"Subject": i18n.Localize("dice"),
+				"Error":   err,
+			})
 			return nil
 		}
 	}
@@ -103,7 +112,12 @@ func makeSet(configs []yamlConfig) []Character {
 func newFromYaml(config yamlConfig) *Character {
 	class, err := classes.InsertIfIsnt(config.Class)
 	if err != nil {
-		fmt.Printf("Error inserting class: %v\n", err)
+		// i18N -- register
+		cwd, cwderr := os.Getwd()
+		i18n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, err),
+		})
 		return nil
 	}
 
@@ -121,7 +135,12 @@ func newFromYaml(config yamlConfig) *Character {
 	})
 
 	if err != nil {
-		fmt.Printf("Error creating new character: %v\n", err)
+		// i18N -- register
+		cwd, cwderr := os.Getwd()
+		i18n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, err),
+		})
 		return nil
 	}
 

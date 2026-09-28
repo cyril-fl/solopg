@@ -1,7 +1,9 @@
 package codex
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/characters/classes"
@@ -49,7 +51,12 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if generator.HasError() {
-		return fmt.Errorf("failed to generate stats from values: %w", generator.GetError())
+		// i18N -- register
+		cwd, err := os.Getwd()
+		return i18n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(err, generator.GetError()),
+		})
 	}
 
 	/*
@@ -68,7 +75,11 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to create character from mapped values: %w", err)
+		// i18N -- register
+		return i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("npcs"),
+			"Error":   err,
+		})
 	}
 
 	tb.Add(character)
@@ -93,7 +104,7 @@ func (tb *NpcsTable) Summaries() []string {
 				"Class": i18n.Localize(entry.Character.Class),
 			}))
 
-			fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.entry:stats", entry.Character.Stats.MappedString()))
+			fmt.Fprintf(&content, "%s\n", i18n.Localize("stats.entry", entry.Character.Stats.MappedString()))
 		}
 
 		content.WriteString("\n\n")
@@ -106,16 +117,32 @@ func (tb *NpcsTable) Summaries() []string {
 func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {
-		err = append(err, fmt.Errorf("name is empty"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("npcs"),
+			"Property": i18n.Localize("property.name"),
+		}))
 	}
 	if entry["description"] == "" {
-		err = append(err, fmt.Errorf("description is empty"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("npcs"),
+			"Property": i18n.Localize("property.description"),
+		}))
 	}
 	if !races.Assert(entry["race"]) {
-		err = append(err, fmt.Errorf("race is empty"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("npcs"),
+			"Property": i18n.Localize("property.race"),
+		}))
 	}
 	if !classes.Assert(entry["class"]) {
-		err = append(err, fmt.Errorf("class is empty"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("npcs"),
+			"Property": i18n.Localize("property.class"),
+		}))
 	}
 
 	if len(err) > 0 {

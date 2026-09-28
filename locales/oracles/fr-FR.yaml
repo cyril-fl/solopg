@@ -1,2 +1,23 @@
-oracles.roll:result:
+oracle.roll:result:
   other: "Oracle lancé : {{.Roll}}, Résultat : {{.Value}}, Critique : {{.Critical}}"
+
+# --- Name ---
+# Base
+oracle.likely:
+  other: "Probable"
+oracle.unlikely:
+  other: "Improbable"
+oracle.neutral:
+  other: "Neutre"
+oracle.very_likely:
+  other: "Très probable"
+oracle.very_unlikly:
+  other: "Très improbable"
+  
+# Encouter
+oracles.encounter_easy:
+  other: "Facile"
+oracles.encounter_normal:
+  other: "Normal"
+oracles.encounter_hard:
+  other: "Difficile"

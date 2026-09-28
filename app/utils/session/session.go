@@ -44,7 +44,12 @@ func RunSession(db *mongo.Mongo) error {
 			Resolve: func(ctx *tui.Context, value any) error {
 				selected, ok := value.(*campaign.Campaign)
 				if !ok {
-					return i18n.NewError("error.unexpected_save_value", map[string]any{"Type": value})
+					// i18N -- register
+					return i18n.NewError("error.unexpected:value", map[string]any{
+						"Subject":  "campaign",
+						"Expected": "*campaign.Campaign",
+						"Received": value,
+					})
 				}
 				ctx.SelectedSave = selected
 
@@ -113,7 +118,12 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
-					return i18n.NewError("error.unexpected_name_value", map[string]any{"Type": value})
+					// i18N -- register
+					return i18n.NewError("error.unexpected:value", map[string]any{
+						"Subject":  i18n.Localize("name"),
+						"Expected": "string",
+						"Received": value,
+					})
 				}
 				ctx.SelectedName = name
 				return nil
@@ -124,7 +134,12 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				selected, ok := value.(models.Item[races.Race])
 				if !ok {
-					return i18n.NewError("error.unexpected_race_value", map[string]any{"Type": value})
+					// i18N -- register
+					return i18n.NewError("error.unexpected:value", map[string]any{
+						"Subject":  i18n.Localize("race"),
+						"Expected": "models.Item[races.Race]",
+						"Received": value,
+					})
 				}
 				selectedRace := selected.Value()
 				ctx.SelectedRace = &selectedRace
@@ -136,7 +151,12 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				selected, ok := value.(models.Item[classes.Class])
 				if !ok {
-					return i18n.NewError("error.unexpected_class_value", map[string]any{"Type": value})
+					// i18N -- register
+					return i18n.NewError("error.unexpected:value", map[string]any{
+						"Subject":  i18n.Localize("class"),
+						"Expected": "models.Item[classes.Class]",
+						"Received": value,
+					})
 				}
 				class := selected.Value()
 				ctx.SelectedClass = &class
@@ -148,7 +168,12 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				build, ok := value.([]stats.Modifier)
 				if !ok {
-					return i18n.NewError("error.unexpected_build_value", map[string]any{"Type": value})
+					// i18N -- register
+					return i18n.NewError("error.unexpected:value", map[string]any{
+						"Subject":  i18n.Localize("build"),
+						"Expected": "[]stats.Modifier",
+						"Received": value,
+					})
 				}
 				ctx.SelectedBuild = build
 				return nil
@@ -159,7 +184,12 @@ func onboardingSteps() []tui.Step {
 			Resolve: func(ctx *tui.Context, value any) error {
 				location, ok := value.(*locations.Location)
 				if !ok {
-					return i18n.NewError("error.unexpected_location_value", map[string]any{"Type": value})
+					// i18N -- register
+					return i18n.NewError("error.unexpected:value", map[string]any{
+						"Subject":  i18n.Localize("location"),
+						"Expected": "*locations.Location",
+						"Received": value,
+					})
 				}
 				ctx.SelectedLocation = location
 				return nil

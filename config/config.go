@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 )
@@ -76,15 +75,18 @@ func Load() (*config, error) {
 	}
 
 	if err := current.I18n.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid configuration: %w", err)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid", map[string]any{
+			"Subject": i18n.Localize("config"),
+			"Error":   err,
+		})
 	}
 
 	return current, nil
 }
 
 /*
-BACKLOG
-gerer le cas post buil avec un truc genre:
+BACKLOG gerer le cas post buil avec un truc genre:
 	getPath -> if isDev = path actuell
 		else constructeur de path
 aussi faire en sorte de embeded config.yaml part defaut

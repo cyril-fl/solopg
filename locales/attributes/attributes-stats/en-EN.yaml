@@ -1,10 +1,10 @@
 stat.health:
-  other: health
+  other: "health"
 stat.physical:
-  other: physical
+  other: "physical"
 stat.mental:
-  other: mental
+  other: "mental"
 stat.stamina:
-  other: stamina
+  other: "stamina"
 stat.social:
-  other: social
+  other: "social"

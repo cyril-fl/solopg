@@ -56,7 +56,11 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to create object from mapped values: %w", err)
+		// i18N -- register
+		return i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("item"),
+			"Error":   err,
+		})
 	}
 
 	tb.Add(object)
@@ -87,10 +91,18 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
-		err = append(err, fmt.Errorf("name is required"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("item"),
+			"Property": "name",
+		}))
 	}
 	if entry["description"] == "" {
-		err = append(err, fmt.Errorf("description is required"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("item"),
+			"Property": "description",
+		}))
 	}
 	/*
 		TODO HIGH quand tout sera fix ajouter ces champs dans le form

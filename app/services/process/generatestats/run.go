@@ -2,11 +2,12 @@ package generatestats
 
 import (
 	"errors"
-	"fmt"
+	"os"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/characters/classes"
 	"solopg/app/domain/card/characters/races"
 	"solopg/app/domain/gameplay/oracle"
+	"solopg/app/services/i18n"
 	"strconv"
 )
 
@@ -74,7 +75,12 @@ func (sg *generator) GenerateFromOracle() {
 func (sg *generator) makeModifiersFromValuesWithFallback() {
 	rules, err := oracle.GetByName(sg.values["encounter"])
 	if err != nil {
-		sg.error = append(sg.error, fmt.Errorf("failed to get oracle for encounter: %w", err))
+		// i18N -- register
+		sg.error = append(sg.error, i18n.NewError("error.not_found:id-error", map[string]any{
+			"Subject": i18n.Localize("encounter"),
+			"ID":      i18n.Localize(sg.values["encounter"]),
+			"Error":   err,
+		}))
 		return
 	}
 
@@ -99,7 +105,11 @@ func (sg *generator) makeModifiersFromAttributesValues() {
 func (sg *generator) makeRandomModifiersFromOracleValue() {
 	modifiers, err := makeModifiersFromOracle(sg.oraclesId)
 	if err != nil {
-		sg.error = append(sg.error, fmt.Errorf("failed to generate random modifiers: %w", err))
+		// i18N -- register
+		sg.error = append(sg.error, i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("stat"),
+			"Error":   err,
+		}))
 		return
 	}
 
@@ -132,7 +142,12 @@ func makeModifierWithRandomFallback(params withFallbackTemplate) stats.Modifier 
 
 	roll, err := oracle.Roll[int](params.fallback)
 	if err != nil {
-		fmt.Printf("Error rolling for stat %s: %v\n", params.stat.String(), err)
+		// i18N -- register
+		cwd, cwderr := os.Getwd()
+		i18n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, err),
+		})
 		return stats.Modifier{
 			Stat:  params.stat,
 			Value: 0,
@@ -149,13 +164,23 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	var modifiers []stats.Modifier
 	rules, err := oracle.GetByName(id)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get stat generation oracle: %w", err)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid:new: %w", map[string]any{
+			"Subject": i18n.Localize("stat"),
+			"Error":   err,
+		})
 	}
 
 	for _, stat := range stats.List() {
 		roll, err := oracle.Roll[int](*rules)
 		if err != nil {
-			return nil, fmt.Errorf("failed to roll for stat %s: %w", stat.String(), err)
+			// i18N -- register
+			cwd, cwderr := os.Getwd()
+			return nil,
+				i18n.NewError("error.unexpected", map[string]any{
+					"Path":  cwd,
+					"Error": errors.Join(cwderr, err),
+				})
 		}
 
 		modifiers = append(modifiers, stats.Modifier{

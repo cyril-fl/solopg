@@ -1,23 +1,26 @@
+race:
+  other: "race"
+
 # Elves
 race.elf:
-  other: elf
+  other: "elf"
 race.elf.description:
   other: "Elves are known for their grace, agility, and affinity with nature. They have a long lifespan and are often skilled in magic and archery."
 
 # Humans
 race.human:
-  other: human
+  other: "human"
 race.human.description:
   other: "Humans are the most adaptable and versatile of all races. They can thrive in any environment and are known for their resilience and determination."
 
 # Dwarves
 race.dwarf:
-  other: dwarf
+  other: "dwarf"
 race.dwarf.description:
   other: "Dwarves are stout and hardy, known for their craftsmanship and mining skills. They have a strong sense of community and are often skilled warriors."
 
 # Slimes
 race.slime:
-  other: slime
+  other: "slime"
 race.slime.description:
   other: "Slimes are amorphous creatures that can take on various shapes and sizes."

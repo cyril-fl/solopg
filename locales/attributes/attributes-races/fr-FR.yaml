@@ -1,24 +1,27 @@
+race:
+  other: "race"
+
 # Elves
 race.elf:
-  other: elfe
+  other: "elfe"
 race.elf.description:
   other: "Les elfes sont connus pour leur grâce, leur agilité et leur affinité avec la nature. Ils ont une longue durée de vie et sont souvent habiles en magie et en tir à l'arc."
 
 # Humans
 race.human:
-  other: humain
+  other: "humain"
 race.human.description:
   other: "Les humains sont la race la plus adaptable et polyvalente. Ils peuvent prospérer dans n'importe quel environnement et sont connus pour leur résilience et leur détermination."
 
 # Dwarves
 race.dwarf:
-  other: nain
+  other: "nain"
 race.dwarf.description:
   other: "Les nains sont robustes et résistants, connus pour leur savoir-faire et leurs compétences en minage. Ils ont un fort sens de la communauté et sont souvent des guerriers compétents."
 
 # Slimes
 race.slime:
-  other: slime
+  other: "slime"
 race.slime.description:
   other: "Les slimes sont des créatures amorphes qui peuvent prendre diverses formes."
   

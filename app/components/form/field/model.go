@@ -3,6 +3,7 @@ package field
 import (
 	"errors"
 	"solopg/app/services/i18n"
+	"solopg/app/utils/transform"
 )
 
 // - Field - //
@@ -44,7 +45,7 @@ func (f *field[T]) ID() string {
 }
 
 func (f *field[T]) Label() string {
-	return i18n.Localize(f.label)
+	return transform.Capitalize(i18n.Localize(f.label))
 }
 
 func (f *field[T]) SetError(err error) {

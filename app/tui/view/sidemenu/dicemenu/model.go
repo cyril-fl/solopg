@@ -85,7 +85,11 @@ func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
 	selected, ok := m.list.SelectedItem().(models.Item[dice.Dice])
 	if !ok {
 		return func() tea.Msg {
-			return tui.ErrorMsg{Err: i18n.NewError("error.dice_selection")}
+			// i18N -- register
+			return tui.SendErrorMsg(i18n.NewError("error.invalid", map[string]any{
+				"Subject":  i18n.Localize("dice"),
+				"Received": selected,
+			}))
 		}
 	}
 

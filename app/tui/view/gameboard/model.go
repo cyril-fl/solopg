@@ -47,7 +47,7 @@ func NewModel(params UiParams) model {
 		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
 
 		textarea: initTextarea(),
-		viewport: initViewport(i18n.Localize("chat.welcome")),
+		viewport: initViewport(i18n.Localize("chat.msg:welcome")),
 
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -98,6 +98,8 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.handleViewportScroll(msg)
 	case tui.Refresh:
 		return m.refreshViewport(msg.Resize)
+	case tui.ErrorMsg:
+		return m.handleError(msg)
 
 	case cursor.BlinkMsg:
 		return m.handleCursorBlink(msg)
@@ -108,7 +110,5 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
 func (m model) HandlesEscape() bool {
 	// return m.codexMenu.HandlesEscape()
-	// REFACTOR LOW refactor la maniere dont on hndle escape
-
 	return true
 }

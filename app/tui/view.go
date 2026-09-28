@@ -1,7 +1,8 @@
 package tui
 
 import (
-	"fmt"
+	"errors"
+	"os"
 	"strings"
 
 	"solopg/app/services/i18n"
@@ -12,8 +13,12 @@ import (
 
 func (m model) View() tea.View {
 	if m.err != nil {
-		errorLabel := i18n.Localize("error")
-		return tea.NewView(alignFooter(fmt.Sprintf("%s: %v", errorLabel, m.err), m.windowHeight(), mainFooter()))
+		cwd, err := os.Getwd()
+		errorLabel := i18n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(err, m.err),
+		})
+		return tea.NewView(alignFooter(errorLabel.Error(), m.windowHeight(), mainFooter()))
 	}
 
 	if current := m.steps.GetCurrentSubmodel(); current != nil {
@@ -27,7 +32,7 @@ func (m model) View() tea.View {
 
 // REFACTOR LOW Modifier le footer pour qu'il devienne une "class" en soit.
 func mainFooter() []string {
-	return []string{i18n.Localize("quit")}
+	return []string{i18n.Localize("cmd.ctrl+q:quit")}
 }
 
 type HasFooter interface {

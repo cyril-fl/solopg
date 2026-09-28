@@ -1,0 +1,14 @@
+field.category:
+  other: "category (weapon/armor/potion)"
+field.class:
+  other: "class"
+field.description:
+  other: "description"
+field.encounter:
+  other: "encounter"
+field.name:
+  other: "name"
+field.race:
+  other: "Race"
+field.title:
+  other: "title"

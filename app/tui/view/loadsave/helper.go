@@ -11,7 +11,7 @@ import (
 
 func makeItems(data []campaign.Campaign) []list.Item {
 	items := []list.Item{
-		models.NewItem[*campaign.Campaign](transform.Capitalize(i18n.Localize("save:new")), "", nil),
+		models.NewItem[*campaign.Campaign](transform.Capitalize(i18n.Localize("campaign:new")), "", nil),
 	}
 
 	for _, s := range data {

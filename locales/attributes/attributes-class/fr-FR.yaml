@@ -1,12 +1,13 @@
-
+class:
+  other: "classe"
   
 class.warrior:
-  other: guerrier
+  other: "guerrier"
 class.mage:
-  other: mage
+  other: "mage"
 class.thief:
-  other: voleur
+  other: "voleur"
 class.merchant:
-  other: marchand
+  other: "marchand"
 class.beast:
-  other: bête
+  other: "bête"

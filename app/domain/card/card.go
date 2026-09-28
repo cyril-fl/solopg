@@ -1,10 +1,11 @@
 package card
 
 import (
-	"fmt"
 	"solopg/app/domain/card/attributes/description"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/variety"
+	"solopg/app/services/i18n"
+	"strings"
 )
 
 type Card struct {
@@ -23,11 +24,31 @@ type NewCardParams struct {
 
 func NewCard(params NewCardParams) (*Card, error) {
 	if !params.Rarity.Validate() {
-		return nil, fmt.Errorf("invalid rarity: %s", params.Rarity)
+		// i18N -- register
+		valid := make([]string, 0, len(rarity.List()))
+		for _, r := range rarity.List() {
+			valid = append(valid, i18n.Localize(r.String()))
+		}
+
+		return nil, i18n.NewError("error.unexpected:value", map[string]any{
+			"Subject":  i18n.Localize("rarity"),
+			"Expected": strings.Join(valid, ", "),
+			"Received": params.Rarity,
+		})
 	}
 
 	if !params.Variety.Validate() {
-		return nil, fmt.Errorf("invalid variety: %s", params.Variety)
+		// i18N -- register
+		valid := make([]string, 0, len(rarity.List()))
+		for _, v := range variety.List() {
+			valid = append(valid, i18n.Localize(v.String()))
+		}
+
+		return nil, i18n.NewError("error.unexpected:value", map[string]any{
+			"Subject":  i18n.Localize("variety"),
+			"Expected": strings.Join(valid, ", "),
+			"Received": params.Variety,
+		})
 	}
 
 	return &Card{

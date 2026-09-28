@@ -1,12 +1,12 @@
 package objects
 
 import (
-	"fmt"
 	"solopg/app/domain/card"
 	"solopg/app/domain/card/attributes/objectcategory"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
+	"solopg/app/services/i18n"
 )
 
 type Object struct {
@@ -37,7 +37,11 @@ func New(params Template) (*Object, error) {
 	})
 
 	if newCard == nil {
-		return nil, fmt.Errorf("failed to create new card for item %s: %v", params.Name, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("item"),
+			"Error":   err,
+		})
 	}
 
 	// if newCard.Variety != attributes.ArticleCard && newCard.Variety != attributes.EquipmentCard {
@@ -46,7 +50,11 @@ func New(params Template) (*Object, error) {
 
 	// Check Category
 	if !params.Category.Validate() {
-		return nil, fmt.Errorf("invalid category for item: %s", params.Category)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid", map[string]any{
+			"Subject": i18n.Localize("category"),
+			"Receive": params.Category,
+		})
 	}
 
 	return &Object{

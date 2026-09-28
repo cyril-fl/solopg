@@ -1,7 +1,6 @@
 package equipment
 
 import (
-	"fmt"
 	"solopg/app/domain/card/attributes/objectcategory"
 	"solopg/app/domain/card/attributes/potency"
 	"solopg/app/domain/card/attributes/rarity"
@@ -9,6 +8,7 @@ import (
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/objects"
+	"solopg/app/services/i18n"
 )
 
 // - Equipment - //
@@ -85,12 +85,20 @@ func NewGear(params Template) (*Gear, error) {
 	}
 
 	if newItem == nil {
-		return nil, fmt.Errorf("failed to create new item for equipment gear")
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("gear"),
+			"Error":   err,
+		})
 	}
 
 	// Check EquipmentSlot
 	if !params.Slot.Validate() {
-		return nil, fmt.Errorf("invalid equipment slot: %s", params.Slot)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid", map[string]any{
+			"Subject": i18n.Localize("slot"),
+			"Receive": params.Slot,
+		})
 	}
 
 	return &Gear{

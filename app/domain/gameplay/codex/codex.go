@@ -2,7 +2,7 @@ package codex
 
 import (
 	"errors"
-	"fmt"
+	"solopg/app/services/i18n"
 )
 
 // - Codex - //
@@ -79,7 +79,12 @@ func ensureEmbeddedTable[E any](name string, table **TableData[E]) {
 
 func (t TableData[any]) formatAssertErrors(err []error) error {
 	return errors.Join(
-		fmt.Errorf("invalid %s:", t.name),
+		// i18N -- registe
+		i18n.NewError("error.invalid", map[string]interface{}{
+			"Subject":  t.name,
+			"Received": err,
+		}),
+
 		errors.Join(err...),
 	)
 }

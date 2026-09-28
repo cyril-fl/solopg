@@ -53,7 +53,7 @@ func (o *ObjectivesTable) Summaries() []string {
 	content := strings.Builder{}
 	for i, entry := range o.Entries {
 		if entry.Title == "" {
-			content.WriteString(i18n.Localize("objective.number", map[string]any{"Number": i + 1}))
+			content.WriteString(i18n.Localize("codex.objectives.number", map[string]any{"Number": i + 1}))
 		} else {
 			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Title), i18n.Localize(entry.Description))
 		}
@@ -64,7 +64,7 @@ func (o *ObjectivesTable) Summaries() []string {
 	// summaries := make([]string, 0, len(o.Entries))
 	// for i := range o.Entries {
 	// 	if o.Entries[i].Title == "" {
-	// 		summaries = append(summaries, i18n.Localize("objective.number", map[string]any{"Number": i + 1}))
+	// 		summaries = append(summaries, i18n.Localize("codex.objectives.number", map[string]any{"Number": i + 1}))
 	// 		continue
 	// 	}
 	// 	summaries = append(summaries, fmt.Sprintf("%s — %s", i18n.Localize(o.Entries[i].Title), i18n.Localize(o.Entries[i].Description)))
@@ -82,10 +82,18 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 	var err []error
 
 	if values["title"] == "" {
-		err = append(err, fmt.Errorf("title is required"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("objectives"),
+			"Property": i18n.Localize("property.title"),
+		}))
 	}
 	if values["description"] == "" {
-		err = append(err, fmt.Errorf("description is required"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("objectives"),
+			"Property": i18n.Localize("property.description"),
+		}))
 	}
 
 	if len(err) > 0 {

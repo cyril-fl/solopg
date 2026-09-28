@@ -3,6 +3,7 @@ package field
 import (
 	"fmt"
 	"solopg/app/components/form"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"strings"
 
@@ -75,7 +76,12 @@ func (f *textField[T]) Validate() error {
 		return f.validate(v)
 	}
 
-	return fmt.Errorf("invalid value type for field %s: expected %T, got %T", f.ID(), f.defaultvalue, f.Value())
+	// i18N -- register
+	return i18n.NewError("error.unexpected:value", map[string]any{	
+		"Subject": f.Label(),
+		"Expected": fmt.Sprintf("%T", f.defaultvalue),
+		"Received":   f.Value(),
+	})
 }
 
 // - Tea Model Implementation - //
@@ -152,7 +158,11 @@ func setValue[T stringOrInt](input *textinput.Model, value T) {
 
 func (f *textField[T]) testRequireness() error {
 	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
-		return fmt.Errorf("field %s is required", f.ID())
+		// i18N -- register
+		return i18n.NewError("error.required", map[string]any{
+			"Subject": f.ID(),
+			"Property": i18n.Localize(f.Label()),
+		})
 	}
 	return nil
 }

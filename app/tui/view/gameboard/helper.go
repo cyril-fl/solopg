@@ -24,7 +24,7 @@ import (
 // - Init - //
 func initTextarea() textarea.Model {
 	ta := textarea.New()
-	ta.Placeholder = i18n.Localize("chat.placeholder")
+	ta.Placeholder = i18n.Localize("chat.input:placeholder")
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
@@ -131,9 +131,16 @@ func (m *model) handleEnterInput() {
 func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
-		m.journal = append(m.journal, i18n.Localize("error.save", map[string]any{"Error": msg.Err}))
+		// i18N -- register
+		err := i18n.NewError("error.unexpected:save", map[string]any{
+			"Error": msg.Err,
+		})
+		// LOG autrement
+		m.journal = append(m.journal, err.Error())
 	} else {
-		log := i18n.Localize("save.success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
+
+		// Log aussi les succes
+		log := i18n.Localize("campaign:success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
 
 		m.engine.Log(log)
 		m.journal = append(m.journal, log)
@@ -181,6 +188,11 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 		return m, tui.SendSaveMsg(m.save)
 	}
 
+	return m.refreshViewport(false)
+}
+
+func (m *model) handleError(msg tui.ErrorMsg) (*model, tea.Cmd) {
+	m.err = msg.Err
 	return m.refreshViewport(false)
 }
 

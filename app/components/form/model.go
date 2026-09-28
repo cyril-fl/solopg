@@ -2,6 +2,7 @@ package form
 
 import (
 	"errors"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 
 	tea "charm.land/bubbletea/v2"
@@ -90,7 +91,10 @@ func (m *Form) Validate() *Form {
 	}
 
 	if hasErrors {
-		m.SetError(errors.New("form validation failed"))
+		// i18N -- register
+		m.SetError(i18n.NewError("error.invalid:form", map[string]any{
+			"Error": errors.Join(m.GetFieldsErrors()...),
+		}))
 	}
 
 	return m
@@ -106,6 +110,16 @@ func (m *Form) GetError() error {
 	}
 
 	return nil
+}
+
+func (m *Form) GetFieldsErrors() []error {
+	fieldErrors := make([]error, 0, len(m.fields))
+	for _, f := range m.fields {
+		if err := f.GetError(); err != nil {
+			fieldErrors = append(fieldErrors, err)
+		}
+	}
+	return fieldErrors
 }
 
 func (m *Form) HasErrors() bool {

@@ -1,109 +1,52 @@
-# Reroll 
-attempt:
-  other: "attempt"
+# --- Global ---
+# Chat
+chat.input:placeholder:
+  other: "Send a message..."
+chat.msg:welcome:
+  other: "Welcome to the chat room!\nType a message and press Enter to send."
 
-## - Options
+  # Ctrl
+cmd.ctrl+q:quit:
+  other: "Ctrl+Q: Quit"
+cmd.ctrl+s:save:
+  other: "Ctrl+S: Save"
+cmd.shift+enter:add:
+  other: "Shift+Enter: Add"
+cmd.shift+enter:open:
+  other: "Shift+Enter: Open"
+cmd.shift+enter:roll:
+  other: "Shift+Enter: Roll"
+
+# Options
 accept:
   other: "accept"
 reroll:
   other: "reroll"
 
+# Other
+build:
+  other: "build"
+name:
+  other: "name"
+page:
+  other: "page"
+
+# Reroll 
+attempt:
+  other: "attempt"
+draw:
+  other: "draw"
+
 # System
 onboarding:
   other: "Create character"
-save:new:
+
+# Campaign
+campaign:
+  other: "save"
+campaign:new:
   other: "new save"
-
-###
-
-
-name:
-  other: "Name:"
-
-
-
-
-
-
-
-## todo deplacer ça ailler
-oracles.encounter_easy:
-  other: "Easy"
-oracles.encounter_normal:
-  other: "Normal"
-oracles.encounter_hard:
-  other: "Hard"
-
-
-unknown_player:
-  other: "Unknown player"
-unknown_place:
-  other: "Unknown place"
-
-no_stats:
-  other: "No stats"
-chat.placeholder:
-  other: "Send a message..."
-chat.welcome:
-  other: "Welcome to the chat room!\nType a message and press Enter to send."
-field.name:
-  other: "Name"
-field.description:
-  other: "Description"
-field.class:
-  other: "Class"
-field.race:
-  other: "Race"
-field.category:
-  other: "Category (weapon/armor/potion)"
-field.title:
-  other: "Title"
-field.encounter:
-  other: "Encounter"
-
-
-error.oracle_action:
-  other: "Oracle error: {{.Error}}"
-critical:
-  other: "Critical"
-error.save:
-  other: "Save error: {{.Error}}"
-save.success:
+campaign:success:
   other: "Saved successfully at {{.Time}}"
 campaign.description:
   other: "Location: {{.Location}} | Updated: {{.Updated}}"
-objective.number:
-  other: "Objective #{{.Number}}"
-
-
-
-oracle.likely:
-  other: "Likely"
-oracle.unlikely:
-  other: "Unlikely"
-oracle.neutral:
-  other: "Neutral"
-oracle.very_likely:
-  other: "Very likely"
-oracle.very_unlikly:
-  other: "Very unlikely"
-
-
-  # Ctrl
-shift-enter:open:
-  other: "Shift+Enter: Open"
-save:
-  other: "Ctrl+S: Save"
-validate:
-  other: "Enter: Validate"
-cancel:
-  other: "Esc: Cancel"
-shift-enter:add:
-  other: "Shift+Enter: Add"
-shift-enter:roll:
-  other: "Shift+Enter: Roll"
-quit:
-  other: "Ctrl+Q: Quit"
-
-back_to_chat:
-  other: "Esc: Back to chat"

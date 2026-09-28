@@ -35,7 +35,12 @@ func load() error {
 		filepath := fmt.Sprintf("%s/%s", folderConfigPath, file)
 
 		if err := loadFromFile(filepath); err != nil {
-			errs = append(errs, i18n.NewError("error.locations.load_file", map[string]any{"File": file, "Error": err}))
+			// i18N -- register
+			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
+				"Subject": i18n.Localize("location"),
+				"File":    filepath,
+				"Error":   err,
+			}))
 			continue
 		}
 	}
@@ -51,7 +56,12 @@ func loadFromFolder() ([]string, error) {
 	list, err := yaml.GetFolderFiles(folderConfigPath)
 
 	if err != nil {
-		return nil, i18n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		// i18N -- register
+		return nil, i18n.NewError("error.loading:folder", map[string]any{
+			"Subject": i18n.Localize("location"),
+			"Folder":  folderConfigPath,
+			"Error":   err,
+		})
 	}
 
 	return list, nil
@@ -61,9 +71,20 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return i18n.NewError("error.locations.load", map[string]any{"Error": err})
+		// i18N -- register
+		return i18n.NewError("error.loading:file", map[string]any{
+			"Subject": i18n.Localize("location"),
+			"File":    fileAddress,
+			"Error":   err,
+		})
 	}
-	// TODO LOW exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
+
+	/*
+		TODO LOW Verrifier ou "MakeDefault" pourrait être utile
+		ex: Si la data vien d'une carte loader, c'est valider
+
+		Exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
+	*/
 	variety.MakeDefault(params.Variety)
 
 	cachedConfig = append(cachedConfig, *params)
@@ -76,7 +97,11 @@ func List() []Location {
 	if cachedConfig == nil {
 		err := load()
 		if err != nil {
-			fmt.Printf("Error loading locations: %v\n", err)
+			// i18N -- register
+			i18n.NewError("error.loading", map[string]any{
+				"Subject": i18n.Localize("location"),
+				"Error":   err,
+			})
 			return nil
 		}
 	}
@@ -106,7 +131,11 @@ func newFromYaml(config yamlConfig) *Location {
 	})
 
 	if err != nil {
-		fmt.Printf("Error creating new location: %v\n", err)
+		// i18N -- register
+		i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("location"),
+			"Error":   err,
+		})
 		return nil
 	}
 

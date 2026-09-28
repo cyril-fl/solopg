@@ -3,6 +3,7 @@ package field
 import (
 	"fmt"
 	"solopg/app/components/form"
+	"solopg/app/services/i18n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/types/direction"
@@ -81,12 +82,21 @@ func (f *selectField[T]) Validate() error {
 		return f.validate(v)
 	}
 
-	return fmt.Errorf("invalid value type for field %s: expected %T, got %T", f.ID(), f.defaultvalue, f.Value())
+	// i18N -- register
+	return i18n.NewError("error.unexpected:value", map[string]any{
+		"Subject":  i18n.Localize("field"),
+		"Expected": fmt.Sprintf("%T", f.defaultvalue),
+		"Received": f.Value(),
+	})
 }
 
 func (f *selectField[T]) testRequireness() error {
 	if f.required && f.Value() == nil {
-		return fmt.Errorf("field %s is required", f.ID())
+		// i18N -- register
+		return i18n.NewError("error.required", map[string]any{
+			"Subject": f.Label(),
+			"Value":   f.ID(),
+		})
 	}
 	return nil
 }

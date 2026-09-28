@@ -3,6 +3,7 @@ package codex
 import (
 	"errors"
 	"fmt"
+	"os"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/characters/races"
 	"solopg/app/services/i18n"
@@ -39,16 +40,6 @@ func (tb *BeastiaryTable) Add(race *races.Race) {
 	})
 }
 
-func (tb *BeastiaryTable) HasEntry(race races.Race) bool {
-	for _, entry := range tb.Entries {
-		if entry.Race.GetHash() == race.GetHash() {
-			return true
-		}
-	}
-
-	return false
-}
-
 func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	if err := tb.assertEntry(values); err != nil {
 		return err
@@ -60,7 +51,12 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if generator.HasError() {
-		return fmt.Errorf("failed to generate stats from values: %w", generator.GetError())
+		// i18N -- register
+		cwd, err := os.Getwd()
+		return i18n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(err, generator.GetError()),
+		})
 	}
 
 	/*
@@ -80,14 +76,15 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 		Bonus:       generator.GetModifiers(),
 	}
 
-	race := races.New(raw)
-	if tb.HasEntry(race) {
-		return fmt.Errorf("race %s already exists in the beastiary", race.GetName())
+	if err := races.AddInConfig(raw); err != nil {
+		// i18N -- register
+		return i18n.NewError("error.unexpected", map[string]any{
+			"Subject": i18n.Localize("race"),
+			"Error":   err,
+		})
 	}
 
-	if err := races.AddInConfig(raw); err != nil {
-		return fmt.Errorf("failed to save race: %w", err)
-	}
+	race := races.New(raw)
 
 	tb.Add(&race)
 
@@ -117,7 +114,7 @@ func (tb *BeastiaryTable) Summaries() []string {
 
 			if len(entry.Race.GetBonus()) > 0 {
 				modifiersToStats := stats.New(entry.Race.GetBonus())
-				fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.entry:stats", modifiersToStats.MappedString()))
+				fmt.Fprintf(&content, "%s\n", i18n.Localize("stats.entry", modifiersToStats.MappedString()))
 			}
 		}
 		content.WriteString("\n\n")
@@ -131,11 +128,19 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
-		err = append(err, fmt.Errorf("missing name for beast"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("race"),
+			"Property": i18n.Localize("property.name"),
+		}))
 	}
 
 	if entry["description"] == "" {
-		err = append(err, fmt.Errorf("missing description for beast"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("race"),
+			"Property": i18n.Localize("property.description"),
+		}))
 	}
 
 	if len(err) > 0 {

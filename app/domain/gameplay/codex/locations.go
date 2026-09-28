@@ -91,10 +91,18 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 	var err []error
 
 	if values["name"] == "" {
-		err = append(err, fmt.Errorf("name is empty"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("location"),
+			"Property": i18n.Localize("name"),
+		}))
 	}
 	if values["description"] == "" {
-		err = append(err, fmt.Errorf("description is empty"))
+		// i18N -- register
+		err = append(err, i18n.NewError("error.required_property", map[string]any{
+			"Subject":  i18n.Localize("location"),
+			"Property": i18n.Localize("description"),
+		}))
 	}
 
 	if len(err) > 0 {

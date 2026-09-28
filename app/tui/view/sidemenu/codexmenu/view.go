@@ -26,7 +26,12 @@ func (m *codexMenu) GetMenuView() string {
 func (m *codexMenu) GetView() string {
 	page := m.getCurrentPage()
 	if page == nil {
-		return i18n.Localize("error.page_not_found")
+		// i18N -- register
+		return i18n.
+			NewError("error.not_found", map[string]any{
+				"Subject": transform.Capitalize(i18n.Localize("page")),
+			}).
+			Error()
 	}
 
 	return page.GetItemView()
@@ -53,9 +58,9 @@ func (m *codexMenu) GetFooter() []string {
 	footer := []string{}
 
 	if m.IsOpen() {
-		footer = append(footer, i18n.Localize("shift-enter:add"))
+		footer = append(footer, i18n.Localize("cmd.shift+enter:add"))
 	} else {
-		footer = append(footer, i18n.Localize("shift-enter:open"))
+		footer = append(footer, i18n.Localize("cmd.shift+enter:open"))
 	}
 
 	return footer

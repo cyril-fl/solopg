@@ -2,13 +2,13 @@ package equipment
 
 import (
 	"errors"
-	"fmt"
 	"solopg/app/domain/card/attributes/objectcategory"
 	"solopg/app/domain/card/attributes/potency"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/slot"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
+	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 )
 
@@ -33,7 +33,12 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return fmt.Errorf("Error reading armor set folder: %v\n", err)
+		// i18N -- register
+		return i18n.NewError("error.loading:folder", map[string]any{
+			"Subject": i18n.Localize("gear"),
+			"Folder":  folderConfigPath,
+			"Error":   err,
+		})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -47,7 +52,13 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
-			errs = append(errs, fmt.Errorf("Error loading armor set from file %s: %v", file, err))
+			// i18N -- register
+			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
+				"Subject": i18n.Localize("gear"),
+				"File":    file,
+				"Error":   err,
+			}))
+
 			continue
 		}
 	}
@@ -71,7 +82,11 @@ func loadFromFile(fileAddress string) error {
 func List() []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			fmt.Printf("Error loading dice: %v\n", err)
+			// i18N -- register
+			i18n.NewError("error.loading", map[string]any{
+				"Subject": i18n.Localize("gear"),
+				"Error":   err,
+			})
 			return nil
 		}
 	}
@@ -105,7 +120,11 @@ func newFromYaml(config yamlConfig) *Gear {
 	})
 
 	if err != nil {
-		fmt.Printf("Error creating gear from YAML: %v\n", err)
+		// i18N -- register
+		i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("gear"),
+			"Error":   err,
+		})
 		return nil
 	}
 
@@ -115,7 +134,11 @@ func newFromYaml(config yamlConfig) *Gear {
 func FindEquipementByName(name string) []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			fmt.Printf("Error loading armor sets: %v\n", err)
+			// i18N -- register
+			i18n.NewError("error.loading", map[string]any{
+				"Subject": i18n.Localize("gear"),
+				"Error":   err,
+			})
 			return nil
 		}
 	}

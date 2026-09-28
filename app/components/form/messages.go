@@ -26,6 +26,7 @@ func SendMsg[T msg]() tea.Cmd {
 }
 
 // Error
+// TODO HIGH mouve ca dans un truc plus general
 type Error struct {
 	err error
 }

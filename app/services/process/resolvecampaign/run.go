@@ -10,6 +10,7 @@ import (
 	"solopg/app/domain/card/objects/equipment"
 	"solopg/app/services/i18n"
 	"solopg/app/tui"
+	"strings"
 )
 
 func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
@@ -30,7 +31,11 @@ func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
 	isValidArgs := ctx.SelectedRace != nil && ctx.SelectedClass != nil && ctx.SelectedLocation != nil
 	if !isValidArgs {
-		return nil, i18n.NewError("error.onboarding")
+		// i18N -- register
+		return nil, i18n.NewError("error.required", map[string]any{
+			"Subject":  i18n.Localize("campaign"),
+			"Property": strings.Join([]string{i18n.Localize("race"), i18n.Localize("class"), i18n.Localize("location")}, ", "),
+		})
 	}
 
 	player, err := generateCharacter(ctx)

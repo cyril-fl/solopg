@@ -38,15 +38,11 @@ func newModel(steps *contextStepList) model {
 }
 
 func (m *model) resolveCurrentStep(value any) error {
-	list := m.steps
-	current := list.CurrentStep()
-
-	isResolvable := current != nil && current.Resolve != nil
-	if !isResolvable {
-		return nil
+	if current := m.steps.CurrentStep(); current != nil && current.Resolve != nil {
+		return current.Resolve(&m.context, value)
 	}
 
-	return current.Resolve(&m.context, value)
+	return nil
 }
 
 func (m *model) selectNextStep() bool {
@@ -62,55 +58,52 @@ func (m *model) selectNextStep() bool {
 	}
 }
 
-func (m *model) forwardNextStep() (tea.Model, tea.Cmd) {
+func (m *model) forwardNextStep() (*model, tea.Cmd) {
 	if !m.selectNextStep() {
-		return *m, tea.Quit
+		return m, tea.Quit
 	}
 
 	submodel := m.steps.GetCurrentSubmodel()
 	if submodel == nil {
-		return *m, tea.Quit
+		return m, tea.Quit
 	}
 
 	initCmd := submodel.Init()
 	if m.size == nil {
-		return *m, initCmd
+		return m, initCmd
 	}
 
-	return *m, tea.Sequence(initCmd, func() tea.Msg {
+	return m, tea.Sequence(initCmd, func() tea.Msg {
 		return *m.size
 	})
 }
 
 func (m model) Init() tea.Cmd {
-	submodel := m.steps.GetCurrentSubmodel()
-	if submodel == nil {
-		return nil
+	if submodel := m.steps.GetCurrentSubmodel(); submodel != nil {
+		return submodel.Init()
 	}
 
-	return submodel.Init()
+	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if size, ok := msg.(tea.WindowSizeMsg); ok {
-		m.size = &size
-	}
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.size = &msg
+		return m.handleResize(msg)
+	case tea.KeyMsg:
+		return m.handleEvent(msg)
 
-	var cmd tea.Cmd
-	m, cmd = m.handleEvent(msg)
-	if cmd != nil {
-		return m, cmd
-	}
+	case ResolutionMsg:
+		return m.handleResolution(msg)
 
-	if resolution, ok := msg.(ResolutionMsg); ok {
-		return m.handleResolution(resolution)
+	default:
+		return m.handleSubmodelUpdate(msg)
 	}
-
-	if m.steps.GetCurrentSubmodel() == nil {
-		return m, nil
-	}
-
-	return m.handleSubmodel(msg)
 }
 
 type DelegateUpdateFunc func(msg tea.Msg) (tea.Model, tea.Cmd)
+
+type EscapeSupport interface {
+	HandlesEscape() bool
+}

@@ -11,7 +11,11 @@ func Teleport() (*locations.Location, error) {
 	list := locations.List()
 
 	if len(list) == 0 {
-		return nil, i18n.NewError("error.locations.empty", nil)
+		// i18N -- register
+		return nil, i18n.NewError("error.required", map[string]any{
+			"Subject":  i18n.Localize("location"),
+			"Property": i18n.Localize("list"),
+		})
 	}
 
 	roll := dice.Roll(len(list))

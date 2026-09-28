@@ -2,6 +2,7 @@ package onboardename
 
 import (
 	"solopg/app/services/i18n"
+	"solopg/app/utils/transform"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -18,11 +19,11 @@ func (m model) View() tea.View {
 		lipgloss.JoinVertical(
 			lipgloss.Left,
 			/*
-				TODO LOW verrifier pourquoi CREATE CHARACTER apparais pas sur les autre view
+				TODO LOW Verrifier pourquoi CREATE CHARACTER apparais pas sur les autre view
 			*/
 			title,
 			"",
-			i18n.Localize("name"),
+			transform.Capitalize(i18n.Localize("field.name")),
 			input,
 		),
 	)

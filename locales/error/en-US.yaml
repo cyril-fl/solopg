@@ -1,57 +1,41 @@
-error:
-  other: Error
+# Loading
+error.loading:
+  other: "Failed to load oracle:\n{{.Error}}"
+error.loading:file:
+  other: "Error loading oracle file {{.File}}:\n{{.Error}}"
+error.loading:folder:
+  other: "Error loading oracle folder {{.Folder}}:\n{{.Error}}"
+error.loading:campaign:
+  other: "Error loading campaign save {{.ID}}:\n{{.Error}}"
 
-error.onboarding:
-  other: "Incomplete character creation context"
+# Invalid
+error.invalid:
+  other: "Invalid \"{{.Subject}}\": {{.Received}}"
+error.invalid:form:
+  other: "Form validation error:\n{{.Error}}"
+error.invalid:new:
+  other: "Failed to create \"{{.Subject}}\":\n{{.Error}}"
 
-###
-error.game_unavailable:
-  other: "Game state unavailable"
-error.unknown_class:
-  other: "Unknown class: {{.Class}}"
-error.unknown_race:
-  other: "Unknown race: {{.Race}}"
-error.non_beast_race:
-  other: "Race is not a beast race: {{.Race}}"
-error.unknown_codex:
-  other: "Unknown Codex type: {{.Kind}}"
-codex.entry:empty:
-  other: "No entries in this table."
-error.oracle_action:
-  other: "Oracle error: {{.Error}}"
-error.save:
-  other: "Save error: {{.Error}}"
-error.page_not_found:
-  other: "Page not found"
-error.save_unconfigured:
+# Not found
+error.not_found:
+  other: "{{.Subject}} not found"
+error.not_found.id:
+  other: "{{.Subject}} {{.ID}} not found"
+error.not_found:id-error:
+  other: "{{.Subject}} {{.ID}} not found:\n{{.Error}}"
+error.not_found:on_save:
   other: "Save function is not configured"
-error.oracle.not_found:
-  other: "Oracle {{.ID}} not found"
-error.oracle.load_file:
-  other: "Error loading oracle file {{.File}}: {{.Error}}"
-error.oracle.load_folder:
-  other: "Error loading oracle folder {{.Folder}}: {{.Error}}"
-error.oracle.load:
-  other: "Failed to load oracle: {{.Error}}"
-error.oracle.invalid_dice:
-  other: "Oracle {{.ID}} has an invalid dice value: {{.Dice}}"
-error.oracle.no_intervals:
-  other: "Oracle {{.ID}} has no intervals"
-error.oracle.invalid_result_type:
-  other: "Oracle {{.ID}} has an interval result of type {{.Actual}}, expected {{.Expected}}"
-error.oracle.no_matching_interval:
-  other: "Oracle {{.ID}} has no interval matching roll {{.Roll}}"
 
-error.unexpected_save_value:
-  other: "Unexpected save value type: {{.Type}}"
-error.unexpected_name_value:
-  other: "Unexpected name value type: {{.Type}}"
-error.unexpected_race_value:
-  other: "Unexpected race value type: {{.Type}}"
-error.unexpected_class_value:
-  other: "Unexpected class value type: {{.Type}}"
-error.unexpected_build_value:
-  other: "Unexpected build value type: {{.Type}}"
-error.unexpected_location_value:
-  other: "Unexpected location value type: {{.Type}}"
+# Required
+error.required:
+  other: "Field \"{{.Subject}}\" is required: {{.Value}}"
 
+# Unexpected
+error.unexpected:
+  other: "Unexpected error at {{.Path}}:\n{{.Error}}"
+error.unexpected:action:
+  other: "Error executing \"{{.Action}}\":\n{{.Error}}"
+error.unexpected:save:
+  other: "Save error:\n{{.Error}}"
+error.unexpected:value:
+  other: "Unexpected \"{{.Subject}}\" value type: {{.Type}}"

@@ -85,7 +85,11 @@ func (m *HintMenu) handleKeyShiftEnter() tea.Cmd {
 	selected, ok := m.list.SelectedItem().(models.Item[hint.Hint])
 	if !ok {
 		return func() tea.Msg {
-			return tui.ErrorMsg{Err: i18n.NewError("error.hint_selection")}
+			// i18N -- register
+			return tui.SendErrorMsg(i18n.NewError("error.invalid", map[string]any{
+				"Subject":  i18n.Localize("hint"),
+				"Received": selected,
+			}))
 		}
 	}
 

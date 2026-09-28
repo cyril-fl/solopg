@@ -1,13 +1,12 @@
 package articles
 
 import (
-	"fmt"
-
 	"solopg/app/domain/card/attributes/objectcategory"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/objects"
+	"solopg/app/services/i18n"
 	"solopg/app/services/yaml"
 )
 
@@ -45,7 +44,11 @@ func New(params Template) (*Article, error) {
 	}
 
 	if newItem == nil {
-		return nil, fmt.Errorf("failed to create new item for article")
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("article"),
+			"Error":   err,
+		})
 	}
 
 	return &Article{

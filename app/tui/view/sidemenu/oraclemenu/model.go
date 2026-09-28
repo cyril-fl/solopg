@@ -89,7 +89,11 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 
 	if !ok {
 		return func() tea.Msg {
-			return tui.ErrorMsg{Err: i18n.NewError("error.oracle_selection")}
+			// i18N -- register
+			return tui.SendErrorMsg(i18n.NewError("error.invalid", map[string]any{
+				"Subject":  i18n.Localize("oracle"),
+				"Received": selected,
+			}))
 		}
 	}
 
@@ -98,7 +102,11 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	rollResult, err := oracle.Roll[any](rules)
 	if err != nil {
 		return func() tea.Msg {
-			return tui.ErrorMsg{Err: err}
+			// i18N -- register
+			return tui.SendErrorMsg(i18n.NewError("error.unexpected:action:oracle", map[string]any{
+				"Action": i18n.Localize("roll"),
+				"Error":  err,
+			}))
 		}
 	}
 

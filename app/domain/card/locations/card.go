@@ -1,12 +1,11 @@
 package locations
 
 import (
-	"fmt"
-
 	"solopg/app/domain/card"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
+	"solopg/app/services/i18n"
 )
 
 type Location struct {
@@ -32,7 +31,11 @@ func New(params Template) (*Location, error) {
 	})
 
 	if newCard == nil {
-		return nil, fmt.Errorf("failed to create new card for location %s: %v", params.Name, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": i18n.Localize("location"),
+			"Error":   err,
+		})
 	}
 
 	return &Location{

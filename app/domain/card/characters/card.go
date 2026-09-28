@@ -1,7 +1,6 @@
 package characters
 
 import (
-	"fmt"
 	"solopg/app/domain/card"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
@@ -11,6 +10,7 @@ import (
 	"solopg/app/domain/card/characters/wallet"
 	"solopg/app/domain/card/objects"
 	"solopg/app/domain/card/objects/equipment"
+	"solopg/app/services/i18n"
 )
 
 type Character struct {
@@ -60,15 +60,27 @@ func New(params Template) (*Character, error) {
 	})
 
 	if newCard == nil {
-		return nil, fmt.Errorf("failed to create new card for character %s: %v", params.Name, err)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid:new", map[string]any{
+			"Subject": params.Name,
+			"Error":   err,
+		})
 	}
 
 	if !classes.Assert(params.Class) {
-		return nil, fmt.Errorf("invalid class for character: %s", params.Class)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid", map[string]any{
+			"Subject": i18n.Localize("class"),
+			"Receive": params.Class,
+		})
 	}
 
 	if !races.Assert(params.Race) {
-		return nil, fmt.Errorf("invalid race for character: %s", params.Race)
+		// i18N -- register
+		return nil, i18n.NewError("error.invalid", map[string]any{
+			"Subject": i18n.Localize("race"),
+			"Receive": params.Race,
+		})
 	}
 
 	return &Character{

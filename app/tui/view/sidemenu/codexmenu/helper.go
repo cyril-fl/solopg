@@ -165,7 +165,7 @@ func (m *codexMenu) updatePageOnRedirection() {
 func getFormRaceOptions() []models.Item[string] {
 	var raceItems []models.Item[string]
 	for _, i := range races.List() {
-		raceItems = append(raceItems, models.NewItem(i.GetName(), "", i.GetName()))
+		raceItems = append(raceItems, models.NewItem(i18n.Localize(i.GetName()), "", i.GetName()))
 	}
 	return raceItems
 }
@@ -173,7 +173,7 @@ func getFormRaceOptions() []models.Item[string] {
 func getFormClassOptions() []models.Item[string] {
 	var classItems []models.Item[string]
 	for _, i := range classes.List() {
-		classItems = append(classItems, models.NewItem(i.GetName(), "", i.GetName()))
+		classItems = append(classItems, models.NewItem(i18n.Localize(i.GetName()), "", i.GetName()))
 	}
 	classItems = append(classItems, models.NewItem("None", "", ""))
 	return classItems
@@ -244,7 +244,6 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 
 	currentPage.setShowForm(false)
 
-	// TODO MEDIUM Verrifier que tout soit bien logger et persister dans le logger, et dans le codex.
 	return sendMsg()
 }
 

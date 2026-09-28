@@ -11,7 +11,7 @@ import (
 )
 
 /*
-TODO LOW, trouver un meilleur moyen de gerer les sizes,
+TODO LOW Trouver un meilleur moyen de gerer les sizes,
 trouver un moyen de les distibuer al'interieur des sous composant avec
 par exemple un contexte disponible, un peu comme Engine et States.
 */
@@ -48,7 +48,7 @@ func (m model) View() tea.View {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{i18n.Localize("save")}
+	footer := []string{i18n.Localize("cmd.ctrl+s:save")}
 	return append(footer, m.getMenuActiveElement().GetFooter()...)
 }
 
