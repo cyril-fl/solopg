@@ -28,6 +28,22 @@ func (e *Engine) UpdateLocation(newLocation *locations.Location) {
 	e.DiscoverLocation(newLocation)
 }
 
+/*
+REFACTOR NOTE
+Ce systeme de log la est le log:campaign / journal d'aventurier.
+Doit être étendu
+
+logger dedans ->
+- changement de location quand implementer
+- systeme day night si implementer
+- rencontre avec PNJ / mob
+- details de combat :
+  - dégat subit
+  - resultats
+
+- object urilisé / equipement enfilé / recu /acheter / vendu si implementer ect
+- quetes recus / terminé
+*/
 func (e *Engine) Log(message string) {
 	e.State.Log.AddEntry("System", message)
 }

@@ -10,7 +10,8 @@ import (
 	"solopg/app/domain/card/locations"
 	"solopg/app/services/game"
 	"solopg/app/services/i18n"
-	"solopg/app/services/mongo"
+	"solopg/app/services/mango"
+	"solopg/app/services/mango/repository"
 	"solopg/app/services/process"
 	"solopg/app/services/process/resolvearchives"
 	"solopg/app/services/process/resolvecampaign"
@@ -30,10 +31,16 @@ func ClearTui() {
 	cmd.Run()
 }
 
-func RunSession(db *mongo.Mongo) error {
-	saves, err := db.LoadCampaign()
+func RunSession(db *mango.Mongo) error {
+	repo := repository.NewCampaignRepo().SetDb(db)
+	
+	saves, err := repo.Load()
 	if err != nil {
-		return err
+		// i18N -- register
+		return i18n.NewError("error.unexpected:action", map[string]any{
+			"Action":  i18n.Localize("unexpected:action.load_campaigns"),
+			"Received": err.Error(),
+		})
 	}
 
 	ui := tui.New()
@@ -82,7 +89,7 @@ func RunSession(db *mongo.Mongo) error {
 		Run()
 }
 
-func buildEngine(db *mongo.Mongo, ctx *tui.Context) (*game.Engine, error) {
+func buildEngine(db *mango.Mongo, ctx *tui.Context) (*game.Engine, error) {
 	resolvedCampaign, err := resolvecampaign.ResolveCampaignFromContext(ctx)
 	if err != nil {
 		return nil, err

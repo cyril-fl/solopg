@@ -14,15 +14,15 @@ type RerollModel[T any] struct {
 	Limit   int
 	Options list.Model
 	Value   T
-	Draw    func() (T, error)
+	Roll    func() (T, error)
 }
 
-func NewRerollModel[T any](options list.Model, draw func() (T, error), limit int) RerollModel[T] {
-	value, err := draw()
+func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), limit int) RerollModel[T] {
+	value, err := handleRoll()
+	// i18N -- register
 	if err != nil {
-		// i18N -- register
 		panic(i18n.NewError("error.unexpected:action", map[string]any{
-			"Action": i18n.Localize("draw"),
+			"Action": i18n.Localize("unexpected:action.roll"),
 			"Error":  err,
 		}))
 	}
@@ -32,16 +32,16 @@ func NewRerollModel[T any](options list.Model, draw func() (T, error), limit int
 		Limit:   limit,
 		Options: options,
 		Value:   value,
-		Draw:    draw,
+		Roll:    handleRoll,
 	}
 }
 
 func (s *RerollModel[T]) Reroll() {
-	value, err := s.Draw()
+	value, err := s.Roll()
+	// i18N -- register
 	if err != nil {
-		// i18N -- register
 		panic(i18n.NewError("error.unexpected:action", map[string]any{
-			"Action": i18n.Localize("draw"),
+			"Action": i18n.Localize("unexpected:action.roll"),
 			"Error":  err,
 		}))
 	}

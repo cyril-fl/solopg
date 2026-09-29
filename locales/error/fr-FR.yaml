@@ -39,3 +39,9 @@ error.unexpected:save:
   other: "Erreur de sauvegarde :\n{{.Error}}"
 error.unexpected:value:
   other: "Type invalide pour \"{{.Subject}}\", attendu : {{.Expected}}, reçu : {{.Received}}"
+
+# Unexpected actions
+unexpected:action.load_campaigns:
+  other: "chargement des campagnes"
+unexpected:action.roll:
+  other: "lancer de dés"

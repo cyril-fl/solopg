@@ -77,10 +77,10 @@ func (f *textField[T]) Validate() error {
 	}
 
 	// i18N -- register
-	return i18n.NewError("error.unexpected:value", map[string]any{	
-		"Subject": f.Label(),
+	return i18n.NewError("error.unexpected:value", map[string]any{
+		"Subject":  f.Label(),
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
-		"Received":   f.Value(),
+		"Received": f.Value(),
 	})
 }
 
@@ -160,7 +160,7 @@ func (f *textField[T]) testRequireness() error {
 	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
 		// i18N -- register
 		return i18n.NewError("error.required", map[string]any{
-			"Subject": f.ID(),
+			"Subject":  f.ID(),
 			"Property": i18n.Localize(f.Label()),
 		})
 	}

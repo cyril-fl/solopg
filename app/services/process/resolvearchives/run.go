@@ -4,11 +4,14 @@ import (
 	"solopg/app/domain/campaign"
 	"solopg/app/domain/gameplay/codex"
 	"solopg/app/services/mongo"
+	"solopg/app/services/mongo/repository"
 	"solopg/app/types/id"
 )
 
 func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaign.Archives, error) {
-	maybeArchives, err := db.LoadArchivesByCampaignID(campaignID)
+	reppo := repository.NewArchivesRepository().SetDb(db)
+
+	maybeArchives, err := reppo.LoadArchivesByCampaignID(campaignID)
 	if err != nil {
 		return nil, err
 	}

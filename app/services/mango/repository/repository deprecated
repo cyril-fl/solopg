@@ -1,0 +1,159 @@
+// --- Repository --
+// Collection
+type Collection string
+
+func (c Collection) String() string {
+	return string(c)
+}
+
+// Document
+type Document interface {
+	Filter() bson.M
+	SetUpdatedAt(time.Time)
+}
+
+type MongoRepository struct {
+	db         *Mongo
+	collection Collection
+	timeout    time.Duration
+}
+
+type Repository interface {
+	GetDd() *Mongo
+	SetDb() *Mongo
+	GetTimeout() time.Duration
+	SetTimeout(timeout time.Duration)
+	GetCollection() Collection
+}
+
+func NewRepository(collection Collection) *MongoRepository {
+	return &MongoRepository{
+		collection: collection,
+	}
+}
+
+// Getters & Setters
+/* TODO
+VOIR Ppour creer un interface et un factotory si besoin , basé sur la colelctions
+*/
+func (r *MongoRepository) GetDb() *Mongo {
+	return r.db
+}
+
+func (r *MongoRepository) SetDb(db *Mongo) *MongoRepository {
+	r.db = db
+	return r
+}
+
+func (r *MongoRepository) GetTimeout() time.Duration {
+	if r.timeout > 0 {
+		return r.timeout
+	}
+	return 10 * time.Second
+}
+
+func (r *MongoRepository) SetTimeout(timeout time.Duration) *MongoRepository {
+	r.timeout = timeout
+	return r
+}
+
+func (r *MongoRepository) GetCollection() Collection {
+	return r.collection
+}
+
+// Methods
+func (r *MongoRepository) FromCollection[T any](
+	filter bson.M,
+	opts ...FindOption,
+) ([]T, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.GetTimeout())
+	defer cancel()
+
+	cursor, err := r.db.
+		GetCollection(r.collection).
+		Find(
+			ctx,
+			assertFilter(filter),
+			buildOptions(opts),
+		)
+
+	if err != nil {
+		return nil, i18n.NewError("error.loading", map[string]any{
+			"Subject": r.collection,
+			"Error":   err,
+		})
+	}
+
+	defer cursor.Close(ctx)
+
+	return decodeCursor[T](cursor, r.collection, ctx)
+}
+
+func (r *MongoRepository) ToCollection[T Document](data T) error {
+	ctx, cancel := context.WithTimeout(context.Background(), r.GetTimeout())
+	defer cancel()
+
+	data.SetUpdatedAt(time.Now().UTC())
+
+	_, err := r.db.
+		GetCollection(r.collection).
+		ReplaceOne(
+			ctx,
+			data.Filter(),
+			data,
+			options.
+				Replace().
+				SetUpsert(true),
+		)
+
+	if err != nil {
+		return i18n.NewError("error.unexpected:save", map[string]any{
+			"Error": err,
+		})
+	}
+
+	return nil
+}
+
+// Methods options
+type FindOption func(*options.FindOptions)
+
+func WithLimit(n int64) FindOption {
+	return func(o *options.FindOptions) { o.SetLimit(n) }
+}
+
+func WithSort(sort bson.D) FindOption {
+	return func(o *options.FindOptions) { o.SetSort(sort) }
+}
+
+func WithSkip(n int64) FindOption {
+	return func(o *options.FindOptions) { o.SetSkip(n) }
+}
+
+// Helpers
+func assertFilter(filter bson.M) bson.M {
+	if filter == nil {
+		return bson.M{}
+	}
+	return filter
+}
+
+func buildOptions(opts []FindOption) *options.FindOptions {
+	findOpts := options.Find()
+	for _, opt := range opts {
+		opt(findOpts)
+	}
+	return findOpts
+}
+
+func decodeCursor[T any](cursor *mongo.Cursor, collection Collection, ctx context.Context) ([]T, error) {
+	var data []T
+	if err := cursor.All(ctx, &data); err != nil {
+		return nil, i18n.NewError("error.loading", map[string]any{
+			"Subject": collection,
+			"Error":   err,
+		})
+	}
+
+	return data, nil
+}

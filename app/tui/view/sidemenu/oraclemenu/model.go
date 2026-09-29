@@ -104,7 +104,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 		return func() tea.Msg {
 			// i18N -- register
 			return tui.SendErrorMsg(i18n.NewError("error.unexpected:action:oracle", map[string]any{
-				"Action": i18n.Localize("roll"),
+				"Action": i18n.Localize("unexpected:action.roll"),
 				"Error":  err,
 			}))
 		}

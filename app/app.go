@@ -2,7 +2,9 @@ package src
 
 import (
 	"solopg/app/services/i18n"
-	"solopg/app/services/mongo"
+	"solopg/app/services/mango/repository"
+
+	"solopg/app/services/mango"
 	"solopg/app/utils/session"
 	"solopg/config"
 )
@@ -14,7 +16,7 @@ func Start() error {
 
 	session.ClearTui()
 
-	db := mongo.NewMongo()
+	db := mango.New()
 	db.Connect()
 	if db.HasErrors() {
 		return db.GetErrors()
@@ -27,9 +29,9 @@ func Start() error {
 
 func Try() error {
 
-	if err := i18n.Init(config.Current.I18n, ""); err != nil {
-		return err
-	}
+	// if err := i18n.Init(config.Current.I18n, ""); err != nil {
+	// 	return err
+	// }
 
-	return nil
+	return repository.TestLog()
 }

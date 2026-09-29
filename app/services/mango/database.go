@@ -1,4 +1,4 @@
-package mongo
+package mango
 
 import (
 	"context"
@@ -18,7 +18,7 @@ type Mongo struct {
 	err      []error
 }
 
-func NewMongo() *Mongo {
+func New() *Mongo {
 	return &Mongo{}
 }
 
@@ -43,6 +43,13 @@ func (db *Mongo) HasErrors() bool {
 
 func (db *Mongo) GetErrors() error {
 	return errors.Join(db.err...)
+}
+
+// Collection
+type Collection string
+
+func (c Collection) String() string {
+	return string(c)
 }
 
 // Helper
@@ -73,4 +80,8 @@ func (db *Mongo) close(ctx context.Context) error {
 
 func (db *Mongo) setErrors(err error) {
 	db.err = append(db.err, err)
+}
+
+func (db *Mongo) GetCollection(collection Collection) *mongo.Collection {
+	return db.instance.Collection(collection.String())
 }
