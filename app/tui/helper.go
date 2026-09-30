@@ -17,7 +17,7 @@ func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 		if current == nil {
 			return m, tea.Quit
 		}
-		if current, ok := current.(EscapeSupport); !ok && !current.HandlesEscape() {
+		if current, ok := current.(EscapeSupport); !ok || (ok && !current.HandlesEscape()) {
 			return m, tea.Quit
 		}
 	}
