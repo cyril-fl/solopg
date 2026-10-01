@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -14,7 +14,7 @@ import (
 func (m model) View() tea.View {
 	if m.err != nil {
 		cwd, err := os.Getwd()
-		errorLabel := i18n.NewError("error.unexpected", map[string]any{
+		errorLabel := i19n.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, m.err),
 		})
@@ -32,7 +32,7 @@ func (m model) View() tea.View {
 
 // REFACTOR LOW Modifier le footer pour qu'il devienne une "class" en soit.
 func mainFooter() []string {
-	return []string{i18n.Localize("cmd.ctrl+q:quit")}
+	return []string{i19n.Localize("cmd.ctrl+q:quit")}
 }
 
 type HasFooter interface {

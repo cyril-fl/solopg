@@ -2,7 +2,7 @@ package repository
 
 import (
 	"solopg/app/domain/campaign"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/mango"
 	"solopg/app/types/id"
 
@@ -43,14 +43,14 @@ func (r *CampaignRepo) FromCollectionByID(campaignID id.ID) (*campaign.Campaign,
 	}
 
 	if len(campaigns) == 0 {
-		return nil, i18n.NewError("error.not_found.id", map[string]any{
+		return nil, i19n.NewError("error.not_found.id", map[string]any{
 			"Subject": "Campaign",
 			"ID":      campaignID,
 		})
 	}
 
 	if len(campaigns) > 1 {
-		return nil, i18n.NewError("error.unexpected:value", map[string]any{
+		return nil, i19n.NewError("error.unexpected:value", map[string]any{
 			"Subject":  "Campaign",
 			"Expected": 1,
 			"Received": len(campaigns),

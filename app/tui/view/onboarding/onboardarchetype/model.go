@@ -2,7 +2,7 @@ package onboardarchetype
 
 import (
 	"solopg/app/domain/card/attributes/archetypes"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/utils/transform"
@@ -31,7 +31,7 @@ func NewModel[T archetypes.Archetype](data []T) model {
 			continue
 		}
 
-		label := transform.Capitalize(i18n.Localize(i.GetName()))
+		label := transform.Capitalize(i19n.Localize(i.GetName()))
 		items = append(items, models.NewItem(label, "", i))
 	}
 

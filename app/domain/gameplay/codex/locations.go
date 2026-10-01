@@ -5,7 +5,7 @@ import (
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/locations"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"strings"
 	"time"
 )
@@ -24,7 +24,7 @@ var tablelocations = "codex.locations"
 
 func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
 	return &LocationsTable{
-		TableData: newTable(i18n.Localize(tablelocations), entries),
+		TableData: newTable(i19n.Localize(tablelocations), entries),
 	}
 }
 
@@ -59,15 +59,15 @@ func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
 
 func (tb *LocationsTable) Summaries() []string {
 	if len(tb.Entries) == 0 {
-		return []string{i18n.Localize("codex.entry:empty")}
+		return []string{i19n.Localize("codex.entry:empty")}
 	}
 
 	content := strings.Builder{}
 	for _, entry := range tb.Entries {
 		if entry.Location == nil {
-			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
 		} else {
-			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Location.GetName()), i18n.Localize(entry.Location.GetDescription()))
+			fmt.Fprintf(&content, "%s — %s", i19n.Localize(entry.Location.GetName()), i19n.Localize(entry.Location.GetDescription()))
 		}
 		content.WriteString("\n\n")
 	}
@@ -92,16 +92,16 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 
 	if values["name"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("location"),
-			"Property": i18n.Localize("name"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("location"),
+			"Property": i19n.Localize("name"),
 		}))
 	}
 	if values["description"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("location"),
-			"Property": i18n.Localize("description"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("location"),
+			"Property": i19n.Localize("description"),
 		}))
 	}
 
@@ -114,7 +114,7 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 
 func (tb *LocationsTable) Ensure() {
 	if tb.name == "" {
-		tb.name = i18n.Localize(tablelocations)
+		tb.name = i19n.Localize(tablelocations)
 	}
 	if tb.Entries == nil {
 		tb.Entries = []LocationsEntry{}

@@ -6,8 +6,8 @@ import (
 	"os"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/characters/races"
-	"solopg/app/services/i18n"
-	"solopg/app/services/process/generatestats"
+	"solopg/app/services/factory/millstats"
+	"solopg/app/services/i19n"
 	"strings"
 	"time"
 )
@@ -28,7 +28,7 @@ func NewBeastiaryTable(entries []BeastiaryEntry) *BeastiaryTable {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{
-		TableData: newTable(i18n.Localize(tablebeast), entries),
+		TableData: newTable(i19n.Localize(tablebeast), entries),
 	}
 }
 
@@ -45,15 +45,15 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
-	generator := generatestats.NewGenerator(values)
-	generator.GenerateFromValues(generatestats.FromValuesParams{
+	generator := millstats.NewWithValues(values)
+	generator.GenerateFromValues(millstats.FromValuesParams{
 		Randomness: false,
 	})
 
 	if generator.HasError() {
 		// i18N -- register
 		cwd, err := os.Getwd()
-		return i18n.NewError("error.unexpected", map[string]any{
+		return i19n.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, generator.GetError()),
 		})
@@ -78,8 +78,8 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 
 	if err := races.AddInConfig(raw); err != nil {
 		// i18N -- register
-		return i18n.NewError("error.unexpected", map[string]any{
-			"Subject": i18n.Localize("race"),
+		return i19n.NewError("error.unexpected", map[string]any{
+			"Subject": i19n.Localize("race"),
 			"Error":   err,
 		})
 	}
@@ -99,22 +99,22 @@ viewport (mettre la liste et prevoir une fonction de la redu pour une enum ou un
 */
 func (tb *BeastiaryTable) Summaries() []string {
 	if len(tb.Entries) == 0 {
-		return []string{i18n.Localize("codex.entry:empty")}
+		return []string{i19n.Localize("codex.entry:empty")}
 	}
 
 	content := strings.Builder{}
 	for _, entry := range tb.Entries {
 		if entry.Race == nil {
-			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
 		} else {
-			fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.beastiary:entry", map[string]any{
-				"Name":        i18n.Localize(entry.Race.GetName()),
-				"Description": i18n.Localize(entry.Race.GetDescription()),
+			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.beastiary:entry", map[string]any{
+				"Name":        i19n.Localize(entry.Race.GetName()),
+				"Description": i19n.Localize(entry.Race.GetDescription()),
 			}))
 
 			if len(entry.Race.GetBonus()) > 0 {
 				modifiersToStats := stats.New(entry.Race.GetBonus())
-				fmt.Fprintf(&content, "%s\n", i18n.Localize("stats.entry", modifiersToStats.MappedString()))
+				fmt.Fprintf(&content, "%s\n", i19n.Localize("stats.entry", modifiersToStats.MappedString()))
 			}
 		}
 		content.WriteString("\n\n")
@@ -129,17 +129,17 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 
 	if entry["name"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("race"),
-			"Property": i18n.Localize("property.name"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("race"),
+			"Property": i19n.Localize("property.name"),
 		}))
 	}
 
 	if entry["description"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("race"),
-			"Property": i18n.Localize("property.description"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("race"),
+			"Property": i19n.Localize("property.description"),
 		}))
 	}
 
@@ -151,7 +151,7 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 }
 
 func (tb *BeastiaryTable) Ensure() {
-	ensureEmbeddedTable(i18n.Localize(tablebeast), &tb.TableData)
+	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.TableData)
 	tb.syncWithConfig()
 }
 

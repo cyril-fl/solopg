@@ -2,7 +2,7 @@ package onboardforgecharacter
 
 import (
 	"solopg/app/domain/card/attributes/stats"
-	"solopg/app/services/process/generatestats"
+	"solopg/app/services/factory/millstats"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -12,7 +12,7 @@ func handleWindowResize(m *model, msg tea.WindowSizeMsg) {
 }
 
 func drowBuild() ([]stats.Modifier, error) {
-	generator := generatestats.NewValuelessGenerator()
+	generator := millstats.New()
 	generator.GenerateFromOracle()
 
 	if generator.HasError() {

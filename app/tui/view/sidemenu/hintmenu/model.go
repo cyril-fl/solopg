@@ -2,7 +2,7 @@ package hintmenu
 
 import (
 	"solopg/app/domain/gameplay/hint"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
@@ -19,7 +19,7 @@ func NewSideMenu(size size.Size, focused bool) *HintMenu {
 	items := make([]list.Item, 0)
 
 	for _, hint := range hint.List() {
-		name := i18n.Localize(hint.Name())
+		name := i19n.Localize(hint.Name())
 		items = append(items, models.NewItem(name, "", hint))
 	}
 
@@ -86,8 +86,8 @@ func (m *HintMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 			// i18N -- register
-			return tui.SendErrorMsg(i18n.NewError("error.invalid", map[string]any{
-				"Subject":  i18n.Localize("hint"),
+			return tui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
+				"Subject":  i19n.Localize("hint"),
 				"Received": selected,
 			}))
 		}

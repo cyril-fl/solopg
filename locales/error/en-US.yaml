@@ -25,6 +25,8 @@ error.not_found:id-error:
   other: "{{.Subject}} {{.ID}} not found:\n{{.Error}}"
 error.not_found:on_save:
   other: "Save function is not configured"
+error.not_implemented:
+  other: "{{.Function}} function is not configured for \"{{.Subject}}\""
 
 # Required
 error.required:
@@ -39,3 +41,13 @@ error.unexpected:save:
   other: "Save error:\n{{.Error}}"
 error.unexpected:value:
   other: "Unexpected \"{{.Subject}}\" value type: {{.Type}}"
+
+# Unexpected actions
+unexpected:action.build_engine:
+  other: "building engine"
+unexpected:action.load_archives:
+  other: "loading archives"
+unexpected:action.load_campaigns:
+  other: "loading campaigns"
+unexpected:action.roll:
+  other: "rolling dice"

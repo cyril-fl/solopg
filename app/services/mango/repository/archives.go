@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"errors"
+	"os"
 	"solopg/app/domain/campaign"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/mango"
 	"solopg/app/types/id"
 
@@ -39,18 +41,25 @@ func (r *ArchivesRepo) Load() ([]campaign.Archives, error) {
 func (r *ArchivesRepo) LoadByCampaignID(campaignID id.ID) (*campaign.Archives, error) {
 	archives, err := r.fromCollection[campaign.Archives](bson.M{"campaignId": campaignID})
 	if err != nil {
-		return nil, err
-	}
-
-	if len(archives) == 0 {
-		return nil, i18n.NewError("error.not_found.id", map[string]any{
-			"Subject": "Archives",
-			"ID":      campaignID,
+		cwd, cwderr := os.Getwd()
+		return nil, i19n.NewError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, err),
 		})
 	}
 
+	/*
+		NOTE If no archives are found, returning (nil, nil) is perfectly fine.
+		That's the reason why return type is *campaign.Archives and not campaign.Archives.
+		If not the whished behavior, the error should be handled appropriately in
+		the calling function.
+	*/
+	if len(archives) == 0 {
+		return nil, nil
+	}
+
 	if len(archives) > 1 {
-		return nil, i18n.NewError("error.unexpected:value", map[string]any{
+		return nil, i19n.NewError("error.unexpected:value", map[string]any{
 			"Subject":  "Archives",
 			"Expected": 1,
 			"Received": len(archives),

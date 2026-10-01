@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"solopg/app/domain/gameplay/dice"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/yaml"
 	"solopg/app/utils/transform"
 	"solopg/config"
@@ -42,8 +42,8 @@ func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.loading:folder", map[string]any{
-			"Subject": i18n.Localize("oracle"),
+		return i19n.NewError("error.loading:folder", map[string]any{
+			"Subject": i19n.Localize("oracle"),
 			"Folder":  folderConfigPath,
 			"Error":   err,
 		})
@@ -61,8 +61,8 @@ func handleLoadFromFiles(files []string) []error {
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
 			// i18N -- register
-			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
-				"Subject": i18n.Localize("oracle"),
+			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
+				"Subject": i19n.Localize("oracle"),
 				"File":    file,
 				"Error":   err,
 			}))
@@ -78,25 +78,25 @@ func loadFromFile(fileAddress string) error {
 
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.loading", map[string]any{
-			"Subject": transform.Capitalize(i18n.Localize("oracle")),
+		return i19n.NewError("error.loading", map[string]any{
+			"Subject": transform.Capitalize(i19n.Localize("oracle")),
 			"Error":   err,
 		})
 	}
 
 	if params.Dice <= 0 {
 		// i18N -- register
-		return i18n.NewError("error.invalid", map[string]any{
-			"Subject":  transform.Capitalize(i18n.Localize("oracle")),
+		return i19n.NewError("error.invalid", map[string]any{
+			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
 			"Received": params.Name,
 		})
 	}
 
 	if len(params.Intervals) == 0 {
 		// i18N -- register
-		return i18n.NewError("error.required", map[string]any{
-			"Subject":  transform.Capitalize(i18n.Localize("oracle")),
-			"Property": i18n.Localize("intervals"),
+		return i19n.NewError("error.required", map[string]any{
+			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
+			"Property": i19n.Localize("intervals"),
 		})
 	}
 
@@ -134,8 +134,8 @@ func GetByName(name string) (*Oracle, error) {
 	}
 
 	// i18N -- register
-	return nil, i18n.NewError("error.not_found.id", map[string]any{
-		"Subject": transform.Capitalize(i18n.Localize("oracle")),
+	return nil, i19n.NewError("error.not_found.id", map[string]any{
+		"Subject": transform.Capitalize(i19n.Localize("oracle")),
 		"ID":      name,
 	})
 }
@@ -154,8 +154,8 @@ func List() []Oracle {
 		if err := loadFromSource(); err != nil {
 			// i18N -- register
 
-			i18n.NewError("error.loading", map[string]any{
-				"Subject": transform.Capitalize(i18n.Localize("oracle")),
+			i19n.NewError("error.loading", map[string]any{
+				"Subject": transform.Capitalize(i19n.Localize("oracle")),
 				"Error":   err,
 			})
 			return nil
@@ -185,8 +185,8 @@ func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {
 		// i18N -- register
-		return nil, i18n.NewError("error.loading:folder", map[string]any{
-			"Subject": transform.Capitalize(i18n.Localize("oracle")),
+		return nil, i19n.NewError("error.loading:folder", map[string]any{
+			"Subject": transform.Capitalize(i19n.Localize("oracle")),
 			"Folder":  path,
 			"Error":   err,
 		})
@@ -197,8 +197,8 @@ func ListFromFolder(path string) ([]string, error) {
 	for _, file := range list {
 		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
 			// i18N -- register
-			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
-				"Subject": transform.Capitalize(i18n.Localize("oracle")),
+			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
+				"Subject": transform.Capitalize(i19n.Localize("oracle")),
 				"File":    file,
 				"Error":   err,
 			}))
@@ -232,7 +232,7 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 			res, ok := interval.Result.(T)
 			if !ok {
 				// i18N -- register
-				return nil, i18n.NewError("error.unexpected:value", map[string]any{
+				return nil, i19n.NewError("error.unexpected:value", map[string]any{
 					"Subject":  o.name,
 					"Expected": fmt.Sprintf("%T", res),
 					"Received": fmt.Sprintf("%T", interval.Result),
@@ -248,7 +248,7 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 	}
 
 	// i18N -- register
-	return nil, i18n.NewError("error.not_found.id", map[string]any{
+	return nil, i19n.NewError("error.not_found.id", map[string]any{
 		"Subject": o.name,
 		"ID":      value,
 	})

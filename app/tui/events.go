@@ -1,7 +1,7 @@
 package tui
 
 import (
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -46,7 +46,7 @@ type SaveMsg struct {
 func SendSaveMsg(save func() error) tea.Cmd {
 	return func() tea.Msg {
 		if save == nil {
-			return SaveMsg{Err: i18n.NewError("error.not_found:on_save")}
+			return SaveMsg{Err: i19n.NewError("error.not_found:on_save")}
 		}
 		return SaveMsg{Err: save()}
 	}

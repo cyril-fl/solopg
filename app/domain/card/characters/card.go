@@ -10,7 +10,7 @@ import (
 	"solopg/app/domain/card/characters/wallet"
 	"solopg/app/domain/card/objects"
 	"solopg/app/domain/card/objects/equipment"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 )
 
 type Character struct {
@@ -61,7 +61,7 @@ func New(params Template) (*Character, error) {
 
 	if newCard == nil {
 		// i18N -- register
-		return nil, i18n.NewError("error.invalid:new", map[string]any{
+		return nil, i19n.NewError("error.invalid:new", map[string]any{
 			"Subject": params.Name,
 			"Error":   err,
 		})
@@ -69,16 +69,16 @@ func New(params Template) (*Character, error) {
 
 	if !classes.Assert(params.Class) {
 		// i18N -- register
-		return nil, i18n.NewError("error.invalid", map[string]any{
-			"Subject": i18n.Localize("class"),
+		return nil, i19n.NewError("error.invalid", map[string]any{
+			"Subject": i19n.Localize("class"),
 			"Receive": params.Class,
 		})
 	}
 
 	if !races.Assert(params.Race) {
 		// i18N -- register
-		return nil, i18n.NewError("error.invalid", map[string]any{
-			"Subject": i18n.Localize("race"),
+		return nil, i19n.NewError("error.invalid", map[string]any{
+			"Subject": i19n.Localize("race"),
 			"Receive": params.Race,
 		})
 	}

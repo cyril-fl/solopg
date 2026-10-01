@@ -1,7 +1,7 @@
 package oraclemenu
 
 import (
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/utils/transform"
 
 	tea "charm.land/bubbletea/v2"
@@ -10,7 +10,7 @@ import (
 
 // - View - //
 func (m *OracleMenu) GetMenuView() string {
-	title := transform.Uppercase(i18n.Localize(m.id))
+	title := transform.Uppercase(i19n.Localize(m.id))
 	title = lipgloss.NewStyle().Bold(true).Render(title)
 
 	return lipgloss.JoinVertical(
@@ -27,7 +27,7 @@ func (m *OracleMenu) GetView() string {
 
 func (m *OracleMenu) GetFooter() []string {
 	return []string{
-		i18n.Localize("cmd.shift+enter:roll"),
+		i19n.Localize("cmd.shift+enter:roll"),
 	}
 }
 

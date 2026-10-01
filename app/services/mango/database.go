@@ -85,3 +85,13 @@ func (db *Mongo) setErrors(err error) {
 func (db *Mongo) GetCollection(collection Collection) *mongo.Collection {
 	return db.instance.Collection(collection.String())
 }
+
+// Init
+func Init() (db *Mongo, err error) {
+	db = New()
+	db.Connect()
+	if db.HasErrors() {
+		return nil, db.GetErrors()
+	}
+	return db, nil
+}

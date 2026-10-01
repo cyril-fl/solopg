@@ -6,7 +6,7 @@ import (
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/objects"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"strings"
 	"time"
 )
@@ -28,7 +28,7 @@ var tableobject = "codex.objects"
 
 func NewObjectsTable(entries []ObjectEntry) *ObjectsTable {
 	return &ObjectsTable{
-		TableData: newTable(i18n.Localize(tableobject), entries),
+		TableData: newTable(i19n.Localize(tableobject), entries),
 	}
 }
 
@@ -57,8 +57,8 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.invalid:new", map[string]any{
-			"Subject": i18n.Localize("item"),
+		return i19n.NewError("error.invalid:new", map[string]any{
+			"Subject": i19n.Localize("item"),
 			"Error":   err,
 		})
 	}
@@ -70,15 +70,15 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 
 func (tb *ObjectsTable) Summaries() []string {
 	if len(tb.Entries) == 0 {
-		return []string{i18n.Localize("codex.entry:empty")}
+		return []string{i19n.Localize("codex.entry:empty")}
 	}
 
 	content := strings.Builder{}
 	for _, entry := range tb.Entries {
 		if entry.Object == nil {
-			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
 		} else {
-			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Object.GetName()), i18n.Localize(entry.Object.GetDescription()))
+			fmt.Fprintf(&content, "%s — %s", i19n.Localize(entry.Object.GetName()), i19n.Localize(entry.Object.GetDescription()))
 		}
 		content.WriteString("\n\n")
 	}
@@ -92,15 +92,15 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 
 	if entry["name"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("item"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("item"),
 			"Property": "name",
 		}))
 	}
 	if entry["description"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("item"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("item"),
 			"Property": "description",
 		}))
 	}
@@ -125,5 +125,5 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 }
 
 func (tb *ObjectsTable) Ensure() {
-	ensureEmbeddedTable(i18n.Localize(tableobject), &tb.TableData)
+	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.TableData)
 }

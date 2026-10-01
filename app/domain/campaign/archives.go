@@ -3,6 +3,7 @@ package campaign
 import (
 	"solopg/app/domain/gameplay/codex"
 	"solopg/app/types/id"
+	"solopg/app/types/interfaces"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -44,5 +45,29 @@ func (a *Archives) SetUpdatedAt(t time.Time) {
 func (a *Archives) Filter() bson.M {
 	return bson.M{
 		"campaignId": a.CampaignID,
+	}
+}
+
+func (a *Archives) EnsureInitialized() {
+	if a.Codex == nil {
+		a.Codex = codex.New()
+	}
+
+	if a.Journal == nil {
+		a.Journal = NewJournal([]Entry{})
+	}
+
+	if a.Log == nil {
+		a.Log = NewJournal([]Entry{})
+	}
+
+	list := []interfaces.Initializable{
+		a.Codex,
+		a.Journal,
+		a.Log,
+	}
+
+	for _, archive := range list {
+		archive.EnsureInitialized()
 	}
 }

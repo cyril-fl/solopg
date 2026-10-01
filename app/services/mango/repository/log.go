@@ -58,6 +58,6 @@ func TestLog() error {
 	defer db.Disconnect()
 
 	repo := NewLogSystemRepos().SetDb(db)
-	
+
 	return repo.Register(log)
 }

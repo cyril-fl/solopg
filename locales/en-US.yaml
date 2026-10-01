@@ -42,6 +42,8 @@ onboarding:
   other: "Create character"
 
 # Campaign
+archive:
+  other: "archives"
 campaign:
   other: "save"
 campaign:new:

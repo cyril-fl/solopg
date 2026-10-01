@@ -3,34 +3,89 @@ package resolvearchives
 import (
 	"solopg/app/domain/campaign"
 	"solopg/app/domain/gameplay/codex"
-	"solopg/app/services/mongo"
-	"solopg/app/services/mongo/repository"
+	"solopg/app/services/i19n"
+	"solopg/app/services/mango"
+	"solopg/app/services/mango/repository"
+	"solopg/app/services/process/processkit"
 	"solopg/app/types/id"
 )
 
-func LoadArchivesFromDbByCampaignID(db *mongo.Mongo, campaignID id.ID) (*campaign.Archives, error) {
-	reppo := repository.NewArchivesRepository().SetDb(db)
+type process struct {
+	processkit.Process
+	cache
 
-	maybeArchives, err := reppo.LoadArchivesByCampaignID(campaignID)
+	db         *mango.Mongo
+	campaignID id.ID
+}
+
+type cache struct {
+	loadedArchives *campaign.Archives
+}
+
+func Process(db *mango.Mongo, campaignID id.ID) *process {
+	return &process{
+		db:         db,
+		campaignID: campaignID,
+	}
+}
+
+func (p *process) Run() {
+	p.loadArchives()
+	p.ensureArchives()
+	p.ensureArchivesInitialized()
+}
+
+func (p *process) GetResult() *campaign.Archives {
+	return p.cache.loadedArchives
+}
+
+// Helpers
+func (p *process) loadArchives() {
+	reppo := repository.NewArchivesRepo()
+	reppo.SetDb(p.db)
+
+	result, err := reppo.LoadByCampaignID(p.campaignID)
 	if err != nil {
-		return nil, err
+		p.SetErr(err)
+		return
 	}
 
-	var archives *campaign.Archives
-	if maybeArchives != nil {
-		archives = maybeArchives
-	} else {
-		archives = campaign.NewArchives(campaign.ArchivesTemplate{
-			CampaignID: campaignID,
-			Codex:      codex.New(),
-			Journal:    campaign.NewJournal([]campaign.Entry{}),
-			Log:        campaign.NewJournal([]campaign.Entry{}),
+	p.cache.loadedArchives = result
+}
+
+func (p *process) ensureArchives() {
+	if p.HasErr() {
+		return
+	}
+
+	if p.cache.loadedArchives != nil {
+		return
+	}
+
+	p.cache.loadedArchives = campaign.NewArchives(campaign.ArchivesTemplate{
+		CampaignID: p.campaignID,
+		Codex:      codex.New(),
+		Journal:    campaign.NewJournal([]campaign.Entry{}),
+		Log:        campaign.NewJournal([]campaign.Entry{}),
+	})
+}
+
+func (p *process) ensureArchivesInitialized() {
+	if p.HasErr() {
+		return
+	}
+
+	if p.cache.loadedArchives == nil {
+		err := i19n.NewError("error:unexpected:action", map[string]any{
+			"Action": i19n.Localize("unexpected:action.load_archives"),
+			"Error": i19n.Localize("error.not_found", map[string]any{
+				"Subject": i19n.Localize("archives"),
+			}),
 		})
+
+		p.SetErr(err)
+		return
 	}
 
-	archives.Codex.EnsureInitialized()
-	archives.Journal.EnsureInitialized()
-	archives.Log.EnsureInitialized()
-
-	return archives, nil
+	p.cache.loadedArchives.EnsureInitialized()
 }

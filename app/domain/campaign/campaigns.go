@@ -6,7 +6,7 @@ import (
 
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/locations"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/types/id"
 	"solopg/app/utils/transform"
 
@@ -41,14 +41,14 @@ func New(params Template) *Campaign {
 func (c *Campaign) Title() string {
 	return fmt.Sprintf("%s | %s | %s",
 		c.Player.Name,
-		transform.Capitalize(i18n.Localize(c.Player.Race)),
-		transform.Capitalize(i18n.Localize(c.Player.Class)),
+		transform.Capitalize(i19n.Localize(c.Player.Race)),
+		transform.Capitalize(i19n.Localize(c.Player.Class)),
 	)
 }
 
 func (c *Campaign) Description() string {
-	return i18n.Localize("campaign.description", map[string]any{
-		"Location": i18n.Localize(c.CurrentLocation.Name),
+	return i19n.Localize("campaign.description", map[string]any{
+		"Location": i19n.Localize(c.CurrentLocation.Name),
 		"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
 	})
 }

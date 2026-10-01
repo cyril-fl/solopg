@@ -11,7 +11,7 @@ import (
 	"solopg/app/domain/card/characters/wallet"
 	"solopg/app/domain/card/objects"
 	"solopg/app/domain/card/objects/equipment"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/yaml"
 	"solopg/config"
 )
@@ -37,7 +37,7 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return i18n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return i19n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -64,8 +64,8 @@ func loadFromFile(fileAddress string) error {
 
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.loading", map[string]any{
-			"Subject": i18n.Localize("location"),
+		return i19n.NewError("error.loading", map[string]any{
+			"Subject": i19n.Localize("location"),
 			"Error":   err,
 		})
 	}
@@ -86,8 +86,8 @@ func List() []Character {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
 			// i18N -- register
-			i18n.NewError("error.loading", map[string]any{
-				"Subject": i18n.Localize("dice"),
+			i19n.NewError("error.loading", map[string]any{
+				"Subject": i19n.Localize("dice"),
 				"Error":   err,
 			})
 			return nil
@@ -114,7 +114,7 @@ func newFromYaml(config yamlConfig) *Character {
 	if err != nil {
 		// i18N -- register
 		cwd, cwderr := os.Getwd()
-		i18n.NewError("error.unexpected", map[string]any{
+		i19n.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})
@@ -137,7 +137,7 @@ func newFromYaml(config yamlConfig) *Character {
 	if err != nil {
 		// i18N -- register
 		cwd, cwderr := os.Getwd()
-		i18n.NewError("error.unexpected", map[string]any{
+		i19n.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})

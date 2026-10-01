@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/services/game"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"solopg/app/tui/view/sidemenu"
 	"solopg/app/tui/view/sidemenu/codexmenu"
@@ -24,7 +24,7 @@ import (
 // - Init - //
 func initTextarea() textarea.Model {
 	ta := textarea.New()
-	ta.Placeholder = i18n.Localize("chat.input:placeholder")
+	ta.Placeholder = i19n.Localize("chat.input:placeholder")
 	ta.SetVirtualCursor(false)
 	ta.Focus()
 
@@ -71,13 +71,16 @@ func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
 		Height: oracleMenuHeight + 5,
 	}
 
+	codex := engine.State.Codex
+	codex.EnsureInitialized()
+
 	return []sidemenu.MenuItem{
 		oraclemenu.NewSideMenu(size, true),
 		dicemenu.NewSideMenu(size, false),
 		hintmenu.NewSideMenu(size, false),
 		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
 			Size:  size,
-			Codex: engine.State.Codex.EnsureInitialized(),
+			Codex: codex,
 		}, false),
 	}
 }
@@ -132,7 +135,7 @@ func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
 		// i18N -- register
-		err := i18n.NewError("error.unexpected:save", map[string]any{
+		err := i19n.NewError("error.unexpected:save", map[string]any{
 			"Error": msg.Err,
 		})
 		// LOG autrement
@@ -140,7 +143,7 @@ func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
 	} else {
 
 		// Log aussi les succes
-		log := i18n.Localize("campaign:success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
+		log := i19n.Localize("campaign:success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
 
 		m.engine.Log(log)
 		m.journal = append(m.journal, log)
@@ -241,7 +244,7 @@ func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
 
 // Dice Rolled
 func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
-	message := i18n.Localize("dice.roll:result", map[string]any{
+	message := i19n.Localize("dice.roll:result", map[string]any{
 		"Dice":  msg.Dice,
 		"Value": msg.Value,
 	})
@@ -256,10 +259,10 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
 	localized := make([]string, 0, len(msg.Result))
 	for _, hint := range msg.Result {
-		localized = append(localized, i18n.Localize(hint))
+		localized = append(localized, i19n.Localize(hint))
 	}
 
-	message := i18n.Localize("hint.roll:result", map[string]any{
+	message := i19n.Localize("hint.roll:result", map[string]any{
 		"Value": strings.Join(localized, ", "),
 	})
 
@@ -271,7 +274,7 @@ func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
 
 // Oracle Rolled
 func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
-	message := i18n.Localize("oracle.roll:result", map[string]any{
+	message := i19n.Localize("oracle.roll:result", map[string]any{
 		"Roll":     msg.Result.Roll,
 		"Value":    msg.Result.Result,
 		"Critical": msg.Result.Critical,

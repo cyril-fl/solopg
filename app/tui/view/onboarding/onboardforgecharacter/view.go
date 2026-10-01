@@ -2,7 +2,7 @@ package onboardforgecharacter
 
 import (
 	"fmt"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/utils/transform"
 	"strings"
 
@@ -12,15 +12,15 @@ import (
 func (m model) View() tea.View {
 	content := strings.Builder{}
 
-	fmt.Fprintf(&content, "%s: ", transform.Capitalize(i18n.Localize("stats")))
+	fmt.Fprintf(&content, "%s: ", transform.Capitalize(i19n.Localize("stats")))
 
 	for _, modifier := range m.reroll.Value {
-		label := i18n.Localize("stat." + string(modifier.Stat))
+		label := i19n.Localize("stat." + string(modifier.Stat))
 		fmt.Fprintf(&content, "%s: %d ", label, modifier.Value)
 	}
 
 	content.WriteString(" | ")
-	fmt.Fprintf(&content, "%s: %d ", transform.Capitalize(i18n.Localize("attempt")), m.reroll.Attempt)
+	fmt.Fprintf(&content, "%s: %d ", transform.Capitalize(i19n.Localize("attempt")), m.reroll.Attempt)
 
 	content.WriteString("\n\n")
 	content.WriteString(m.reroll.Options.View())

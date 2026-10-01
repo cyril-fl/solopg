@@ -3,7 +3,7 @@ package portal
 import (
 	"solopg/app/domain/card/locations"
 	"solopg/app/domain/gameplay/dice"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 )
 
 // - Portal - //
@@ -12,9 +12,9 @@ func Teleport() (*locations.Location, error) {
 
 	if len(list) == 0 {
 		// i18N -- register
-		return nil, i18n.NewError("error.required", map[string]any{
-			"Subject":  i18n.Localize("location"),
-			"Property": i18n.Localize("list"),
+		return nil, i19n.NewError("error.required", map[string]any{
+			"Subject":  i19n.Localize("location"),
+			"Property": i19n.Localize("list"),
 		})
 	}
 

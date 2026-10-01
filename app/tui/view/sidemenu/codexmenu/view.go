@@ -2,7 +2,7 @@ package codexmenu
 
 import (
 	"fmt"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/utils/transform"
 	"strings"
 
@@ -12,7 +12,7 @@ import (
 
 // - View - //
 func (m *codexMenu) GetMenuView() string {
-	title := transform.Uppercase(i18n.Localize(m.id))
+	title := transform.Uppercase(i19n.Localize(m.id))
 	title = lipgloss.NewStyle().Bold(true).Render(title)
 
 	return lipgloss.JoinVertical(
@@ -27,9 +27,9 @@ func (m *codexMenu) GetView() string {
 	page := m.getCurrentPage()
 	if page == nil {
 		// i18N -- register
-		return i18n.
+		return i19n.
 			NewError("error.not_found", map[string]any{
-				"Subject": transform.Capitalize(i18n.Localize("page")),
+				"Subject": transform.Capitalize(i19n.Localize("page")),
 			}).
 			Error()
 	}
@@ -48,8 +48,8 @@ func (m *codexMenuItem) GetItemView() string {
 }
 
 func (m *codexMenuItem) GetPageHeader() string {
-	return fmt.Sprintf("%s\n\n", i18n.Localize("sidemenu.title:page", map[string]any{
-		"Submenu": transform.Capitalize(i18n.Localize(m.id)),
+	return fmt.Sprintf("%s\n\n", i19n.Localize("sidemenu.title:page", map[string]any{
+		"Submenu": transform.Capitalize(i19n.Localize(m.id)),
 	}))
 }
 
@@ -58,9 +58,9 @@ func (m *codexMenu) GetFooter() []string {
 	footer := []string{}
 
 	if m.IsOpen() {
-		footer = append(footer, i18n.Localize("cmd.shift+enter:add"))
+		footer = append(footer, i19n.Localize("cmd.shift+enter:add"))
 	} else {
-		footer = append(footer, i18n.Localize("cmd.shift+enter:open"))
+		footer = append(footer, i19n.Localize("cmd.shift+enter:open"))
 	}
 
 	return footer

@@ -1,6 +1,11 @@
 package tui
 
-import tea "charm.land/bubbletea/v2"
+import (
+	"os"
+	"os/exec"
+
+	tea "charm.land/bubbletea/v2"
+)
 
 type Ui struct {
 	list *contextStepList
@@ -48,4 +53,10 @@ func (ui *Ui) Run() error {
 	_, err := ui.program.Run()
 
 	return err
+}
+
+func Clear() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }

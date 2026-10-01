@@ -4,7 +4,7 @@ import (
 	"solopg/app/domain/card/attributes/description"
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/variety"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"strings"
 )
 
@@ -27,11 +27,11 @@ func NewCard(params NewCardParams) (*Card, error) {
 		// i18N -- register
 		valid := make([]string, 0, len(rarity.List()))
 		for _, r := range rarity.List() {
-			valid = append(valid, i18n.Localize(r.String()))
+			valid = append(valid, i19n.Localize(r.String()))
 		}
 
-		return nil, i18n.NewError("error.unexpected:value", map[string]any{
-			"Subject":  i18n.Localize("rarity"),
+		return nil, i19n.NewError("error.unexpected:value", map[string]any{
+			"Subject":  i19n.Localize("rarity"),
 			"Expected": strings.Join(valid, ", "),
 			"Received": params.Rarity,
 		})
@@ -41,11 +41,11 @@ func NewCard(params NewCardParams) (*Card, error) {
 		// i18N -- register
 		valid := make([]string, 0, len(rarity.List()))
 		for _, v := range variety.List() {
-			valid = append(valid, i18n.Localize(v.String()))
+			valid = append(valid, i19n.Localize(v.String()))
 		}
 
-		return nil, i18n.NewError("error.unexpected:value", map[string]any{
-			"Subject":  i18n.Localize("variety"),
+		return nil, i19n.NewError("error.unexpected:value", map[string]any{
+			"Subject":  i19n.Localize("variety"),
 			"Expected": strings.Join(valid, ", "),
 			"Received": params.Variety,
 		})

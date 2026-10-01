@@ -2,7 +2,7 @@ package form
 
 import (
 	"errors"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 
 	tea "charm.land/bubbletea/v2"
@@ -92,7 +92,7 @@ func (m *Form) Validate() *Form {
 
 	if hasErrors {
 		// i18N -- register
-		m.SetError(i18n.NewError("error.invalid:form", map[string]any{
+		m.SetError(i19n.NewError("error.invalid:form", map[string]any{
 			"Error": errors.Join(m.GetFieldsErrors()...),
 		}))
 	}

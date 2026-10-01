@@ -2,7 +2,7 @@ package loadsave
 
 import (
 	"solopg/app/domain/campaign"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui/models"
 	"solopg/app/utils/transform"
 
@@ -11,7 +11,7 @@ import (
 
 func makeItems(data []campaign.Campaign) []list.Item {
 	items := []list.Item{
-		models.NewItem[*campaign.Campaign](transform.Capitalize(i18n.Localize("campaign:new")), "", nil),
+		models.NewItem[*campaign.Campaign](transform.Capitalize(i19n.Localize("campaign:new")), "", nil),
 	}
 
 	for _, s := range data {

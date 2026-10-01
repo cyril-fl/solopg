@@ -3,7 +3,7 @@ package field
 import (
 	"fmt"
 	"solopg/app/components/form"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/types/direction"
@@ -83,8 +83,8 @@ func (f *selectField[T]) Validate() error {
 	}
 
 	// i18N -- register
-	return i18n.NewError("error.unexpected:value", map[string]any{
-		"Subject":  i18n.Localize("field"),
+	return i19n.NewError("error.unexpected:value", map[string]any{
+		"Subject":  i19n.Localize("field"),
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
 		"Received": f.Value(),
 	})
@@ -93,7 +93,7 @@ func (f *selectField[T]) Validate() error {
 func (f *selectField[T]) testRequireness() error {
 	if f.required && f.Value() == nil {
 		// i18N -- register
-		return i18n.NewError("error.required", map[string]any{
+		return i19n.NewError("error.required", map[string]any{
 			"Subject": f.Label(),
 			"Value":   f.ID(),
 		})

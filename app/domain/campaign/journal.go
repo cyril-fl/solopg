@@ -22,16 +22,14 @@ func NewJournal(entries []Entry) *Journal {
 	}
 }
 
-func (j *Journal) EnsureInitialized() *Journal {
+func (j *Journal) EnsureInitialized() {
 	if j == nil {
-		return NewJournal([]Entry{})
+		j = NewJournal([]Entry{})
 	}
 
 	if j.Entries == nil {
 		j.Entries = []Entry{}
 	}
-
-	return j
 }
 
 func (j *Journal) AddEntry(author, message string) *Entry {

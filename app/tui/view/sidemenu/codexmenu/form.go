@@ -4,7 +4,7 @@ import (
 	"solopg/app/components/form"
 	"solopg/app/components/form/field"
 	"solopg/app/domain/card/attributes/objectcategory"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui/models"
 )
 
@@ -53,7 +53,7 @@ func getObjectForm() *form.Form {
 	}
 
 	for _, i := range objectcategory.List() {
-		categoryItems = append(categoryItems, models.NewItem(i18n.Localize(i.String()), "", i.String()))
+		categoryItems = append(categoryItems, models.NewItem(i19n.Localize(i.String()), "", i.String()))
 	}
 
 	return form.NewForm(

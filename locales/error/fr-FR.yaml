@@ -25,6 +25,8 @@ error.not_found:id-error:
   other: "\"{{.Subject}}\" {{.ID}} introuvable :\n{{.Error}}"
 error.not_found:on_save:
   other: "Fonction de sauvegarde non configurée"
+error.not_implemented:
+  other: "Fonction de {{.Function}} non configurée pour \"{{.Subject}}\""
 
 # Required
 error.required:
@@ -41,6 +43,10 @@ error.unexpected:value:
   other: "Type invalide pour \"{{.Subject}}\", attendu : {{.Expected}}, reçu : {{.Received}}"
 
 # Unexpected actions
+unexpected:action.build_engine:
+  other: "construction du moteur"
+unexpected:action.load_archives:
+  other: "chargement des archives"
 unexpected:action.load_campaigns:
   other: "chargement des campagnes"
 unexpected:action.roll:

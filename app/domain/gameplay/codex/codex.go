@@ -2,7 +2,7 @@ package codex
 
 import (
 	"errors"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 )
 
 // - Codex - //
@@ -25,7 +25,7 @@ func New() *Codex {
 }
 
 // EnsureInitialized repairs a Codex loaded from storage where nested tables may be nil.
-func (c *Codex) EnsureInitialized() *Codex {
+func (c *Codex) EnsureInitialized() {
 	if c.NpcsTable == nil {
 		c.NpcsTable = NewNpcsTable(nil)
 	}
@@ -47,8 +47,6 @@ func (c *Codex) EnsureInitialized() *Codex {
 	c.LocationsTable.Ensure()
 	c.ObjectsTable.Ensure()
 	c.ObjectifsTable.Ensure()
-
-	return c
 }
 
 // - Codex table - //
@@ -80,7 +78,7 @@ func ensureEmbeddedTable[E any](name string, table **TableData[E]) {
 func (t TableData[any]) formatAssertErrors(err []error) error {
 	return errors.Join(
 		// i18N -- registe
-		i18n.NewError("error.invalid", map[string]interface{}{
+		i19n.NewError("error.invalid", map[string]interface{}{
 			"Subject":  t.name,
 			"Received": err,
 		}),

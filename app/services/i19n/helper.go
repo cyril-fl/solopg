@@ -1,4 +1,4 @@
-package i18n
+package i19n
 
 import (
 	"errors"
@@ -8,11 +8,11 @@ import (
 )
 
 func Localize(id string, data ...map[string]any) string {
-	return lookupMessage(local, id, data...)
+	return lookupMessage(cache.local, id, data...)
 }
 
 func lookupErrorMessage(id string, data ...map[string]any) string {
-	return lookupMessage(localerror, id, data...)
+	return lookupMessage(cache.localerror, id, data...)
 }
 
 func lookupMessage(t *i18n.Localizer, id string, data ...map[string]any) string {

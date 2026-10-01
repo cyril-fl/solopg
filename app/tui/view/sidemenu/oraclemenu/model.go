@@ -2,7 +2,7 @@ package oraclemenu
 
 import (
 	"solopg/app/domain/gameplay/oracle"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"solopg/app/tui/models"
 	"solopg/app/tui/view/sidemenu"
@@ -21,7 +21,7 @@ func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 	for _, rules := range oracle.List() {
 		if rules.IsVisible() {
 			key := "oracle." + rules.Name()
-			name := i18n.Localize(key)
+			name := i19n.Localize(key)
 			items = append(items, models.NewItem(name, "", rules))
 		}
 	}
@@ -90,8 +90,8 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 			// i18N -- register
-			return tui.SendErrorMsg(i18n.NewError("error.invalid", map[string]any{
-				"Subject":  i18n.Localize("oracle"),
+			return tui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
+				"Subject":  i19n.Localize("oracle"),
 				"Received": selected,
 			}))
 		}
@@ -103,8 +103,8 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if err != nil {
 		return func() tea.Msg {
 			// i18N -- register
-			return tui.SendErrorMsg(i18n.NewError("error.unexpected:action:oracle", map[string]any{
-				"Action": i18n.Localize("unexpected:action.roll"),
+			return tui.SendErrorMsg(i19n.NewError("error.unexpected:action:oracle", map[string]any{
+				"Action": i19n.Localize("unexpected:action.roll"),
 				"Error":  err,
 			}))
 		}

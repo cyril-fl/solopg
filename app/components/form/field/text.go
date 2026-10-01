@@ -3,7 +3,7 @@ package field
 import (
 	"fmt"
 	"solopg/app/components/form"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"strings"
 
@@ -77,7 +77,7 @@ func (f *textField[T]) Validate() error {
 	}
 
 	// i18N -- register
-	return i18n.NewError("error.unexpected:value", map[string]any{
+	return i19n.NewError("error.unexpected:value", map[string]any{
 		"Subject":  f.Label(),
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
 		"Received": f.Value(),
@@ -159,9 +159,9 @@ func setValue[T stringOrInt](input *textinput.Model, value T) {
 func (f *textField[T]) testRequireness() error {
 	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
 		// i18N -- register
-		return i18n.NewError("error.required", map[string]any{
+		return i19n.NewError("error.required", map[string]any{
 			"Subject":  f.ID(),
-			"Property": i18n.Localize(f.Label()),
+			"Property": i19n.Localize(f.Label()),
 		})
 	}
 	return nil

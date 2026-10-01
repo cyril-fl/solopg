@@ -8,77 +8,124 @@ import (
 	"solopg/app/domain/card/characters/wallet"
 	"solopg/app/domain/card/objects"
 	"solopg/app/domain/card/objects/equipment"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
+	"solopg/app/services/process/processkit"
 	"solopg/app/tui"
 	"strings"
 )
 
-func ResolveCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
-	selectedCampaign := ctx.SelectedSave
+type process struct {
+	processkit.Process
+	cache
 
-	if selectedCampaign == nil {
-		newCampaign, err := buildCampaignFromContext(ctx)
-		if err != nil {
-			return nil, err
-		}
-
-		selectedCampaign = newCampaign
-	}
-
-	return selectedCampaign, nil
+	ctx  *tui.Context
+	errs []error
 }
 
-func buildCampaignFromContext(ctx *tui.Context) (*campaign.Campaign, error) {
-	isValidArgs := ctx.SelectedRace != nil && ctx.SelectedClass != nil && ctx.SelectedLocation != nil
-	if !isValidArgs {
-		// i18N -- register
-		return nil, i18n.NewError("error.required", map[string]any{
-			"Subject":  i18n.Localize("campaign"),
-			"Property": strings.Join([]string{i18n.Localize("race"), i18n.Localize("class"), i18n.Localize("location")}, ", "),
-		})
+type cache struct {
+	campaign *campaign.Campaign
+	player   *characters.Character
+
+	err error
+}
+
+func Process(ctx *tui.Context) *process {
+	return &process{
+		ctx: ctx,
+	}
+}
+
+func (p *process) Run() {
+	if p.isNewCampaign() {
+		p.assertContext()
+		p.generateCharacter()
+		p.generateCampaign()
+	} else {
+		p.cache.campaign = p.ctx.SelectedSave
+	}
+}
+
+func (p *process) GetResult() *campaign.Campaign {
+	return p.cache.campaign
+}
+
+// Methods
+func (p *process) isNewCampaign() bool {
+	return p.ctx.SelectedSave == nil
+}
+
+func (p *process) assertContext() {
+	isValid := false
+	c := p.ctx
+
+	for _, v := range []any{c.SelectedRace, c.SelectedClass, c.SelectedLocation} {
+		if v == nil {
+			continue
+		}
+		isValid = true
+		break
 	}
 
-	player, err := generateCharacter(ctx)
-	if err != nil {
-		return nil, err
+	if isValid {
+		return
 	}
 
-	newCampaign := campaign.New(campaign.Template{
-		Player:          player,
-		CurrentLocation: ctx.SelectedLocation,
+	// i18N -- register
+	p.cache.err = i19n.NewError("error.required", map[string]any{
+		"Subject":  i19n.Localize("campaign"),
+		"Property": strings.Join([]string{i19n.Localize("race"), i19n.Localize("class"), i19n.Localize("location")}, ", "),
 	})
 
-	return newCampaign, nil
+	p.checkError()
 }
 
-func generateCharacter(ctx *tui.Context) (*characters.Character, error) {
-	player, err := characters.New(characters.Template{
-		Name:      ctx.SelectedName,
-		Race:      ctx.SelectedRace.GetName(),
-		Class:     ctx.SelectedClass.GetName(),
+func (p *process) generateCharacter() {
+	if p.HasErr() {
+		return
+	}
+
+	p.cache.player, p.cache.err = characters.New(characters.Template{
+		Name:      p.ctx.SelectedName,
+		Race:      p.ctx.SelectedRace.GetName(),
+		Class:     p.ctx.SelectedClass.GetName(),
 		Rarity:    rarity.Default(),
-		Stats:     getStatsFromContext(ctx),
-		Equipment: getEquipementFromContext(ctx),
+		Stats:     makeStatsFromContext(p.ctx),
+		Equipment: makeEquipementFromContext(p.ctx),
 		Inventory: []objects.Object{},
 		Wallet:    wallet.Wallet{},
 	})
 
-	if err != nil {
-		return nil, err
-	}
-
-	return player, nil
+	p.checkError()
 }
 
-func getEquipementFromContext(ctx *tui.Context) equipment.Equipment {
+func (p *process) generateCampaign() {
+	if p.HasErr() {
+		return
+	}
+
+	p.cache.campaign = campaign.New(campaign.Template{
+		Player:          p.cache.player,
+		CurrentLocation: p.ctx.SelectedLocation,
+	})
+}
+
+func (p *process) checkError() {
+	if p.cache.err != nil {
+		p.SetErr(p.cache.err)
+		p.cache.err = nil
+	}
+}
+
+// Helpers
+func makeEquipementFromContext(ctx *tui.Context) equipment.Equipment {
 	name := ctx.SelectedClass.GetEquipementName()
 	set := equipment.FindEquipementByName(name)
 
 	return equipment.NewSet(set)
 }
 
-func getStatsFromContext(ctx *tui.Context) stats.Stats {
-	modifiers := getModifiersFromContext(ctx)
+func makeStatsFromContext(ctx *tui.Context) stats.Stats {
+	modifiers := makeModifiersFromContext(ctx)
 
 	baseStats := stats.GetBasic()
 	baseStats.ApplyModifiers(modifiers)
@@ -86,7 +133,7 @@ func getStatsFromContext(ctx *tui.Context) stats.Stats {
 	return baseStats
 }
 
-func getModifiersFromContext(ctx *tui.Context) []stats.Modifier {
+func makeModifiersFromContext(ctx *tui.Context) []stats.Modifier {
 	raceBoost := ctx.SelectedRace.GetBonus()
 	classBoost := ctx.SelectedClass.GetBonus()
 	build := ctx.SelectedBuild

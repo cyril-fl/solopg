@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/services/game"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui/view/sidemenu/metadatamenu"
 	"strings"
 
@@ -48,7 +48,7 @@ func (m model) View() tea.View {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{i18n.Localize("cmd.ctrl+s:save")}
+	footer := []string{i19n.Localize("cmd.ctrl+s:save")}
 	return append(footer, m.getMenuActiveElement().GetFooter()...)
 }
 

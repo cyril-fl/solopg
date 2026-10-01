@@ -6,7 +6,7 @@ import (
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
 	"solopg/app/domain/card/objects"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/yaml"
 )
 
@@ -45,8 +45,8 @@ func New(params Template) (*Article, error) {
 
 	if newItem == nil {
 		// i18N -- register
-		return nil, i18n.NewError("error.invalid:new", map[string]any{
-			"Subject": i18n.Localize("article"),
+		return nil, i19n.NewError("error.invalid:new", map[string]any{
+			"Subject": i19n.Localize("article"),
 			"Error":   err,
 		})
 	}

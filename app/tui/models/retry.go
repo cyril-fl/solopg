@@ -1,7 +1,7 @@
 package models
 
 import (
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/tui"
 	"solopg/app/utils/transform"
 
@@ -21,8 +21,8 @@ func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), lim
 	value, err := handleRoll()
 	// i18N -- register
 	if err != nil {
-		panic(i18n.NewError("error.unexpected:action", map[string]any{
-			"Action": i18n.Localize("unexpected:action.roll"),
+		panic(i19n.NewError("error.unexpected:action", map[string]any{
+			"Action": i19n.Localize("unexpected:action.roll"),
 			"Error":  err,
 		}))
 	}
@@ -40,8 +40,8 @@ func (s *RerollModel[T]) Reroll() {
 	value, err := s.Roll()
 	// i18N -- register
 	if err != nil {
-		panic(i18n.NewError("error.unexpected:action", map[string]any{
-			"Action": i18n.Localize("unexpected:action.roll"),
+		panic(i19n.NewError("error.unexpected:action", map[string]any{
+			"Action": i19n.Localize("unexpected:action.roll"),
 			"Error":  err,
 		}))
 	}
@@ -105,11 +105,11 @@ func newConfiguredList(items []list.Item, width, height int) list.Model {
 }
 
 func trueLabel(options rerollOptions) string {
-	return transform.Capitalize(i18n.Localize(options.true))
+	return transform.Capitalize(i19n.Localize(options.true))
 }
 
 func falseLabel(options rerollOptions) string {
-	return transform.Capitalize(i18n.Localize(options.false))
+	return transform.Capitalize(i19n.Localize(options.false))
 }
 
 type rerollOptions struct {

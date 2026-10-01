@@ -2,7 +2,7 @@ package codex
 
 import (
 	"fmt"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"strings"
 	"time"
 )
@@ -21,7 +21,7 @@ var tableobjectives = "codex.objectives"
 
 func NewObjectivesTable(entries []ObjectifEntry) *ObjectivesTable {
 	return &ObjectivesTable{
-		TableData: newTable(i18n.Localize(tableobjectives), entries),
+		TableData: newTable(i19n.Localize(tableobjectives), entries),
 	}
 }
 
@@ -47,15 +47,15 @@ func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 // TODO refavtor tout ca en se basant sur object ect
 func (o *ObjectivesTable) Summaries() []string {
 	if len(o.Entries) == 0 {
-		return []string{i18n.Localize("codex.entry:empty")}
+		return []string{i19n.Localize("codex.entry:empty")}
 	}
 
 	content := strings.Builder{}
 	for i, entry := range o.Entries {
 		if entry.Title == "" {
-			content.WriteString(i18n.Localize("codex.objectives.number", map[string]any{"Number": i + 1}))
+			content.WriteString(i19n.Localize("codex.objectives.number", map[string]any{"Number": i + 1}))
 		} else {
-			fmt.Fprintf(&content, "%s — %s", i18n.Localize(entry.Title), i18n.Localize(entry.Description))
+			fmt.Fprintf(&content, "%s — %s", i19n.Localize(entry.Title), i19n.Localize(entry.Description))
 		}
 		content.WriteString("\n\n")
 	}
@@ -83,16 +83,16 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 
 	if values["title"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("objectives"),
-			"Property": i18n.Localize("property.title"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("objectives"),
+			"Property": i19n.Localize("property.title"),
 		}))
 	}
 	if values["description"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("objectives"),
-			"Property": i18n.Localize("property.description"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("objectives"),
+			"Property": i19n.Localize("property.description"),
 		}))
 	}
 
@@ -104,5 +104,5 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 }
 
 func (o *ObjectivesTable) Ensure() {
-	ensureEmbeddedTable(i18n.Localize(tableobjectives), &o.TableData)
+	ensureEmbeddedTable(i19n.Localize(tableobjectives), &o.TableData)
 }

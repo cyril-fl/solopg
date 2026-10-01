@@ -8,8 +8,8 @@ import (
 	"solopg/app/domain/card/characters"
 	"solopg/app/domain/card/characters/classes"
 	"solopg/app/domain/card/characters/races"
-	"solopg/app/services/i18n"
-	"solopg/app/services/process/generatestats"
+	"solopg/app/services/factory/millstats"
+	"solopg/app/services/i19n"
 	"strings"
 
 	"time"
@@ -28,7 +28,7 @@ var tablenpcs = "codex.npcs"
 
 func NewNpcsTable(entries []NpcsEntry) *NpcsTable {
 	return &NpcsTable{
-		TableData: newTable(i18n.Localize(tablenpcs), entries),
+		TableData: newTable(i19n.Localize(tablenpcs), entries),
 	}
 }
 
@@ -45,15 +45,15 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 		return err
 	}
 
-	generator := generatestats.NewGenerator(values)
-	generator.GenerateFromValues(generatestats.FromValuesParams{
+	generator := millstats.NewWithValues(values)
+	generator.GenerateFromValues(millstats.FromValuesParams{
 		Randomness: true,
 	})
 
 	if generator.HasError() {
 		// i18N -- register
 		cwd, err := os.Getwd()
-		return i18n.NewError("error.unexpected", map[string]any{
+		return i19n.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, generator.GetError()),
 		})
@@ -76,8 +76,8 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.invalid:new", map[string]any{
-			"Subject": i18n.Localize("npcs"),
+		return i19n.NewError("error.invalid:new", map[string]any{
+			"Subject": i19n.Localize("npcs"),
 			"Error":   err,
 		})
 	}
@@ -89,22 +89,22 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 
 func (tb *NpcsTable) Summaries() []string {
 	if len(tb.Entries) == 0 {
-		return []string{i18n.Localize("codex.entry:empty")}
+		return []string{i19n.Localize("codex.entry:empty")}
 	}
 
 	content := strings.Builder{}
 	for _, entry := range tb.Entries {
 		if entry.Character == nil {
-			content.WriteString(i18n.Localize("codex.codex.unknown:entry"))
+			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
 			continue
 		} else {
-			fmt.Fprintf(&content, "%s\n", i18n.Localize("codex.npcs:entry", map[string]any{
-				"Name":  i18n.Localize(entry.Character.Name),
-				"Race":  i18n.Localize(entry.Character.Race),
-				"Class": i18n.Localize(entry.Character.Class),
+			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.npcs:entry", map[string]any{
+				"Name":  i19n.Localize(entry.Character.Name),
+				"Race":  i19n.Localize(entry.Character.Race),
+				"Class": i19n.Localize(entry.Character.Class),
 			}))
 
-			fmt.Fprintf(&content, "%s\n", i18n.Localize("stats.entry", entry.Character.Stats.MappedString()))
+			fmt.Fprintf(&content, "%s\n", i19n.Localize("stats.entry", entry.Character.Stats.MappedString()))
 		}
 
 		content.WriteString("\n\n")
@@ -118,30 +118,30 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("npcs"),
-			"Property": i18n.Localize("property.name"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("npcs"),
+			"Property": i19n.Localize("property.name"),
 		}))
 	}
 	if entry["description"] == "" {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("npcs"),
-			"Property": i18n.Localize("property.description"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("npcs"),
+			"Property": i19n.Localize("property.description"),
 		}))
 	}
 	if !races.Assert(entry["race"]) {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("npcs"),
-			"Property": i18n.Localize("property.race"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("npcs"),
+			"Property": i19n.Localize("property.race"),
 		}))
 	}
 	if !classes.Assert(entry["class"]) {
 		// i18N -- register
-		err = append(err, i18n.NewError("error.required_property", map[string]any{
-			"Subject":  i18n.Localize("npcs"),
-			"Property": i18n.Localize("property.class"),
+		err = append(err, i19n.NewError("error.required_property", map[string]any{
+			"Subject":  i19n.Localize("npcs"),
+			"Property": i19n.Localize("property.class"),
 		}))
 	}
 
@@ -153,5 +153,5 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 }
 
 func (tb *NpcsTable) Ensure() {
-	ensureEmbeddedTable(i18n.Localize(tablenpcs), &tb.TableData)
+	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.TableData)
 }

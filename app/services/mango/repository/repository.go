@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,14 +20,14 @@ type Document interface {
 }
 
 type MongoRepository struct {
-	db         * mango.Mongo
+	db         *mango.Mongo
 	collection mango.Collection
 	timeout    time.Duration
 }
 
 type Repository interface {
-	GetDd() * mango.Mongo
-	SetDb() * mango.Mongo
+	GetDd() *mango.Mongo
+	SetDb() *mango.Mongo
 	GetTimeout() time.Duration
 	SetTimeout(timeout time.Duration)
 	GetCollection() mango.Collection
@@ -43,11 +43,11 @@ func NewRepository(collection mango.Collection) *MongoRepository {
 /* TODO
 VOIR Ppour creer un interface et un factotory si besoin , basé sur la colelctions
 */
-func (r *MongoRepository) getDb() * mango.Mongo {
+func (r *MongoRepository) getDb() *mango.Mongo {
 	return r.db
 }
 
-func (r *MongoRepository) setDb(db * mango.Mongo) *MongoRepository {
+func (r *MongoRepository) setDb(db *mango.Mongo) *MongoRepository {
 	r.db = db
 	return r
 }
@@ -85,7 +85,7 @@ func (r *MongoRepository) fromCollection[T any](
 		)
 
 	if err != nil {
-		return nil, i18n.NewError("error.loading", map[string]any{
+		return nil, i19n.NewError("error.loading", map[string]any{
 			"Subject": r.collection,
 			"Error":   err,
 		})
@@ -114,7 +114,7 @@ func (r *MongoRepository) toCollection[T Document](data T) error {
 		)
 
 	if err != nil {
-		return i18n.NewError("error.unexpected:save", map[string]any{
+		return i19n.NewError("error.unexpected:save", map[string]any{
 			"Error": err,
 		})
 	}
@@ -156,7 +156,7 @@ func buildOptions(opts []FindOption) *options.FindOptions {
 func decodeCursor[T any](cursor *mongodb.Cursor, collection mango.Collection, ctx context.Context) ([]T, error) {
 	var data []T
 	if err := cursor.All(ctx, &data); err != nil {
-		return nil, i18n.NewError("error.loading", map[string]any{
+		return nil, i19n.NewError("error.loading", map[string]any{
 			"Subject": collection,
 			"Error":   err,
 		})

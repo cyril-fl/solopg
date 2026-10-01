@@ -6,7 +6,7 @@ import (
 	"solopg/app/domain/card/attributes/rarity"
 	"solopg/app/domain/card/attributes/stats"
 	"solopg/app/domain/card/attributes/variety"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/yaml"
 	"solopg/config"
 )
@@ -36,8 +36,8 @@ func load() error {
 
 		if err := loadFromFile(filepath); err != nil {
 			// i18N -- register
-			errs = append(errs, i18n.NewError("error.loading:file", map[string]any{
-				"Subject": i18n.Localize("location"),
+			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
+				"Subject": i19n.Localize("location"),
 				"File":    filepath,
 				"Error":   err,
 			}))
@@ -57,8 +57,8 @@ func loadFromFolder() ([]string, error) {
 
 	if err != nil {
 		// i18N -- register
-		return nil, i18n.NewError("error.loading:folder", map[string]any{
-			"Subject": i18n.Localize("location"),
+		return nil, i19n.NewError("error.loading:folder", map[string]any{
+			"Subject": i19n.Localize("location"),
 			"Folder":  folderConfigPath,
 			"Error":   err,
 		})
@@ -72,8 +72,8 @@ func loadFromFile(fileAddress string) error {
 
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.loading:file", map[string]any{
-			"Subject": i18n.Localize("location"),
+		return i19n.NewError("error.loading:file", map[string]any{
+			"Subject": i19n.Localize("location"),
 			"File":    fileAddress,
 			"Error":   err,
 		})
@@ -98,8 +98,8 @@ func List() []Location {
 		err := load()
 		if err != nil {
 			// i18N -- register
-			i18n.NewError("error.loading", map[string]any{
-				"Subject": i18n.Localize("location"),
+			i19n.NewError("error.loading", map[string]any{
+				"Subject": i19n.Localize("location"),
 				"Error":   err,
 			})
 			return nil
@@ -132,8 +132,8 @@ func newFromYaml(config yamlConfig) *Location {
 
 	if err != nil {
 		// i18N -- register
-		i18n.NewError("error.invalid:new", map[string]any{
-			"Subject": i18n.Localize("location"),
+		i19n.NewError("error.invalid:new", map[string]any{
+			"Subject": i19n.Localize("location"),
 			"Error":   err,
 		})
 		return nil

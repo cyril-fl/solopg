@@ -2,7 +2,7 @@ package classes
 
 import (
 	"solopg/app/domain/card/attributes/stats"
-	"solopg/app/services/i18n"
+	"solopg/app/services/i19n"
 	"solopg/app/services/yaml"
 	"solopg/config"
 )
@@ -23,8 +23,8 @@ func loadFromFile() error {
 	params, err := yaml.LoadListFromFile[yamlConfig](filePath)
 	if err != nil {
 		// i18N -- register
-		return i18n.NewError("error.loading:file", map[string]any{
-			"Subject": i18n.Localize("class"),
+		return i19n.NewError("error.loading:file", map[string]any{
+			"Subject": i19n.Localize("class"),
 			"File":    filePath,
 			"Error":   err,
 		})
@@ -49,8 +49,8 @@ func Has(value Template) bool {
 func AddInConfig(value Template) error {
 	if Has(value) {
 		// i18N -- register
-		return i18n.NewError("error.invalid:already_exists", map[string]any{
-			"Subject": i18n.Localize("class"),
+		return i19n.NewError("error.invalid:already_exists", map[string]any{
+			"Subject": i19n.Localize("class"),
 			"ID":      value.Name,
 		})
 	}
@@ -72,8 +72,8 @@ func List() []Class {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
 			// i18N -- register
-			i18n.NewError("error.loading", map[string]any{
-				"Subject": i18n.Localize("class"),
+			i19n.NewError("error.loading", map[string]any{
+				"Subject": i19n.Localize("class"),
 				"Error":   err,
 			})
 			return nil
