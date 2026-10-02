@@ -1,7 +1,7 @@
-package initlogger
+package initloggerepository
 
 import (
-	"solopg/app/cmdrun/services/logger"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
@@ -11,7 +11,6 @@ type initializer struct {
 	process.Process
 
 	db *mango.Mongo
-	
 }
 
 func Process(db *mango.Mongo) *initializer {
@@ -24,5 +23,5 @@ func (p *initializer) Run() {
 	repo := repository.NewLogSystemRepos()
 	repo.SetDb(p.db)
 
-	logger.Init(repo)
+	logs.Init(repo)
 }

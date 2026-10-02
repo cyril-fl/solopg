@@ -1,12 +1,12 @@
 package cmdrun
 
 import (
-	initlogger "solopg/app/cmdrun/services/process/initLogger"
 	"solopg/app/cmdrun/services/process/runsession"
 	"solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/process"
 	initI19n "solopg/app/shared/services/process/initI19n"
+	initlogger "solopg/app/shared/services/process/initloggerepository"
 	"solopg/config"
 )
 

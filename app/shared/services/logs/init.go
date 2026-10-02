@@ -1,16 +1,16 @@
-package logger
+package logs
 
+var cache Registrable
 
-type Register interface {
+type Registrable interface {
 	Register(log Log) error
 }
 
-var cache Register
-
-func Init(r Register) {
+func Init(r Registrable) {
 	cache = r
 }
 
+// ---
 func TestLog(log Log) error {
 	return cache.Register(log)
 }

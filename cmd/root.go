@@ -11,7 +11,7 @@ import (
 var c = config.Current
 var cmd = c.Commands
 
-var rootCmd = &cobra.Command{
+var cmdRoot = &cobra.Command{
 	Use:     c.Name,
 	Short:   cmd.Root.Short,
 	Long:    cmd.Root.Long,
@@ -24,7 +24,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	if err := cmdRoot.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

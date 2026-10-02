@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"solopg/app/cmdrun/services/logger"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -35,11 +35,11 @@ func (r *LogSystemRepos) SetDb(db *mango.Mongo) *LogSystemRepos {
 func (r *LogSystemRepos) Load(
 	filter bson.M,
 	opts ...FindOption,
-) ([]logger.Log, error) {
-	return r.fromCollection[logger.Log](filter, opts...)
+) ([]logs.Log, error) {
+	return r.fromCollection[logs.Log](filter, opts...)
 }
 
 // TODO a la sorier de lui, pas register mais l'afficher direct ou panic ?
-func (r *LogSystemRepos) Register(log logger.Log) error {
+func (r *LogSystemRepos) Register(log logs.Log) error {
 	return r.toCollection(&log)
 }

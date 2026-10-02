@@ -19,13 +19,14 @@ type Translator struct {
 
 var cache *Translator
 
-func New() *Translator{
+func New() *Translator {
 	return &Translator{}
 }
 
 func (t *Translator) SetBundle(b *i18n.Bundle) {
 	t.bundle = b
 }
+
 func (t *Translator) SetLocale(l *i18n.Localizer) {
 	t.local = l
 }
@@ -34,14 +35,9 @@ func (t *Translator) SetLocalerror(l *i18n.Localizer) {
 	t.localerror = l
 }
 
-func (t *Translator) LoadMessageFile(path string) (*i18n.MessageFile, error) {
-	return t.bundle.LoadMessageFile(path)
-} 
-
 func SetCache(i19n *Translator) {
 	cache = i19n
 }
-
 
 // - Locale - //
 type Locale struct {

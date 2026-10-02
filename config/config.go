@@ -15,8 +15,10 @@ type config struct {
 
 type commands struct {
 	Config  commandParams `yaml:"config"`
+	Logs    commandParams `yaml:"logs"`
 	Root    commandParams `yaml:"root"`
 	Run     commandParams `yaml:"run"`
+	Serve   commandParams `yaml:"serve"`
 	Try     commandParams `yaml:"try"`
 	Version commandParams `yaml:"version"`
 }
@@ -54,8 +56,11 @@ type structureFiles struct {
 }
 
 type arg struct {
-	Name     string `yaml:"name"`
-	Required bool   `yaml:"required"`
+	Name        string `yaml:"name"`
+	Shorthand   string `yaml:"shorthand"`
+	Type        string `yaml:"type"`
+	Description string `yaml:"description"`
+	Required    bool   `yaml:"required"`
 }
 
 var Current config

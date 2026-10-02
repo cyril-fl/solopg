@@ -1,4 +1,4 @@
-package logger
+package logs
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// TODO deplacer dans le service
 type Log struct {
 	ID        id.ID
 	Type      Kind
@@ -19,11 +18,13 @@ type Log struct {
 
 type Kind string
 
-// TODO LOW mettre les autre enume en MAJ aussi
 const (
+	// TODO LOW mettre les autre enume en MAJ aussi
 	ERR  Kind = "ERROR"
 	INFO Kind = "INFO"
 )
+
+var Kinds = []Kind{ERR, INFO}
 
 type Template struct {
 	Type    Kind
@@ -46,12 +47,14 @@ func New(params Template) Log {
 	}
 }
 
+// -- Methods -- //
 func (l *Log) String() string {
 	return fmt.Sprintf("%s - [%s] - %s : %s", l.Timestamp.Format(time.RFC3339), l.Type, l.Author, l.Message)
 }
 
-// NOTE Log are imutable
+// Repository implementation
 func (l *Log) SetUpdatedAt(t time.Time) {
+	// NOTE Log are imutable
 }
 
 func (l *Log) Filter() bson.M {

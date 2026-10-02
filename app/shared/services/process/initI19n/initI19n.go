@@ -28,7 +28,7 @@ type cache struct {
 	local      *i18n.Localizer
 	localerror *i18n.Localizer
 
-	files         []string
+	files []string
 }
 
 func Process(cfg i19n.Config, locale string) *initializer {
@@ -57,7 +57,7 @@ func (i *initializer) Run() {
 	i.seti19n()
 }
 
-func (i *initializer) GetResult()  {}
+func (i *initializer) GetResult() {}
 
 // Methods
 func (i *initializer) assertConfig() {
@@ -133,7 +133,7 @@ func (i *initializer) initLocalizer() {
 		return
 	}
 
-	localizer, err := newLocalizer(i.cfg, i.bundle ,i.locale, i.defaultLocale)
+	localizer, err := newLocalizer(i.cfg, i.bundle, i.locale, i.defaultLocale)
 	if err != nil {
 		i.SetErr(err)
 		return
@@ -147,7 +147,7 @@ func (i *initializer) initErrorLocalizer() {
 		return
 	}
 
-	localizer, err := newLocalizer(i.cfg, i.bundle ,"en", i.defaultLocale)
+	localizer, err := newLocalizer(i.cfg, i.bundle, "en", i.defaultLocale)
 	if err != nil {
 		i.SetErr(err)
 		return
@@ -171,7 +171,7 @@ func (i *initializer) seti19n() {
 
 func (i *initializer) reset() {
 	i.cache = cache{}
-	
+
 	i.SetErr(nil)
 	i19n.SetCache(i19n.New())
 }
@@ -207,7 +207,7 @@ func loadLocaleFile(cfg i19n.Config) ([]string, error) {
 NOTE newLocalizer pourrais très biens passer en methode mais je treouve que c'est mélanger les responsabiltés.
 Ainsi un localierpeu etre initialisé sans passer par l'initilizer.
 */
-func newLocalizer(cfg i19n.Config, bundle *i18n.Bundle,lang string, defaultLocale *i19n.Locale) (*i18n.Localizer, error) {
+func newLocalizer(cfg i19n.Config, bundle *i18n.Bundle, lang string, defaultLocale *i19n.Locale) (*i18n.Localizer, error) {
 	locale, err := getLocale(cfg, lang, defaultLocale)
 	if err != nil {
 		return nil, err

@@ -1,14 +1,14 @@
 package cmdtry
 
 import (
-	"solopg/app/cmdrun/services/logger"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 )
 
 func Try() error {
-	log := logger.New(logger.Template{
-		Type:    logger.INFO,
+	log := logs.New(logs.Template{
+		Type:    logs.INFO,
 		Message: "This is a test log entry",
 	})
 
@@ -21,7 +21,7 @@ func Try() error {
 
 	repo := repository.NewLogSystemRepos()
 	repo.SetDb(db)
-	logger.Init(repo)
+	logs.Init(repo)
 
-	return logger.TestLog(log)
+	return logs.TestLog(log)
 }
