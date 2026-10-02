@@ -1,0 +1,255 @@
+package oracle
+
+import (
+	"errors"
+	"fmt"
+	"path/filepath"
+
+	"solopg/app/cmdrun/domain/gameplay/dice"
+	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/utils/transform"
+	"solopg/config"
+)
+
+// - Configuration & caching - //
+type yamlConfig struct {
+	Name      string     `yaml:"name"`
+	Dice      int        `yaml:"dice"`
+	Type      string     `yaml:"type"`
+	Visible   bool       `yaml:"visible"`
+	Intervals []interval `yaml:"intervals"`
+}
+
+type interval struct {
+	Min      int  `yaml:"min"`
+	Max      int  `yaml:"max"`
+	Critical bool `yaml:"critical"`
+	Result   any  `yaml:"result"`
+}
+
+type Result[T any] struct {
+	Roll     int  `yaml:"roll"`
+	Critical bool `yaml:"critical"`
+	Result   T    `yaml:"result"`
+}
+
+var folderConfigPath = config.Current.Documents.Folders.Oracle
+
+var cachedConfig []yamlConfig
+
+func loadFromSource() error {
+	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
+	if err != nil {
+		// i18N -- register
+		return i19n.NewError("error.loading:folder", map[string]any{
+			"Subject": i19n.Localize("oracle"),
+			"Folder":  folderConfigPath,
+			"Error":   err,
+		})
+	}
+
+	if errs := handleLoadFromFiles(files); len(errs) > 0 {
+		return errors.Join(errs...)
+	}
+
+	return nil
+}
+
+func handleLoadFromFiles(files []string) []error {
+	errs := []error{}
+	for _, file := range files {
+		if err := loadFromFile(file); err != nil {
+			// i18N -- register
+			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
+				"Subject": i19n.Localize("oracle"),
+				"File":    file,
+				"Error":   err,
+			}))
+			continue
+		}
+	}
+
+	return errs
+}
+
+func loadFromFile(fileAddress string) error {
+	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
+
+	if err != nil {
+		// i18N -- register
+		return i19n.NewError("error.loading", map[string]any{
+			"Subject": transform.Capitalize(i19n.Localize("oracle")),
+			"Error":   err,
+		})
+	}
+
+	if params.Dice <= 0 {
+		// i18N -- register
+		return i19n.NewError("error.invalid", map[string]any{
+			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
+			"Received": params.Name,
+		})
+	}
+
+	if len(params.Intervals) == 0 {
+		// i18N -- register
+		return i19n.NewError("error.required", map[string]any{
+			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
+			"Property": i19n.Localize("intervals"),
+		})
+	}
+
+	cachedConfig = append(cachedConfig, *params)
+
+	return nil
+}
+
+// - Oracle - //
+type Oracle struct {
+	name      string
+	dice      int
+	typ       string
+	visible   bool
+	intervals []interval
+}
+
+func newFromYamlConfig(config yamlConfig) Oracle {
+	return Oracle{
+		name:      config.Name,
+		dice:      config.Dice,
+		typ:       config.Type,
+		visible:   config.Visible,
+		intervals: config.Intervals,
+	}
+}
+
+func GetByName(name string) (*Oracle, error) {
+	oracles := List()
+
+	for _, oracle := range oracles {
+		if oracle.name == name {
+			return &oracle, nil
+		}
+	}
+
+	// i18N -- register
+	return nil, i19n.NewError("error.not_found.id", map[string]any{
+		"Subject": transform.Capitalize(i19n.Localize("oracle")),
+		"ID":      name,
+	})
+}
+
+func (o Oracle) Name() string {
+	return o.name
+}
+
+func (o Oracle) IsVisible() bool {
+	return o.visible
+}
+
+// - Collection - //
+func List() []Oracle {
+	if cachedConfig == nil {
+		if err := loadFromSource(); err != nil {
+			// i18N -- register
+
+			i19n.NewError("error.loading", map[string]any{
+				"Subject": transform.Capitalize(i19n.Localize("oracle")),
+				"Error":   err,
+			})
+			return nil
+		}
+	}
+
+	return makeSet(cachedConfig)
+}
+
+func Log() {
+	oracles := List()
+
+	for _, oracle := range oracles {
+		fmt.Printf("Oracle: %s \n", oracle.Name())
+		fmt.Printf("Dice: %d \n", oracle.dice)
+		fmt.Printf("Type: %s \n", oracle.typ)
+		fmt.Printf("Visible: %t \n", oracle.visible)
+		fmt.Println("Intervals:")
+		for _, interval := range oracle.intervals {
+			fmt.Printf("  - Min: %d, Max: %d, Critical: %t, Result: %v\n", interval.Min, interval.Max, interval.Critical, interval.Result)
+		}
+		fmt.Println()
+	}
+}
+
+func ListFromFolder(path string) ([]string, error) {
+	list, err := yaml.GetFolderFiles(path)
+	if err != nil {
+		// i18N -- register
+		return nil, i19n.NewError("error.loading:folder", map[string]any{
+			"Subject": transform.Capitalize(i19n.Localize("oracle")),
+			"Folder":  path,
+			"Error":   err,
+		})
+	}
+
+	errs := []error{}
+	oracles := []string{}
+	for _, file := range list {
+		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
+			// i18N -- register
+			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
+				"Subject": transform.Capitalize(i19n.Localize("oracle")),
+				"File":    file,
+				"Error":   err,
+			}))
+		} else {
+			oracles = append(oracles, params.Name)
+		}
+	}
+
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return oracles, nil
+}
+
+func makeSet(configs []yamlConfig) []Oracle {
+	result := make([]Oracle, 0, len(configs))
+
+	for _, config := range configs {
+		result = append(result, newFromYamlConfig(config))
+	}
+
+	return result
+}
+
+// - Helpers - //
+func Roll[T any](o Oracle) (*Result[T], error) {
+	value := dice.Roll(o.dice)
+	for _, interval := range o.intervals {
+		if value >= interval.Min && value <= interval.Max {
+			res, ok := interval.Result.(T)
+			if !ok {
+				// i18N -- register
+				return nil, i19n.NewError("error.unexpected:value", map[string]any{
+					"Subject":  o.name,
+					"Expected": fmt.Sprintf("%T", res),
+					"Received": fmt.Sprintf("%T", interval.Result),
+				})
+			}
+
+			return &Result[T]{
+				Roll:     value,
+				Critical: interval.Critical,
+				Result:   res,
+			}, nil
+		}
+	}
+
+	// i18N -- register
+	return nil, i19n.NewError("error.not_found.id", map[string]any{
+		"Subject": o.name,
+		"ID":      value,
+	})
+}

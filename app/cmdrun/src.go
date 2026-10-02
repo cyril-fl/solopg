@@ -1,0 +1,37 @@
+package cmdrun
+
+import (
+	initlogger "solopg/app/cmdrun/services/process/initLogger"
+	"solopg/app/cmdrun/services/process/runsession"
+	"solopg/app/cmdrun/tui"
+	"solopg/app/shared/services/mango"
+	"solopg/app/shared/services/process"
+	initI19n "solopg/app/shared/services/process/initI19n"
+	"solopg/config"
+)
+
+func Start() error {
+	var db *mango.Mongo
+	var err error
+
+	tui.Clear()
+
+	if db, err = mango.Init(); err != nil {
+		return err
+	}
+	defer db.Disconnect()
+
+	/* --- NOTE Everything above this line is non loggable --- */
+
+	logger := initlogger.Process(db)
+	translation := initI19n.Process(config.Current.I18n, "")
+	session := runsession.Process(db)
+
+	processes := []process.Processable{
+		logger,
+		translation,
+		session,
+	}
+
+	return process.HandleProcess(processes)
+}

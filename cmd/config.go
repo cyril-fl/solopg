@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"solopg/app/utils/debug"
+	"solopg/app/shared/utils/debug"
 	"solopg/config"
 
 	"github.com/spf13/cobra"
@@ -12,7 +12,7 @@ var configCmd = &cobra.Command{
 	Short:   cmd.Config.Short,
 	Long:    cmd.Config.Long,
 	Example: cmd.Config.Example,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(cobra *cobra.Command, args []string) error {
 		debug.ParseJson(config.Current)
 
 		return nil

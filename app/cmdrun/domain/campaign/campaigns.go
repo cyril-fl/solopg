@@ -1,0 +1,64 @@
+package campaign
+
+import (
+	"fmt"
+	"time"
+
+	"solopg/app/cmdrun/domain/card/characters"
+	"solopg/app/cmdrun/domain/card/locations"
+	"solopg/app/cmdrun/types/id"
+	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/utils/transform"
+
+	"go.mongodb.org/mongo-driver/bson"
+)
+
+type Campaign struct {
+	ID              id.ID                 `bson:"Id" json:"Id"`
+	Player          *characters.Character `bson:"character" json:"character"`
+	CurrentLocation *locations.Location   `bson:"location" json:"location"`
+	CreatedAt       time.Time             `bson:"createdAt" json:"createdAt"`
+	UpdatedAt       time.Time             `bson:"updatedAt" json:"updatedAt"`
+}
+
+type Template struct {
+	Player          *characters.Character
+	CurrentLocation *locations.Location
+}
+
+func New(params Template) *Campaign {
+	now := time.Now().UTC()
+
+	return &Campaign{
+		ID:              id.New(),
+		Player:          params.Player,
+		CurrentLocation: params.CurrentLocation,
+		CreatedAt:       now,
+		UpdatedAt:       now,
+	}
+}
+
+func (c *Campaign) Title() string {
+	return fmt.Sprintf("%s | %s | %s",
+		c.Player.Name,
+		transform.Capitalize(i19n.Localize(c.Player.Race)),
+		transform.Capitalize(i19n.Localize(c.Player.Class)),
+	)
+}
+
+func (c *Campaign) Description() string {
+	return i19n.Localize("campaign.description", map[string]any{
+		"Location": i19n.Localize(c.CurrentLocation.Name),
+		"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
+	})
+}
+
+func (c *Campaign) SetUpdatedAt(t time.Time) {
+	c.UpdatedAt = t
+}
+
+func (c *Campaign) Filter() bson.M {
+	return bson.M{
+		"Id": c.ID,
+	}
+}

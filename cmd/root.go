@@ -18,8 +18,8 @@ var rootCmd = &cobra.Command{
 	Version: config.Version,
 	Example: cmd.Root.Example,
 
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return cmd.Help()
+	RunE: func(cobra *cobra.Command, args []string) error {
+		return cobra.Help()
 	},
 }
 

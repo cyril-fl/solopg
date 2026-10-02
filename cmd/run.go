@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	src "solopg/app"
+	src "solopg/app/cmdrun"
 
 	"github.com/spf13/cobra"
 )
@@ -11,7 +11,7 @@ var runCmd = &cobra.Command{
 	Short:   cmd.Run.Short,
 	Long:    cmd.Run.Long,
 	Example: cmd.Run.Example,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(cobra *cobra.Command, args []string) error {
 		return src.Start()
 	},
 }

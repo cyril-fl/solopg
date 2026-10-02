@@ -1,8 +1,8 @@
 package config
 
 import (
-	"solopg/app/services/i19n"
-	"solopg/app/services/yaml"
+	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/yaml"
 )
 
 type config struct {

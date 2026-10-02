@@ -21,5 +21,5 @@ make build
 ### Build manuel
 
 ```bash
-go build -ldflags "-X 'solopg/app/buildinfo.AppName=solopg' -X 'solopg/app/buildinfo.Version=v0.0.3' -X 'solopg/app/buildinfo.Commit=$(git rev-parse --short HEAD)' -X 'solopg/app/buildinfo.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)'" .
+go build -ldflags "-X 'solopg/app/cmdrun/buildinfo.AppName=solopg' -X 'solopg/app/cmdrun/buildinfo.Version=v0.0.3' -X 'solopg/app/cmdrun/buildinfo.Commit=$(git rev-parse --short HEAD)' -X 'solopg/app/cmdrun/buildinfo.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)'" .
 ```

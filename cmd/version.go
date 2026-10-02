@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Short:   cmd.Version.Short,
 	Long:    cmd.Version.Long,
 	Example: cmd.Version.Example,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cobra *cobra.Command, args []string) {
 		fmt.Println(config.String())
 	},
 }
