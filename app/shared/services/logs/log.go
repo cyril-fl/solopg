@@ -11,9 +11,9 @@ import (
 type Log struct {
 	ID        id.ID
 	Type      Kind
-	Author    string // Player Id O system
+	Author    string
 	Message   string
-	Timestamp time.Time
+	CreatedAt time.Time
 }
 
 type Kind string
@@ -32,24 +32,24 @@ type Template struct {
 	Message string
 }
 
-func New(params Template) Log {
+func New(params Template) *Log {
 	author := "System"
 	if params.Author != nil {
 		author = *params.Author
 	}
 
-	return Log{
+	return &Log{
 		ID:        id.New(),
 		Type:      params.Type,
 		Author:    author,
 		Message:   params.Message,
-		Timestamp: time.Now().UTC(),
+		CreatedAt: time.Now().UTC(),
 	}
 }
 
 // -- Methods -- //
 func (l *Log) String() string {
-	return fmt.Sprintf("%s - [%s] - %s : %s", l.Timestamp.Format(time.RFC3339), l.Type, l.Author, l.Message)
+	return fmt.Sprintf("%s - [%s] - %s : %s", l.CreatedAt.Format(time.RFC3339), l.Type, l.Author, l.Message)
 }
 
 // Repository implementation

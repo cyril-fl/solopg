@@ -37,14 +37,14 @@ func (p *saver) GetResult() {
 
 // Helpers
 func (p *saver) saveCampaign() {
-	repo := repository.NewCampaignRepo().SetDb(p.db)
+	repo := repository.Campaign().SetDb(p.db)
 	data := p.engine.ExportCampaign()
 
 	p.SetErr(repo.Register(data))
 }
 
 func (p *saver) saveArchives() {
-	repo := repository.NewArchivesRepo().SetDb(p.db)
+	repo := repository.Archives().SetDb(p.db)
 	data := p.engine.ExportArchives()
 
 	p.SetErr(repo.Register(data))

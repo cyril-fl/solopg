@@ -19,7 +19,7 @@ func Try() error {
 	}
 	defer db.Disconnect()
 
-	repo := repository.NewLogSystemRepos()
+	repo := repository.LogSystem()
 	repo.SetDb(db)
 	logs.Init(repo)
 

@@ -1,12 +1,12 @@
 package cmdrun
 
 import (
-	"solopg/app/cmdrun/services/process/runsession"
-	cmdruntui "solopg/app/cmdrun/tui"
+	cmdrunrunsession "solopg/app/cmdrun/services/process/runsession"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/process"
 	initI19n "solopg/app/shared/services/process/initI19n"
 	initlogger "solopg/app/shared/services/process/initloggerepository"
+	"solopg/app/shared/utils/cleanui"
 	"solopg/config"
 )
 
@@ -14,7 +14,7 @@ func Start() error {
 	var db *mango.Mongo
 	var err error
 
-	cmdruntui.Clear()
+	cleanui.Run()
 
 	if db, err = mango.Init(); err != nil {
 		return err
@@ -25,7 +25,7 @@ func Start() error {
 
 	logger := initlogger.Process(db)
 	translation := initI19n.Process(config.Current.I18n, "")
-	session := runsession.Process(db)
+	session := cmdrunrunsession.Process(db)
 
 	processes := []process.Processable{
 		logger,

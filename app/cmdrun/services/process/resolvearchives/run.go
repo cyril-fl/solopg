@@ -41,7 +41,7 @@ func (p *resolver) GetResult() *campaign.Archives {
 
 // Helpers
 func (p *resolver) loadArchives() {
-	reppo := repository.NewArchivesRepo()
+	reppo := repository.Archives()
 	reppo.SetDb(p.db)
 
 	result, err := reppo.LoadByCampaignID(p.campaignID)

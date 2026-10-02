@@ -30,7 +30,7 @@ func RunCmdLogs(flags func() *pflag.FlagSet) error {
 	}
 
 	// Trasformer ça en process
-	repo := repository.NewLogSystemRepos()
+	repo := repository.LogSystem()
 	repo.SetDb(db)
 	logs, err := repo.Load(nil)
 	if err != nil {

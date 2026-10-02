@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -71,7 +72,7 @@ func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.
 	switch msg := params.Msg.(type) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case cmdruntui.CmdShiftEnter, cmdruntui.CmdAltEnter:
+		case sharedtui.CmdShiftEnter, sharedtui.CmdAltEnter:
 			return params.Model, m.handleKeyShiftEnter()
 		default:
 			return params.Delegate(msg)

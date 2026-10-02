@@ -1,4 +1,4 @@
-package runsession
+package cmdrunrunsession
 
 import (
 	"solopg/app/cmdrun/domain/campaign"
@@ -12,6 +12,7 @@ import (
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
+	"solopg/app/shared/services/process/generatesteplist"
 
 	"solopg/app/cmdrun/services/process/savestate"
 	"solopg/app/cmdrun/tui/models"
@@ -29,11 +30,10 @@ type runner struct {
 
 	db  *mango.Mongo
 	ctx *cmdruntui.Context
-	err []error
 }
 
 type cache struct {
-	view *cmdruntui.Ui
+	view *generatesteplist.Generator[cmdruntui.Context]
 }
 
 func Process(db *mango.Mongo) *runner {
@@ -58,11 +58,7 @@ func (p *runner) GetResult() {
 
 // Methods
 func (p *runner) createTuiView() {
-	p.cache.view = cmdruntui.New()
-}
-
-func (p *runner) runTuiView() {
-	p.cache.view.Run()
+	p.cache.view = generatesteplist.Process[cmdruntui.Context]()
 }
 
 func (p *runner) makeSelectsaveStep() {
@@ -70,7 +66,7 @@ func (p *runner) makeSelectsaveStep() {
 		return
 	}
 
-	repository := repository.NewCampaignRepo().SetDb(p.db)
+	repository := repository.Campaign().SetDb(p.db)
 	campaigns, err := repository.Load()
 	if err != nil { // i18N -- register
 		err := i19n.NewError("error.unexpected:action", map[string]any{
@@ -138,6 +134,16 @@ func (p *runner) makeResolveStep() {
 				return nil
 			},
 		})
+}
+
+func (p *runner) runTuiView() {
+	model := cmdruntui.NewModel(p.cache.view.GetSteps())
+
+	p.cache.view.Run(&model)
+
+	if p.cache.view.HasErr() {
+		p.SetErr(p.cache.view.GetErr())
+	}
 }
 
 // Helpers

@@ -1,8 +1,9 @@
 services:
   app:
     image: golang:latest
+    container_name: solopg-app
     working_dir: /app
-    volumes:  
+    volumes:
       - .:/app
     environment:
       TERM: xterm-256color
@@ -14,22 +15,37 @@ services:
   mongo:
     image: mongo:latest
     container_name: solopg-mongo
+    hostname: solopg-mongo
+    restart: unless-stopped
     ports:
       - "${PORT:-27017}:27017"
-    # environment:
-    #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-    #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          mongosh --quiet --eval
+          "try { rs.status().myState } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'solopg-mongo:27017'}]}); 0 }"
+          | grep -q 1
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 5s
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+    #   MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
 
   compooss:
     image: abdullahmia/compooss:latest
+    container_name: solopg-compooss
     ports:
-        - "6969:3000"
+      - "6969:3000"
     depends_on:
-        - mongo
+      mongo:
+        condition: service_healthy
 
 volumes:
   mongo-data:

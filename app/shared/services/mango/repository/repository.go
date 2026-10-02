@@ -25,15 +25,7 @@ type MongoRepository struct {
 	timeout    time.Duration
 }
 
-type Repository interface {
-	GetDd() *mango.Mongo
-	SetDb() *mango.Mongo
-	GetTimeout() time.Duration
-	SetTimeout(timeout time.Duration)
-	GetCollection() mango.Collection
-}
-
-func NewRepository(collection mango.Collection) *MongoRepository {
+func New(collection mango.Collection) *MongoRepository {
 	return &MongoRepository{
 		collection: collection,
 	}
@@ -120,6 +112,50 @@ func (r *MongoRepository) toCollection[T Document](data T) error {
 	}
 
 	return nil
+}
+
+// Stream
+type Watchable[T any] interface {
+	Watch(ctx context.Context) (<-chan T, error)
+}
+
+func (r *MongoRepository) watchCollection[T any](ctx context.Context) (<-chan T, error) {
+	pipeline := mongodb.Pipeline{
+		{{Key: "$match", Value: bson.M{
+			"operationType": bson.M{"$in": bson.A{"insert", "replace"}},
+		}}},
+	}
+
+	stream, err := r.db.GetCollection(r.collection).Watch(ctx, pipeline)
+	if err != nil {
+		return nil, i19n.NewError("error.loading", map[string]any{
+			"Subject": r.collection,
+			"Error":   err,
+		})
+	}
+
+	out := make(chan T)
+	go func() {
+		defer close(out)
+		defer stream.Close(context.Background())
+
+		for stream.Next(ctx) {
+			var event struct {
+				FullDocument T `bson:"fullDocument"`
+			}
+			if err := stream.Decode(&event); err != nil {
+				continue
+			}
+
+			select {
+			case out <- event.FullDocument:
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return out, nil
 }
 
 // Methods options

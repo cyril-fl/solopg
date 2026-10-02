@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/types/step"
+	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -17,7 +17,7 @@ type model struct {
 	size    *tea.WindowSizeMsg
 	err     error
 }
-
+// TODO rendre ça generique
 type Context struct {
 	SelectedSave     *campaign.Campaign
 	SelectedName     string
@@ -28,10 +28,9 @@ type Context struct {
 }
 
 type contextStepList = step.List[Context]
-type contextStep = step.Step[Context]
-type Step = contextStep
+type Step = step.Step[Context]
 
-func newModel(steps *contextStepList) model {
+func NewModel(steps *contextStepList) model {
 	return model{
 		steps: steps,
 	}

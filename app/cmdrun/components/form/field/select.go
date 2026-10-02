@@ -3,10 +3,10 @@ package field
 import (
 	"fmt"
 	"solopg/app/cmdrun/components/form"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/shared/services/i19n"
+	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -112,9 +112,9 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.options.SetSize(msg.Width, msg.Height)
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case cmdruntui.KeyUp, cmdruntui.KeyDown:
+		case sharedtui.KeyUp, sharedtui.KeyDown:
 			return m.handleDirection(msg)
-		case cmdruntui.KeyEnter:
+		case sharedtui.KeyEnter:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),
 				form.SendMsg[form.Scroll](),

@@ -13,32 +13,32 @@ import (
 
 const ArchivesCollection mango.Collection = "archives"
 
-type ArchivesRepo struct {
+type archivesrepository struct {
 	*MongoRepository
 }
 
-func NewArchivesRepo() *ArchivesRepo {
-	return &ArchivesRepo{
-		NewRepository(ArchivesCollection),
+func Archives() *archivesrepository {
+	return &archivesrepository{
+		New(ArchivesCollection),
 	}
 }
 
 // Getters & Setters
-func (r *ArchivesRepo) GetDb() *mango.Mongo {
+func (r *archivesrepository) GetDb() *mango.Mongo {
 	return r.getDb()
 }
 
-func (r *ArchivesRepo) SetDb(db *mango.Mongo) *ArchivesRepo {
+func (r *archivesrepository) SetDb(db *mango.Mongo) *archivesrepository {
 	r.setDb(db)
 	return r
 }
 
 // Methods
-func (r *ArchivesRepo) Load() ([]campaign.Archives, error) {
+func (r *archivesrepository) Load() ([]campaign.Archives, error) {
 	return r.fromCollection[campaign.Archives](nil)
 }
 
-func (r *ArchivesRepo) LoadByCampaignID(campaignID id.ID) (*campaign.Archives, error) {
+func (r *archivesrepository) LoadByCampaignID(campaignID id.ID) (*campaign.Archives, error) {
 	archives, err := r.fromCollection[campaign.Archives](bson.M{"campaignId": campaignID})
 	if err != nil {
 		cwd, cwderr := os.Getwd()
@@ -69,6 +69,6 @@ func (r *ArchivesRepo) LoadByCampaignID(campaignID id.ID) (*campaign.Archives, e
 	return &archives[0], nil
 }
 
-func (r *ArchivesRepo) Register(archives *campaign.Archives) error {
+func (r *archivesrepository) Register(archives *campaign.Archives) error {
 	return r.toCollection(archives)
 }

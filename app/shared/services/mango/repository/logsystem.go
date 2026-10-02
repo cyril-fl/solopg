@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 
@@ -11,35 +12,39 @@ import (
 const LoggingCollection mango.Collection = "log_system"
 
 // Methods
-type LogSystemRepos struct {
+type logsystemrepository struct {
 	*MongoRepository
 }
 
-func NewLogSystemRepos() *LogSystemRepos {
-	return &LogSystemRepos{
-		NewRepository(LoggingCollection),
+func LogSystem() *logsystemrepository {
+	return &logsystemrepository{
+		New(LoggingCollection),
 	}
 }
 
 // Getters & setters
-func (r *LogSystemRepos) GetDb() *mango.Mongo {
+func (r *logsystemrepository) GetDb() *mango.Mongo {
 	return r.getDb()
 }
 
-func (r *LogSystemRepos) SetDb(db *mango.Mongo) *LogSystemRepos {
+func (r *logsystemrepository) SetDb(db *mango.Mongo) *logsystemrepository {
 	r.setDb(db)
 	return r
 }
 
 // Methods
-func (r *LogSystemRepos) Load(
+func (r *logsystemrepository) Load(
 	filter bson.M,
 	opts ...FindOption,
 ) ([]logs.Log, error) {
 	return r.fromCollection[logs.Log](filter, opts...)
 }
 
+func (r *logsystemrepository) Watch(ctx context.Context) (<-chan logs.Log, error) {
+	return r.watchCollection[logs.Log](ctx)
+}
+
 // TODO a la sorier de lui, pas register mais l'afficher direct ou panic ?
-func (r *LogSystemRepos) Register(log logs.Log) error {
-	return r.toCollection(&log)
+func (r *logsystemrepository) Register(log *logs.Log) error {
+	return r.toCollection(log)
 }

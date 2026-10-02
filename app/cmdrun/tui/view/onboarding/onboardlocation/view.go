@@ -2,8 +2,8 @@ package onboardlocation
 
 import (
 	"fmt"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
+	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
 	"strings"
 
@@ -17,7 +17,7 @@ func (m model) View() tea.View {
 	content.WriteString(" | ")
 	fmt.Fprintf(&content, "%s: %d", transform.Capitalize(i19n.Localize("attempt")), m.reroll.Attempt)
 
-	if m.reroll.Value.Description.Description != cmdruntui.EmptyKey {
+	if m.reroll.Value.Description.Description != sharedtui.EmptyKey {
 		content.WriteString("\n")
 		content.WriteString(i19n.Localize(m.reroll.Value.Description.Description))
 	}

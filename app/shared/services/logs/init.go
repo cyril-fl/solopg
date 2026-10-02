@@ -3,7 +3,7 @@ package logs
 var cache Registrable
 
 type Registrable interface {
-	Register(log Log) error
+	Register(log *Log) error
 }
 
 func Init(r Registrable) {
@@ -11,6 +11,6 @@ func Init(r Registrable) {
 }
 
 // ---
-func TestLog(log Log) error {
+func TestLog(log *Log) error {
 	return cache.Register(log)
 }

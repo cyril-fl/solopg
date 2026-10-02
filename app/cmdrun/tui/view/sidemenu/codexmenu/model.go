@@ -3,9 +3,9 @@ package codexmenu
 import (
 	"solopg/app/cmdrun/components/form"
 	"solopg/app/cmdrun/domain/gameplay/codex"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
+	sharedtui "solopg/app/shared/tui"
 
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
@@ -109,13 +109,13 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case cmdruntui.KeyEsc:
+		case sharedtui.KeyEsc:
 			return m.handleKeyEsc(params)
-		case cmdruntui.KeyUp, cmdruntui.KeyDown:
+		case sharedtui.KeyUp, sharedtui.KeyDown:
 			return m.delegateInputToForm(params)
-		case cmdruntui.KeyEnter:
+		case sharedtui.KeyEnter:
 			return m.delegateInputToForm(params)
-		case cmdruntui.CmdShiftEnter, cmdruntui.CmdAltEnter:
+		case sharedtui.CmdShiftEnter, sharedtui.CmdAltEnter:
 			return m.handleKeyShiftEnter(params)
 		default:
 			return m.delegateInputToForm(params)

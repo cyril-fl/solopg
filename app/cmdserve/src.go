@@ -1,17 +1,18 @@
 package cmdserve
 
 import (
-	"fmt"
-	"solopg/app/cmdlogs/services/process/filterlogs"
+	cmdserverunsession "solopg/app/cmdserve/service/runsession"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
+	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/process/initI19n"
 	"solopg/config"
 
 	"github.com/spf13/pflag"
 )
 
-func RunCmdLogs(flags func() *pflag.FlagSet) error {
+func RunCmdServe(flags func() *pflag.FlagSet) error {
 	var db *mango.Mongo
 	var err error
 
@@ -22,31 +23,17 @@ func RunCmdLogs(flags func() *pflag.FlagSet) error {
 
 	/* --- NOTE Everything above this line is non loggable --- */
 
-	// REFACTOR MEDIUM
 	translation := initI19n.Process(config.Current.I18n, "")
-	translation.Run()
-	if translation.HasErr() {
-		return translation.GetErr()
-	}
+	session := cmdserverunsession.Process(func() repository.Watchable[logs.Log] {
+		repo := repository.LogSystem()
+		repo.SetDb(db)
+		return repo
+	})
 
-	// Trasformer ça en process
-	repo := repository.NewLogSystemRepos()
-	repo.SetDb(db)
-	logs, err := repo.Load(nil)
-	if err != nil {
-		return err
+	processes := []process.Processable{
+		translation,
+		session,
 	}
-
-	// touver le moyen de lier le prcees qui a pas encore run et logs
-	filter := filterlogs.Process(flags, logs)
-	filter.Run()
-	if filter.HasErr() {
-		return filter.GetErr()
-	}
-
-	for _, log := range filter.GetResult() {
-		fmt.Println(log.String())
-	}
-
-	return nil
+	
+	return process.HandleProcess(processes)
 }

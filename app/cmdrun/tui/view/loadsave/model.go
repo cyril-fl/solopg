@@ -4,6 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/campaign"
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
+	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -34,7 +35,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case cmdruntui.KeyEnter:
+		case sharedtui.KeyEnter:
 			if selected, ok := m.list.SelectedItem().(models.Item[*campaign.Campaign]); ok {
 				m.selected = selected.Value()
 			}

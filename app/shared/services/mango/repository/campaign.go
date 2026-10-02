@@ -11,32 +11,32 @@ import (
 
 const CampaignCollection mango.Collection = "campaigns"
 
-type CampaignRepo struct {
+type campaignrepository struct {
 	*MongoRepository
 }
 
-func NewCampaignRepo() *CampaignRepo {
-	return &CampaignRepo{
-		NewRepository(CampaignCollection),
+func Campaign() *campaignrepository {
+	return &campaignrepository{
+		New(CampaignCollection),
 	}
 }
 
 // Getters & Setters
-func (r *CampaignRepo) GetDb() *mango.Mongo {
+func (r *campaignrepository) GetDb() *mango.Mongo {
 	return r.getDb()
 }
 
-func (r *CampaignRepo) SetDb(db *mango.Mongo) *CampaignRepo {
+func (r *campaignrepository) SetDb(db *mango.Mongo) *campaignrepository {
 	r.setDb(db)
 	return r
 }
 
 // Methods
-func (r *CampaignRepo) Load() ([]campaign.Campaign, error) {
+func (r *campaignrepository) Load() ([]campaign.Campaign, error) {
 	return r.fromCollection[campaign.Campaign](nil)
 }
 
-func (r *CampaignRepo) FromCollectionByID(campaignID id.ID) (*campaign.Campaign, error) {
+func (r *campaignrepository) FromCollectionByID(campaignID id.ID) (*campaign.Campaign, error) {
 	campaigns, err := r.fromCollection[campaign.Campaign](bson.M{"id": campaignID})
 	if err != nil {
 		return nil, err
@@ -60,6 +60,6 @@ func (r *CampaignRepo) FromCollectionByID(campaignID id.ID) (*campaign.Campaign,
 	return &campaigns[0], nil
 }
 
-func (r *CampaignRepo) Register(save *campaign.Campaign) error {
+func (r *campaignrepository) Register(save *campaign.Campaign) error {
 	return r.toCollection(save)
 }

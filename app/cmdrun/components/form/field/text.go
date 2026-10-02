@@ -3,8 +3,8 @@ package field
 import (
 	"fmt"
 	"solopg/app/cmdrun/components/form"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
+	sharedtui "solopg/app/shared/tui"
 	"strings"
 
 	"strconv"
@@ -93,17 +93,17 @@ func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case cmdruntui.KeyEnter:
+		case sharedtui.KeyEnter:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),
 				form.SendMsg[form.Scroll](),
 			)
-		case cmdruntui.KeyUp:
+		case sharedtui.KeyUp:
 			return m, tea.Sequence(
 				form.SendMsg[form.PreviousField](),
 				form.SendMsg[form.Scroll](),
 			)
-		case cmdruntui.KeyDown:
+		case sharedtui.KeyDown:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),
 				form.SendMsg[form.Scroll](),

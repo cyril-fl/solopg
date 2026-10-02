@@ -3,8 +3,8 @@ package onboardlocation
 import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/portal"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
+	sharedtui "solopg/app/shared/tui"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -34,7 +34,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case cmdruntui.KeyEnter:
+		case sharedtui.KeyEnter:
 			return m, m.reroll.HandleEnterInput()
 		}
 	}

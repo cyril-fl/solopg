@@ -5,6 +5,7 @@ import (
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/shared/services/i19n"
+	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
@@ -71,7 +72,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	updatedList, cmd := m.list.Update(msg)
 	m.list = updatedList
 
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == cmdruntui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KeyEnter {
 		selectedItem := m.list.SelectedItem()
 		if selectedItem == nil {
 			return m, nil
@@ -89,7 +90,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == cmdruntui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KeyEnter {
 		return m, tea.Quit
 	}
 

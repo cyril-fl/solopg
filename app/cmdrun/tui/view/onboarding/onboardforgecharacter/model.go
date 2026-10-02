@@ -2,8 +2,8 @@ package onboardforgecharacter
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
+	sharedtui "solopg/app/shared/tui"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -33,7 +33,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case cmdruntui.KeyEnter:
+		case sharedtui.KeyEnter:
 			return m, m.reroll.HandleEnterInput()
 		}
 	}

@@ -3,6 +3,7 @@ package mango
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,6 +23,7 @@ func New() *Mongo {
 	return &Mongo{}
 }
 
+// - Methods -
 // Dis.connection
 func (db *Mongo) Connect() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -37,6 +39,7 @@ func (db *Mongo) Disconnect() {
 	db.close(context.Background())
 }
 
+// Error
 func (db *Mongo) HasErrors() bool {
 	return len(db.err) > 0
 }
@@ -46,15 +49,17 @@ func (db *Mongo) GetErrors() error {
 }
 
 // Collection
-type Collection string
-
-func (c Collection) String() string {
-	return string(c)
+func (db *Mongo) GetCollection(collection Collection) *mongo.Collection {
+	return db.instance.Collection(collection.String())
 }
 
 // Helper
 func (db *Mongo) open(ctx context.Context) {
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(env.GetEnvURI()))
+	client, err := mongo.
+		Connect(ctx, options.Client().
+			ApplyURI(env.GetEnvURI()).
+			SetDirect(true))
+
 	if err != nil {
 		db.setErrors(err)
 		return
@@ -68,6 +73,8 @@ func (db *Mongo) open(ctx context.Context) {
 
 	db.client = client
 	db.instance = client.Database(env.GetEnvDBName())
+
+	fmt.Println("🥭 DB MongoDB connected successfully.")
 }
 
 func (db *Mongo) close(ctx context.Context) error {
@@ -82,11 +89,13 @@ func (db *Mongo) setErrors(err error) {
 	db.err = append(db.err, err)
 }
 
-func (db *Mongo) GetCollection(collection Collection) *mongo.Collection {
-	return db.instance.Collection(collection.String())
+// -- Collection -- //
+type Collection string
+
+func (c Collection) String() string {
+	return string(c)
 }
 
-// Init
 func Init() (db *Mongo, err error) {
 	db = New()
 	db.Connect()

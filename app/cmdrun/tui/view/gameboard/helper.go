@@ -11,6 +11,7 @@ import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	sharedtui "solopg/app/shared/tui"
 	"strings"
 	"time"
 
@@ -175,9 +176,9 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case cmdruntui.KeyEnter:
+	case sharedtui.KeyEnter:
 		m.handleEnterInput()
-	case cmdruntui.KeyUp, cmdruntui.KeyDown:
+	case sharedtui.KeyUp, sharedtui.KeyDown:
 		m.handleDirectionInput(msg)
 	default:
 		handleDefaultInput(m, msg)
@@ -187,7 +188,7 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case cmdruntui.CmdCtrlS:
+	case sharedtui.CmdCtrlS:
 		return m, cmdruntui.SendSaveMsg(m.save)
 	}
 

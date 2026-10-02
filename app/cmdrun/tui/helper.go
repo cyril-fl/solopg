@@ -1,6 +1,7 @@
 package cmdruntui
 
 import (
+	sharedtui "solopg/app/shared/tui"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -10,9 +11,9 @@ import (
 // Handlers
 func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case ShortcutCtrlQ:
+	case sharedtui.ShortcutCtrlQ:
 		return m, tea.Quit
-	case KeyEsc:
+	case sharedtui.KeyEsc:
 		current := m.steps.GetCurrentSubmodel()
 		if current == nil {
 			return m, tea.Quit

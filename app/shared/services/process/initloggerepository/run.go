@@ -20,7 +20,7 @@ func Process(db *mango.Mongo) *initializer {
 }
 
 func (p *initializer) Run() {
-	repo := repository.NewLogSystemRepos()
+	repo := repository.LogSystem()
 	repo.SetDb(p.db)
 
 	logs.Init(repo)
