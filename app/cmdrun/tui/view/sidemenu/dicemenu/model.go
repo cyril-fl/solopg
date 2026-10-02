@@ -2,7 +2,7 @@ package dicemenu
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/types/direction"
@@ -68,7 +68,7 @@ func (m *DiceMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cm
 	switch msg := params.Msg.(type) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case tui.CmdShiftEnter, tui.CmdAltEnter:
+		case cmdruntui.CmdShiftEnter, cmdruntui.CmdAltEnter:
 			return params.Model, m.handleKeyShiftEnter()
 		default:
 			return params.Delegate(msg)
@@ -86,7 +86,7 @@ func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 			// i18N -- register
-			return tui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
+			return cmdruntui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
 				"Subject":  i19n.Localize("dice"),
 				"Received": selected,
 			}))

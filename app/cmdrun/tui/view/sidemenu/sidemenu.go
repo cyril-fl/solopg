@@ -1,7 +1,7 @@
 package sidemenu
 
 import (
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/types/direction"
 
 	"charm.land/bubbles/v2/list"
@@ -49,7 +49,7 @@ func (m *Context) IsFirstMenuElement() bool {
 type UpdateParams struct {
 	Model    tea.Model
 	Msg      tea.Msg
-	Delegate tui.DelegateUpdateFunc
+	Delegate cmdruntui.DelegateUpdateFunc
 	Viewport viewport.Model
 }
 

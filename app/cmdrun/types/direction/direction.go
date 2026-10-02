@@ -1,7 +1,7 @@
 package direction
 
 import (
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -24,11 +24,11 @@ func GetListDirection(list *list.Model, key tea.KeyPressMsg) (list.Model, Direct
 	currentIndex := list.Index()
 
 	switch key.String() {
-	case tui.KeyUp:
+	case cmdruntui.KeyUp:
 		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
 			direction = Previous
 		}
-	case tui.KeyDown:
+	case cmdruntui.KeyDown:
 		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
 			direction = Next
 		}

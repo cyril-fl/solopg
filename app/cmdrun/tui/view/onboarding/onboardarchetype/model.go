@@ -2,7 +2,7 @@ package onboardarchetype
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/archetypes"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/utils/transform"
@@ -71,14 +71,14 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	updatedList, cmd := m.list.Update(msg)
 	m.list = updatedList
 
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == cmdruntui.KeyEnter {
 		selectedItem := m.list.SelectedItem()
 		if selectedItem == nil {
 			return m, nil
 		}
 
 		return m, func() tea.Msg {
-			return tui.ResolutionMsg{
+			return cmdruntui.ResolutionMsg{
 				Completed: true,
 				Value:     selectedItem,
 			}
@@ -89,7 +89,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == cmdruntui.KeyEnter {
 		return m, tea.Quit
 	}
 

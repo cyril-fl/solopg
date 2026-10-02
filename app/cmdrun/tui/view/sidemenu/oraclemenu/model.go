@@ -2,7 +2,7 @@ package oraclemenu
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/types/direction"
@@ -71,7 +71,7 @@ func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.
 	switch msg := params.Msg.(type) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case tui.CmdShiftEnter, tui.CmdAltEnter:
+		case cmdruntui.CmdShiftEnter, cmdruntui.CmdAltEnter:
 			return params.Model, m.handleKeyShiftEnter()
 		default:
 			return params.Delegate(msg)
@@ -90,7 +90,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 			// i18N -- register
-			return tui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
+			return cmdruntui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
 				"Subject":  i19n.Localize("oracle"),
 				"Received": selected,
 			}))
@@ -103,7 +103,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if err != nil {
 		return func() tea.Msg {
 			// i18N -- register
-			return tui.SendErrorMsg(i19n.NewError("error.unexpected:action:oracle", map[string]any{
+			return cmdruntui.SendErrorMsg(i19n.NewError("error.unexpected:action:oracle", map[string]any{
 				"Action": i19n.Localize("unexpected:action.roll"),
 				"Error":  err,
 			}))

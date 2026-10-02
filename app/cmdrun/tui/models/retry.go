@@ -1,7 +1,7 @@
 package models
 
 import (
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/utils/transform"
 
@@ -72,7 +72,7 @@ func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 
 	if isSelected.Value() || s.IsOutOfLimit() {
 		return func() tea.Msg {
-			return tui.ResolutionMsg{Completed: true, Value: s.Value}
+			return cmdruntui.ResolutionMsg{Completed: true, Value: s.Value}
 		}
 	}
 

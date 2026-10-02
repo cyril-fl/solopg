@@ -1,4 +1,4 @@
-package tui
+package cmdruntui
 
 import (
 	"solopg/app/shared/services/i19n"
@@ -16,7 +16,7 @@ le tout = History {
 	Curent
 }
 
-faire une evnt undo / redo en en fonction de tui.CtrlZ / CtrlY
+faire une evnt undo / redo en en fonction de cmdruntui.CtrlZ / CtrlY
 
 si on entre un nouvelle element utilser une methode dumpFuture()
 

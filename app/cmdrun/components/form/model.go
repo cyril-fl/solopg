@@ -2,7 +2,7 @@ package form
 
 import (
 	"errors"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
 
 	tea "charm.land/bubbletea/v2"
@@ -220,9 +220,9 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 func (m *Form) handleKeyPressMsg(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
-	case tui.KeyTab:
+	case cmdruntui.KeyTab:
 		return m, SendMsg[NextField]()
-	case tui.KeyShiftTab:
+	case cmdruntui.KeyShiftTab:
 		return m, SendMsg[PreviousField]()
 	}
 	return m.updateFocusedField(msg)

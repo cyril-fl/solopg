@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
@@ -92,13 +92,13 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case oraclemenu.Msg:
 		return m.handleOracleRolled(msg)
 
-	case tui.SaveMsg:
+	case cmdruntui.SaveMsg:
 		return m.handleSaveInput(msg)
-	case tui.ScrollMsg:
+	case cmdruntui.ScrollMsg:
 		return m.handleViewportScroll(msg)
-	case tui.Refresh:
+	case cmdruntui.Refresh:
 		return m.refreshViewport(msg.Resize)
-	case tui.ErrorMsg:
+	case cmdruntui.ErrorMsg:
 		return m.handleError(msg)
 
 	case cursor.BlinkMsg:

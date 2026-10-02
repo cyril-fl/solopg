@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/services/process/resolvearchives"
 	"solopg/app/cmdrun/services/process/resolvecampaign"
 	"solopg/app/cmdrun/services/process/savestate"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/process"
 )
@@ -18,7 +18,7 @@ type generator struct {
 	cache
 
 	db  *mango.Mongo
-	ctx *tui.Context
+	ctx *cmdruntui.Context
 	err []error
 }
 
@@ -30,7 +30,7 @@ type cache struct {
 	err error
 }
 
-func Process(db *mango.Mongo, ctx *tui.Context) *generator {
+func Process(db *mango.Mongo, ctx *cmdruntui.Context) *generator {
 	return &generator{
 		db:  db,
 		ctx: ctx,

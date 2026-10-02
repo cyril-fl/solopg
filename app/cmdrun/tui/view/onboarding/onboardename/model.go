@@ -1,7 +1,7 @@
 package onboardename
 
 import (
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"strings"
 
 	"charm.land/bubbles/v2/textinput"
@@ -41,16 +41,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.Input = newInput
 	m.Name = newInput.Value()
 
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == tui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == cmdruntui.KeyEnter {
 		name := strings.TrimSpace(m.Name)
-		if name == tui.EmptyKey {
+		if name == cmdruntui.EmptyKey {
 			return m, nil
 		}
 
 		m.Name = name
 
 		return m, func() tea.Msg {
-			return tui.ResolutionMsg{
+			return cmdruntui.ResolutionMsg{
 				Completed: true,
 				Value:     m.Name,
 			}

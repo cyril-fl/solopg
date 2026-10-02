@@ -2,7 +2,7 @@ package loadsave
 
 import (
 	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 
 	"charm.land/bubbles/v2/list"
@@ -34,12 +34,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case tui.KeyEnter:
+		case cmdruntui.KeyEnter:
 			if selected, ok := m.list.SelectedItem().(models.Item[*campaign.Campaign]); ok {
 				m.selected = selected.Value()
 			}
 			return m, func() tea.Msg {
-				return tui.ResolutionMsg{
+				return cmdruntui.ResolutionMsg{
 					Completed: true,
 					Value:     m.selected,
 				}

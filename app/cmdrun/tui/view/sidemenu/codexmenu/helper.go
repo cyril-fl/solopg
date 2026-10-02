@@ -7,7 +7,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/shared/services/i19n"
@@ -261,7 +261,7 @@ func (m *codexMenu) handleFormScroll(params sidemenu.UpdateParams) (tea.Model, t
 	viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
 	viewHight += lipgloss.Height(pageHeader)
 
-	return params.Model, tui.SendScrollMsg(viewTop, viewHight)
+	return params.Model, cmdruntui.SendScrollMsg(viewTop, viewHight)
 }
 
 func (m *codexMenu) handleFormError(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {

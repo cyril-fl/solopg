@@ -2,7 +2,7 @@ package cmdrun
 
 import (
 	"solopg/app/cmdrun/services/process/runsession"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/process"
 	initI19n "solopg/app/shared/services/process/initI19n"
@@ -14,7 +14,7 @@ func Start() error {
 	var db *mango.Mongo
 	var err error
 
-	tui.Clear()
+	cmdruntui.Clear()
 
 	if db, err = mango.Init(); err != nil {
 		return err

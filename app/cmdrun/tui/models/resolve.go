@@ -1,7 +1,7 @@
 package models
 
 import (
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -14,7 +14,7 @@ func Resolve() tea.Model {
 
 func (resolveModel) Init() tea.Cmd {
 	return func() tea.Msg {
-		return tui.ResolutionMsg{
+		return cmdruntui.ResolutionMsg{
 			Completed: true,
 		}
 	}

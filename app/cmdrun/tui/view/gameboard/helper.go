@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
@@ -131,7 +131,7 @@ func (m *model) handleEnterInput() {
 	m.viewport.GotoBottom()
 }
 
-func (m *model) handleSaveInput(msg tui.SaveMsg) (*model, tea.Cmd) {
+func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
 		// i18N -- register
@@ -175,9 +175,9 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case tui.KeyEnter:
+	case cmdruntui.KeyEnter:
 		m.handleEnterInput()
-	case tui.KeyUp, tui.KeyDown:
+	case cmdruntui.KeyUp, cmdruntui.KeyDown:
 		m.handleDirectionInput(msg)
 	default:
 		handleDefaultInput(m, msg)
@@ -187,14 +187,14 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case tui.CmdCtrlS:
-		return m, tui.SendSaveMsg(m.save)
+	case cmdruntui.CmdCtrlS:
+		return m, cmdruntui.SendSaveMsg(m.save)
 	}
 
 	return m.refreshViewport(false)
 }
 
-func (m *model) handleError(msg tui.ErrorMsg) (*model, tea.Cmd) {
+func (m *model) handleError(msg cmdruntui.ErrorMsg) (*model, tea.Cmd) {
 	m.err = msg.Err
 	return m.refreshViewport(false)
 }
@@ -295,7 +295,7 @@ func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
-	scrollMsg, ok := msg.(tui.ScrollMsg)
+	scrollMsg, ok := msg.(cmdruntui.ScrollMsg)
 	if !ok {
 		return m, nil
 	}

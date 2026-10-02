@@ -52,3 +52,24 @@ func HandleProcess(processes []Processable) error {
 
 	return nil
 }
+
+/*
+NOTE Snippet
+
+type p struct {
+	process.Process
+	cache
+}
+
+type cache struct {
+}
+
+func Process() *p {
+	return &p{
+
+	}
+}
+func (i *p) Run() {}
+
+func (i *p) GetResult() {}
+*/

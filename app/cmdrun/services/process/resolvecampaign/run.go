@@ -8,7 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/wallet"
 	"solopg/app/cmdrun/domain/card/objects"
 	"solopg/app/cmdrun/domain/card/objects/equipment"
-	"solopg/app/cmdrun/tui"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/process"
 	"strings"
@@ -18,7 +18,7 @@ type resolver struct {
 	process.Process
 	cache
 
-	ctx  *tui.Context
+	ctx  *cmdruntui.Context
 	errs []error
 }
 
@@ -29,7 +29,7 @@ type cache struct {
 	err error
 }
 
-func Process(ctx *tui.Context) *resolver {
+func Process(ctx *cmdruntui.Context) *resolver {
 	return &resolver{
 		ctx: ctx,
 	}
@@ -117,14 +117,14 @@ func (p *resolver) checkError() {
 }
 
 // Helpers
-func makeEquipementFromContext(ctx *tui.Context) equipment.Equipment {
+func makeEquipementFromContext(ctx *cmdruntui.Context) equipment.Equipment {
 	name := ctx.SelectedClass.GetEquipementName()
 	set := equipment.FindEquipementByName(name)
 
 	return equipment.NewSet(set)
 }
 
-func makeStatsFromContext(ctx *tui.Context) stats.Stats {
+func makeStatsFromContext(ctx *cmdruntui.Context) stats.Stats {
 	modifiers := makeModifiersFromContext(ctx)
 
 	baseStats := stats.GetBasic()
@@ -133,7 +133,7 @@ func makeStatsFromContext(ctx *tui.Context) stats.Stats {
 	return baseStats
 }
 
-func makeModifiersFromContext(ctx *tui.Context) []stats.Modifier {
+func makeModifiersFromContext(ctx *cmdruntui.Context) []stats.Modifier {
 	raceBoost := ctx.SelectedRace.GetBonus()
 	classBoost := ctx.SelectedClass.GetBonus()
 	build := ctx.SelectedBuild

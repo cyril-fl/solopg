@@ -1,4 +1,4 @@
-package tui
+package cmdruntui
 
 import (
 	"solopg/app/cmdrun/domain/campaign"

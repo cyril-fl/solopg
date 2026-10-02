@@ -7,13 +7,13 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/services/process/generatengine"
+	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
 
 	"solopg/app/cmdrun/services/process/savestate"
-	"solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/gameboard"
 	"solopg/app/cmdrun/tui/view/loadsave"
@@ -28,12 +28,12 @@ type runner struct {
 	cache
 
 	db  *mango.Mongo
-	ctx *tui.Context
+	ctx *cmdruntui.Context
 	err []error
 }
 
 type cache struct {
-	view *tui.Ui
+	view *cmdruntui.Ui
 }
 
 func Process(db *mango.Mongo) *runner {
@@ -58,7 +58,7 @@ func (p *runner) GetResult() {
 
 // Methods
 func (p *runner) createTuiView() {
-	p.cache.view = tui.New()
+	p.cache.view = cmdruntui.New()
 }
 
 func (p *runner) runTuiView() {
@@ -84,9 +84,9 @@ func (p *runner) makeSelectsaveStep() {
 	}
 
 	p.cache.view.Add(
-		tui.Step{
+		cmdruntui.Step{
 			Submodel: loadsave.NewModel(campaigns),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 
 				selected, ok := value.(*campaign.Campaign)
 				if !ok { // i18N -- register
@@ -114,9 +114,9 @@ func (p *runner) makeResolveStep() {
 	}
 
 	p.cache.view.Add(
-		tui.Step{
+		cmdruntui.Step{
 			Submodel: models.Resolve(),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 
 				process := generatengine.Process(p.db, ctx)
 				process.Run()
@@ -128,7 +128,7 @@ func (p *runner) makeResolveStep() {
 					})
 				}
 
-				p.cache.view.Insert(tui.Step{
+				p.cache.view.Insert(cmdruntui.Step{
 					Submodel: gameboard.NewModel(gameboard.UiParams{
 						Engine: process.GetResult(),
 						OnSave: savestate.Save(p.db, process.GetResult()),
@@ -141,11 +141,11 @@ func (p *runner) makeResolveStep() {
 }
 
 // Helpers
-func makeOnboardingSteps() []tui.Step {
-	return []tui.Step{
+func makeOnboardingSteps() []cmdruntui.Step {
+	return []cmdruntui.Step{
 		{
 			Submodel: onboardename.NewModel(),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
 					// i18N -- register
@@ -161,7 +161,7 @@ func makeOnboardingSteps() []tui.Step {
 		},
 		{
 			Submodel: onboardarchetype.NewModel(races.List()),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				selected, ok := value.(models.Item[races.Race])
 				if !ok {
 					// i18N -- register
@@ -178,7 +178,7 @@ func makeOnboardingSteps() []tui.Step {
 		},
 		{
 			Submodel: onboardarchetype.NewModel(classes.List()),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				selected, ok := value.(models.Item[classes.Class])
 				if !ok {
 					// i18N -- register
@@ -195,7 +195,7 @@ func makeOnboardingSteps() []tui.Step {
 		},
 		{
 			Submodel: onboardforgecharacter.NewModel(),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				build, ok := value.([]stats.Modifier)
 				if !ok {
 					// i18N -- register
@@ -211,7 +211,7 @@ func makeOnboardingSteps() []tui.Step {
 		},
 		{
 			Submodel: onboardlocation.NewModel(),
-			Resolve: func(ctx *tui.Context, value any) error {
+			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				location, ok := value.(*locations.Location)
 				if !ok {
 					// i18N -- register
