@@ -1,13 +1,14 @@
 package src
 
 import (
-	"solopg/app/services/mango/repository"
-	"solopg/app/tui"
-
+	"solopg/app/services/logger"
 	"solopg/app/services/mango"
+	"solopg/app/services/mango/repository"
 	initi19n "solopg/app/services/process/initI19n"
+	initlogger "solopg/app/services/process/initLogger"
 	"solopg/app/services/process/processkit"
 	"solopg/app/services/process/runsession"
+	"solopg/app/tui"
 	"solopg/config"
 )
 
@@ -22,12 +23,17 @@ func Start() error {
 	}
 	defer db.Disconnect()
 
+
+
+
 	/* --- NOTE Everything above this line is non loggable --- */
 
+	logger := initlogger.Process(db)
 	translation := initi19n.Process(config.Current.I18n, "")
 	session := runsession.Process(db)
 
 	processes := []processkit.Processable{
+		logger,
 		translation,
 		session,
 	}
@@ -36,10 +42,21 @@ func Start() error {
 }
 
 func Try() error {
+	log := logger.New(logger.Template{
+		Type:    logger.INFO,
+		Message: "This is a test log entry",
+	})
 
-	// if err := i18n.Init(config.Current.I18n, ""); err != nil {
-	// 	return err
-	// }
+	db := mango.New()
+	db.Connect()
+	if db.HasErrors() {
+		return db.GetErrors()
+	}
+	defer db.Disconnect()
 
-	return repository.TestLog()
+	repo := repository.NewLogSystemRepos()
+	repo.SetDb(db)
+	logger.Init(repo)
+
+	return logger.TestLog(log)
 }

@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// TODO deplacer dans le service
 type Log struct {
 	ID        id.ID
 	Type      Kind
@@ -18,7 +19,7 @@ type Log struct {
 
 type Kind string
 
-// TODO mettre les autre enume en MAJ aussi
+// TODO LOW mettre les autre enume en MAJ aussi
 const (
 	ERR  Kind = "ERROR"
 	INFO Kind = "INFO"

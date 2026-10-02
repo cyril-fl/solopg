@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"solopg/app/domain/system/logger"
+	"solopg/app/services/logger"
 	"solopg/app/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -42,22 +42,4 @@ func (r *LogSystemRepos) Load(
 // TODO a la sorier de lui, pas register mais l'afficher direct ou panic ?
 func (r *LogSystemRepos) Register(log logger.Log) error {
 	return r.toCollection(&log)
-}
-
-func TestLog() error {
-	log := logger.New(logger.Template{
-		Type:    logger.INFO,
-		Message: "This is a test log entry",
-	})
-
-	db := mango.New()
-	db.Connect()
-	if db.HasErrors() {
-		return db.GetErrors()
-	}
-	defer db.Disconnect()
-
-	repo := NewLogSystemRepos().SetDb(db)
-
-	return repo.Register(log)
 }
