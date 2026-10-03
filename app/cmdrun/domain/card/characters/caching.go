@@ -11,7 +11,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/wallet"
 	"solopg/app/cmdrun/domain/card/objects"
 	"solopg/app/cmdrun/domain/card/objects/equipment"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
 )
@@ -37,7 +37,7 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return i19n.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return logs.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -63,9 +63,8 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading", map[string]any{
-			"Subject": i19n.Localize("location"),
+		return logs.NewError("error.loading", map[string]any{
+			"Subject": "location",
 			"Error":   err,
 		})
 	}
@@ -85,9 +84,8 @@ func loadFromFile(fileAddress string) error {
 func List() []Character {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading", map[string]any{
-				"Subject": i19n.Localize("dice"),
+			logs.NewError("error.loading", map[string]any{
+				"Subject": ("dice"),
 				"Error":   err,
 			})
 			return nil
@@ -112,9 +110,8 @@ func makeSet(configs []yamlConfig) []Character {
 func newFromYaml(config yamlConfig) *Character {
 	class, err := classes.InsertIfIsnt(config.Class)
 	if err != nil {
-		// i18N -- register
 		cwd, cwderr := os.Getwd()
-		i19n.NewError("error.unexpected", map[string]any{
+		logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})
@@ -135,9 +132,8 @@ func newFromYaml(config yamlConfig) *Character {
 	})
 
 	if err != nil {
-		// i18N -- register
 		cwd, cwderr := os.Getwd()
-		i19n.NewError("error.unexpected", map[string]any{
+		logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})

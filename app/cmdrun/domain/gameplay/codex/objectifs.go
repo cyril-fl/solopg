@@ -3,6 +3,7 @@ package codex
 import (
 	"fmt"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"strings"
 	"time"
 )
@@ -82,17 +83,17 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 	var err []error
 
 	if values["title"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("objectives"),
-			"Property": i19n.Localize("property.title"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "objectives",
+			"Property": "property.title",
 		}))
 	}
 	if values["description"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("objectives"),
-			"Property": i19n.Localize("property.description"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "objectives",
+			"Property": "property.description",
 		}))
 	}
 

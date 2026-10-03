@@ -1,7 +1,7 @@
 package generatesteplist
 
 import (
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/process"
 	"solopg/app/shared/types/step"
 
@@ -21,7 +21,7 @@ func (p *Generator[T]) GetSteps() *step.List[T] {
 }
 
 func (p *Generator[T]) GetResult() {
-	i19n.NewError("error:not_implemented", map[string]any{
+	logs.NewError("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})

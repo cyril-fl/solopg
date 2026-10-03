@@ -21,7 +21,7 @@ type model[T any] struct {
 	events     []T
 	stream     <-chan T
 
-	err        error
+	err  error
 	size *tea.WindowSizeMsg
 }
 
@@ -75,7 +75,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
-	
+
 	return m, nil
 }
 

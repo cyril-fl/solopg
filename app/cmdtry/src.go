@@ -4,14 +4,12 @@ import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
+	initI19n "solopg/app/shared/services/process/initI19n"
+	"solopg/config"
 )
 
+// Actuellement enregistre un log en DB
 func Try() error {
-	log := logs.New(logs.Template{
-		Type:    logs.INFO,
-		Message: "This is a test log entry",
-	})
-
 	db := mango.New()
 	db.Connect()
 	if db.HasErrors() {
@@ -23,5 +21,19 @@ func Try() error {
 	repo.SetDb(db)
 	logs.Init(repo)
 
-	return logs.TestLog(log)
+	translation := initI19n.Process(config.Current.I18n, "")
+	translation.Run()
+	if translation.HasErr() {
+		return translation.GetErr()
+	}
+
+	err := logs.NewError("error.required", map[string]any{
+		"Subject":  "race",
+		"Property": 1,
+	})
+
+	println(err.Error())
+
+	return nil
+
 }

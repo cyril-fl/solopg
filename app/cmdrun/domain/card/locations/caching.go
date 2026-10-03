@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
 )
@@ -35,9 +35,9 @@ func load() error {
 		filepath := fmt.Sprintf("%s/%s", folderConfigPath, file)
 
 		if err := loadFromFile(filepath); err != nil {
-			// i18N -- register
-			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
-				"Subject": i19n.Localize("location"),
+
+			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+				"Subject": "location",
 				"File":    filepath,
 				"Error":   err,
 			}))
@@ -56,9 +56,9 @@ func loadFromFolder() ([]string, error) {
 	list, err := yaml.GetFolderFiles(folderConfigPath)
 
 	if err != nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.loading:folder", map[string]any{
-			"Subject": i19n.Localize("location"),
+
+		return nil, logs.NewError("error.loading:folder", map[string]any{
+			"Subject": "location",
 			"Folder":  folderConfigPath,
 			"Error":   err,
 		})
@@ -71,9 +71,9 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading:file", map[string]any{
-			"Subject": i19n.Localize("location"),
+
+		return logs.NewError("error.loading:file", map[string]any{
+			"Subject": "location",
 			"File":    fileAddress,
 			"Error":   err,
 		})
@@ -97,9 +97,9 @@ func List() []Location {
 	if cachedConfig == nil {
 		err := load()
 		if err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading", map[string]any{
-				"Subject": i19n.Localize("location"),
+
+			logs.NewError("error.loading", map[string]any{
+				"Subject": "location",
 				"Error":   err,
 			})
 			return nil
@@ -131,9 +131,9 @@ func newFromYaml(config yamlConfig) *Location {
 	})
 
 	if err != nil {
-		// i18N -- register
-		i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("location"),
+
+		logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "location",
 			"Error":   err,
 		})
 		return nil

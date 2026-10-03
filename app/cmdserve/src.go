@@ -24,7 +24,7 @@ func RunCmdServe(flags func() *pflag.FlagSet) error {
 	/* --- NOTE Everything above this line is non loggable --- */
 
 	translation := initI19n.Process(config.Current.I18n, "")
-	session := cmdserverunsession.Process(func() repository.Watchable[logs.Log] {
+	session := cmdserverunsession.Process(func() repository.Watchable[logs.Entry] {
 		repo := repository.LogSystem()
 		repo.SetDb(db)
 		return repo
@@ -34,6 +34,6 @@ func RunCmdServe(flags func() *pflag.FlagSet) error {
 		translation,
 		session,
 	}
-	
+
 	return process.HandleProcess(processes)
 }

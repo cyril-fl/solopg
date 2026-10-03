@@ -3,6 +3,7 @@ package codexmenu
 import (
 	"fmt"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
 	"strings"
 
@@ -26,11 +27,10 @@ func (m *codexMenu) GetMenuView() string {
 func (m *codexMenu) GetView() string {
 	page := m.getCurrentPage()
 	if page == nil {
-		// i18N -- register
-		return i19n.
-			NewError("error.not_found", map[string]any{
-				"Subject": transform.Capitalize(i19n.Localize("page")),
-			}).
+
+		return logs.NewError("error.not_found", map[string]any{
+			"Subject": transform.Capitalize(i19n.Localize("page")),
+		}).
 			Error()
 	}
 

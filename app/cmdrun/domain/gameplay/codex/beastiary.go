@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"strings"
 	"time"
 )
@@ -51,9 +52,9 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if generator.HasError() {
-		// i18N -- register
+
 		cwd, err := os.Getwd()
-		return i19n.NewError("error.unexpected", map[string]any{
+		return logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, generator.GetError()),
 		})
@@ -77,9 +78,9 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	}
 
 	if err := races.AddInConfig(raw); err != nil {
-		// i18N -- register
-		return i19n.NewError("error.unexpected", map[string]any{
-			"Subject": i19n.Localize("race"),
+
+		return logs.NewError("error.unexpected", map[string]any{
+			"Subject": "race",
 			"Error":   err,
 		})
 	}
@@ -108,8 +109,8 @@ func (tb *BeastiaryTable) Summaries() []string {
 			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
 		} else {
 			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.beastiary:entry", map[string]any{
-				"Name":        i19n.Localize(entry.Race.GetName()),
-				"Description": i19n.Localize(entry.Race.GetDescription()),
+				"Name":        entry.Race.GetName(),
+				"Description": entry.Race.GetDescription(),
 			}))
 
 			if len(entry.Race.GetBonus()) > 0 {
@@ -128,18 +129,18 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("race"),
-			"Property": i19n.Localize("property.name"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "race",
+			"Property": "property.name",
 		}))
 	}
 
 	if entry["description"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("race"),
-			"Property": i19n.Localize("property.description"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "race",
+			"Property": "property.description",
 		}))
 	}
 

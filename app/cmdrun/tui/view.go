@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -14,7 +15,7 @@ import (
 func (m model) View() tea.View {
 	if m.err != nil {
 		cwd, err := os.Getwd()
-		errorLabel := i19n.NewError("error.unexpected", map[string]any{
+		errorLabel := logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, m.err),
 		})

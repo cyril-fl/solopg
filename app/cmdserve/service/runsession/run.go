@@ -6,7 +6,7 @@ import (
 	"os/signal"
 
 	cmdservetui "solopg/app/cmdserve/tui"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/process/generatesteplist"
@@ -44,7 +44,7 @@ func (p *runner[T]) Run() {
 }
 
 func (p *runner[T]) GetResult() {
-	i19n.NewError("error:not_implemented", map[string]any{
+	logs.NewError("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})
@@ -63,10 +63,10 @@ func (p *runner[T]) runTuiView() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	/* 
-	FIXME MEDIUM de vrai etre une vue et nom l'equilavent du moteur qui tourne dans CMDRUN
-	Deplaver le moteur aiderais a ameliore et fixer ici
-	Ne devrai pas rester comme ça ca ca marche mais ma melanger les responsabilté
+	/*
+		FIXME MEDIUM de vrai etre une vue et nom l'equilavent du moteur qui tourne dans CMDRUN
+		Deplaver le moteur aiderais a ameliore et fixer ici
+		Ne devrai pas rester comme ça ca ca marche mais ma melanger les responsabilté
 	*/
 	model := cmdservetui.NewModel(ctx, p.cache.view.GetSteps(), p.repository)
 

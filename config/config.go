@@ -2,6 +2,7 @@ package config
 
 import (
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 )
 
@@ -80,9 +81,9 @@ func Load() (*config, error) {
 	}
 
 	if err := current.I18n.Validate(); err != nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid", map[string]any{
-			"Subject": i19n.Localize("config"),
+
+		return nil, logs.NewError("error.invalid", map[string]any{
+			"Subject": "config",
 			"Error":   err,
 		})
 	}

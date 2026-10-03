@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
@@ -90,9 +91,9 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 
 	if !ok {
 		return func() tea.Msg {
-			// i18N -- register
-			return cmdruntui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
-				"Subject":  i19n.Localize("oracle"),
+
+			return cmdruntui.SendErrorMsg(logs.NewError("error.invalid", map[string]any{
+				"Subject":  "oracle",
 				"Received": selected,
 			}))
 		}
@@ -103,9 +104,9 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	rollResult, err := oracle.Roll[any](rules)
 	if err != nil {
 		return func() tea.Msg {
-			// i18N -- register
-			return cmdruntui.SendErrorMsg(i19n.NewError("error.unexpected:action:oracle", map[string]any{
-				"Action": i19n.Localize("unexpected:action.roll"),
+
+			return cmdruntui.SendErrorMsg(logs.NewError("error.unexpected:action:oracle", map[string]any{
+				"Action": "unexpected:action.roll",
 				"Error":  err,
 			}))
 		}

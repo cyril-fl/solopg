@@ -10,6 +10,7 @@ import (
 	"solopg/app/cmdrun/domain/card/objects/equipment"
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/process"
 	"strings"
 )
@@ -70,9 +71,8 @@ func (p *resolver) assertContext() {
 		return
 	}
 
-	// i18N -- register
-	p.cache.err = i19n.NewError("error.required", map[string]any{
-		"Subject":  i19n.Localize("campaign"),
+	p.cache.err = logs.NewError("error.required", map[string]any{
+		"Subject":  "campaign",
 		"Property": strings.Join([]string{i19n.Localize("race"), i19n.Localize("class"), i19n.Localize("location")}, ", "),
 	})
 

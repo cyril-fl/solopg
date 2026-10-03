@@ -11,6 +11,7 @@ import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 	"strings"
 	"time"
@@ -135,8 +136,8 @@ func (m *model) handleEnterInput() {
 func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
-		// i18N -- register
-		err := i19n.NewError("error.unexpected:save", map[string]any{
+
+		err := logs.NewError("error.unexpected:save", map[string]any{
 			"Error": msg.Err,
 		})
 		// LOG autrement

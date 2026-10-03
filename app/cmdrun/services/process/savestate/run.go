@@ -2,7 +2,7 @@ package savestate
 
 import (
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
@@ -29,7 +29,7 @@ func (p *saver) Run() {
 
 func (p *saver) GetResult() {
 	// i18N register
-	i19n.NewError("error:not_implemented", map[string]any{
+	logs.NewError("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "savestate",
 	})

@@ -7,13 +7,13 @@ const (
 	KEY_ESC       = "esc"
 	KEY_BACKSPACE = "backspace"
 	KEY_TAB       = "tab"
-	KEY_SHIFT_TAB  = "shift+tab"
+	KEY_SHIFT_TAB = "shift+tab"
 
 	// Arrow keys
-	KEY_UP     = "up"
-	KEY_DOWN   = "down"
-	KEY_LEFT   = "left"
-	KEY_RIGHT  = "right"
+	KEY_UP      = "up"
+	KEY_DOWN    = "down"
+	KEY_LEFT    = "left"
+	KEY_RIGHT   = "right"
 	KEY_PG_UP   = "pgup"
 	KEY_PG_DOWN = "pgdown"
 

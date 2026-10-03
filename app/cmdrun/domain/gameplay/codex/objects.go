@@ -7,6 +7,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/objects"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"strings"
 	"time"
 )
@@ -56,9 +57,9 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("item"),
+
+		return logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "item",
 			"Error":   err,
 		})
 	}
@@ -91,16 +92,16 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("item"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "item",
 			"Property": "name",
 		}))
 	}
 	if entry["description"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("item"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "item",
 			"Property": "description",
 		}))
 	}

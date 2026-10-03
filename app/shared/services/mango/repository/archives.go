@@ -5,7 +5,7 @@ import (
 	"os"
 	"solopg/app/cmdrun/domain/campaign"
 	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -42,7 +42,7 @@ func (r *archivesrepository) LoadByCampaignID(campaignID id.ID) (*campaign.Archi
 	archives, err := r.fromCollection[campaign.Archives](bson.M{"campaignId": campaignID})
 	if err != nil {
 		cwd, cwderr := os.Getwd()
-		return nil, i19n.NewError("error.unexpected", map[string]any{
+		return nil, logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})
@@ -59,7 +59,7 @@ func (r *archivesrepository) LoadByCampaignID(campaignID id.ID) (*campaign.Archi
 	}
 
 	if len(archives) > 1 {
-		return nil, i19n.NewError("error.unexpected:value", map[string]any{
+		return nil, logs.NewError("error.unexpected:value", map[string]any{
 			"Subject":  "Archives",
 			"Expected": 1,
 			"Received": len(archives),

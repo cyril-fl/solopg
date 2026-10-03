@@ -3,7 +3,7 @@ package repository
 import (
 	"solopg/app/cmdrun/domain/campaign"
 	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -43,14 +43,14 @@ func (r *campaignrepository) FromCollectionByID(campaignID id.ID) (*campaign.Cam
 	}
 
 	if len(campaigns) == 0 {
-		return nil, i19n.NewError("error.not_found.id", map[string]any{
+		return nil, logs.NewError("error.not_found.id", map[string]any{
 			"Subject": "Campaign",
 			"ID":      campaignID,
 		})
 	}
 
 	if len(campaigns) > 1 {
-		return nil, i19n.NewError("error.unexpected:value", map[string]any{
+		return nil, logs.NewError("error.unexpected:value", map[string]any{
 			"Subject":  "Campaign",
 			"Expected": 1,
 			"Received": len(campaigns),

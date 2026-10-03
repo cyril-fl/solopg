@@ -22,9 +22,14 @@ func Start() error {
 	defer db.Disconnect()
 
 	/* --- NOTE Everything above this line is non loggable --- */
+	/*
+		- STEP 1: Initialize translation bundle
+		- STEP 2: Initialize logger repository
+		- STEP 3: Run session
+	*/
 
-	logger := initlogger.Process(db)
 	translation := initI19n.Process(config.Current.I18n, "")
+	logger := initlogger.Process(db)
 	session := cmdrunrunsession.Process(db)
 
 	processes := []process.Processable{

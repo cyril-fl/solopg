@@ -5,6 +5,7 @@ import (
 	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/description"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
 	"strings"
@@ -55,9 +56,8 @@ func New(mods []Modifier) Stats {
 func GetBasic() Stats {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading", map[string]any{
-				"Subject": i19n.Localize("stats"),
+			logs.NewError("error.loading", map[string]any{
+				"Subject": "stats",
 				"Error":   err,
 			})
 
@@ -85,9 +85,8 @@ func (s *Stats) ApplyModifier(mod Modifier) {
 			valid = append(valid, i19n.Localize(stat.String()))
 		}
 
-		// i18N -- register
-		i19n.NewError("error.unexpected:value", map[string]any{
-			"Subject":  i19n.Localize("stat"),
+		logs.NewError("error.unexpected:value", map[string]any{
+			"Subject":  "stat",
 			"Expected": strings.Join(valid, ", "),
 			"Received": mod.Stat,
 		})
@@ -140,9 +139,8 @@ func (m Modifier) String() string {
 func List() []Stat {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading:file", map[string]any{
-				"Subject": i19n.Localize("stats"),
+			logs.NewError("error.loading:file", map[string]any{
+				"Subject": "stats",
 				"File":    fileConfigPath,
 				"Error":   err,
 			})

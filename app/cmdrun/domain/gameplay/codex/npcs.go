@@ -10,6 +10,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"strings"
 
 	"time"
@@ -51,9 +52,9 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if generator.HasError() {
-		// i18N -- register
+
 		cwd, err := os.Getwd()
-		return i19n.NewError("error.unexpected", map[string]any{
+		return logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, generator.GetError()),
 		})
@@ -75,9 +76,9 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("npcs"),
+
+		return logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "npcs",
 			"Error":   err,
 		})
 	}
@@ -117,31 +118,31 @@ func (tb *NpcsTable) Summaries() []string {
 func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("npcs"),
-			"Property": i19n.Localize("property.name"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "npcs",
+			"Property": "property.name",
 		}))
 	}
 	if entry["description"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("npcs"),
-			"Property": i19n.Localize("property.description"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "npcs",
+			"Property": "property.description",
 		}))
 	}
 	if !races.Assert(entry["race"]) {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("npcs"),
-			"Property": i19n.Localize("property.race"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "npcs",
+			"Property": "property.race",
 		}))
 	}
 	if !classes.Assert(entry["class"]) {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("npcs"),
-			"Property": i19n.Localize("property.class"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "npcs",
+			"Property": "property.class",
 		}))
 	}
 

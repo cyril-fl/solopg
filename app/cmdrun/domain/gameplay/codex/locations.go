@@ -6,6 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"strings"
 	"time"
 )
@@ -91,17 +92,17 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 	var err []error
 
 	if values["name"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("location"),
-			"Property": i19n.Localize("name"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "location",
+			"Property": "name",
 		}))
 	}
 	if values["description"] == "" {
-		// i18N -- register
-		err = append(err, i19n.NewError("error.required_property", map[string]any{
-			"Subject":  i19n.Localize("location"),
-			"Property": i19n.Localize("description"),
+
+		err = append(err, logs.NewError("error.required", map[string]any{
+			"Subject":  "location",
+			"Property": "description",
 		}))
 	}
 

@@ -8,7 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/slot"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 )
 
@@ -33,9 +33,9 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading:folder", map[string]any{
-			"Subject": i19n.Localize("gear"),
+
+		return logs.NewError("error.loading:folder", map[string]any{
+			"Subject": "gear",
 			"Folder":  folderConfigPath,
 			"Error":   err,
 		})
@@ -52,9 +52,9 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
-			// i18N -- register
-			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
-				"Subject": i19n.Localize("gear"),
+
+			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+				"Subject": "gear",
 				"File":    file,
 				"Error":   err,
 			}))
@@ -82,9 +82,9 @@ func loadFromFile(fileAddress string) error {
 func List() []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading", map[string]any{
-				"Subject": i19n.Localize("gear"),
+
+			logs.NewError("error.loading", map[string]any{
+				"Subject": "gear",
 				"Error":   err,
 			})
 			return nil
@@ -120,9 +120,9 @@ func newFromYaml(config yamlConfig) *Gear {
 	})
 
 	if err != nil {
-		// i18N -- register
-		i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("gear"),
+
+		logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "gear",
 			"Error":   err,
 		})
 		return nil
@@ -134,9 +134,9 @@ func newFromYaml(config yamlConfig) *Gear {
 func FindEquipementByName(name string) []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading", map[string]any{
-				"Subject": i19n.Localize("gear"),
+
+			logs.NewError("error.loading", map[string]any{
+				"Subject": "gear",
 				"Error":   err,
 			})
 			return nil

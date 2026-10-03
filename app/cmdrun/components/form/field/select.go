@@ -5,7 +5,7 @@ import (
 	"solopg/app/cmdrun/components/form"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/types/direction"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
@@ -82,9 +82,8 @@ func (f *selectField[T]) Validate() error {
 		return f.validate(v)
 	}
 
-	// i18N -- register
-	return i19n.NewError("error.unexpected:value", map[string]any{
-		"Subject":  i19n.Localize("field"),
+	return logs.NewError("error.unexpected:value", map[string]any{
+		"Subject":  "field",
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
 		"Received": f.Value(),
 	})
@@ -92,8 +91,7 @@ func (f *selectField[T]) Validate() error {
 
 func (f *selectField[T]) testRequireness() error {
 	if f.required && f.Value() == nil {
-		// i18N -- register
-		return i19n.NewError("error.required", map[string]any{
+		return logs.NewError("error.required", map[string]any{
 			"Subject": f.Label(),
 			"Value":   f.ID(),
 		})

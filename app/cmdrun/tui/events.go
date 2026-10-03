@@ -1,7 +1,7 @@
 package cmdruntui
 
 import (
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -46,7 +46,7 @@ type SaveMsg struct {
 func SendSaveMsg(save func() error) tea.Cmd {
 	return func() tea.Msg {
 		if save == nil {
-			return SaveMsg{Err: i19n.NewError("error.not_found:on_save")}
+			return SaveMsg{Err: logs.NewError("error.not_found:on_save")}
 		}
 		return SaveMsg{Err: save()}
 	}

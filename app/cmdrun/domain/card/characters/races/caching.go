@@ -3,7 +3,7 @@ package races
 import (
 	"solopg/app/cmdrun/domain/card/attributes/description"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
 )
@@ -23,9 +23,8 @@ var cachedConfig []yamlConfig
 func loadFromFile() error {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading:file", map[string]any{
-			"Subject": i19n.Localize("race"),
+		return logs.NewError("error.loading:file", map[string]any{
+			"Subject": "race",
 			"File":    fileConfigPath,
 			"Error":   err,
 		})
@@ -49,9 +48,8 @@ func Has(value Template) bool {
 
 func AddInConfig(value Template) error {
 	if Has(value) {
-		// i18N -- register
-		return i19n.NewError("error.invalid:already_exists", map[string]any{
-			"Subject": i19n.Localize("race"),
+		return logs.NewError("error.invalid:already_exists", map[string]any{
+			"Subject": "race",
 			"ID":      value.Name,
 		})
 	}
@@ -72,9 +70,9 @@ func AddInConfig(value Template) error {
 func List() []Race {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading", map[string]any{
-				"Subject": i19n.Localize("race"),
+
+			logs.NewError("error.loading", map[string]any{
+				"Subject": "race",
 				"Error":   err,
 			})
 			return nil

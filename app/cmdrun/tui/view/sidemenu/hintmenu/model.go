@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
@@ -86,8 +87,8 @@ func (m *HintMenu) handleKeyShiftEnter() tea.Cmd {
 	selected, ok := m.list.SelectedItem().(models.Item[hint.Hint])
 	if !ok {
 		return func() tea.Msg {
-			// i18N -- register
-			return cmdruntui.SendErrorMsg(i19n.NewError("error.invalid", map[string]any{
+
+			return cmdruntui.SendErrorMsg(logs.NewError("error.invalid", map[string]any{
 				"Subject":  i19n.Localize("hint"),
 				"Received": selected,
 			}))

@@ -3,6 +3,7 @@ package models
 import (
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
@@ -19,10 +20,10 @@ type RerollModel[T any] struct {
 
 func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), limit int) RerollModel[T] {
 	value, err := handleRoll()
-	// i18N -- register
+
 	if err != nil {
-		panic(i19n.NewError("error.unexpected:action", map[string]any{
-			"Action": i19n.Localize("unexpected:action.roll"),
+		panic(logs.NewError("error.unexpected:action", map[string]any{
+			"Action": "unexpected:action.roll",
 			"Error":  err,
 		}))
 	}
@@ -38,10 +39,10 @@ func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), lim
 
 func (s *RerollModel[T]) Reroll() {
 	value, err := s.Roll()
-	// i18N -- register
+
 	if err != nil {
-		panic(i19n.NewError("error.unexpected:action", map[string]any{
-			"Action": i19n.Localize("unexpected:action.roll"),
+		panic(logs.NewError("error.unexpected:action", map[string]any{
+			"Action": "unexpected:action.roll",
 			"Error":  err,
 		}))
 	}

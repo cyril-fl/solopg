@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 )
 
 type Object struct {
@@ -37,9 +37,9 @@ func New(params Template) (*Object, error) {
 	})
 
 	if newCard == nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("item"),
+
+		return nil, logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "item",
 			"Error":   err,
 		})
 	}
@@ -50,9 +50,9 @@ func New(params Template) (*Object, error) {
 
 	// Check Category
 	if !params.Category.Validate() {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid", map[string]any{
-			"Subject": i19n.Localize("category"),
+
+		return nil, logs.NewError("error.invalid", map[string]any{
+			"Subject": "category",
 			"Receive": params.Category,
 		})
 	}

@@ -48,7 +48,7 @@ func (c *Campaign) Title() string {
 
 func (c *Campaign) Description() string {
 	return i19n.Localize("campaign.description", map[string]any{
-		"Location": i19n.Localize(c.CurrentLocation.Name),
+		"Location": c.CurrentLocation.Name,
 		"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
 	})
 }

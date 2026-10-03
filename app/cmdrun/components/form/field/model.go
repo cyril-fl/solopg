@@ -20,7 +20,6 @@ type field[T any] struct {
 
 type kind string
 
-
 const (
 	// FieldTypeInput represents a text input field.
 	INPUT kind = "input"

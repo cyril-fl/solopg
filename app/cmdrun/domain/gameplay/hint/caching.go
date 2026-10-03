@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
 )
@@ -25,9 +25,9 @@ func loadFromSource() error {
 	// Appliquer cette logique la au oracles dice ect...
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading:folder", map[string]any{
-			"Subject": i19n.Localize("hint"),
+
+		return logs.NewError("error.loading:folder", map[string]any{
+			"Subject": "hint",
 			"Folder":  folderConfigPath,
 			"Error":   err,
 		})
@@ -44,9 +44,9 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
-			// i18N -- register
-			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
-				"Subject": i19n.Localize("hint"),
+
+			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+				"Subject": "hint",
 				"File":    file,
 				"Error":   err,
 			}))
@@ -61,9 +61,9 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading:file", map[string]any{
-			"Subject": i19n.Localize("hint"),
+
+		return logs.NewError("error.loading:file", map[string]any{
+			"Subject": "hint",
 			"File":    fileAddress,
 			"Error":   err,
 		})
@@ -96,9 +96,8 @@ func GetByName(name string) (*Hint, error) {
 		}
 	}
 
-	// i18N -- register
-	return nil, i19n.NewError("error.not_found.id", map[string]any{
-		"Subject": i19n.Localize("hint"),
+	return nil, logs.NewError("error.not_found.id", map[string]any{
+		"Subject": "hint",
 		"ID":      name,
 	})
 }
@@ -125,9 +124,9 @@ func List() []Hint {
 func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.loading:folder", map[string]any{
-			"Subject": i19n.Localize("hint"),
+
+		return nil, logs.NewError("error.loading:folder", map[string]any{
+			"Subject": "hint",
 			"Folder":  path,
 			"Error":   err,
 		})
@@ -137,9 +136,9 @@ func ListFromFolder(path string) ([]string, error) {
 	hints := []string{}
 	for _, file := range list {
 		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
-			// i18N -- register
-			errs = append(errs, i19n.NewError("error.loading:file", map[string]any{
-				"Subject": i19n.Localize("hint"),
+
+			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+				"Subject": "hint",
 				"File":    file,
 				"Error":   err,
 			}))

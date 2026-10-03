@@ -2,7 +2,7 @@ package dice
 
 import (
 	"math/rand"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
 	"strconv"
@@ -21,9 +21,9 @@ var cachedConfig []yamlConfig
 func loadFromFile() error {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		// i18N -- register
-		return i19n.NewError("error.loading:file", map[string]any{
-			"Subject": i19n.Localize("dice"),
+
+		return logs.NewError("error.loading:file", map[string]any{
+			"Subject": "dice",
 			"File":    fileConfigPath,
 			"Error":   err,
 		})
@@ -66,9 +66,9 @@ func (d Dice) Roll() int {
 func List() []Dice {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// i18N -- register
-			i19n.NewError("error.loading:file", map[string]any{
-				"Subject": i19n.Localize("dice"),
+
+			logs.NewError("error.loading:file", map[string]any{
+				"Subject": "dice",
 				"File":    fileConfigPath,
 				"Error":   err,
 			})

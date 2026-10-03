@@ -5,7 +5,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 )
 
 type Location struct {
@@ -31,9 +31,8 @@ func New(params Template) (*Location, error) {
 	})
 
 	if newCard == nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("location"),
+		return nil, logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "location",
 			"Error":   err,
 		})
 	}

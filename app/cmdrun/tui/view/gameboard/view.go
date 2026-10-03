@@ -16,8 +16,8 @@ trouver un moyen de les distibuer al'interieur des sous composant avec
 par exemple un contexte disponible, un peu comme Engine et States.
 */
 const (
-	PANEL_WHIDTH       = 34
-	PANEL_GAP         = 1
+	PANEL_WHIDTH  = 34
+	PANEL_GAP     = 1
 	ORACLE_HEIGHT = 1
 )
 

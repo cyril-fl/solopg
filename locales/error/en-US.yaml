@@ -30,7 +30,7 @@ error.not_implemented:
 
 # Required
 error.required:
-  other: "Field \"{{.Subject}}\" is required: {{.Value}}"
+  other: "Field \"{{.Subject}}\" is required: {{.Property}}"
 
 # Unexpected
 error.unexpected:

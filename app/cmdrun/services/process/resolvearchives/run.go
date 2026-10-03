@@ -5,6 +5,7 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
@@ -76,10 +77,10 @@ func (p *resolver) ensureArchivesInitialized() {
 	}
 
 	if p.cache.loadedArchives == nil {
-		err := i19n.NewError("error:unexpected:action", map[string]any{
-			"Action": i19n.Localize("unexpected:action.load_archives"),
+		err := logs.NewError("error:unexpected:action", map[string]any{
+			"Action": "unexpected:action.load_archives",
 			"Error": i19n.Localize("error.not_found", map[string]any{
-				"Subject": i19n.Localize("archives"),
+				"Subject": "archives",
 			}),
 		})
 

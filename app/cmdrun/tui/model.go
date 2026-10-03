@@ -17,6 +17,7 @@ type model struct {
 	size    *tea.WindowSizeMsg
 	err     error
 }
+
 // TODO rendre ça generique
 type Context struct {
 	SelectedSave     *campaign.Campaign

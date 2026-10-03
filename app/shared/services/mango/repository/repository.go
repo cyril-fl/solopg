@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -77,7 +77,7 @@ func (r *MongoRepository) fromCollection[T any](
 		)
 
 	if err != nil {
-		return nil, i19n.NewError("error.loading", map[string]any{
+		return nil, logs.NewError("error.loading", map[string]any{
 			"Subject": r.collection,
 			"Error":   err,
 		})
@@ -106,7 +106,7 @@ func (r *MongoRepository) toCollection[T Document](data T) error {
 		)
 
 	if err != nil {
-		return i19n.NewError("error.unexpected:save", map[string]any{
+		return logs.NewError("error.unexpected:save", map[string]any{
 			"Error": err,
 		})
 	}
@@ -128,7 +128,7 @@ func (r *MongoRepository) watchCollection[T any](ctx context.Context) (<-chan T,
 
 	stream, err := r.db.GetCollection(r.collection).Watch(ctx, pipeline)
 	if err != nil {
-		return nil, i19n.NewError("error.loading", map[string]any{
+		return nil, logs.NewError("error.loading", map[string]any{
 			"Subject": r.collection,
 			"Error":   err,
 		})
@@ -192,7 +192,7 @@ func buildOptions(opts []FindOption) *options.FindOptions {
 func decodeCursor[T any](cursor *mongodb.Cursor, collection mango.Collection, ctx context.Context) ([]T, error) {
 	var data []T
 	if err := cursor.All(ctx, &data); err != nil {
-		return nil, i19n.NewError("error.loading", map[string]any{
+		return nil, logs.NewError("error.loading", map[string]any{
 			"Subject": collection,
 			"Error":   err,
 		})

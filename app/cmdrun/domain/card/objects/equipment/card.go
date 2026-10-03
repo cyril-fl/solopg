@@ -8,7 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/objects"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 )
 
 // - Equipment - //
@@ -85,18 +85,18 @@ func NewGear(params Template) (*Gear, error) {
 	}
 
 	if newItem == nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("gear"),
+
+		return nil, logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "gear",
 			"Error":   err,
 		})
 	}
 
 	// Check EquipmentSlot
 	if !params.Slot.Validate() {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid", map[string]any{
-			"Subject": i19n.Localize("slot"),
+
+		return nil, logs.NewError("error.invalid", map[string]any{
+			"Subject": "slot",
 			"Receive": params.Slot,
 		})
 	}

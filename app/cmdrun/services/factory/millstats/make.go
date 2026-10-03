@@ -7,7 +7,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"strconv"
 )
 
@@ -73,10 +73,10 @@ func (m *mill) GenerateFromOracle() {
 func (m *mill) makeModifiersFromValuesWithFallback() {
 	rules, err := oracle.GetByName(m.values["encounter"])
 	if err != nil {
-		// i18N -- register
-		m.error = append(m.error, i19n.NewError("error.not_found:id-error", map[string]any{
-			"Subject": i19n.Localize("encounter"),
-			"ID":      i19n.Localize(m.values["encounter"]),
+
+		m.error = append(m.error, logs.NewError("error.not_found:id-error", map[string]any{
+			"Subject": "encounter",
+			"ID":      m.values["encounter"],
 			"Error":   err,
 		}))
 		return
@@ -103,9 +103,9 @@ func (m *mill) makeModifiersFromAttributesValues() {
 func (m *mill) makeRandomModifiersFromOracleValue() {
 	modifiers, err := makeModifiersFromOracle(m.oraclesId)
 	if err != nil {
-		// i18N -- register
-		m.error = append(m.error, i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("stat"),
+
+		m.error = append(m.error, logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "stat",
 			"Error":   err,
 		}))
 		return
@@ -140,9 +140,9 @@ func makeModifierWithRandomFallback(params withFallbackTemplate) stats.Modifier 
 
 	roll, err := oracle.Roll[int](params.fallback)
 	if err != nil {
-		// i18N -- register
+
 		cwd, cwderr := os.Getwd()
-		i19n.NewError("error.unexpected", map[string]any{
+		logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})
@@ -162,9 +162,9 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	var modifiers []stats.Modifier
 	rules, err := oracle.GetByName(id)
 	if err != nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid:new: %w", map[string]any{
-			"Subject": i19n.Localize("stat"),
+
+		return nil, logs.NewError("error.invalid:new: %w", map[string]any{
+			"Subject": "stat",
 			"Error":   err,
 		})
 	}
@@ -172,10 +172,10 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	for _, stat := range stats.List() {
 		roll, err := oracle.Roll[int](*rules)
 		if err != nil {
-			// i18N -- register
+
 			cwd, cwderr := os.Getwd()
 			return nil,
-				i19n.NewError("error.unexpected", map[string]any{
+				logs.NewError("error.unexpected", map[string]any{
 					"Path":  cwd,
 					"Error": errors.Join(cwderr, err),
 				})

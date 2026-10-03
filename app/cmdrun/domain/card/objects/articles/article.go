@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/objects"
-	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 )
 
@@ -44,9 +44,9 @@ func New(params Template) (*Article, error) {
 	}
 
 	if newItem == nil {
-		// i18N -- register
-		return nil, i19n.NewError("error.invalid:new", map[string]any{
-			"Subject": i19n.Localize("article"),
+
+		return nil, logs.NewError("error.invalid:new", map[string]any{
+			"Subject": "article",
 			"Error":   err,
 		})
 	}

@@ -12,15 +12,19 @@ import (
 
 // - Translator - //
 type Translator struct {
-	bundle     *i18n.Bundle
-	local      *i18n.Localizer
-	localerror *i18n.Localizer
+	bundle       *i18n.Bundle
+	local        *i18n.Localizer
+	localcatalog *i18n.Localizer
 }
 
 var cache *Translator
 
 func New() *Translator {
-	return &Translator{}
+	return &Translator{
+		bundle:       nil,
+		local:        nil,
+		localcatalog: nil,
+	}
 }
 
 func (t *Translator) SetBundle(b *i18n.Bundle) {
@@ -32,7 +36,7 @@ func (t *Translator) SetLocale(l *i18n.Localizer) {
 }
 
 func (t *Translator) SetLocalerror(l *i18n.Localizer) {
-	t.localerror = l
+	t.localcatalog = l
 }
 
 func SetCache(i19n *Translator) {

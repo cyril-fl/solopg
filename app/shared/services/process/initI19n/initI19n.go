@@ -57,7 +57,9 @@ func (i *initializer) Run() {
 	i.seti19n()
 }
 
-func (i *initializer) GetResult() {}
+func (i *initializer) GetResult() {
+
+}
 
 // Methods
 func (i *initializer) assertConfig() {
@@ -204,8 +206,8 @@ func loadLocaleFile(cfg i19n.Config) ([]string, error) {
 }
 
 /*
-NOTE newLocalizer pourrais très biens passer en methode mais je treouve que c'est mélanger les responsabiltés.
-Ainsi un localierpeu etre initialisé sans passer par l'initilizer.
+NOTE newLocalizer may very well be a method, but I find that it mixes responsibilities.
+Thus, a localizer can be initialized without going through the initializer.
 */
 func newLocalizer(cfg i19n.Config, bundle *i18n.Bundle, lang string, defaultLocale *i19n.Locale) (*i18n.Localizer, error) {
 	locale, err := getLocale(cfg, lang, defaultLocale)

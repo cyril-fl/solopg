@@ -3,7 +3,7 @@ package logs
 var cache Registrable
 
 type Registrable interface {
-	Register(log *Log) error
+	Register(log *Entry) error
 }
 
 func Init(r Registrable) {
@@ -11,6 +11,8 @@ func Init(r Registrable) {
 }
 
 // ---
-func TestLog(log *Log) error {
+//
+//	TODO DELETE THIS FUNCTION WHEN THE LOGS ARE TESTED AND WORKING
+func TestLog(log *Entry) error {
 	return cache.Register(log)
 }
