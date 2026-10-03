@@ -3,31 +3,31 @@ package sharedtui
 // keys
 const (
 	// Navigation keys
-	KeyEnter     = "enter"
-	KeyEsc       = "esc"
-	KeyBackspace = "backspace"
-	KeyTab       = "tab"
-	KeyShiftTab  = "shift+tab"
+	KEY_ENTER     = "enter"
+	KEY_ESC       = "esc"
+	KEY_BACKSPACE = "backspace"
+	KEY_TAB       = "tab"
+	KEY_SHIFT_TAB  = "shift+tab"
 
 	// Arrow keys
-	KeyUp     = "up"
-	KeyDown   = "down"
-	KeyLeft   = "left"
-	KeyRight  = "right"
-	KeyPgUp   = "pgup"
-	KeyPgDown = "pgdown"
+	KEY_UP     = "up"
+	KEY_DOWN   = "down"
+	KEY_LEFT   = "left"
+	KEY_RIGHT  = "right"
+	KEY_PG_UP   = "pgup"
+	KEY_PG_DOWN = "pgdown"
 
 	// Shortcut
-	ShortcutCtrlC    = "ctrl+c"
-	ShortcutCtrlQ    = "ctrl+q"
-	ShortcutCtrlN    = "ctrl+n"
-	ShortcutShiftTab = "shift+tab"
+	SHORT_CTRL_C    = "ctrl+c"
+	SHORT_CTRL_Q    = "ctrl+q"
+	SHORT_CTRL_N    = "ctrl+n"
+	SHORT_SHIFT_TAB = "shift+tab"
 
 	// Command keys
-	CmdShiftEnter = "shift+enter"
-	CmdAltEnter   = "alt+enter"
-	CmdCtrlS      = "ctrl+s"
+	CMD_SHIFT_ENTER = "shift+enter"
+	CMD_ALT_ENTER   = "alt+enter"
+	CMD_CTRL_S      = "ctrl+s"
 
 	// Other keys
-	EmptyKey = ""
+	KEY_EMPTY = ""
 )

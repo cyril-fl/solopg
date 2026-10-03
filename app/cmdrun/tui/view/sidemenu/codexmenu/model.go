@@ -109,13 +109,13 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case sharedtui.KeyEsc:
+		case sharedtui.KEY_ESC:
 			return m.handleKeyEsc(params)
-		case sharedtui.KeyUp, sharedtui.KeyDown:
+		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
 			return m.delegateInputToForm(params)
-		case sharedtui.KeyEnter:
+		case sharedtui.KEY_ENTER:
 			return m.delegateInputToForm(params)
-		case sharedtui.CmdShiftEnter, sharedtui.CmdAltEnter:
+		case sharedtui.CMD_SHIFT_ENTER, sharedtui.CMD_ALT_ENTER:
 			return m.handleKeyShiftEnter(params)
 		default:
 			return m.delegateInputToForm(params)

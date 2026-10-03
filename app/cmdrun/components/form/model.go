@@ -220,9 +220,9 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 func (m *Form) handleKeyPressMsg(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
-	case sharedtui.KeyTab:
+	case sharedtui.KEY_TAB:
 		return m, SendMsg[NextField]()
-	case sharedtui.KeyShiftTab:
+	case sharedtui.KEY_SHIFT_TAB:
 		return m, SendMsg[PreviousField]()
 	}
 	return m.updateFocusedField(msg)

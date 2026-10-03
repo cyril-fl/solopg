@@ -15,8 +15,8 @@ import (
 type step int
 
 const (
-	choiceStep step = iota
-	stepConfirm
+	CHOICE_STEP step = iota
+	CONFIRM_STEP
 )
 
 type model struct {
@@ -40,7 +40,7 @@ func NewModel[T archetypes.Archetype](data []T) model {
 	models.ConfigureList(&listModel)
 
 	return model{
-		Step: choiceStep,
+		Step: CHOICE_STEP,
 		list: listModel,
 	}
 }
@@ -59,9 +59,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	switch m.Step {
-	case choiceStep:
+	case CHOICE_STEP:
 		return m.updateList(msg)
-	case stepConfirm:
+	case CONFIRM_STEP:
 		return m.updateConfirm(msg)
 	default:
 		return m, nil
@@ -72,7 +72,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	updatedList, cmd := m.list.Update(msg)
 	m.list = updatedList
 
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
 		selectedItem := m.list.SelectedItem()
 		if selectedItem == nil {
 			return m, nil
@@ -90,7 +90,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
 		return m, tea.Quit
 	}
 

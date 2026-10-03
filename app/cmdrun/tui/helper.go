@@ -11,9 +11,9 @@ import (
 // Handlers
 func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case sharedtui.ShortcutCtrlQ:
+	case sharedtui.SHORT_CTRL_Q:
 		return m, tea.Quit
-	case sharedtui.KeyEsc:
+	case sharedtui.KEY_ESC:
 		current := m.steps.GetCurrentSubmodel()
 		if current == nil {
 			return m, tea.Quit

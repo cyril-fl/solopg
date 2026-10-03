@@ -68,8 +68,8 @@ func initJournal(engine *game.Engine) []string {
 
 func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
 	size := size.Size{
-		Width:  panelWidth - 4,
-		Height: oracleMenuHeight + 5,
+		Width:  PANEL_WHIDTH - 4,
+		Height: ORACLE_HEIGHT + 5,
 	}
 
 	codex := engine.State.Codex
@@ -176,9 +176,9 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case sharedtui.KeyEnter:
+	case sharedtui.KEY_ENTER:
 		m.handleEnterInput()
-	case sharedtui.KeyUp, sharedtui.KeyDown:
+	case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
 		m.handleDirectionInput(msg)
 	default:
 		handleDefaultInput(m, msg)
@@ -188,7 +188,7 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
-	case sharedtui.CmdCtrlS:
+	case sharedtui.CMD_CTRL_S:
 		return m, cmdruntui.SendSaveMsg(m.save)
 	}
 
@@ -220,11 +220,11 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 	menuLength := len(m.menu)
 
 	switch msg {
-	case direction.Previous:
+	case direction.PREVIOUS:
 		if m.activeMenuIndex > 0 {
 			m.activeMenuIndex--
 		}
-	case direction.Next:
+	case direction.NEXT:
 		if m.activeMenuIndex < menuLength-1 {
 			m.activeMenuIndex++
 		}
@@ -321,7 +321,7 @@ func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
 }
 
 func refreshMainView(m *model, msg tea.WindowSizeMsg) {
-	chatWidth := max(0, msg.Width-panelWidth-panelGap)
+	chatWidth := max(0, msg.Width-PANEL_WHIDTH-PANEL_GAP)
 
 	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
 	m.viewport.SetWidth(chatWidth)

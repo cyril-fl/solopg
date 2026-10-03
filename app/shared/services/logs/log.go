@@ -19,9 +19,8 @@ type Log struct {
 type Kind string
 
 const (
-	// TODO LOW mettre les autre enume en MAJ aussi
-	ERR  Kind = "ERROR"
-	INFO Kind = "INFO"
+	ERR  Kind = "error"
+	INFO Kind = "info"
 )
 
 var Kinds = []Kind{ERR, INFO}

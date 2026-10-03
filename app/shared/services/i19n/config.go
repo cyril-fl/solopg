@@ -60,13 +60,13 @@ func (locale *Locale) ParseTag() (language.Tag, error) {
 type format string
 
 const (
-	FormatJSON format = "json"
-	FormatYAML format = "yaml"
+	FORMAT_JSON format = "json"
+	FORMAT_YAML format = "yaml"
 )
 
 var FormatValidExtensions = map[format][]string{
-	FormatJSON: {".json"},
-	FormatYAML: {".yaml", ".yml"},
+	FORMAT_JSON: {".json"},
+	FORMAT_YAML: {".yaml", ".yml"},
 }
 
 // - Config - //
@@ -136,7 +136,7 @@ func isDirectoryValid(path string) error {
 }
 
 func isFileFormatValid(extension format) error {
-	if !slices.Contains([]format{FormatJSON, FormatYAML}, extension) {
+	if !slices.Contains([]format{FORMAT_JSON, FORMAT_YAML}, extension) {
 		return fmt.Errorf("invalid i18n format '%s', must be 'json' or 'yaml'", extension)
 	}
 

@@ -39,7 +39,7 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	models.SetListFocus(&options, false)
 
 	return &selectField[T]{
-		field:   newField(template.ID, template.Label, Select, template.Defaultvalue, template.Validator, template.Required),
+		field:   newField(template.ID, template.Label, SELECT, template.Defaultvalue, template.Validator, template.Required),
 		options: options,
 	}
 }
@@ -112,9 +112,9 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.options.SetSize(msg.Width, msg.Height)
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case sharedtui.KeyUp, sharedtui.KeyDown:
+		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
 			return m.handleDirection(msg)
-		case sharedtui.KeyEnter:
+		case sharedtui.KEY_ENTER:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),
 				form.SendMsg[form.Scroll](),
@@ -157,12 +157,12 @@ func (m *selectField[T]) handleDirection(msg tea.KeyPressMsg) (tea.Model, tea.Cm
 	updatedList, newdirection := direction.GetListDirection(&m.options, msg)
 	m.options = updatedList
 	switch newdirection {
-	case direction.Next:
+	case direction.NEXT:
 		return m, tea.Sequence(
 			form.SendMsg[form.NextField](),
 			form.SendMsg[form.Scroll](),
 		)
-	case direction.Previous:
+	case direction.PREVIOUS:
 		return m, tea.Sequence(
 			form.SendMsg[form.PreviousField](),
 			form.SendMsg[form.Scroll](),

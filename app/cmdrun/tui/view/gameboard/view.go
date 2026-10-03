@@ -16,9 +16,9 @@ trouver un moyen de les distibuer al'interieur des sous composant avec
 par exemple un contexte disponible, un peu comme Engine et States.
 */
 const (
-	panelWidth       = 34
-	panelGap         = 1
-	oracleMenuHeight = 1
+	PANEL_WHIDTH       = 34
+	PANEL_GAP         = 1
+	ORACLE_HEIGHT = 1
 )
 
 func (m model) View() tea.View {
@@ -36,7 +36,7 @@ func (m model) View() tea.View {
 	composedView := lipgloss.JoinHorizontal(
 		lipgloss.Top,
 		base,
-		strings.Repeat(" ", panelGap),
+		strings.Repeat(" ", PANEL_GAP),
 		renderSidePanel(m.engine, lipgloss.Height(base), sidemenu...),
 	)
 
@@ -95,7 +95,7 @@ func renderSidePanel(engine *game.Engine, height int, views ...string) string {
 
 func renderPanel(content string, height int) string {
 	return lipgloss.NewStyle().
-		Width(panelWidth-4).
+		Width(PANEL_WHIDTH-4).
 		Height(max(0, height-2)).
 		Padding(0, 1).
 		Border(lipgloss.NormalBorder()).

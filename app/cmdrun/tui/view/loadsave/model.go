@@ -35,7 +35,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case sharedtui.KeyEnter:
+		case sharedtui.KEY_ENTER:
 			if selected, ok := m.list.SelectedItem().(models.Item[*campaign.Campaign]); ok {
 				m.selected = selected.Value()
 			}

@@ -42,9 +42,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.Input = newInput
 	m.Name = newInput.Value()
 
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KeyEnter {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
 		name := strings.TrimSpace(m.Name)
-		if name == sharedtui.EmptyKey {
+		if name == sharedtui.KEY_EMPTY {
 			return m, nil
 		}
 

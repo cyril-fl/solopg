@@ -34,7 +34,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case sharedtui.KeyEnter:
+		case sharedtui.KEY_ENTER:
 			return m, m.reroll.HandleEnterInput()
 		}
 	}

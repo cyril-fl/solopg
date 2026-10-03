@@ -59,8 +59,8 @@ func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) direction.Direction {
 
 	metadata.Menu.SetList(list)
 
-	isFirstElementToNext := metadata.IsFirstMenuElement() && newdirection == direction.Next
-	isLastElementToPrevious := metadata.IsLastMenuElement() && newdirection == direction.Previous
+	isFirstElementToNext := metadata.IsFirstMenuElement() && newdirection == direction.NEXT
+	isLastElementToPrevious := metadata.IsLastMenuElement() && newdirection == direction.PREVIOUS
 	isBetweenElements := !(metadata.IsFirstMenuElement() || metadata.IsLastMenuElement())
 
 	if isFirstElementToNext || isBetweenElements || isLastElementToPrevious {

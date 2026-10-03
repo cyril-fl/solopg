@@ -20,11 +20,12 @@ type field[T any] struct {
 
 type kind string
 
-var (
+
+const (
 	// FieldTypeInput represents a text input field.
-	Input kind = "input"
+	INPUT kind = "input"
 	// FieldTypeSelect represents a select field.
-	Select kind = "select"
+	SELECT kind = "select"
 )
 
 // newField creates a form field with an automatically generated identifier.

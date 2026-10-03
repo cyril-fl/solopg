@@ -9,14 +9,14 @@ import (
 
 type Direction string
 
-var (
-	Previous Direction = "previous"
-	Next     Direction = "next"
-	None     Direction = "none"
+const (
+	PREVIOUS Direction = "previous"
+	NEXT     Direction = "next"
+	NONE     Direction = "none"
 )
 
 func GetListDirection(list *list.Model, key tea.KeyPressMsg) (list.Model, Direction) {
-	direction := None
+	direction := NONE
 	itemCount := len(list.Items())
 
 	previousIndex := list.Index()
@@ -24,13 +24,13 @@ func GetListDirection(list *list.Model, key tea.KeyPressMsg) (list.Model, Direct
 	currentIndex := list.Index()
 
 	switch key.String() {
-	case sharedtui.KeyUp:
+	case sharedtui.KEY_UP:
 		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
-			direction = Previous
+			direction = PREVIOUS
 		}
-	case sharedtui.KeyDown:
+	case sharedtui.KEY_DOWN:
 		if isLastEL := currentIndex == itemCount-1; isLastEL && previousIndex == currentIndex {
-			direction = Next
+			direction = NEXT
 		}
 	}
 

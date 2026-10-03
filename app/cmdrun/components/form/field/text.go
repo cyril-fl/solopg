@@ -34,7 +34,7 @@ func TextField[T stringOrInt](template TextTemplate[T]) *textField[T] {
 	setValue(&input, template.Defaultvalue)
 
 	return &textField[T]{
-		field: newField(template.ID, template.Label, Input, template.Defaultvalue, template.Validator, template.Required),
+		field: newField(template.ID, template.Label, INPUT, template.Defaultvalue, template.Validator, template.Required),
 		input: input,
 	}
 }
@@ -93,17 +93,17 @@ func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
-		case sharedtui.KeyEnter:
+		case sharedtui.KEY_ENTER:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),
 				form.SendMsg[form.Scroll](),
 			)
-		case sharedtui.KeyUp:
+		case sharedtui.KEY_UP:
 			return m, tea.Sequence(
 				form.SendMsg[form.PreviousField](),
 				form.SendMsg[form.Scroll](),
 			)
-		case sharedtui.KeyDown:
+		case sharedtui.KEY_DOWN:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),
 				form.SendMsg[form.Scroll](),

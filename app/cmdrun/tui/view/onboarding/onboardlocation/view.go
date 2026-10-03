@@ -17,7 +17,7 @@ func (m model) View() tea.View {
 	content.WriteString(" | ")
 	fmt.Fprintf(&content, "%s: %d", transform.Capitalize(i19n.Localize("attempt")), m.reroll.Attempt)
 
-	if m.reroll.Value.Description.Description != sharedtui.EmptyKey {
+	if m.reroll.Value.Description.Description != sharedtui.KEY_EMPTY {
 		content.WriteString("\n")
 		content.WriteString(i19n.Localize(m.reroll.Value.Description.Description))
 	}
