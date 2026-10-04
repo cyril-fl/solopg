@@ -10,6 +10,7 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/oraclemenu"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
+	"solopg/app/cmdrun/types/viewoptions"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
@@ -155,7 +156,7 @@ func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
 	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
 	m.viewport.GotoBottom()
 
-	return m.refreshViewport(true)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
@@ -193,12 +194,12 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 		return m, cmdruntui.SendSaveMsg(m.save)
 	}
 
-	return m.refreshViewport(false)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 func (m *model) handleError(msg cmdruntui.ErrorMsg) (*model, tea.Cmd) {
 	m.err = msg.Err
-	return m.refreshViewport(false)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 // Side Menu Direction
@@ -241,7 +242,7 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
 	_ = msg
 
-	return m.refreshViewport(false)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 // Dice Rolled
@@ -254,7 +255,7 @@ func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
 	m.engine.AddJournalEntry("Dice", message)
 	m.journal = append(m.journal, message)
 
-	return m.refreshViewport(true)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 // Hint Rolled
@@ -271,7 +272,7 @@ func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
 	m.engine.AddJournalEntry("Hint", message)
 	m.journal = append(m.journal, message)
 
-	return m.refreshViewport(true)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 // Oracle Rolled
@@ -285,7 +286,7 @@ func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
 	m.engine.AddJournalEntry("Oracle", message)
 	m.journal = append(m.journal, message)
 
-	return m.refreshViewport(true)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
 }
 
 // Window
@@ -318,7 +319,11 @@ func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
 		v.SetYOffset(top + hight - vHeight)
 	}
 
-	return m.refreshViewport(false)
+	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
+}
+
+func (m model) handleViewRefresh(msg cmdruntui.Refresh) (tea.Model, tea.Cmd) {
+	return m.refreshViewport(msg.Option)
 }
 
 func refreshMainView(m *model, msg tea.WindowSizeMsg) {

@@ -97,7 +97,7 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case cmdruntui.ScrollMsg:
 		return m.handleViewportScroll(msg)
 	case cmdruntui.Refresh:
-		return m.refreshViewport(msg.Resize)
+		return m.handleViewRefresh(msg)
 	case cmdruntui.ErrorMsg:
 		return m.handleError(msg)
 

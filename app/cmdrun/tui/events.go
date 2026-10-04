@@ -1,6 +1,7 @@
 package cmdruntui
 
 import (
+	"solopg/app/cmdrun/types/viewoptions"
 	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
@@ -78,12 +79,12 @@ func (sm ScrollMsg) GetBottom() int {
 
 // Refresh
 type Refresh struct {
-	Resize bool
+	Option viewoptions.RefreshOption
 }
 
-func SendRefreshMsg(resize bool) tea.Cmd {
+func SendRefreshMsg(option viewoptions.RefreshOption) tea.Cmd {
 	return func() tea.Msg {
-		return Refresh{Resize: resize}
+		return Refresh{Option: option}
 	}
 }
 

@@ -3,6 +3,7 @@ package gameboard
 import (
 	"solopg/app/cmdrun/services/game"
 	"solopg/app/cmdrun/tui/view/sidemenu/metadatamenu"
+	"solopg/app/cmdrun/types/viewoptions"
 	"solopg/app/shared/services/i19n"
 	"strings"
 
@@ -53,7 +54,8 @@ func (m model) GetFooter() []string {
 }
 
 // - Viewport - //
-func (m *model) refreshViewport(resetPosition bool) (*model, tea.Cmd) {
+
+func (m *model) refreshViewport(params viewoptions.RefreshOption) (*model, tea.Cmd) {
 	content := m.getContent()
 	content = lipgloss.NewStyle().
 		Width(m.viewport.Width()).
@@ -61,7 +63,7 @@ func (m *model) refreshViewport(resetPosition bool) (*model, tea.Cmd) {
 
 	m.viewport.SetContent(content)
 
-	if resetPosition {
+	if params.Positionreset {
 		m.viewport.GotoTop()
 	}
 
