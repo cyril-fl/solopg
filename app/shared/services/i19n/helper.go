@@ -8,10 +8,12 @@ import (
 )
 
 func Localize(id string, data ...map[string]any) string {
+	ensureCache()
 	return lookupMessage(cache.local, id, data...)
 }
 
 func Unlocalize(id string, data ...map[string]any) string {
+	ensureCache()
 	return lookupMessage(cache.localcatalog, id, data...)
 }
 
@@ -54,4 +56,10 @@ func makeTemplate(t *i18n.Localizer, data ...map[string]any) map[string]any {
 	}
 
 	return template
+}
+
+func ensureCache() {
+	if cache == nil {
+		cache = New()
+	}
 }
