@@ -50,12 +50,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		m.Name = name
 
-		return m, func() tea.Msg {
-			return cmdruntui.ResolutionMsg{
+		return m, cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{
 				Completed: true,
 				Value:     m.Name,
-			}
-		}
+			})
 	}
 
 	return m, cmd

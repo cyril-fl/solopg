@@ -39,6 +39,12 @@ type ResolutionMsg struct {
 	Err       error
 }
 
+func SendResolutionMsg(params ResolutionMsg) tea.Cmd {
+	return func() tea.Msg {
+		return params
+	}
+}
+
 // Save
 type SaveMsg struct {
 	Err error

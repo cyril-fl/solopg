@@ -72,9 +72,7 @@ func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 	}
 
 	if isSelected.Value() || s.IsOutOfLimit() {
-		return func() tea.Msg {
-			return cmdruntui.ResolutionMsg{Completed: true, Value: s.Value}
-		}
+		return cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{Completed: true, Value: s.Value})
 	}
 
 	s.Reroll()

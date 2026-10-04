@@ -78,12 +78,10 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 
-		return m, func() tea.Msg {
-			return cmdruntui.ResolutionMsg{
-				Completed: true,
-				Value:     selectedItem,
-			}
-		}
+		return m, cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{
+			Completed: true,
+			Value:     selectedItem,
+		})
 	}
 
 	return m, cmd
