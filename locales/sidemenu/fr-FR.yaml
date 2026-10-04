@@ -1,5 +1,13 @@
 sidemenu.title:page:
   other: "Page {{.Submenu}}"
+sidemenu.open:
+  other: "Ouverture de {{.Subject}} \"{{.Submenu}}\""
+sidemenu.close:
+  other: "Fermeture de {{.Subject}} \"{{.Submenu}}\""
+form.submitted:
+  other: "Soumission du formulaire {{.Form}}"
+form.post:
+  other: "Envoi du formulaire {{.Form}}"
 
 # --- Codex ---
 codex:
@@ -10,6 +18,8 @@ codex.entry:empty:
   other: "Aucune entrée dans cette table."
 codex.entry:unknown:
   other: "Entrée inconnue"
+codex.entry:added:
+  other: "Entrée ajoutée au codex: {{.Table}} : \n {{.Entry}}"
   
 # Beastiary
 codex.beastiary:

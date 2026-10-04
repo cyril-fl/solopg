@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"solopg/app/shared/services/mango/repository"
+	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
 	"solopg/app/shared/types/step"
 
@@ -64,6 +65,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.err = msg.err
 		return m, tea.Quit
 	case streamClosedMsg:
+		// i18N voir si c'est faisable
 		m.err = errors.New("MongoDB stream closed unexpectedly")
 		return m, tea.Quit
 
@@ -72,8 +74,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	case tea.KeyMsg:
 		switch msg.String() {
-		// TODO mettre des keyevent
-		case "ctrl+c", "q":
+		case sharedtui.SHORT_CTRL_C, sharedtui.SHORT_CTRL_Q:
 			return m, tea.Quit
 		}
 	}

@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/objects"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/utils/transform"
 	"strings"
 	"time"
 )
@@ -53,11 +54,9 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 		Rarity:   rarity.Default(),
 		Variety:  variety.AssertWithDefault(values["variety"]),
 		Category: objectcategory.AssertWithDefault(values["category"]),
-		// ___
 	})
 
 	if err != nil {
-
 		return logs.Error("error.invalid:new", map[string]any{
 			"Subject": "item",
 			"Error":   err,
@@ -65,6 +64,11 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	}
 
 	tb.Add(object)
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tableobject,
+		"Entry": transform.ParseJson(object),
+	})
 
 	return nil
 }
@@ -106,7 +110,7 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 		}))
 	}
 	/*
-		TODO HIGH quand tout sera fix ajouter ces champs dans le form
+		TODO HIGH Quand tout sera fix ajouter ces champs dans le form
 		if entry["rarity"] == "" {
 			err = append(err, fmt.Errorf("rarity is required"))
 		}

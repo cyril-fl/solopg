@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	// TODO LOW check ka quelle fonctionne et faire une config gene cleatm mode 1 / 2
+	// TODO LOW Check ka quelle fonctionne et faire une config gene cleatm mode 1 / 2
 	// CLEAR = "\033[H\033[2J"
 	CLEAR = "clear"
 )

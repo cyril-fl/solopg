@@ -1,16 +1,11 @@
 package debug
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
+	"solopg/app/shared/utils/transform"
 )
 
-func ParseJson(data interface{}) {
-	json, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return
-	}
+func Json(data interface{}) {
+	json := transform.ParseJson(data)
 	fmt.Println(string(json))
 }

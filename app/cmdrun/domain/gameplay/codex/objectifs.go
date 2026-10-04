@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/utils/transform"
 	"strings"
 	"time"
 )
@@ -37,10 +38,17 @@ func (o *ObjectivesTable) Add(title, description string) {
 
 func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 	if err := o.assertEntry(values); err != nil {
+		// i18N
 		return err
 	}
 
 	o.Add(values["title"], values["description"])
+
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tableobjectives,
+		"Entry": transform.ParseJson(values),
+	})
 
 	return nil
 }

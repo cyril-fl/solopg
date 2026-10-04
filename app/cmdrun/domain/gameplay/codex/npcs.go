@@ -11,6 +11,7 @@ import (
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/utils/transform"
 	"strings"
 
 	"time"
@@ -76,7 +77,6 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if err != nil {
-
 		return logs.Error("error.invalid:new", map[string]any{
 			"Subject": "npcs",
 			"Error":   err,
@@ -84,6 +84,11 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	}
 
 	tb.Add(character)
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tablenpcs,
+		"Entry": transform.ParseJson(character),
+	})
 
 	return nil
 }

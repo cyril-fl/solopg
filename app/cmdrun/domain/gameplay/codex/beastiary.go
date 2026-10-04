@@ -9,6 +9,7 @@ import (
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/utils/transform"
 	"strings"
 	"time"
 )
@@ -52,7 +53,6 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	if generator.HasError() {
-
 		cwd, err := os.Getwd()
 		return logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
@@ -78,7 +78,6 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	}
 
 	if err := races.AddInConfig(raw); err != nil {
-
 		return logs.Error("error.unexpected", map[string]any{
 			"Subject": "race",
 			"Error":   err,
@@ -88,6 +87,11 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	race := races.New(raw)
 
 	tb.Add(&race)
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tablebeast,
+		"Entry": transform.ParseJson(race),
+	})
 
 	return nil
 }

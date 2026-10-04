@@ -13,7 +13,7 @@ var configCmd = &cobra.Command{
 	Long:    cmd.Config.Long,
 	Example: cmd.Config.Example,
 	Run: func(cobra *cobra.Command, args []string) {
-		debug.ParseJson(config.Current)
+		debug.Json(config.Current)
 	},
 }
 

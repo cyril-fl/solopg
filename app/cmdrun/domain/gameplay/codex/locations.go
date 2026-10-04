@@ -7,6 +7,7 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/utils/transform"
 	"strings"
 	"time"
 )
@@ -55,6 +56,11 @@ func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
 
 	tb.Add(location)
 
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tablelocations,
+		"Entry": transform.ParseJson(location),
+	})
+
 	return nil
 }
 
@@ -77,7 +83,6 @@ func (tb *LocationsTable) Summaries() []string {
 }
 
 func (tb *LocationsTable) FindEntryByName(name string) *LocationsEntry {
-
 	for i, entry := range tb.Entries {
 		if entry.Location != nil && entry.Location.Name == name {
 			return &tb.Entries[i]
@@ -99,7 +104,6 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 		}))
 	}
 	if values["description"] == "" {
-
 		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "location",
 			"Property": "description",

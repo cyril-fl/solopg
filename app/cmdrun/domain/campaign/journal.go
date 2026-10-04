@@ -44,9 +44,7 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 	return entry
 }
 
+// String format for the entry in the journal, shown in gamebord view
 func (e *Entry) String() string {
-	// TODO modifier avec log
-	//  Attention ca c'est les log montrée en jeux au debut de partie !
-	// STEP ..
 	return e.Timestamp.Format(time.RFC3339) + " - " + e.Author + ": " + e.Message
 }

@@ -1,6 +1,9 @@
 package transform
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
 	"strings"
 )
 
@@ -28,3 +31,13 @@ func CleanJoin(sep string, parts ...string) string {
 
 	return strings.Join(res, sep)
 }
+
+func ParseJson(data interface{}) string {
+	json, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, )
+		return err.Error()
+	}
+
+	return string(json)
+ }

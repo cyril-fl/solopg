@@ -11,6 +11,7 @@ import (
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/config"
 
 	"charm.land/bubbles/v2/list"
@@ -90,6 +91,16 @@ func (m *codexMenuItem) setOpen(open bool) {
 }
 
 func (m *codexMenuItem) setShowForm(show bool) {
+	state := "closed"
+	if show {
+		state = "opened"
+	}
+
+	logs.SilentInfo("sidemenu."+state, map[string]any{
+		"Subject": "form",
+		"Value":   m.id,
+	})
+
 	m.showForm = show
 }
 
@@ -145,10 +156,21 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 		item, ok := item.(models.Item[*codexMenuItem])
 
 		if page := item.Value(); ok && page != selected {
+
+			logs.SilentInfo("sidemenu.closed", map[string]any{
+				"Subject": "page",
+				"Value":   page.id,
+			})
+
 			page.setOpen(false)
 		}
-
 	}
+
+	logs.SilentInfo("sidemenu.opened", map[string]any{
+		"Subject": "page",
+		"Value":   selected.id,
+	})
+		
 	selected.setOpen(true)
 }
 
@@ -211,7 +233,12 @@ func getFormStatsFields() []form.Field {
 }
 
 func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	currentForm := m.GetFormFromCurrentPage()
+	currentPage := m.getCurrentPage()
+	if currentPage == nil {
+		return params.Model, nil
+	}
+
+	currentForm := currentPage.form
 	if currentForm == nil {
 		return params.Model, nil
 	}
@@ -221,6 +248,11 @@ func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, t
 	if currentForm.HasErrors() {
 		return params.Model, form.SendErrorMsg(currentForm.GetError())
 	}
+
+
+	logs.SilentInfo("form.submitted", map[string]any{
+		"Form": currentPage.id,
+	})
 
 	return params.Model, m.handleFormPost()
 }
@@ -244,6 +276,10 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 
 	currentPage.setShowForm(false)
 
+	logs.SilentSuccess("form.post", map[string]any{
+		"Form": currentPage.id,
+	})
+
 	return sendMsg()
 }
 
@@ -253,10 +289,10 @@ func (m *codexMenu) handleFormScroll(params sidemenu.UpdateParams) (tea.Model, t
 		return params.Model, nil
 	}
 
-	page := m.getCurrentPage()
+	currentPage := m.getCurrentPage()
 	pageHeader := lipgloss.NewStyle().
 		Width(params.Viewport.Width()).
-		Render(page.GetPageHeader())
+		Render(currentPage.GetPageHeader())
 
 	viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
 	viewHight += lipgloss.Height(pageHeader)

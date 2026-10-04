@@ -17,7 +17,8 @@ var cmdLogs = &cobra.Command{
 }
 
 func init() {
-	// TODO HIGH modifier ça pour que ce soit vienne a patir de la confiq grave a un proces ouune fonction utils
+	// TODO HIGH Modifier ça pour que ce soit vienne a patir de la confiq grave a un proces ouune fonction utils
+	// y a le mem dans serve je pense
 	cmdLogs.Flags().IntP("tail", "t", 0, "Show only the last N log entries")
 	cmdLogs.Flags().StringP("filter", "f", "", "Show only logs at the specified level")
 
