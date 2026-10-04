@@ -62,7 +62,6 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-
 		return logs.NewError("error.loading:file", map[string]any{
 			"Subject": "hint",
 			"File":    fileAddress,

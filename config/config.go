@@ -1,9 +1,13 @@
 package config
 
 import (
+	"os"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 type config struct {
@@ -66,23 +70,15 @@ type arg struct {
 
 var Current config
 
-func init() {
-	loaded, err := Load()
-	if err != nil {
-		panic(err)
-	}
-	Current = *loaded
-}
+func load() (*config, error) {
+	file := strings.TrimSpace(os.Getenv("CONFIG_FILE"))	
+	current, err := yaml.LoadFromFile[config](file)
 
-func Load() (*config, error) {
-	// TODO LOW mettre config/.config.yaml en env
-	current, err := yaml.LoadFromFile[config]("config/.config.yaml")
 	if err != nil {
 		return nil, err
 	}
 
 	if err := current.I18n.Validate(); err != nil {
-
 		return nil, logs.NewError("error.invalid", map[string]any{
 			"Subject": "config",
 			"Error":   err,
@@ -92,6 +88,15 @@ func Load() (*config, error) {
 	return current, nil
 }
 
+
+func init() {
+	godotenv.Load()
+	loaded, err := load()
+	if err != nil {
+		panic(err)
+	}
+	Current = *loaded
+}
 /*
 BACKLOG gerer le cas post buil avec un truc genre:
 	getPath -> if isDev = path actuell

@@ -12,10 +12,8 @@ var configCmd = &cobra.Command{
 	Short:   cmd.Config.Short,
 	Long:    cmd.Config.Long,
 	Example: cmd.Config.Example,
-	RunE: func(cobra *cobra.Command, args []string) error {
+	Run: func(cobra *cobra.Command, args []string) {
 		debug.ParseJson(config.Current)
-
-		return nil
 	},
 }
 
