@@ -70,8 +70,8 @@ func (p *runner) makeSelectsaveStep() {
 	campaigns, err := repository.Load()
 	if err != nil {
 		err := logs.Error("error.unexpected:action", map[string]any{
-			"Action":   "unexpected:action.load_campaigns",
-			"Value": err.Error(),
+			"Action": "unexpected:action.load_campaigns",
+			"Value":  err.Error(),
 		})
 
 		p.SetErr(err)
@@ -89,7 +89,7 @@ func (p *runner) makeSelectsaveStep() {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "campaign",
 						"Expected": "*campaign.Campaign",
-						"Value": value,
+						"Value":    value,
 					})
 				}
 
@@ -115,7 +115,7 @@ func (p *runner) makeResolveStep() {
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				process := generatengine.Process(p.db, ctx)
 				process.Run()
-				
+
 				if process.HasErr() {
 					return logs.Error("error.unexpected:action", map[string]any{
 						"Action": "unexpected:action.build_engine",
@@ -156,14 +156,14 @@ func makeOnboardingSteps() []cmdruntui.Step {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "name",
 						"Expected": "string",
-						"Value": value,
+						"Value":    value,
 					})
 				}
 				ctx.SelectedName = name
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "name",
-					"Value": name,
+					"Value":   name,
 				})
 
 				return nil
@@ -177,7 +177,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "race",
 						"Expected": "models.Item[races.Race]",
-						"Value": value,
+						"Value":    value,
 					})
 				}
 				race := selected.Value()
@@ -185,7 +185,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "race",
-					"Value": race.GetName(),
+					"Value":   race.GetName(),
 				})
 
 				return nil
@@ -199,7 +199,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "class",
 						"Expected": "models.Item[classes.Class]",
-						"Value": value,
+						"Value":    value,
 					})
 				}
 				class := selected.Value()
@@ -207,7 +207,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "class",
-					"Value": class.GetName(),
+					"Value":   class.GetName(),
 				})
 
 				return nil
@@ -222,14 +222,14 @@ func makeOnboardingSteps() []cmdruntui.Step {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "build",
 						"Expected": "[]stats.Modifier",
-						"Value": value,
+						"Value":    value,
 					})
 				}
 				ctx.SelectedBuild = build
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "build",
-					"Value": build,
+					"Value":   build,
 				})
 
 				return nil
@@ -243,14 +243,14 @@ func makeOnboardingSteps() []cmdruntui.Step {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "location",
 						"Expected": "*locations.Location",
-						"Value": value,
+						"Value":    value,
 					})
 				}
 				ctx.SelectedLocation = location
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "location",
-					"Value": location,
+					"Value":   location,
 				})
 
 				return nil

@@ -34,7 +34,7 @@ func NewCard(params NewCardParams) (*Card, error) {
 		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "rarity",
 			"Expected": strings.Join(valid, ", "),
-			"Value": params.Rarity,
+			"Value":    params.Rarity,
 		})
 	}
 
@@ -48,7 +48,7 @@ func NewCard(params NewCardParams) (*Card, error) {
 		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "variety",
 			"Expected": strings.Join(valid, ", "),
-			"Value": params.Variety,
+			"Value":    params.Variety,
 		})
 	}
 

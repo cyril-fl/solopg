@@ -50,7 +50,7 @@ func AddInConfig(value Template) error {
 	if Has(value) {
 		return logs.MildError("error.invalid:already_exists", map[string]any{
 			"Subject": "race",
-			"Value":      value.Name,
+			"Value":   value.Name,
 		})
 	}
 

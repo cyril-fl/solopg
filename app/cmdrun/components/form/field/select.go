@@ -86,7 +86,7 @@ func (f *selectField[T]) Validate() error {
 	return logs.Error("error.unexpected:value", map[string]any{
 		"Subject":  "field",
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
-		"Value": f.Value(),
+		"Value":    f.Value(),
 	})
 }
 

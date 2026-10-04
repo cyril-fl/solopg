@@ -61,11 +61,11 @@ type structureFiles struct {
 }
 
 type arg struct {
-	Name        string `yaml:"name"`
-	Shorthand   string `yaml:"shorthand"`
-	Value        string `yaml:"value"`
-	Usage       string `yaml:"usage"`
-	Type        string `yaml:"type"`
+	Name      string `yaml:"name"`
+	Shorthand string `yaml:"shorthand"`
+	Value     string `yaml:"value"`
+	Usage     string `yaml:"usage"`
+	Type      string `yaml:"type"`
 }
 
 type Arg = arg

@@ -51,9 +51,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Name = name
 
 		return m, cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{
-				Completed: true,
-				Value:     m.Name,
-			})
+			Completed: true,
+			Value:     m.Name,
+		})
 	}
 
 	return m, cmd

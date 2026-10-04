@@ -70,9 +70,8 @@ func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
 
 	} else {
 		log := logs.Success("campaign:success", map[string]any{
-			"Time": time.Now().Format("2006-01-02 15:04:05",
-		)})
-		
+			"Time": time.Now().Format("2006-01-02 15:04:05")})
+
 		m.chat = append(m.chat, log)
 	}
 
@@ -328,7 +327,7 @@ func amendChat(m *model, author, message string) {
 
 	authorstyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("5")).
-		Render(m.author+": ")
+		Render(m.author + ": ")
 
 	cloredmsg := authorstyle + message
 	m.chat = append(m.chat, cloredmsg)

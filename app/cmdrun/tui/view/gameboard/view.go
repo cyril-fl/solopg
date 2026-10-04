@@ -108,9 +108,8 @@ func getJournalMessage(m *model) strings.Builder {
 	return journalmsg
 }
 
-
 // - Helper - //
-// Refresh 
+// Refresh
 func refreshViewport(m *model, params viewoptions.RefreshOption) (*model, tea.Cmd) {
 	content := m.getContent()
 
@@ -140,6 +139,7 @@ func refreshLayout(m *model, msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 
 	return m, nil
 }
+
 // Render
 func renderSidePanel(engine *game.Engine, height int, views ...string) string {
 	panel := makePanel(engine, views...)
@@ -149,7 +149,7 @@ func renderSidePanel(engine *game.Engine, height int, views ...string) string {
 func makePanel(engine *game.Engine, views ...string) string {
 	statsview := makeStatView(engine)
 	menuview := makeMenuView(views...)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		statsview,
@@ -194,4 +194,3 @@ func getCursor(m model) *tea.Cursor {
 
 	return cursor
 }
-

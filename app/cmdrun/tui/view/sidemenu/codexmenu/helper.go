@@ -170,7 +170,7 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 		"Subject": "page",
 		"Value":   selected.id,
 	})
-		
+
 	selected.setOpen(true)
 }
 
@@ -248,7 +248,6 @@ func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, t
 	if currentForm.HasErrors() {
 		return params.Model, form.SendErrorMsg(currentForm.GetError())
 	}
-
 
 	logs.SilentInfo("form.submitted", map[string]any{
 		"Form": currentPage.id,

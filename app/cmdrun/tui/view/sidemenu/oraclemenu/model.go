@@ -94,8 +94,8 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 		return func() tea.Msg {
 
 			return cmdruntui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
-				"Subject":  "oracle",
-				"Value": selected,
+				"Subject": "oracle",
+				"Value":   selected,
 			}))
 		}
 	}

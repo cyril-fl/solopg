@@ -12,8 +12,8 @@ type State struct {
 	Player          *characters.Character
 	CurrentLocation *locations.Location
 	Codex           *codex.Codex
-	AdventureLog *campaign.Journal
-	Metadata     Metadata
+	AdventureLog    *campaign.Journal
+	Metadata        Metadata
 }
 type Metadata struct {
 	Archive  Timestamps

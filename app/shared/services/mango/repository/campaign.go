@@ -53,7 +53,7 @@ func (r *campaignrepository) FromCollectionByID(campaignID id.ID) (*campaign.Cam
 		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "Campaign",
 			"Expected": 1,
-			"Value": len(campaigns),
+			"Value":    len(campaigns),
 		})
 	}
 

@@ -42,7 +42,6 @@ func CeaseError(id string, data ...map[string]any) error {
 	return errors.New(i19n.Localize(id, data...))
 }
 
-
 func CatalogError(id string, data ...map[string]any) error {
 	registerFromTemplate(Template{
 		Type:    ERR,

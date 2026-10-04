@@ -31,15 +31,14 @@ func Try(cobra *cobra.Command, args []string) error {
 
 	setI19n()
 	setLogRepository(db)
-// ------------------------- //
+	// ------------------------- //
 
 	println("Serve Args:")
-	arg :=config.Current.Commands.Serve.Args 
+	arg := config.Current.Commands.Serve.Args
 	debug.Json(arg)
-	arg =config.Current.Commands.Logs.Args 
+	arg = config.Current.Commands.Logs.Args
 	println("Logs Args")
 	debug.Json(arg)
-	
 
 	return nil
 }

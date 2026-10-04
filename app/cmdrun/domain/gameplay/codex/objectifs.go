@@ -44,7 +44,6 @@ func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 
 	o.Add(values["title"], values["description"])
 
-
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tableobjectives,
 		"Entry": transform.ParseJson(values),

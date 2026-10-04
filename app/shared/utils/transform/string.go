@@ -35,9 +35,9 @@ func CleanJoin(sep string, parts ...string) string {
 func ParseJson(data interface{}) string {
 	json, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
-		fmt.Fprintln(os.Stderr, )
+		fmt.Fprintln(os.Stderr)
 		return err.Error()
 	}
 
 	return string(json)
- }
+}

@@ -52,7 +52,7 @@ func handleLoadFromFiles(files []string) []error {
 		if err := loadFromFile(file); err != nil {
 			errs = append(errs, logs.CeaseError("error.loading:file", map[string]any{
 				"Subject": "character",
-				"File": file,
+				"File":    file,
 				"Error":   err,
 			}))
 			continue

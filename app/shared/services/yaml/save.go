@@ -11,7 +11,7 @@ import (
 func SaveToFile[T any](fileAddress string, value T) error {
 	data, err := yamlv3.Marshal(value)
 	if err != nil {
-		// Ici 
+		// Ici
 		return fmt.Errorf("marshal %s: %w", fileAddress, err)
 	}
 

@@ -2,7 +2,7 @@ package logs
 
 var (
 	cache_registrable Registrable
-	caches_author = "System"
+	caches_author     = "System"
 )
 
 type Registrable interface {

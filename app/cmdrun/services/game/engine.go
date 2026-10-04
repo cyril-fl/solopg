@@ -21,7 +21,7 @@ func NewEngine(CampaignID id.ID, State *State) *Engine {
 
 func (e *Engine) Initialize() {
 	logs.SilentInfo("system.msg:init")
-	
+
 	e.DiscoverLocation(e.State.CurrentLocation)
 }
 
@@ -46,7 +46,7 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 	if entry == nil {
 		table.Add(newLocation)
 		key = "campaign.location:discover"
-	}	
+	}
 
 	logs.SilentInfo(key, map[string]any{"Location": newLocation.Name})
 }
