@@ -76,7 +76,7 @@ func (f *textField[T]) Validate() error {
 		return f.validate(v)
 	}
 
-	return logs.NewError("error.unexpected:value", map[string]any{
+	return logs.Error("error.unexpected:value", map[string]any{
 		"Subject":  f.Label(),
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
 		"Received": f.Value(),
@@ -157,7 +157,7 @@ func setValue[T stringOrInt](input *textinput.Model, value T) {
 
 func (f *textField[T]) testRequireness() error {
 	if f.required && strings.TrimSpace(f.Value().(string)) == "" {
-		return logs.NewError("error.required", map[string]any{
+		return logs.Error("error.required", map[string]any{
 			"Subject":  f.ID(),
 			"Property": f.Label(),
 		})

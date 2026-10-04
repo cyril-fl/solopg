@@ -44,8 +44,7 @@ func (p *runner[T]) Run() {
 }
 
 func (p *runner[T]) GetResult() {
-	// TODO HIGH Remplacer par un warning
-	logs.NewError("error:not_implemented", map[string]any{
+	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})

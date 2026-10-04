@@ -38,7 +38,7 @@ func New(params Template) (*Object, error) {
 
 	if newCard == nil {
 
-		return nil, logs.NewError("error.invalid:new", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "item",
 			"Error":   err,
 		})
@@ -51,7 +51,7 @@ func New(params Template) (*Object, error) {
 	// Check Category
 	if !params.Category.Validate() {
 
-		return nil, logs.NewError("error.invalid", map[string]any{
+		return nil, logs.Error("error.invalid", map[string]any{
 			"Subject": "category",
 			"Receive": params.Category,
 		})

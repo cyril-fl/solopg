@@ -93,14 +93,14 @@ func (tb *LocationsTable) assertEntry(values map[string]string) error {
 
 	if values["name"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "location",
 			"Property": "name",
 		}))
 	}
 	if values["description"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "location",
 			"Property": "description",
 		}))

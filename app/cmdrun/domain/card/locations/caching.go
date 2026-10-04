@@ -36,7 +36,7 @@ func load() error {
 
 		if err := loadFromFile(filepath); err != nil {
 
-			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+			errs = append(errs, logs.Error("error.loading:file", map[string]any{
 				"Subject": "location",
 				"File":    filepath,
 				"Error":   err,
@@ -57,7 +57,7 @@ func loadFromFolder() ([]string, error) {
 
 	if err != nil {
 
-		return nil, logs.NewError("error.loading:folder", map[string]any{
+		return nil, logs.Error("error.loading:folder", map[string]any{
 			"Subject": "location",
 			"Folder":  folderConfigPath,
 			"Error":   err,
@@ -72,7 +72,7 @@ func loadFromFile(fileAddress string) error {
 
 	if err != nil {
 
-		return logs.NewError("error.loading:file", map[string]any{
+		return logs.Error("error.loading:file", map[string]any{
 			"Subject": "location",
 			"File":    fileAddress,
 			"Error":   err,
@@ -97,9 +97,7 @@ func List() []Location {
 	if cachedConfig == nil {
 		err := load()
 		if err != nil {
-
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading", map[string]any{
+			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "location",
 				"Error":   err,
 			})
@@ -132,9 +130,7 @@ func newFromYaml(config yamlConfig) *Location {
 	})
 
 	if err != nil {
-
-		// TODO HIGH Remplacer par un warning
-		logs.NewError("error.invalid:new", map[string]any{
+		logs.SilentWarning("error.invalid:new", map[string]any{
 			"Subject": "location",
 			"Error":   err,
 		})

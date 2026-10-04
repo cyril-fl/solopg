@@ -71,7 +71,7 @@ func (p *resolver) assertContext() {
 		return
 	}
 
-	p.cache.err = logs.NewError("error.required", map[string]any{
+	p.cache.err = logs.Error("error.required", map[string]any{
 		"Subject":  "campaign",
 		"Property": strings.Join([]string{i19n.Localize("race"), i19n.Localize("class"), i19n.Localize("location")}, ", "),
 	})

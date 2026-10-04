@@ -27,12 +27,9 @@ func (m *codexMenu) GetMenuView() string {
 func (m *codexMenu) GetView() string {
 	page := m.getCurrentPage()
 	if page == nil {
-		// TODO HIGH Remplacer par un warning
-		err := logs.NewError("error.not_found", map[string]any{
+		return logs.Warning("error.not_found", map[string]any{
 			"Subject": transform.Capitalize(i19n.Localize("page")),
 		})
-
-		return err.Error()
 	}
 
 	return page.GetItemView()

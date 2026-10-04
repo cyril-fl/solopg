@@ -58,7 +58,7 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 
 	if err != nil {
 
-		return logs.NewError("error.invalid:new", map[string]any{
+		return logs.Error("error.invalid:new", map[string]any{
 			"Subject": "item",
 			"Error":   err,
 		})
@@ -93,14 +93,14 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 
 	if entry["name"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "item",
 			"Property": "name",
 		}))
 	}
 	if entry["description"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "item",
 			"Property": "description",
 		}))

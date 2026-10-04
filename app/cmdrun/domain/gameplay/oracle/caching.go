@@ -43,7 +43,7 @@ func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
 
-		return logs.NewError("error.loading:folder", map[string]any{
+		return logs.Error("error.loading:folder", map[string]any{
 			"Subject": "oracle",
 			"Folder":  folderConfigPath,
 			"Error":   err,
@@ -62,7 +62,7 @@ func handleLoadFromFiles(files []string) []error {
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
 
-			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+			errs = append(errs, logs.Error("error.loading:file", map[string]any{
 				"Subject": "oracle",
 				"File":    file,
 				"Error":   err,
@@ -79,7 +79,7 @@ func loadFromFile(fileAddress string) error {
 
 	if err != nil {
 
-		return logs.NewError("error.loading", map[string]any{
+		return logs.Error("error.loading", map[string]any{
 			"Subject": transform.Capitalize(i19n.Localize("oracle")),
 			"Error":   err,
 		})
@@ -87,7 +87,7 @@ func loadFromFile(fileAddress string) error {
 
 	if params.Dice <= 0 {
 
-		return logs.NewError("error.invalid", map[string]any{
+		return logs.Error("error.invalid", map[string]any{
 			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
 			"Received": params.Name,
 		})
@@ -95,7 +95,7 @@ func loadFromFile(fileAddress string) error {
 
 	if len(params.Intervals) == 0 {
 
-		return logs.NewError("error.required", map[string]any{
+		return logs.Error("error.required", map[string]any{
 			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
 			"Property": "intervals",
 		})
@@ -134,7 +134,7 @@ func GetByName(name string) (*Oracle, error) {
 		}
 	}
 
-	return nil, logs.NewError("error.not_found.id", map[string]any{
+	return nil, logs.Error("error.not_found.id", map[string]any{
 		"Subject": transform.Capitalize(i19n.Localize("oracle")),
 		"ID":      name,
 	})
@@ -153,7 +153,7 @@ func List() []Oracle {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
 
-			logs.NewError("error.loading", map[string]any{
+			logs.Error("error.loading", map[string]any{
 				"Subject": transform.Capitalize(i19n.Localize("oracle")),
 				"Error":   err,
 			})
@@ -168,7 +168,7 @@ func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {
 
-		return nil, logs.NewError("error.loading:folder", map[string]any{
+		return nil, logs.Error("error.loading:folder", map[string]any{
 			"Subject": transform.Capitalize(i19n.Localize("oracle")),
 			"Folder":  path,
 			"Error":   err,
@@ -180,7 +180,7 @@ func ListFromFolder(path string) ([]string, error) {
 	for _, file := range list {
 		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
 
-			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+			errs = append(errs, logs.Error("error.loading:file", map[string]any{
 				"Subject": transform.Capitalize(i19n.Localize("oracle")),
 				"File":    file,
 				"Error":   err,
@@ -215,7 +215,7 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 			res, ok := interval.Result.(T)
 			if !ok {
 
-				return nil, logs.NewError("error.unexpected:value", map[string]any{
+				return nil, logs.Error("error.unexpected:value", map[string]any{
 					"Subject":  o.name,
 					"Expected": fmt.Sprintf("%T", res),
 					"Received": fmt.Sprintf("%T", interval.Result),
@@ -230,7 +230,7 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 		}
 	}
 
-	return nil, logs.NewError("error.not_found.id", map[string]any{
+	return nil, logs.Error("error.not_found.id", map[string]any{
 		"Subject": o.name,
 		"ID":      value,
 	})

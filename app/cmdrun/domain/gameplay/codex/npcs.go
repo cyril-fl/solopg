@@ -54,7 +54,7 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	if generator.HasError() {
 
 		cwd, err := os.Getwd()
-		return logs.NewError("error.unexpected", map[string]any{
+		return logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, generator.GetError()),
 		})
@@ -77,7 +77,7 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 
 	if err != nil {
 
-		return logs.NewError("error.invalid:new", map[string]any{
+		return logs.Error("error.invalid:new", map[string]any{
 			"Subject": "npcs",
 			"Error":   err,
 		})
@@ -119,28 +119,28 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.name",
 		}))
 	}
 	if entry["description"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.description",
 		}))
 	}
 	if !races.Assert(entry["race"]) {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.race",
 		}))
 	}
 	if !classes.Assert(entry["class"]) {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.class",
 		}))

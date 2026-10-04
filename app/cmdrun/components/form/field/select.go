@@ -83,7 +83,7 @@ func (f *selectField[T]) Validate() error {
 		return f.validate(v)
 	}
 
-	return logs.NewError("error.unexpected:value", map[string]any{
+	return logs.Error("error.unexpected:value", map[string]any{
 		"Subject":  "field",
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
 		"Received": f.Value(),
@@ -92,7 +92,7 @@ func (f *selectField[T]) Validate() error {
 
 func (f *selectField[T]) testRequireness() error {
 	if f.required && f.Value() == nil {
-		return logs.NewError("error.required", map[string]any{
+		return logs.Error("error.required", map[string]any{
 			"Subject": f.Label(),
 			"Value":   f.ID(),
 		})

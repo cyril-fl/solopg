@@ -34,7 +34,7 @@ func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
 
-		return logs.NewError("error.loading:folder", map[string]any{
+		return logs.Error("error.loading:folder", map[string]any{
 			"Subject": "gear",
 			"Folder":  folderConfigPath,
 			"Error":   err,
@@ -53,7 +53,7 @@ func handleLoadFromFiles(files []string) []error {
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
 
-			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+			errs = append(errs, logs.Error("error.loading:file", map[string]any{
 				"Subject": "gear",
 				"File":    file,
 				"Error":   err,
@@ -82,9 +82,7 @@ func loadFromFile(fileAddress string) error {
 func List() []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading", map[string]any{
+			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "gear",
 				"Error":   err,
 			})
@@ -121,9 +119,7 @@ func newFromYaml(config yamlConfig) *Gear {
 	})
 
 	if err != nil {
-
-		// TODO HIGH Remplacer par un warning
-		logs.NewError("error.invalid:new", map[string]any{
+		logs.SilentWarning("error.invalid:new", map[string]any{
 			"Subject": "gear",
 			"Error":   err,
 		})
@@ -136,9 +132,7 @@ func newFromYaml(config yamlConfig) *Gear {
 func FindEquipementByName(name string) []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading", map[string]any{
+			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "gear",
 				"Error":   err,
 			})

@@ -74,7 +74,7 @@ func (m *mill) makeModifiersFromValuesWithFallback() {
 	rules, err := oracle.GetByName(m.values["encounter"])
 	if err != nil {
 
-		m.error = append(m.error, logs.NewError("error.not_found:id-error", map[string]any{
+		m.error = append(m.error, logs.Error("error.not_found:id-error", map[string]any{
 			"Subject": "encounter",
 			"ID":      m.values["encounter"],
 			"Error":   err,
@@ -104,7 +104,7 @@ func (m *mill) makeRandomModifiersFromOracleValue() {
 	modifiers, err := makeModifiersFromOracle(m.oraclesId)
 	if err != nil {
 
-		m.error = append(m.error, logs.NewError("error.invalid:new", map[string]any{
+		m.error = append(m.error, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "stat",
 			"Error":   err,
 		}))
@@ -142,7 +142,7 @@ func makeModifierWithRandomFallback(params withFallbackTemplate) stats.Modifier 
 	if err != nil {
 
 		cwd, cwderr := os.Getwd()
-		logs.NewError("error.unexpected", map[string]any{
+		logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})
@@ -163,7 +163,7 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	rules, err := oracle.GetByName(id)
 	if err != nil {
 
-		return nil, logs.NewError("error.invalid:new: %w", map[string]any{
+		return nil, logs.Error("error.invalid:new: %w", map[string]any{
 			"Subject": "stat",
 			"Error":   err,
 		})
@@ -174,7 +174,7 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 		if err != nil {
 			cwd, cwderr := os.Getwd()
 			return nil,
-				logs.NewError("error.unexpected", map[string]any{
+				logs.Error("error.unexpected", map[string]any{
 					"Path":  cwd,
 					"Error": errors.Join(cwderr, err),
 				})

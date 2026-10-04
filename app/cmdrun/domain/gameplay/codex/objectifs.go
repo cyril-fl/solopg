@@ -84,14 +84,14 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 
 	if values["title"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "objectives",
 			"Property": "property.title",
 		}))
 	}
 	if values["description"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "objectives",
 			"Property": "property.description",
 		}))

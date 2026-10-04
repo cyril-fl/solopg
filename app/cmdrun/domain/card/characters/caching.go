@@ -37,7 +37,7 @@ var cachedConfig []yamlConfig
 func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return logs.NewError("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return logs.Error("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
 	if errs := handleLoadFromFiles(files); len(errs) > 0 {
@@ -64,7 +64,7 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return logs.NewError("error.loading", map[string]any{
+		return logs.Error("error.loading", map[string]any{
 			"Subject": "location",
 			"Error":   err,
 		})
@@ -85,8 +85,7 @@ func loadFromFile(fileAddress string) error {
 func List() []Character {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading", map[string]any{
+			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": ("dice"),
 				"Error":   err,
 			})
@@ -113,8 +112,7 @@ func newFromYaml(config yamlConfig) *Character {
 	class, err := classes.InsertIfIsnt(config.Class)
 	if err != nil {
 		cwd, cwderr := os.Getwd()
-		// TODO HIGH Remplacer par un warning
-		logs.NewError("error.unexpected", map[string]any{
+		logs.SilentWarning("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})
@@ -136,8 +134,7 @@ func newFromYaml(config yamlConfig) *Character {
 
 	if err != nil {
 		cwd, cwderr := os.Getwd()
-		// TODO HIGH Remplacer par un warning
-		logs.NewError("error.unexpected", map[string]any{
+		logs.SilentWarning("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
 		})

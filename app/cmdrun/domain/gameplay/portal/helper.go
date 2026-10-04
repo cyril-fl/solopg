@@ -12,7 +12,7 @@ func Teleport() (*locations.Location, error) {
 
 	if len(list) == 0 {
 
-		return nil, logs.NewError("error.required", map[string]any{
+		return nil, logs.Error("error.required", map[string]any{
 			"Subject":  "location",
 			"Property": "list",
 		})

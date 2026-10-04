@@ -31,7 +31,7 @@ func New(params Template) (*Location, error) {
 	})
 
 	if newCard == nil {
-		return nil, logs.NewError("error.invalid:new", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "location",
 			"Error":   err,
 		})

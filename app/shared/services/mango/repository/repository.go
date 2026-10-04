@@ -76,7 +76,7 @@ func (r *MongoRepository) fromCollection[T any](
 		)
 
 	if err != nil {
-		return nil, logs.NewError("error.loading", map[string]any{
+		return nil, logs.Error("error.loading", map[string]any{
 			"Subject": r.collection,
 			"Error":   err,
 		})
@@ -105,7 +105,7 @@ func (r *MongoRepository) toCollection[T Document](data T) error {
 		)
 
 	if err != nil {
-		return logs.NewError("error.unexpected:save", map[string]any{
+		return logs.Error("error.unexpected:save", map[string]any{
 			"Error": err,
 		})
 	}
@@ -127,7 +127,7 @@ func (r *MongoRepository) watchCollection[T any](ctx context.Context) (<-chan T,
 
 	stream, err := r.db.GetCollection(r.collection).Watch(ctx, pipeline)
 	if err != nil {
-		return nil, logs.NewError("error.loading", map[string]any{
+		return nil, logs.Error("error.loading", map[string]any{
 			"Subject": r.collection,
 			"Error":   err,
 		})
@@ -191,7 +191,7 @@ func buildOptions(opts []FindOption) *options.FindOptions {
 func decodeCursor[T any](cursor *mongodb.Cursor, collection mango.Collection, ctx context.Context) ([]T, error) {
 	var data []T
 	if err := cursor.All(ctx, &data); err != nil {
-		return nil, logs.NewError("error.loading", map[string]any{
+		return nil, logs.Error("error.loading", map[string]any{
 			"Subject": collection,
 			"Error":   err,
 		})

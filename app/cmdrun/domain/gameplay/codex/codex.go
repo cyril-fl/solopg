@@ -78,7 +78,7 @@ func ensureEmbeddedTable[E any](name string, table **TableData[E]) {
 func (t TableData[any]) formatAssertErrors(err []error) error {
 	return errors.Join(
 		// i18N -- registe
-		logs.NewError("error.invalid", map[string]interface{}{
+		logs.Error("error.invalid", map[string]interface{}{
 			"Subject":  t.name,
 			"Received": err,
 		}),

@@ -31,7 +31,7 @@ func NewCard(params NewCardParams) (*Card, error) {
 			valid = append(valid, i19n.Localize(r.String()))
 		}
 
-		return nil, logs.NewError("error.unexpected:value", map[string]any{
+		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "rarity",
 			"Expected": strings.Join(valid, ", "),
 			"Received": params.Rarity,
@@ -45,7 +45,7 @@ func NewCard(params NewCardParams) (*Card, error) {
 			valid = append(valid, i19n.Localize(v.String()))
 		}
 
-		return nil, logs.NewError("error.unexpected:value", map[string]any{
+		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "variety",
 			"Expected": strings.Join(valid, ", "),
 			"Received": params.Variety,

@@ -56,8 +56,7 @@ func New(mods []Modifier) Stats {
 func GetBasic() Stats {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading", map[string]any{
+			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "stats",
 				"Error":   err,
 			})
@@ -85,9 +84,7 @@ func (s *Stats) ApplyModifier(mod Modifier) {
 		for _, stat := range List() {
 			valid = append(valid, i19n.Localize(stat.String()))
 		}
-
-		// TODO HIGH Remplacer par un warning
-		logs.NewError("error.unexpected:value", map[string]any{
+		logs.SilentWarning("error.unexpected:value", map[string]any{
 			"Subject":  "stat",
 			"Expected": strings.Join(valid, ", "),
 			"Received": mod.Stat,
@@ -141,8 +138,7 @@ func (m Modifier) String() string {
 func List() []Stat {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading:file", map[string]any{
+			logs.SilentWarning("error.loading:file", map[string]any{
 				"Subject": "stats",
 				"File":    fileConfigPath,
 				"Error":   err,

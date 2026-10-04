@@ -79,7 +79,7 @@ func load() (*config, error) {
 	}
 
 	if err := current.I18n.Validate(); err != nil {
-		return nil, logs.NewError("error.invalid", map[string]any{
+		return nil, logs.Error("error.invalid", map[string]any{
 			"Subject": "config",
 			"Error":   err,
 		})

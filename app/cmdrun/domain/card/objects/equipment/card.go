@@ -86,7 +86,7 @@ func NewGear(params Template) (*Gear, error) {
 
 	if newItem == nil {
 
-		return nil, logs.NewError("error.invalid:new", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "gear",
 			"Error":   err,
 		})
@@ -95,7 +95,7 @@ func NewGear(params Template) (*Gear, error) {
 	// Check EquipmentSlot
 	if !params.Slot.Validate() {
 
-		return nil, logs.NewError("error.invalid", map[string]any{
+		return nil, logs.Error("error.invalid", map[string]any{
 			"Subject": "slot",
 			"Receive": params.Slot,
 		})

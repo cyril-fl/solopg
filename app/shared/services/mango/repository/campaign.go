@@ -43,14 +43,14 @@ func (r *campaignrepository) FromCollectionByID(campaignID id.ID) (*campaign.Cam
 	}
 
 	if len(campaigns) == 0 {
-		return nil, logs.NewError("error.not_found.id", map[string]any{
+		return nil, logs.Error("error.not_found.id", map[string]any{
 			"Subject": "Campaign",
 			"ID":      campaignID,
 		})
 	}
 
 	if len(campaigns) > 1 {
-		return nil, logs.NewError("error.unexpected:value", map[string]any{
+		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "Campaign",
 			"Expected": 1,
 			"Received": len(campaigns),

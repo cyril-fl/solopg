@@ -93,7 +93,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 
-			return cmdruntui.SendErrorMsg(logs.NewError("error.invalid", map[string]any{
+			return cmdruntui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
 				"Subject":  "oracle",
 				"Received": selected,
 			}))
@@ -106,7 +106,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if err != nil {
 		return func() tea.Msg {
 
-			return cmdruntui.SendErrorMsg(logs.NewError("error.unexpected:action:oracle", map[string]any{
+			return cmdruntui.SendErrorMsg(logs.Error("error.unexpected:action:oracle", map[string]any{
 				"Action": "unexpected:action.roll",
 				"Error":  err,
 			}))

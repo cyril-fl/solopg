@@ -26,7 +26,7 @@ func loadFromSource() error {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
 
-		return logs.NewError("error.loading:folder", map[string]any{
+		return logs.Error("error.loading:folder", map[string]any{
 			"Subject": "hint",
 			"Folder":  folderConfigPath,
 			"Error":   err,
@@ -44,9 +44,7 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
-
-			// TODO HIGH Remplacer par un warning
-			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+			errs = append(errs, logs.Error("error.loading:file", map[string]any{
 				"Subject": "hint",
 				"File":    file,
 				"Error":   err,
@@ -62,7 +60,7 @@ func loadFromFile(fileAddress string) error {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return logs.NewError("error.loading:file", map[string]any{
+		return logs.Error("error.loading:file", map[string]any{
 			"Subject": "hint",
 			"File":    fileAddress,
 			"Error":   err,
@@ -96,7 +94,7 @@ func GetByName(name string) (*Hint, error) {
 		}
 	}
 
-	return nil, logs.NewError("error.not_found.id", map[string]any{
+	return nil, logs.Error("error.not_found.id", map[string]any{
 		"Subject": "hint",
 		"ID":      name,
 	})
@@ -125,7 +123,7 @@ func ListFromFolder(path string) ([]string, error) {
 	list, err := yaml.GetFolderFiles(path)
 	if err != nil {
 
-		return nil, logs.NewError("error.loading:folder", map[string]any{
+		return nil, logs.Error("error.loading:folder", map[string]any{
 			"Subject": "hint",
 			"Folder":  path,
 			"Error":   err,
@@ -137,7 +135,7 @@ func ListFromFolder(path string) ([]string, error) {
 	for _, file := range list {
 		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
 
-			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
+			errs = append(errs, logs.Error("error.loading:file", map[string]any{
 				"Subject": "hint",
 				"File":    file,
 				"Error":   err,

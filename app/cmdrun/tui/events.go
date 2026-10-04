@@ -46,7 +46,7 @@ type SaveMsg struct {
 func SendSaveMsg(save func() error) tea.Cmd {
 	return func() tea.Msg {
 		if save == nil {
-			return SaveMsg{Err: logs.NewError("error.not_found:on_save")}
+			return SaveMsg{Err: logs.Error("error.not_found:on_save")}
 		}
 		return SaveMsg{Err: save()}
 	}

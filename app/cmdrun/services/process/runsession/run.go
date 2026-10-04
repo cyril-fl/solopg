@@ -50,8 +50,7 @@ func (p *runner) Run() {
 }
 
 func (p *runner) GetResult() {
-	// TODO HIGH Remplacer par un warning
-	logs.NewError("error:not_implemented", map[string]any{
+	logs.Warning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})
@@ -70,7 +69,7 @@ func (p *runner) makeSelectsaveStep() {
 	repository := repository.Campaign().SetDb(p.db)
 	campaigns, err := repository.Load()
 	if err != nil { // i18N -- register
-		err := logs.NewError("error.unexpected:action", map[string]any{
+		err := logs.Error("error.unexpected:action", map[string]any{
 			"Action":   "unexpected:action.load_campaigns",
 			"Received": err.Error(),
 		})
@@ -87,7 +86,7 @@ func (p *runner) makeSelectsaveStep() {
 
 				selected, ok := value.(*campaign.Campaign)
 				if !ok { // i18N -- register
-					return logs.NewError("error.unexpected:value", map[string]any{
+					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "campaign",
 						"Expected": "*campaign.Campaign",
 						"Received": value,
@@ -119,7 +118,7 @@ func (p *runner) makeResolveStep() {
 				process.Run()
 
 				if process.HasErr() {
-					return logs.NewError("error.unexpected:action", map[string]any{
+					return logs.Error("error.unexpected:action", map[string]any{
 						"Action": "unexpected:action.build_engine",
 						"Error":  process.GetErr().Error(),
 					})
@@ -156,7 +155,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 				name, ok := value.(string)
 				if !ok {
 
-					return logs.NewError("error.unexpected:value", map[string]any{
+					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "name",
 						"Expected": "string",
 						"Received": value,
@@ -172,7 +171,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 				selected, ok := value.(models.Item[races.Race])
 				if !ok {
 
-					return logs.NewError("error.unexpected:value", map[string]any{
+					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "race",
 						"Expected": "models.Item[races.Race]",
 						"Received": value,
@@ -189,7 +188,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 				selected, ok := value.(models.Item[classes.Class])
 				if !ok {
 
-					return logs.NewError("error.unexpected:value", map[string]any{
+					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "class",
 						"Expected": "models.Item[classes.Class]",
 						"Received": value,
@@ -206,7 +205,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 				build, ok := value.([]stats.Modifier)
 				if !ok {
 
-					return logs.NewError("error.unexpected:value", map[string]any{
+					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "build",
 						"Expected": "[]stats.Modifier",
 						"Received": value,
@@ -222,7 +221,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 				location, ok := value.(*locations.Location)
 				if !ok {
 
-					return logs.NewError("error.unexpected:value", map[string]any{
+					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "location",
 						"Expected": "*locations.Location",
 						"Received": value,

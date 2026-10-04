@@ -88,7 +88,7 @@ func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 
-			return cmdruntui.SendErrorMsg(logs.NewError("error.invalid", map[string]any{
+			return cmdruntui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
 				"Subject":  i19n.Localize("dice"),
 				"Received": selected,
 			}))

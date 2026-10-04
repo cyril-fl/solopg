@@ -23,7 +23,7 @@ var cachedConfig []yamlConfig
 func loadFromFile() error {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return logs.NewError("error.loading:file", map[string]any{
+		return logs.Error("error.loading:file", map[string]any{
 			"Subject": "race",
 			"File":    fileConfigPath,
 			"Error":   err,
@@ -48,7 +48,7 @@ func Has(value Template) bool {
 
 func AddInConfig(value Template) error {
 	if Has(value) {
-		return logs.NewError("error.invalid:already_exists", map[string]any{
+		return logs.Error("error.invalid:already_exists", map[string]any{
 			"Subject": "race",
 			"ID":      value.Name,
 		})
@@ -70,9 +70,7 @@ func AddInConfig(value Template) error {
 func List() []Race {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading", map[string]any{
+			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "race",
 				"Error":   err,
 			})

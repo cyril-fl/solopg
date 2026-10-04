@@ -22,7 +22,7 @@ func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), lim
 	value, err := handleRoll()
 
 	if err != nil {
-		panic(logs.NewError("error.unexpected:action", map[string]any{
+		panic(logs.Error("error.unexpected:action", map[string]any{
 			"Action": "unexpected:action.roll",
 			"Error":  err,
 		}))
@@ -41,7 +41,7 @@ func (s *RerollModel[T]) Reroll() {
 	value, err := s.Roll()
 
 	if err != nil {
-		panic(logs.NewError("error.unexpected:action", map[string]any{
+		panic(logs.Error("error.unexpected:action", map[string]any{
 			"Action": "unexpected:action.roll",
 			"Error":  err,
 		}))

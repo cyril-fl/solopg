@@ -21,8 +21,10 @@ type Entry struct {
 type Kind string
 
 const (
+	SUCC Kind = "success"
 	ERR  Kind = "error"
 	INFO Kind = "info"
+	WARN Kind = "warn"
 )
 
 var Kinds = []Kind{ERR, INFO}

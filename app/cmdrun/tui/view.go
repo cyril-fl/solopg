@@ -15,7 +15,7 @@ import (
 func (m model) View() tea.View {
 	if m.err != nil {
 		cwd, err := os.Getwd()
-		errorLabel := logs.NewError("error.unexpected", map[string]any{
+		errorLabel := logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, m.err),
 		})

@@ -45,7 +45,7 @@ func New(params Template) (*Article, error) {
 
 	if newItem == nil {
 
-		return nil, logs.NewError("error.invalid:new", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "article",
 			"Error":   err,
 		})

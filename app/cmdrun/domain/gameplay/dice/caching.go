@@ -22,7 +22,7 @@ func loadFromFile() error {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
 
-		return logs.NewError("error.loading:file", map[string]any{
+		return logs.Error("error.loading:file", map[string]any{
 			"Subject": "dice",
 			"File":    fileConfigPath,
 			"Error":   err,
@@ -67,8 +67,7 @@ func (d Dice) Roll() int {
 func List() []Dice {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-			// TODO HIGH Remplacer par un warning
-			logs.NewError("error.loading:file", map[string]any{
+			logs.SilentWarning("error.loading:file", map[string]any{
 				"Subject": "dice",
 				"File":    fileConfigPath,
 				"Error":   err,

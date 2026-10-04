@@ -54,7 +54,7 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	if generator.HasError() {
 
 		cwd, err := os.Getwd()
-		return logs.NewError("error.unexpected", map[string]any{
+		return logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(err, generator.GetError()),
 		})
@@ -79,7 +79,7 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 
 	if err := races.AddInConfig(raw); err != nil {
 
-		return logs.NewError("error.unexpected", map[string]any{
+		return logs.Error("error.unexpected", map[string]any{
 			"Subject": "race",
 			"Error":   err,
 		})
@@ -130,7 +130,7 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 
 	if entry["name"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "race",
 			"Property": "property.name",
 		}))
@@ -138,7 +138,7 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 
 	if entry["description"] == "" {
 
-		err = append(err, logs.NewError("error.required", map[string]any{
+		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "race",
 			"Property": "property.description",
 		}))

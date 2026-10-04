@@ -137,7 +137,7 @@ func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
 	if msg.Err != nil {
 		m.err = msg.Err
 
-		err := logs.NewError("error.unexpected:save", map[string]any{
+		err := logs.Error("error.unexpected:save", map[string]any{
 			"Error": msg.Err,
 		})
 		// LOG autrement

@@ -91,7 +91,7 @@ func (m *Form) Validate() *Form {
 	}
 
 	if hasErrors {
-		m.SetError(logs.NewError("error.invalid:form", map[string]any{
+		m.SetError(logs.Error("error.invalid:form", map[string]any{
 			"Error": errors.Join(m.GetFieldsErrors()...),
 		}))
 	}
