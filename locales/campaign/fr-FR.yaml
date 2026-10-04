@@ -1,0 +1,15 @@
+# Campaign
+archive:
+  other: "archives"
+campaign:
+  other: "sauvegarde"
+campaign:new:
+  other: "nouvelle sauvegarde"
+campaign:success:
+  other: "Sauvegarde réussie à {{.Time}}"
+campaign.description:
+  other: "Lieu : {{.Location}} | Mis à jour : {{.Updated}}"
+campaign.location:discover:
+  other: "Nouveau lieu découvert : {{.Location}}"
+campaign.location:move:
+  other: "Le joueur s'est déplacé vers : {{.Location}}"

@@ -32,11 +32,6 @@ func (j *Journal) EnsureInitialized() {
 	}
 }
 
-// STEP 2
-/*
-L'entrée est enregistré dans l'élément journal "log" | "adventurer"
-mais pas encore persiter en DB
-*/
 func (j *Journal) AddEntry(author, message string) *Entry {
 	entry := &Entry{
 		ID:        id.New(),

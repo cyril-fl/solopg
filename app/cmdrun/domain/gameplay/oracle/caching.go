@@ -89,7 +89,7 @@ func loadFromFile(fileAddress string) error {
 
 		return logs.Error("error.invalid", map[string]any{
 			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
-			"Received": params.Name,
+			"Value": params.Name,
 		})
 	}
 
@@ -218,7 +218,7 @@ func Roll[T any](o Oracle) (*Result[T], error) {
 				return nil, logs.Error("error.unexpected:value", map[string]any{
 					"Subject":  o.name,
 					"Expected": fmt.Sprintf("%T", res),
-					"Received": fmt.Sprintf("%T", interval.Result),
+					"Value": fmt.Sprintf("%T", interval.Result),
 				})
 			}
 

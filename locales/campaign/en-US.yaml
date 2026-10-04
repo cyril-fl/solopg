@@ -1,0 +1,15 @@
+# Campaign
+archive:
+  other: "archives"
+campaign:
+  other: "save"
+campaign:new:
+  other: "new save"
+campaign:success:
+  other: "Saved successfully at {{.Time}}"
+campaign.description:
+  other: "Location: {{.Location}} | Updated: {{.Updated}}"
+campaign.location:discover:
+  other: "New location discovered: {{.Location}}"
+campaign.location:move:
+  other: "Player moved to: {{.Location}}"

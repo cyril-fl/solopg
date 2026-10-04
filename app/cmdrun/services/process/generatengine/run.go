@@ -7,6 +7,7 @@ import (
 	"solopg/app/cmdrun/services/process/resolvecampaign"
 	"solopg/app/cmdrun/services/process/savestate"
 	cmdruntui "solopg/app/cmdrun/tui"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/process"
 )
@@ -40,6 +41,7 @@ func Process(db *mango.Mongo, ctx *cmdruntui.Context) *generator {
 func (m *generator) Run() {
 	m.setCampaign()
 	m.setArchives()
+	m.setAuthor()
 	m.setEngine()
 	m.ensureSaveState()
 }
@@ -80,6 +82,10 @@ func (m *generator) setEngine() {
 		Campaign: m.cache.resolvedCampaign,
 		Archives: m.cache.loadedArchives,
 	}))
+}
+
+func (m *generator) setAuthor() {
+	logs.SetAuthor(m.cache.resolvedCampaign.ID.String())
 }
 
 func (m *generator) ensureSaveState() {

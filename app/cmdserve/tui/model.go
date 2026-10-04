@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"solopg/app/shared/services/mango/repository"
+	interfass "solopg/app/shared/types/interface"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -15,7 +16,7 @@ type Context struct{}
 type contextStepList = step.List[Context]
 type Step = step.Step[Context]
 
-type model[T any] struct {
+type model[T interfass.Stringable] struct {
 	ctx        context.Context
 	repository repository.Watchable[T]
 	events     []T
@@ -39,7 +40,7 @@ type streamErrorMsg struct {
 
 type streamClosedMsg struct{}
 
-func NewModel[T any](ctx context.Context, steps *contextStepList, repository repository.Watchable[T]) model[T] {
+func NewModel[T interfass.Stringable](ctx context.Context, steps *contextStepList, repository repository.Watchable[T]) model[T] {
 	return model[T]{
 		ctx:        ctx,
 		repository: repository,

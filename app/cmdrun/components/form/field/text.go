@@ -79,7 +79,7 @@ func (f *textField[T]) Validate() error {
 	return logs.Error("error.unexpected:value", map[string]any{
 		"Subject":  f.Label(),
 		"Expected": fmt.Sprintf("%T", f.defaultvalue),
-		"Received": f.Value(),
+		"Value": f.Value(),
 	})
 }
 

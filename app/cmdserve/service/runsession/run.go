@@ -10,24 +10,24 @@ import (
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/process/generatesteplist"
+	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )
 
-type runner[T any] struct {
+type runner[T interfass.Stringable] struct {
 	process.Process
 	cache[T]
 
 	getRepository func() repository.Watchable[T]
-	// getFlags func() *pflag.FlagSet
 }
 
-type cache[T any] struct {
+type cache[T interfass.Stringable] struct {
 	view       *generatesteplist.Generator[cmdservetui.Context]
 	repository repository.Watchable[T]
 }
 
-func Process[T any](
+func Process[T interfass.Stringable](
 	getRepository func() repository.Watchable[T],
 	// getFlags func() *pflag.FlagSet,
 ) *runner[T] {
@@ -68,7 +68,7 @@ func (p *runner[T]) runTuiView() {
 		Deplaver le moteur aiderais a ameliore et fixer ici
 		Ne devrai pas rester comme ça ca ca marche mais ma melanger les responsabilté
 	*/
-	model := cmdservetui.NewModel(ctx, p.cache.view.GetSteps(), p.repository)
+	model := cmdservetui.NewModel[T](ctx, p.cache.view.GetSteps(), p.repository)
 
 	p.cache.view.Run(&model, tea.WithContext(ctx))
 	if err := model.Err(); err != nil {

@@ -14,7 +14,7 @@ type filter struct {
 	cache
 
 	options *pflag.FlagSet
-	list    []logs.Entry
+	list    []logs.Log
 }
 
 type cache struct {
@@ -24,7 +24,7 @@ type cache struct {
 	err error
 }
 
-func Process(get func() *pflag.FlagSet, logs []logs.Entry) *filter {
+func Process(get func() *pflag.FlagSet, logs []logs.Log) *filter {
 	return &filter{
 		options: get(),
 		list:    logs,
@@ -40,7 +40,7 @@ func (p *filter) Run() {
 	p.tailLogs()
 }
 
-func (p *filter) GetResult() []logs.Entry {
+func (p *filter) GetResult() []logs.Log {
 	return p.list
 }
 
@@ -78,7 +78,7 @@ func (p *filter) filterLogs() {
 		return
 	}
 
-	newlist := []logs.Entry{}
+	newlist := []logs.Log{}
 	for _, log := range p.list {
 		if log.Type != logs.Kind(p.filter) {
 			continue

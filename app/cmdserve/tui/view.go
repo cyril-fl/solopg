@@ -11,7 +11,7 @@ func (m *model[T]) View() tea.View {
 	var view strings.Builder
 
 	for _, event := range m.events {
-		fmt.Fprintln(&view, event)
+		fmt.Fprintln(&view, event.String())
 	}
 
 	if m.err != nil {

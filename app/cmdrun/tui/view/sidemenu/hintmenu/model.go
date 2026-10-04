@@ -90,7 +90,7 @@ func (m *HintMenu) handleKeyShiftEnter() tea.Cmd {
 
 			return cmdruntui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
 				"Subject":  i19n.Localize("hint"),
-				"Received": selected,
+				"Value": selected,
 			}))
 		}
 	}

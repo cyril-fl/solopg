@@ -80,7 +80,7 @@ func (t TableData[any]) formatAssertErrors(err []error) error {
 		// i18N -- registe
 		logs.Error("error.invalid", map[string]interface{}{
 			"Subject":  t.name,
-			"Received": err,
+			"Value": err,
 		}),
 
 		errors.Join(err...),

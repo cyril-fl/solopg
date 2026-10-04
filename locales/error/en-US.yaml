@@ -10,11 +10,13 @@ error.loading:campaign:
 
 # Invalid
 error.invalid:
-  other: "Invalid \"{{.Subject}}\": {{.Received}}"
+  other: "Invalid \"{{.Subject}}\": {{.Value}}"
 error.invalid:form:
   other: "Form validation error:\n{{.Error}}"
 error.invalid:new:
   other: "Failed to create \"{{.Subject}}\":\n{{.Error}}"
+error.invalid:already_exists:
+  other: "\"{{.Subject}}\" already exists: {{.Value}}"
 
 # Not found
 error.not_found:

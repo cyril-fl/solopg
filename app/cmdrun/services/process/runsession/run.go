@@ -68,10 +68,10 @@ func (p *runner) makeSelectsaveStep() {
 
 	repository := repository.Campaign().SetDb(p.db)
 	campaigns, err := repository.Load()
-	if err != nil { // i18N -- register
+	if err != nil {
 		err := logs.Error("error.unexpected:action", map[string]any{
 			"Action":   "unexpected:action.load_campaigns",
-			"Received": err.Error(),
+			"Value": err.Error(),
 		})
 
 		p.SetErr(err)
@@ -85,11 +85,11 @@ func (p *runner) makeSelectsaveStep() {
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 
 				selected, ok := value.(*campaign.Campaign)
-				if !ok { // i18N -- register
+				if !ok {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "campaign",
 						"Expected": "*campaign.Campaign",
-						"Received": value,
+						"Value": value,
 					})
 				}
 
@@ -113,10 +113,9 @@ func (p *runner) makeResolveStep() {
 		cmdruntui.Step{
 			Submodel: models.Resolve(),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
-
 				process := generatengine.Process(p.db, ctx)
 				process.Run()
-
+				
 				if process.HasErr() {
 					return logs.Error("error.unexpected:action", map[string]any{
 						"Action": "unexpected:action.build_engine",
@@ -154,14 +153,19 @@ func makeOnboardingSteps() []cmdruntui.Step {
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				name, ok := value.(string)
 				if !ok {
-
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "name",
 						"Expected": "string",
-						"Received": value,
+						"Value": value,
 					})
 				}
 				ctx.SelectedName = name
+
+				logs.SilentInfo("onboarding.selected", map[string]any{
+					"Subject": "name",
+					"Value": name,
+				})
+
 				return nil
 			},
 		},
@@ -170,15 +174,20 @@ func makeOnboardingSteps() []cmdruntui.Step {
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				selected, ok := value.(models.Item[races.Race])
 				if !ok {
-
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "race",
 						"Expected": "models.Item[races.Race]",
-						"Received": value,
+						"Value": value,
 					})
 				}
-				selectedRace := selected.Value()
-				ctx.SelectedRace = &selectedRace
+				race := selected.Value()
+				ctx.SelectedRace = &race
+
+				logs.SilentInfo("onboarding.selected", map[string]any{
+					"Subject": "race",
+					"Value": race.GetName(),
+				})
+
 				return nil
 			},
 		},
@@ -187,15 +196,20 @@ func makeOnboardingSteps() []cmdruntui.Step {
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				selected, ok := value.(models.Item[classes.Class])
 				if !ok {
-
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "class",
 						"Expected": "models.Item[classes.Class]",
-						"Received": value,
+						"Value": value,
 					})
 				}
 				class := selected.Value()
 				ctx.SelectedClass = &class
+
+				logs.SilentInfo("onboarding.selected", map[string]any{
+					"Subject": "class",
+					"Value": class.GetName(),
+				})
+
 				return nil
 			},
 		},
@@ -208,10 +222,16 @@ func makeOnboardingSteps() []cmdruntui.Step {
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "build",
 						"Expected": "[]stats.Modifier",
-						"Received": value,
+						"Value": value,
 					})
 				}
 				ctx.SelectedBuild = build
+
+				logs.SilentInfo("onboarding.selected", map[string]any{
+					"Subject": "build",
+					"Value": build,
+				})
+
 				return nil
 			},
 		},
@@ -220,14 +240,19 @@ func makeOnboardingSteps() []cmdruntui.Step {
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				location, ok := value.(*locations.Location)
 				if !ok {
-
 					return logs.Error("error.unexpected:value", map[string]any{
 						"Subject":  "location",
 						"Expected": "*locations.Location",
-						"Received": value,
+						"Value": value,
 					})
 				}
 				ctx.SelectedLocation = location
+
+				logs.SilentInfo("onboarding.selected", map[string]any{
+					"Subject": "location",
+					"Value": location,
+				})
+
 				return nil
 			},
 		},

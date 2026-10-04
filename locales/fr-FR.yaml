@@ -40,15 +40,10 @@ draw:
 # System
 onboarding:
   other: "Creer un personnage"
+onboarding.selected:
+  other: "{{.Value}} a été sélectionné pour \"{{.Subject}}\""
 
-# Campaign
-archive:
-  other: "archives"
-campaign:
-  other: "sauvegarde"
-campaign:new:
-  other: "nouvelle sauvegarde"
-campaign:success:
-  other: "Sauvegarde réussie à {{.Time}}"
-campaign.description:
-  other: "Lieu : {{.Location}} | Mis à jour : {{.Updated}}"
+system.msg:init:
+  other: "Moteur de jeu initialisé. Bienvenue dans SoloPG !"
+system.msg:quit:
+  other: "Vous avez quitté le jeu."

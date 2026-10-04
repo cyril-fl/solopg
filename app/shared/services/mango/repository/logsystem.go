@@ -36,15 +36,15 @@ func (r *logsystemrepository) SetDb(db *mango.Mongo) *logsystemrepository {
 func (r *logsystemrepository) Load(
 	filter bson.M,
 	opts ...FindOption,
-) ([]logs.Entry, error) {
-	return r.fromCollection[logs.Entry](filter, opts...)
+) ([]logs.Log, error) {
+	return r.fromCollection[logs.Log](filter, opts...)
 }
 
-func (r *logsystemrepository) Watch(ctx context.Context) (<-chan logs.Entry, error) {
-	return r.watchCollection[logs.Entry](ctx)
+func (r *logsystemrepository) Watch(ctx context.Context) (<-chan logs.Log, error) {
+	return r.watchCollection[logs.Log](ctx)
 }
 
 // TODO a la sorier de lui, pas register mais l'afficher direct ou panic ?
-func (r *logsystemrepository) Register(log *logs.Entry) error {
+func (r *logsystemrepository) Register(log *logs.Log) error {
 	return r.toCollection(log)
 }

@@ -12,20 +12,7 @@ type State struct {
 	Player          *characters.Character
 	CurrentLocation *locations.Location
 	Codex           *codex.Codex
-	/*
-		AdventureLog         *campaign.AdventureLog
-		OK, j'ai:
-			- un Avdenturer Journl AJ =
-			- un Log journal LJ = Log
-
-		AJ me semble etre la chat romm
-
-		c'est bien ca , c'est les log de debut de partie .
-
-		log n'est jamais utiliser
-	*/
 	AdventureLog *campaign.Journal
-	Log          *campaign.Journal
 	Metadata     Metadata
 }
 type Metadata struct {
@@ -50,7 +37,6 @@ func NewState(data CampaignData) *State {
 		CurrentLocation: data.Campaign.CurrentLocation,
 		Codex:           data.Archives.Codex,
 		AdventureLog:    data.Archives.Journal,
-		Log:             data.Archives.Log,
 		Metadata: Metadata{
 			Archive: Timestamps{
 				CreatedAt: data.Archives.CreatedAt,

@@ -87,7 +87,7 @@ func (s *Stats) ApplyModifier(mod Modifier) {
 		logs.SilentWarning("error.unexpected:value", map[string]any{
 			"Subject":  "stat",
 			"Expected": strings.Join(valid, ", "),
-			"Received": mod.Stat,
+			"Value": mod.Stat,
 		})
 		return
 	}

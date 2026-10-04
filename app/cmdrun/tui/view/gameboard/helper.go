@@ -59,22 +59,21 @@ func (m *model) handleEnterInput() {
 }
 
 func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
-	if msg.Err != nil {
-		m.err = msg.Err
+	m.err = msg.Err
 
+	if m.err != nil {
 		err := logs.Error("error.unexpected:save", map[string]any{
 			"Error": msg.Err,
 		})
 
 		m.chat = append(m.chat, err.Error())
-	} else {
-		log := logs.Success("campaign:success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
 
-		// STEP 3 -- Log journal
-		// TODO choisir de loguer la save ou non ..
-		m.engine.Log(log)
+	} else {
+		log := logs.Success("campaign:success", map[string]any{
+			"Time": time.Now().Format("2006-01-02 15:04:05",
+		)})
+		
 		m.chat = append(m.chat, log)
-		m.err = nil
 	}
 
 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})

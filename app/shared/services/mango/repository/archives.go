@@ -62,7 +62,7 @@ func (r *archivesrepository) LoadByCampaignID(campaignID id.ID) (*campaign.Archi
 		return nil, logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "Archives",
 			"Expected": 1,
-			"Received": len(archives),
+			"Value": len(archives),
 		})
 	}
 

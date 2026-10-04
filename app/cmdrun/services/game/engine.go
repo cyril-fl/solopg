@@ -4,6 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/campaign"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/types/id"
+	"solopg/app/shared/services/logs"
 )
 
 type Engine struct {
@@ -19,41 +20,14 @@ func NewEngine(CampaignID id.ID, State *State) *Engine {
 }
 
 func (e *Engine) Initialize() {
-	// TODO i18N -- log system
-	// STEP 3 -- Log journal
-	e.Log("Game engine initialized. Welcome to SoloPG!")
+	logs.SilentInfo("system.msg:init")
+	
 	e.DiscoverLocation(e.State.CurrentLocation)
 }
 
 func (e *Engine) UpdateLocation(newLocation *locations.Location) {
 	e.State.CurrentLocation = newLocation
 	e.DiscoverLocation(newLocation)
-}
-
-/*
-REFACTOR NOTE
-Ce systeme de log la est le log:campaign / journal d'aventurier.
-Doit être étendu
-
-logger dedans ->
-- changement de location quand implementer
-- systeme day night si implementer
-- rencontre avec PNJ / mob
-- details de combat :
-  - dégat subit
-  - resultats
-
-- object urilisé / equipement enfilé / recu /acheter / vendu si implementer ect
-- quetes recus / terminé
-*/
-func (e *Engine) Log(message string) {
-	// TODO MEDIUM check
-
-	// STEP 1
-	/*
-		Utiles la fonction AddEntry du "log" journal
-	*/
-	e.State.Log.AddEntry("System", message)
 }
 
 func (e *Engine) GetAdventureJournal() *campaign.Journal {
@@ -65,19 +39,16 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 		return
 	}
 
-	LocationsEntry := e.State.Codex.LocationsTable.FindEntryByName(newLocation.Name)
-	// i18N + log
-	if LocationsEntry != nil {
-		// STEP 3 -- Log journal
-		e.Log("Player moved to " + newLocation.Name)
-		return
-	}
+	key := "campaign.location:move"
+	table := e.State.Codex.LocationsTable
+	entry := table.FindEntryByName(newLocation.Name)
 
-	e.State.Codex.LocationsTable.Add(newLocation)
+	if entry == nil {
+		table.Add(newLocation)
+		key = "campaign.location:discover"
+	}	
 
-	// i18N + log
-	// STEP 3 -- Log journal
-	e.Log("New location discovered: " + newLocation.Name)
+	logs.SilentInfo(key, map[string]any{"Location": newLocation.Name})
 }
 
 func (e *Engine) ExportArchives() *campaign.Archives {
@@ -85,7 +56,6 @@ func (e *Engine) ExportArchives() *campaign.Archives {
 		CampaignID: e.CampaignID,
 		Codex:      e.State.Codex,
 		Journal:    e.State.AdventureLog,
-		Log:        e.State.Log,
 		CreatedAt:  e.State.Metadata.Archive.CreatedAt,
 		UpdatedAt:  e.State.Metadata.Archive.UpdatedAt,
 	}

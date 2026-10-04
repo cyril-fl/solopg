@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-type Entry struct {
+type Log struct {
 	ID        id.ID
 	Type      Kind
 	Author    string
@@ -29,38 +29,38 @@ const (
 
 var Kinds = []Kind{ERR, INFO}
 
+// NOTE Regularly review the code to identify any additional logs that may need to be added.
 type Template struct {
 	Type    Kind
 	Author  string // Player Id O system
 	Message string
 }
 
-func New(params Template) *Entry {
-	author := "System"
-	if params.Author != "" {
-		author = params.Author
+func New(params Template) *Log {
+	if params.Author == "" {
+		params.Author = caches_author
 	}
 
-	return &Entry{
+	return &Log{
 		ID:        id.New(),
 		Type:      params.Type,
-		Author:    author,
+		Author:    params.Author,
 		Message:   params.Message,
 		CreatedAt: time.Now().UTC(),
 	}
 }
 
 // -- Methods -- //
-func (l *Entry) String() string {
+func (l Log) String() string {
 	return fmt.Sprintf("%s - [%s] - (%s) : \"%s\"", l.CreatedAt.Format(time.RFC3339), strings.ToUpper(string(l.Type)), l.Author, l.Message)
 }
 
 // Repository implementation
-func (l *Entry) SetUpdatedAt(t time.Time) {
+func (l *Log) SetUpdatedAt(t time.Time) {
 	// NOTE Log are imutable
 }
 
-func (l *Entry) Filter() bson.M {
+func (l *Log) Filter() bson.M {
 	return bson.M{
 		"id": l.ID,
 	}
@@ -79,5 +79,5 @@ func SystemLog(id string, data ...map[string]any) string {
 
 func registerFromTemplate(params Template) {
 	log := New(params)
-	cache.Register(log)
+	cache_registrable.Register(log)
 }

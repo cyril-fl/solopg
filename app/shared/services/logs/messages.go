@@ -28,6 +28,21 @@ func Error(id string, data ...map[string]any) error {
 	return errors.New(i19n.Localize(id, data...))
 }
 
+func MildError(id string, data ...map[string]any) error {
+	SilentWarning(id, data...)
+	return errors.New(i19n.Localize(id, data...))
+}
+
+func SoftError(id string, data ...map[string]any) error {
+	SilentInfo(id, data...)
+	return errors.New(i19n.Localize(id, data...))
+}
+
+func CeaseError(id string, data ...map[string]any) error {
+	return errors.New(i19n.Localize(id, data...))
+}
+
+
 func CatalogError(id string, data ...map[string]any) error {
 	registerFromTemplate(Template{
 		Type:    ERR,

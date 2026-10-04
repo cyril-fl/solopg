@@ -10,11 +10,13 @@ error.loading:campaign:
 
 # Invalid
 error.invalid:
-  other: "\"{{.Subject}}\" invalide : {{.Received}}"
+  other: "\"{{.Subject}}\" invalide : {{.Value}}"
 error.invalid:form:
   other: "Erreur de validation du formulaire :\n{{.Error}}"
 error.invalid:new:
   other: "\"{{.Subject}}\" n'a pas pu être créé :\n{{.Error}}"
+error.invalid:already_exists:
+  other: "\"{{.Subject}}\" existe déjà : {{.Value}}"
 
 # Not found
 error.not_found:
@@ -40,7 +42,7 @@ error.unexpected:action:
 error.unexpected:save:
   other: "Erreur de sauvegarde :\n{{.Error}}"
 error.unexpected:value:
-  other: "Type invalide pour \"{{.Subject}}\", attendu : {{.Expected}}, reçu : {{.Received}}"
+  other: "Type invalide pour \"{{.Subject}}\", attendu : {{.Expected}}, reçu : {{.Value}}"
 
 # Unexpected actions
 unexpected:action.build_engine:

@@ -1,18 +1,18 @@
 package logs
 
-var cache Registrable
+var (
+	cache_registrable Registrable
+	caches_author = "System"
+)
 
 type Registrable interface {
-	Register(log *Entry) error
+	Register(log *Log) error
 }
 
 func Init(r Registrable) {
-	cache = r
+	cache_registrable = r
 }
 
-// ---
-//
-//	TODO DELETE THIS FUNCTION WHEN THE LOGS ARE TESTED AND WORKING
-func TestLog(log *Entry) error {
-	return cache.Register(log)
+func SetAuthor(a string) {
+	caches_author = a
 }
