@@ -2,6 +2,7 @@ package cmd
 
 import (
 	src "solopg/app/cmdserve"
+	"solopg/app/shared/utils/cmdargs"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ var cmdServe = &cobra.Command{
 }
 
 func init() {
-	cmdServe.Flags().StringP("filter", "f", "", "Show only logs at the specified level")
+	cmdargs.MakeFlags(cmdServe, cmd.Serve.Args)
 
 	cmdRoot.AddCommand(cmdServe)
 }

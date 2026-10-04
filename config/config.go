@@ -63,10 +63,12 @@ type structureFiles struct {
 type arg struct {
 	Name        string `yaml:"name"`
 	Shorthand   string `yaml:"shorthand"`
+	Value        string `yaml:"value"`
+	Usage       string `yaml:"usage"`
 	Type        string `yaml:"type"`
-	Description string `yaml:"description"`
-	Required    bool   `yaml:"required"`
 }
+
+type Arg = arg
 
 var Current config
 

@@ -2,7 +2,6 @@ package characters
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
@@ -51,8 +50,11 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
-			// i18N
-			errs = append(errs, fmt.Errorf("Error loading armor set from file %s: %v", file, err))
+			errs = append(errs, logs.CeaseError("error.loading:file", map[string]any{
+				"Subject": "character",
+				"File": file,
+				"Error":   err,
+			}))
 			continue
 		}
 	}

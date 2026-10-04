@@ -6,15 +6,16 @@ import (
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process/initI19n"
+	"solopg/app/shared/utils/debug"
 	"solopg/config"
 
 	"github.com/spf13/cobra"
 )
 
 const (
-	DB_ON       = true
-	LOCALIZE_ON = true
-	LOG_ON      = true
+	DB_ON       = false
+	LOCALIZE_ON = false
+	LOG_ON      = false
 )
 
 // Actuellement enregistre un log en DB
@@ -30,25 +31,15 @@ func Try(cobra *cobra.Command, args []string) error {
 
 	setI19n()
 	setLogRepository(db)
+// ------------------------- //
 
-	s := logs.Success("success.try", map[string]any{
-		"Subject": "try",
-		"Args":    args,
-	})
-
-	i := logs.Info("info.try", map[string]any{
-		"Subject": "try",
-		"Args":    args,
-	})
-
-	w := logs.Warning("warning.try", map[string]any{
-		"Subject": "try",
-		"Args":    args,
-	})
-
-	fmt.Println(s)
-	fmt.Println(i)
-	fmt.Println(w)
+	println("Serve Args:")
+	arg :=config.Current.Commands.Serve.Args 
+	debug.Json(arg)
+	arg =config.Current.Commands.Logs.Args 
+	println("Logs Args")
+	debug.Json(arg)
+	
 
 	return nil
 }

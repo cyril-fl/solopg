@@ -25,12 +25,14 @@ commands:
     args:
       - name: "tail"
         shorthand: "t"
+        value: ""
+        usage: "Show only the last N log entries"
         type: "int"
-        description: "Show only the last N log entries"
       - name: "filter"
-        shorthand: "l"
+        shorthand: "f"
+        value: ""
+        usage: "Show only logs at the specified kind of level (e.g., error, warning, info)"
         type: "string"
-        description: "Show only logs at the specified level"
   root: 
     short: "SoloPG CLI"
     long: "SoloPG is a CLI to manage a solo RPG session in the terminal."
@@ -47,12 +49,13 @@ commands:
   serve: 
     use: "serve"
     short: "Serve a solo RPG session"
-    example: "solopg serve --level error"
+    example: "solopg serve --filter error"
     args:
-      - name: "level"
-        shorthand: "l"
+      - name: "filter"
+        shorthand: "f"
+        value: ""
+        usage: "Show only logs at the specified kind of level (e.g., error, warning, info)"
         type: "string"
-        description: "Show only logs at the specified level"
   try: 
     use: "try"
     short: "Try a solo RPG session"

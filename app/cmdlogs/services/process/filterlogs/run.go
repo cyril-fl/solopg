@@ -1,7 +1,6 @@
 package filterlogs
 
 import (
-	"fmt"
 	"slices"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/process"
@@ -62,8 +61,9 @@ func (p *filter) assertFilter() {
 	}
 
 	if !slices.Contains(logs.Kinds, logs.Kind(p.filter)) {
-		// i18N
-		p.err = fmt.Errorf("invalid log level: %s", p.filter)
+		p.err = logs.CeaseError("error.invalid:filter", map[string]any{
+			"Filter": p.filter,
+		})
 	}
 
 	p.checkErr()
