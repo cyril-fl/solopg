@@ -32,6 +32,11 @@ func (j *Journal) EnsureInitialized() {
 	}
 }
 
+// STEP 2
+/*
+L'entrée est enregistré dans l'élément journal "log" | "adventurer"
+mais pas encore persiter en DB
+*/
 func (j *Journal) AddEntry(author, message string) *Entry {
 	entry := &Entry{
 		ID:        id.New(),
@@ -46,5 +51,7 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 
 func (e *Entry) String() string {
 	// TODO modifier avec log
+	//  Attention ca c'est les log montrée en jeux au debut de partie !
+	// STEP ..
 	return e.Timestamp.Format(time.RFC3339) + " - " + e.Author + ": " + e.Message
 }

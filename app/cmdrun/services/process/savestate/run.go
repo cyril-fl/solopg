@@ -28,7 +28,7 @@ func (p *saver) Run() {
 }
 
 func (p *saver) GetResult() {
-	logs.Warning("error:not_implemented", map[string]any{
+	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "savestate",
 	})

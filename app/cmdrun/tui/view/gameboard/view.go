@@ -54,45 +54,124 @@ func (m model) GetFooter() []string {
 }
 
 // - Viewport - //
-
-func (m *model) refreshViewport(params viewoptions.RefreshOption) (*model, tea.Cmd) {
-	content := m.getContent()
-	content = lipgloss.NewStyle().
-		Width(m.viewport.Width()).
-		Render(content)
-
-	m.viewport.SetContent(content)
-
-	if params.Positionreset {
-		m.viewport.GotoTop()
-	}
-
-	return m, nil
-}
-
 func (m *model) getContent() string {
 	if m.isMenuActiveElementOpen() {
 		return m.getMenuActiveElement().GetView()
 	}
 
-	return strings.Join(m.journal, "\n")
+	welcomemsg := getWelcomeMessage(m)
+	journalcontent := getJournalMessage(m)
+	chatcontent := strings.Join(m.chat, "\n")
+
+	composedView := lipgloss.JoinVertical(
+		lipgloss.Left,
+
+		lipgloss.NewStyle().
+			Width(m.viewport.Width()).
+			Foreground(lipgloss.Color("240")).
+			Render(journalcontent.String()),
+
+		lipgloss.NewStyle().
+			Width(m.viewport.Width()).
+			Render(welcomemsg.String()),
+
+		lipgloss.NewStyle().
+			Width(m.viewport.Width()).
+			Render(chatcontent),
+	)
+
+	return composedView
 }
 
+func getWelcomeMessage(m *model) strings.Builder {
+	welcomemsg := strings.Builder{}
+
+	if len(m.chat) == 0 {
+		welcomemsg.WriteString("\n\n")
+		welcomemsg.WriteString(i19n.Localize("chat.msg:welcome"))
+		welcomemsg.WriteString("\n\n")
+	}
+
+	return welcomemsg
+}
+
+func getJournalMessage(m *model) strings.Builder {
+	journalmsg := strings.Builder{}
+
+	for _, entry := range m.adventurejournal {
+		journalmsg.WriteString(entry)
+		journalmsg.WriteString("\n")
+	}
+	// journalmsg.WriteString("\n")
+	journalmsg.WriteString(strings.Repeat("_", m.viewport.Width()))
+
+	return journalmsg
+}
+
+
 // - Helper - //
+// Refresh 
+func refreshViewport(m *model, params viewoptions.RefreshOption) (*model, tea.Cmd) {
+	content := m.getContent()
+
+	m.viewport.SetContent(content)
+
+	if params.Positionreset {
+		m.viewport.GotoTop()
+	} else if params.ScrollBottom {
+		m.viewport.GotoBottom()
+	}
+
+	return m, nil
+}
+
+func refreshLayout(m *model, msg tea.WindowSizeMsg) (*model, tea.Cmd) {
+	chatWidth := max(0, msg.Width-PANEL_WHIDTH-PANEL_GAP)
+
+	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
+	m.viewport.SetWidth(chatWidth)
+	m.textarea.SetWidth(chatWidth)
+
+	if !m.isMenuActiveElementOpen() {
+		m.viewport.SetContent(m.getContent())
+	}
+
+	m.viewport.GotoBottom()
+
+	return m, nil
+}
+// Render
 func renderSidePanel(engine *game.Engine, height int, views ...string) string {
+	panel := makePanel(engine, views...)
+	return renderPanel(panel, height)
+}
+
+func makePanel(engine *game.Engine, views ...string) string {
+	statsview := makeStatView(engine)
+	menuview := makeMenuView(views...)
+	
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
+		statsview,
+		menuview,
+	)
+}
+
+func makeStatView(engine *game.Engine) string {
 	var content strings.Builder
+	metadatamenu.GetCharacterInfo(&content, engine)
+	metadatamenu.GetLocationInfo(&content, engine)
+	metadatamenu.GetStatInfo(&content, engine)
 
-	composeSidePanel(&content, engine)
+	return strings.TrimRight(content.String(), "\n")
+}
 
-	statsview := strings.TrimRight(content.String(), "\n")
+func makeMenuView(views ...string) string {
 	menuview := []string{}
 	for _, view := range views {
 		menuview = append(menuview, view)
 	}
-
-	verticalView := lipgloss.JoinVertical(lipgloss.Left, statsview, strings.Join(menuview, "\n"))
-
-	return renderPanel(verticalView, height)
+	return strings.Join(menuview, "\n")
 }
 
 func renderPanel(content string, height int) string {
@@ -105,12 +184,6 @@ func renderPanel(content string, height int) string {
 		Render(content)
 }
 
-func composeSidePanel(content *strings.Builder, engine *game.Engine) {
-	metadatamenu.GetCharacterInfo(content, engine)
-	metadatamenu.GetLocationInfo(content, engine)
-	metadatamenu.GetStatInfo(content, engine)
-}
-
 func getCursor(m model) *tea.Cursor {
 	cursor := m.textarea.Cursor()
 	cursor.Y += lipgloss.Height(m.viewport.View())
@@ -121,3 +194,4 @@ func getCursor(m model) *tea.Cursor {
 
 	return cursor
 }
+

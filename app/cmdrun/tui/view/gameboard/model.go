@@ -8,20 +8,18 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/hintmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/oraclemenu"
-	"solopg/app/shared/services/i19n"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/textarea"
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
 
 // - Model - //
 type model struct {
-	author      string
-	journal     []string
-	senderStyle lipgloss.Style
+	author           string
+	chat             []string
+	adventurejournal []string
 
 	textarea textarea.Model
 	viewport viewport.Model
@@ -42,12 +40,11 @@ type UiParams struct {
 
 func NewModel(params UiParams) model {
 	return model{
-		author:      initAuthor(params.Engine),
-		journal:     initJournal(params.Engine),
-		senderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("5")),
-
-		textarea: initTextarea(),
-		viewport: initViewport(i19n.Localize("chat.msg:welcome")),
+		viewport:         initViewport(),
+		textarea:         initTextarea(),
+		author:           initAuthor(params.Engine),
+		chat:             make([]string, 0),
+		adventurejournal: initJournal(params.Engine),
 
 		engine: params.Engine,
 		save:   params.OnSave,

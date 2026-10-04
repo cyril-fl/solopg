@@ -24,78 +24,6 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// - Init - //
-func initTextarea() textarea.Model {
-	ta := textarea.New()
-	ta.Placeholder = i19n.Localize("chat.input:placeholder")
-	ta.SetVirtualCursor(false)
-	ta.Focus()
-
-	ta.Prompt = "┃ "
-	ta.CharLimit = 280
-
-	ta.SetWidth(30)
-	ta.SetHeight(3)
-
-	// Remove cursor line styling
-	s := ta.Styles()
-	s.Focused.CursorLine = lipgloss.NewStyle()
-	ta.SetStyles(s)
-
-	ta.ShowLineNumbers = false
-	ta.KeyMap.InsertNewline.SetEnabled(false)
-
-	return ta
-}
-
-func initViewport(content string) viewport.Model {
-	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
-
-	vp.SetContent(content)
-	vp.KeyMap.Left.SetEnabled(false)
-	vp.KeyMap.Right.SetEnabled(false)
-
-	return vp
-}
-
-func initJournal(engine *game.Engine) []string {
-	jrnl := make([]string, 0, len(engine.State.Journal.Entries))
-
-	for _, entry := range engine.State.Journal.Entries {
-		jrnl = append(jrnl, entry.String())
-	}
-
-	return jrnl
-}
-
-func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
-	size := size.Size{
-		Width:  PANEL_WHIDTH - 4,
-		Height: ORACLE_HEIGHT + 5,
-	}
-
-	codex := engine.State.Codex
-	codex.EnsureInitialized()
-
-	return []sidemenu.MenuItem{
-		oraclemenu.NewSideMenu(size, true),
-		dicemenu.NewSideMenu(size, false),
-		hintmenu.NewSideMenu(size, false),
-		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
-			Size:  size,
-			Codex: codex,
-		}, false),
-	}
-}
-
-func initAuthor(engine *game.Engine) string {
-	author := "System"
-	if engine.State.Player != nil {
-		author = engine.State.Player.Name
-	}
-	return author
-}
-
 // - Getters & Setters - //
 func (m *model) getMenuActiveElement() sidemenu.MenuItem {
 	return m.menu[m.activeMenuIndex]
@@ -124,14 +52,10 @@ func (m *model) handleEnterInput() {
 		return
 	}
 
-	msg := m.senderStyle.Render(m.author + ": " + input)
-	m.engine.AddJournalEntry(m.author, input)
+	amendChat(m, m.author, input)
 
-	m.journal = append(m.journal, msg)
-
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
 	m.textarea.Reset()
-	m.viewport.GotoBottom()
+	refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
 func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
@@ -141,22 +65,19 @@ func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
 		err := logs.Error("error.unexpected:save", map[string]any{
 			"Error": msg.Err,
 		})
-		// LOG autrement
-		m.journal = append(m.journal, err.Error())
+
+		m.chat = append(m.chat, err.Error())
 	} else {
+		log := logs.Success("campaign:success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
 
-		// Log aussi les succes
-		log := i19n.Localize("campaign:success", map[string]any{"Time": time.Now().Format("2006-01-02 15:04:05")})
-
+		// STEP 3 -- Log journal
+		// TODO choisir de loguer la save ou non ..
 		m.engine.Log(log)
-		m.journal = append(m.journal, log)
+		m.chat = append(m.chat, log)
 		m.err = nil
 	}
 
-	m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
-	m.viewport.GotoBottom()
-
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
+	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
 func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
@@ -194,12 +115,62 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 		return m, cmdruntui.SendSaveMsg(m.save)
 	}
 
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
+	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
 func (m *model) handleError(msg cmdruntui.ErrorMsg) (*model, tea.Cmd) {
 	m.err = msg.Err
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
+	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+}
+
+// - Side Menu - //
+// Codex Action
+func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
+	_ = msg
+
+	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
+}
+
+// Dice Rolled
+func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
+	message := i19n.Localize("dice.roll:result", map[string]any{
+		"Dice":  msg.Dice,
+		"Value": msg.Value,
+	})
+
+	// -- Advent journal
+	amendChat(m, "Dice", message)
+
+	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+}
+
+// Hint Rolled
+func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
+	localized := make([]string, 0, len(msg.Result))
+	for _, hint := range msg.Result {
+		localized = append(localized, i19n.Localize(hint))
+	}
+
+	message := i19n.Localize("hint.roll:result", map[string]any{
+		"Value": strings.Join(localized, ", "),
+	})
+
+	amendChat(m, "Hint", message)
+
+	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+}
+
+// Oracle Rolled
+func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
+	message := i19n.Localize("oracle.roll:result", map[string]any{
+		"Roll":     msg.Result.Roll,
+		"Value":    msg.Result.Result,
+		"Critical": msg.Result.Critical,
+	})
+
+	amendChat(m, "Oracle", message)
+
+	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
 // Side Menu Direction
@@ -238,60 +209,9 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 	}
 }
 
-// Codex Action
-func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
-	_ = msg
-
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
-}
-
-// Dice Rolled
-func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
-	message := i19n.Localize("dice.roll:result", map[string]any{
-		"Dice":  msg.Dice,
-		"Value": msg.Value,
-	})
-
-	m.engine.AddJournalEntry("Dice", message)
-	m.journal = append(m.journal, message)
-
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
-}
-
-// Hint Rolled
-func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
-	localized := make([]string, 0, len(msg.Result))
-	for _, hint := range msg.Result {
-		localized = append(localized, i19n.Localize(hint))
-	}
-
-	message := i19n.Localize("hint.roll:result", map[string]any{
-		"Value": strings.Join(localized, ", "),
-	})
-
-	m.engine.AddJournalEntry("Hint", message)
-	m.journal = append(m.journal, message)
-
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
-}
-
-// Oracle Rolled
-func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
-	message := i19n.Localize("oracle.roll:result", map[string]any{
-		"Roll":     msg.Result.Roll,
-		"Value":    msg.Result.Result,
-		"Critical": msg.Result.Critical,
-	})
-
-	m.engine.AddJournalEntry("Oracle", message)
-	m.journal = append(m.journal, message)
-
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
-}
-
-// Window
+// - Window - //
 func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
-	refreshMainView(m, msg)
+	refreshLayout(m, msg)
 	refreshMenuElement(m, msg)
 
 	return m, nil
@@ -319,28 +239,98 @@ func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
 		v.SetYOffset(top + hight - vHeight)
 	}
 
-	return m.refreshViewport(viewoptions.RefreshOption{Positionreset: false})
+	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
 }
 
 func (m model) handleViewRefresh(msg cmdruntui.Refresh) (tea.Model, tea.Cmd) {
-	return m.refreshViewport(msg.Option)
+	return refreshViewport(&m, msg.Option)
 }
 
-func refreshMainView(m *model, msg tea.WindowSizeMsg) {
-	chatWidth := max(0, msg.Width-PANEL_WHIDTH-PANEL_GAP)
+// - Helper - //
+// Init
+func initTextarea() textarea.Model {
+	ta := textarea.New()
+	ta.Placeholder = i19n.Localize("chat.input:placeholder")
+	ta.SetVirtualCursor(false)
+	ta.Focus()
 
-	m.viewport.SetHeight(max(0, msg.Height-m.textarea.Height()-1))
-	m.viewport.SetWidth(chatWidth)
-	m.textarea.SetWidth(chatWidth)
+	ta.Prompt = "┃ "
+	ta.CharLimit = 280
 
-	if len(m.journal) > 0 && !m.isMenuActiveElementOpen() {
-		m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width()).Render(strings.Join(m.journal, "\n")))
+	ta.SetWidth(30)
+	ta.SetHeight(3)
+
+	// Remove cursor line styling
+	s := ta.Styles()
+	s.Focused.CursorLine = lipgloss.NewStyle()
+	ta.SetStyles(s)
+
+	ta.ShowLineNumbers = false
+	ta.KeyMap.InsertNewline.SetEnabled(false)
+
+	return ta
+}
+
+func initViewport() viewport.Model {
+	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
+	vp.KeyMap.Left.SetEnabled(false)
+	vp.KeyMap.Right.SetEnabled(false)
+
+	return vp
+}
+
+func initJournal(engine *game.Engine) []string {
+	raw := make([]string, 0, len(engine.State.AdventureLog.Entries))
+
+	for _, entry := range engine.State.AdventureLog.Entries {
+		raw = append(raw, entry.String())
 	}
 
-	m.viewport.GotoBottom()
+	return raw
 }
 
+func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
+	size := size.Size{
+		Width:  PANEL_WHIDTH - 4,
+		Height: ORACLE_HEIGHT + 5,
+	}
+
+	codex := engine.State.Codex
+	codex.EnsureInitialized()
+
+	return []sidemenu.MenuItem{
+		oraclemenu.NewSideMenu(size, true),
+		dicemenu.NewSideMenu(size, false),
+		hintmenu.NewSideMenu(size, false),
+		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
+			Size:  size,
+			Codex: codex,
+		}, false),
+	}
+}
+
+func initAuthor(engine *game.Engine) string {
+	author := "System"
+	if engine.State.Player != nil {
+		author = engine.State.Player.Name
+	}
+	return author
+}
+
+// Refresh
 func refreshMenuElement(m *model, msg tea.WindowSizeMsg) {
 	activeEl := m.getMenuActiveElement()
 	activeEl.HandleWindowResize(msg)
+}
+
+func amendChat(m *model, author, message string) {
+	adventureJournal := m.engine.GetAdventureJournal()
+	adventureJournal.AddEntry(author, message)
+
+	authorstyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("5")).
+		Render(m.author+": ")
+
+	cloredmsg := authorstyle + message
+	m.chat = append(m.chat, cloredmsg)
 }

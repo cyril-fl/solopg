@@ -71,5 +71,10 @@ func Process() *p {
 }
 func (i *p) Run() {}
 
-func (i *p) GetResult() {}
+func (i *p) GetResult() {
+	logs.SilentWarning("error:not_implemented", map[string]any{
+		"Function": "GetResult",
+		"Subject":  "",
+	})
+}
 */
