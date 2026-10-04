@@ -71,7 +71,7 @@ type arg struct {
 var Current config
 
 func load() (*config, error) {
-	file := strings.TrimSpace(os.Getenv("CONFIG_FILE"))	
+	file := strings.TrimSpace(os.Getenv("CONFIG_FILE"))
 	current, err := yaml.LoadFromFile[config](file)
 
 	if err != nil {
@@ -88,7 +88,6 @@ func load() (*config, error) {
 	return current, nil
 }
 
-
 func init() {
 	godotenv.Load()
 	loaded, err := load()
@@ -97,6 +96,7 @@ func init() {
 	}
 	Current = *loaded
 }
+
 /*
 BACKLOG gerer le cas post buil avec un truc genre:
 	getPath -> if isDev = path actuell

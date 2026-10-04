@@ -7,6 +7,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 )
+
 // i18N global sur tout les fmt.Errorf
 func loadYAMLFromFile(fileAddress string, target any) error {
 	data, err := os.ReadFile(fileAddress)

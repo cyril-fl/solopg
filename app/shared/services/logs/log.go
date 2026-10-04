@@ -66,7 +66,6 @@ func (l *Entry) Filter() bson.M {
 	}
 }
 
-
 // -- Helpers -- //
 // SystemLog creates a new log entry, registers the unlocalized message, and returns the localized one.
 func SystemLog(id string, data ...map[string]any) string {
@@ -82,4 +81,3 @@ func registerFromTemplate(params Template) {
 	log := New(params)
 	cache.Register(log)
 }
-

@@ -11,9 +11,7 @@ var tryCmd = &cobra.Command{
 	Short:   cmd.Try.Short,
 	Long:    cmd.Try.Long,
 	Example: cmd.Try.Example,
-	RunE: func(cobra *cobra.Command, args []string) error {
-		return src.Try()
-	},
+	RunE:    src.Try,
 }
 
 func init() {

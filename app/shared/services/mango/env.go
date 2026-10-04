@@ -14,6 +14,7 @@ type MongoEnvironment struct {
 	host     string
 	dbname   string
 }
+
 const (
 	HOST = "localhost"
 	PORT = "27017"
@@ -66,4 +67,3 @@ func (env *MongoEnvironment) getHostAt() string {
 
 	return transform.CleanJoin(":", env.host, env.port)
 }
-

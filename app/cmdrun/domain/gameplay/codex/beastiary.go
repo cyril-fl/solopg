@@ -167,7 +167,7 @@ func (tb *BeastiaryTable) syncWithConfig() error {
 			Bonus:       race.Race.GetBonus(),
 		}); err != nil {
 			errs = append(errs,
-				// i18N 
+				// i18N
 				fmt.Errorf(
 					"failed to save race %s: %w",
 					race.Race.GetName(),

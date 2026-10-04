@@ -6,7 +6,7 @@ import (
 )
 
 // Success
-func NewSuccess(id string, data ...map[string]any) string {
+func Success(id string, data ...map[string]any) string {
 	SilentSuccess(id, data...)
 	return i19n.Localize(id, data...)
 }
@@ -61,4 +61,4 @@ func SilentWarning(id string, data ...map[string]any) {
 		Type:    WARN,
 		Message: i19n.Unlocalize(id, data...),
 	})
-}	
+}
