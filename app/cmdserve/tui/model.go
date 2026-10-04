@@ -71,6 +71,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	case tea.KeyMsg:
 		switch msg.String() {
+		// TODO mettre des keyevent
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		}

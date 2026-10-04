@@ -50,6 +50,7 @@ func (p *runner) Run() {
 }
 
 func (p *runner) GetResult() {
+	// TODO HIGH Remplacer par un warning
 	logs.NewError("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",

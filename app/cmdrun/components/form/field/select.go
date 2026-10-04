@@ -64,6 +64,7 @@ func (f *selectField[T]) GetValueAsString() string {
 	if f.Value() == nil {
 		return ""
 	}
+	// TODO LOW trouver un truc plus egalant avc transform
 	return fmt.Sprintf("%v", f.Value())
 }
 

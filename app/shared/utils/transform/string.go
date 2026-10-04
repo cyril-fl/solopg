@@ -17,3 +17,14 @@ func Uppercase(s string) string {
 	// }
 	return strings.ToUpper(s)
 }
+
+func CleanJoin(sep string, parts ...string) string {
+	res := []string{}
+	for _, p := range parts {
+		if p != "" {
+			res = append(res, p)
+		}
+	}
+
+	return strings.Join(res, sep)
+}

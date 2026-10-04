@@ -74,6 +74,7 @@ func (db *Mongo) open(ctx context.Context) {
 	db.client = client
 	db.instance = client.Database(env.GetEnvDBName())
 
+	// TODO i18N -- log system
 	fmt.Println("🥭 DB MongoDB connected successfully.")
 }
 

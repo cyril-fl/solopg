@@ -10,10 +10,12 @@ import (
 func SaveToFile[T any](fileAddress string, value T) error {
 	data, err := yamlv3.Marshal(value)
 	if err != nil {
+		// i18N	
 		return fmt.Errorf("marshal %s: %w", fileAddress, err)
 	}
 
 	if err := os.WriteFile(fileAddress, data, 0o644); err != nil {
+		// i18N
 		return fmt.Errorf("write %s: %w", fileAddress, err)
 	}
 

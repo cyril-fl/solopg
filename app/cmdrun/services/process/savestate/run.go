@@ -28,7 +28,7 @@ func (p *saver) Run() {
 }
 
 func (p *saver) GetResult() {
-	// i18N register
+	// TODO HIGH Remplacer par un warning
 	logs.NewError("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "savestate",

@@ -45,5 +45,6 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 }
 
 func (e *Entry) String() string {
+	// TODO modifier avec log
 	return e.Timestamp.Format(time.RFC3339) + " - " + e.Author + ": " + e.Message
 }

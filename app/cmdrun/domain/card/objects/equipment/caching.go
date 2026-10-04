@@ -83,6 +83,7 @@ func List() []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
 
+			// TODO HIGH Remplacer par un warning
 			logs.NewError("error.loading", map[string]any{
 				"Subject": "gear",
 				"Error":   err,
@@ -121,6 +122,7 @@ func newFromYaml(config yamlConfig) *Gear {
 
 	if err != nil {
 
+		// TODO HIGH Remplacer par un warning
 		logs.NewError("error.invalid:new", map[string]any{
 			"Subject": "gear",
 			"Error":   err,
@@ -135,6 +137,7 @@ func FindEquipementByName(name string) []Gear {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
 
+			// TODO HIGH Remplacer par un warning
 			logs.NewError("error.loading", map[string]any{
 				"Subject": "gear",
 				"Error":   err,

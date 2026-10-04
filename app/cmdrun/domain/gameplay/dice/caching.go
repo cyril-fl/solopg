@@ -51,6 +51,7 @@ func (d Dice) GetName() string {
 	if d.name != "" {
 		return d.name
 	}
+	// i18N
 	return "D" + strconv.Itoa(d.sides)
 }
 
@@ -66,7 +67,7 @@ func (d Dice) Roll() int {
 func List() []Dice {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-
+			// TODO HIGH Remplacer par un warning
 			logs.NewError("error.loading:file", map[string]any{
 				"Subject": "dice",
 				"File":    fileConfigPath,

@@ -2,6 +2,7 @@ package mango
 
 import (
 	"os"
+	"solopg/app/shared/utils/transform"
 	"solopg/config"
 	"strings"
 )
@@ -13,6 +14,10 @@ type MongoEnvironment struct {
 	host     string
 	dbname   string
 }
+const (
+	HOST = "localhost"
+	PORT = "27017"
+)
 
 func NewEnvironment() *MongoEnvironment {
 	return &MongoEnvironment{}
@@ -27,8 +32,8 @@ func (env *MongoEnvironment) ReadEnv() {
 }
 
 func (env *MongoEnvironment) GetEnvURI() string {
-	uri := cleanJoin("@", env.getCredentials(), env.getHostAt())
-	return cleanJoin("", "mongodb://", uri)
+	uri := transform.CleanJoin("@", env.getCredentials(), env.getHostAt())
+	return transform.CleanJoin("", "mongodb://", uri)
 }
 
 func (env *MongoEnvironment) SetEnvURI() {
@@ -48,27 +53,17 @@ func (env *MongoEnvironment) getCredentials() string {
 	if env.username == "" || env.password == "" {
 		return ""
 	}
-	return cleanJoin(":", env.username, env.password)
+	return transform.CleanJoin(":", env.username, env.password)
 }
 
 func (env *MongoEnvironment) getHostAt() string {
 	if env.host == "" {
-		env.host = "localhost"
+		env.host = HOST
 	}
 	if env.port == "" {
-		env.port = "27017"
+		env.port = PORT
 	}
 
-	return cleanJoin(":", env.host, env.port)
+	return transform.CleanJoin(":", env.host, env.port)
 }
 
-func cleanJoin(sep string, parts ...string) string {
-	res := []string{}
-	for _, p := range parts {
-		if p != "" {
-			res = append(res, p)
-		}
-	}
-
-	return strings.Join(res, sep)
-}

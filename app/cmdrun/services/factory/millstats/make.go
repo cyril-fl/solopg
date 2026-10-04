@@ -172,7 +172,6 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	for _, stat := range stats.List() {
 		roll, err := oracle.Roll[int](*rules)
 		if err != nil {
-
 			cwd, cwderr := os.Getwd()
 			return nil,
 				logs.NewError("error.unexpected", map[string]any{

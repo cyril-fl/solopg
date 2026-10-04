@@ -98,6 +98,7 @@ func List() []Location {
 		err := load()
 		if err != nil {
 
+			// TODO HIGH Remplacer par un warning
 			logs.NewError("error.loading", map[string]any{
 				"Subject": "location",
 				"Error":   err,
@@ -132,6 +133,7 @@ func newFromYaml(config yamlConfig) *Location {
 
 	if err != nil {
 
+		// TODO HIGH Remplacer par un warning
 		logs.NewError("error.invalid:new", map[string]any{
 			"Subject": "location",
 			"Error":   err,

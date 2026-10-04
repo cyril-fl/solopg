@@ -45,6 +45,7 @@ func handleLoadFromFiles(files []string) []error {
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
 
+			// TODO HIGH Remplacer par un warning
 			errs = append(errs, logs.NewError("error.loading:file", map[string]any{
 				"Subject": "hint",
 				"File":    file,

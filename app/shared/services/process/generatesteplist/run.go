@@ -21,6 +21,7 @@ func (p *Generator[T]) GetSteps() *step.List[T] {
 }
 
 func (p *Generator[T]) GetResult() {
+// TODO HIGH Remplacer par un warning
 	logs.NewError("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",

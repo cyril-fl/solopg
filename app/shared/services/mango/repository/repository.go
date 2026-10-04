@@ -32,8 +32,7 @@ func New(collection mango.Collection) *MongoRepository {
 }
 
 // Getters & Setters
-/* TODO
-VOIR Ppour creer un interface et un factotory si besoin , basé sur la colelctions
+/* TODO LOW VOIR Ppour creer un interface et un factotory si besoin , basé sur la colelctions
 */
 func (r *MongoRepository) getDb() *mango.Mongo {
 	return r.db

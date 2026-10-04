@@ -75,6 +75,7 @@ func init() {
 }
 
 func Load() (*config, error) {
+	// TODO LOW mettre config/.config.yaml en env
 	current, err := yaml.LoadFromFile[config]("config/.config.yaml")
 	if err != nil {
 		return nil, err

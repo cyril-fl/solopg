@@ -1,6 +1,7 @@
 package oraclemenu
 
 import (
+	"fmt"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
@@ -22,7 +23,7 @@ func NewSideMenu(size size.Size, focused bool) *OracleMenu {
 
 	for _, rules := range oracle.List() {
 		if rules.IsVisible() {
-			key := "oracle." + rules.Name()
+			key := fmt.Sprintf("oracle.%s", rules.Name())
 			name := i19n.Localize(key)
 			items = append(items, models.NewItem(name, "", rules))
 		}

@@ -70,7 +70,7 @@ func AddInConfig(value Template) error {
 func List() []Class {
 	if cachedConfig == nil {
 		if err := loadFromFile(); err != nil {
-
+// TODO HIGH Remplacer par un warning
 			logs.NewError("error.loading", map[string]any{
 				"Subject": "class",
 				"Error":   err,

@@ -19,6 +19,7 @@ func NewEngine(CampaignID id.ID, State *State) *Engine {
 }
 
 func (e *Engine) Initialize() {
+	// TODO i18N -- log system
 	e.Log("Game engine initialized. Welcome to SoloPG!")
 	e.DiscoverLocation(e.State.CurrentLocation)
 }
@@ -45,6 +46,7 @@ logger dedans ->
 - quetes recus / terminé
 */
 func (e *Engine) Log(message string) {
+	// TODO MEDIUM check
 	e.State.Log.AddEntry("System", message)
 }
 
@@ -58,6 +60,7 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 	}
 
 	LocationsEntry := e.State.Codex.LocationsTable.FindEntryByName(newLocation.Name)
+	// i18N + log
 	if LocationsEntry != nil {
 		e.Log("Player moved to " + newLocation.Name)
 		return
@@ -65,6 +68,7 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 
 	e.State.Codex.LocationsTable.Add(newLocation)
 
+	// i18N + log
 	e.Log("New location discovered: " + newLocation.Name)
 }
 

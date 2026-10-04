@@ -51,6 +51,7 @@ func handleLoadFromFiles(files []string) []error {
 	errs := []error{}
 	for _, file := range files {
 		if err := loadFromFile(file); err != nil {
+			// i18N
 			errs = append(errs, fmt.Errorf("Error loading armor set from file %s: %v", file, err))
 			continue
 		}
@@ -84,6 +85,7 @@ func loadFromFile(fileAddress string) error {
 func List() []Character {
 	if cachedConfig == nil {
 		if err := loadFromSource(); err != nil {
+			// TODO HIGH Remplacer par un warning
 			logs.NewError("error.loading", map[string]any{
 				"Subject": ("dice"),
 				"Error":   err,
@@ -111,6 +113,7 @@ func newFromYaml(config yamlConfig) *Character {
 	class, err := classes.InsertIfIsnt(config.Class)
 	if err != nil {
 		cwd, cwderr := os.Getwd()
+		// TODO HIGH Remplacer par un warning
 		logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),
@@ -133,6 +136,7 @@ func newFromYaml(config yamlConfig) *Character {
 
 	if err != nil {
 		cwd, cwderr := os.Getwd()
+		// TODO HIGH Remplacer par un warning
 		logs.NewError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, err),

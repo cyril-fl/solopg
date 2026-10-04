@@ -108,6 +108,7 @@ func (tb *BeastiaryTable) Summaries() []string {
 		if entry.Race == nil {
 			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
 		} else {
+			// TODO HIGH check apre toite les errfo fprint f pour voirlres quelle sont justifeir
 			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.beastiary:entry", map[string]any{
 				"Name":        entry.Race.GetName(),
 				"Description": entry.Race.GetDescription(),
@@ -167,6 +168,7 @@ func (tb *BeastiaryTable) syncWithConfig() error {
 			Bonus:       race.Race.GetBonus(),
 		}); err != nil {
 			errs = append(errs,
+				// i18N 
 				fmt.Errorf(
 					"failed to save race %s: %w",
 					race.Race.GetName(),

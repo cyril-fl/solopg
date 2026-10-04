@@ -62,6 +62,7 @@ func (p *filter) assertFilter() {
 	}
 
 	if !slices.Contains(logs.Kinds, logs.Kind(p.filter)) {
+		// i18N
 		p.err = fmt.Errorf("invalid log level: %s", p.filter)
 	}
 

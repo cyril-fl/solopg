@@ -15,6 +15,7 @@ func (m *model[T]) View() tea.View {
 	}
 
 	if m.err != nil {
+		// i18N
 		fmt.Fprintf(&view, "\nErreur: %v\n", m.err)
 	}
 
