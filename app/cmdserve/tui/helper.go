@@ -37,9 +37,8 @@ func (m *model[T]) assertFlag() {
 
 func (m *model[T]) assertFilterFlag() {
 	if filter, err := m.flags.GetString("filter"); err != nil {
-		return
+	} else if filter == "" {
 	} else if isKind := logs.AssertKind(logs.Kind(filter)); isKind {
-		return
 	} else {
 		logs.Error("error.unexpected:action", map[string]any{
 			"Action": "unexpected:action.logs:filter",
