@@ -1,2 +1,5 @@
+dice.default:
+  other: "Dé {{.sides}}"
+
 dice.roll:result:
   other: "{{.Dice}} : {{.Value}}"

@@ -8,7 +8,7 @@ import (
 // Success
 func Success(id string, data ...map[string]any) string {
 	SilentSuccess(id, data...)
-	return i19n.Localize(id, data...)
+	return CeaseSuccess(id, data...)
 }
 
 func SilentSuccess(id string, data ...map[string]any) {
@@ -18,6 +18,10 @@ func SilentSuccess(id string, data ...map[string]any) {
 	})
 }
 
+func CeaseSuccess(id string, data ...map[string]any) string {
+	return i19n.Localize(id, data...)
+}
+
 // Error
 func Error(id string, data ...map[string]any) error {
 	registerFromTemplate(Template{
@@ -25,17 +29,17 @@ func Error(id string, data ...map[string]any) error {
 		Message: i19n.Unlocalize(id, data...),
 	})
 
-	return errors.New(i19n.Localize(id, data...))
+	return CeaseError(id, data...)
 }
 
 func MildError(id string, data ...map[string]any) error {
 	SilentWarning(id, data...)
-	return errors.New(i19n.Localize(id, data...))
+	return CeaseError(id, data...)
 }
 
 func SoftError(id string, data ...map[string]any) error {
 	SilentInfo(id, data...)
-	return errors.New(i19n.Localize(id, data...))
+	return CeaseError(id, data...)
 }
 
 func CeaseError(id string, data ...map[string]any) error {

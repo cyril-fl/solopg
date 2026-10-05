@@ -1,7 +1,9 @@
 package codex
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
@@ -38,8 +40,11 @@ func (o *ObjectivesTable) Add(title, description string) {
 
 func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 	if err := o.assertEntry(values); err != nil {
-		// i18N
-		return err
+		cwd, cwderr := os.Getwd()
+			return logs.Error("error.unexpected", map[string]any{
+					"Path":  cwd,
+					"Error": errors.Join(cwderr, err),
+			})
 	}
 
 	o.Add(values["title"], values["description"])

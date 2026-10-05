@@ -37,6 +37,8 @@ error.required:
 # Unexpected 
 error.unexpected:
  other: "Une erreur inattendue est survenue à {{.Path}} :\n{{.Error}}"
+error.unexpected:mongo:close:
+  other: "La connexion MongoDB a été fermée de manière inattendue"
 error.unexpected:action:
   other: "Erreur durant l'exécution de \"{{.Action}}\" :\n{{.Error}}"
 error.unexpected:save:

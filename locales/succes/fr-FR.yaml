@@ -1,0 +1,2 @@
+succes.mongo:connect:
+  other: "🥭 Connexion à MongoDB établie avec succès"

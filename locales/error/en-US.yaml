@@ -37,6 +37,8 @@ error.required:
 # Unexpected
 error.unexpected:
   other: "Unexpected error at {{.Path}}:\n{{.Error}}"
+error.unexpected:mongo:close:
+  other: "MongoDB stream closed unexpectedly"
 error.unexpected:action:
   other: "Error executing \"{{.Action}}\":\n{{.Error}}"
 error.unexpected:save:

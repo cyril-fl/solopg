@@ -26,7 +26,11 @@ func SendMsg[T msg]() tea.Cmd {
 }
 
 // Error
-// TODO HIGH Déplacer dans un truc plus general
+/*
+	TODO HIGH Déplacer dans un truc plus general
+	Faire des erreurs coder cfr le doc dans la branch 
+	update readme.
+*/
 type Error struct {
 	err error
 }

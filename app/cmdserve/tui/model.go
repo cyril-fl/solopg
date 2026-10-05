@@ -2,8 +2,8 @@ package cmdservetui
 
 import (
 	"context"
-	"errors"
 
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango/repository"
 	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
@@ -68,9 +68,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.SetErr(msg.err)
 		return m, tea.Quit
 	case streamClosedMsg:
-		// i18N voir si c'est faisable .. ici oui carrement
-		err := errors.New("MongoDB stream closed unexpectedly")
-		m.SetErr(err)
+		m.SetErr(logs.CeaseError("error.unexpected:mongo:close"))
 		return m, tea.Quit
 
 	case tea.WindowSizeMsg:

@@ -2,10 +2,10 @@ package dice
 
 import (
 	"math/rand"
+	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
 	"solopg/config"
-	"strconv"
 )
 
 // - Configuration & caching - //
@@ -51,8 +51,9 @@ func (d Dice) GetName() string {
 	if d.name != "" {
 		return d.name
 	}
-	// i18N
-	return "D" + strconv.Itoa(d.sides)
+	return i19n.Localize("dice.default", map[string]any{
+		"sides": d.sides,
+	})
 }
 
 func (d Dice) GetSides() int {
