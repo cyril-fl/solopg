@@ -2,6 +2,7 @@ package logs
 
 import (
 	"errors"
+	"fmt"
 	"solopg/app/shared/services/i19n"
 )
 
@@ -24,11 +25,7 @@ func CeaseSuccess(id string, data ...map[string]any) string {
 
 // Error
 func Error(id string, data ...map[string]any) error {
-	registerFromTemplate(Template{
-		Type:    ERR,
-		Message: i19n.Unlocalize(id, data...),
-	})
-
+	SilentError(id, data...)
 	return CeaseError(id, data...)
 }
 
@@ -40,6 +37,24 @@ func MildError(id string, data ...map[string]any) error {
 func SoftError(id string, data ...map[string]any) error {
 	SilentInfo(id, data...)
 	return CeaseError(id, data...)
+}
+
+func SilentError(id string, data ...map[string]any) {
+	registerFromTemplate(Template{
+		Type:    ERR,
+		Message: i19n.Unlocalize(id, data...),
+	})
+}
+
+func RawError(id string, format string, a ...any) error {
+	err:= fmt.Errorf(format, a...)
+
+	registerFromTemplate(Template{
+		Type:    ERR,
+		Message: err.Error(),
+	})
+
+	return err
 }
 
 func CeaseError(id string, data ...map[string]any) error {

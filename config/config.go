@@ -100,15 +100,10 @@ func init() {
 }
 
 /*
-BACKLOG gerer le cas post buil avec un truc genre:
-	getPath -> if isDev = path actuell
-		else constructeur de path
-aussi faire en sorte de embeded config.yaml part defaut
-et de laisser un chemin pour configurer avec un yaml externe.
-creer une commande genre
-	CLI config --init
+BACKLOG  creer une commande genre :
+	- CLI config --init
 et si je fait
-	CLI config --set [...args]
+	- CLI config --set [...args]
 je passe automatiquement par l'equivalent de
 	isInit ? -> si oui rien, puis config
 		-> si non init, puis config

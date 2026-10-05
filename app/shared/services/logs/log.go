@@ -14,6 +14,7 @@ import (
 // -- Kind -- //
 type Kind string
 
+// BACKLOG NOTE Regularly review the code to identify any additional logs that may need to be added.
 const (
 	SUCC Kind = "success"
 	ERR  Kind = "error"
@@ -40,7 +41,6 @@ type Log struct {
 	CreatedAt time.Time
 }
 
-// NOTE Regularly review the code to identify any additional logs that may need to be added.
 type Template struct {
 	Type    Kind
 	Author  string // Player Id O system

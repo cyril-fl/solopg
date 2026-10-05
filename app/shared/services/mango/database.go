@@ -3,8 +3,6 @@ package mango
 import (
 	"context"
 	"errors"
-	"fmt"
-	"solopg/app/shared/services/logs"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -74,15 +72,6 @@ func (db *Mongo) open(ctx context.Context) {
 
 	db.client = client
 	db.instance = client.Database(env.GetEnvDBName())
-
-
-	// Cannot be i19n, as DB is init first.
-	log := logs.New(logs.Template{
-		Type:    logs.SUCC,
-		Message: "🥭 DB MongoDB connected successfully.",
-	})
-
-	fmt.Println(log.String())
 }
 
 func (db *Mongo) close(ctx context.Context) error {

@@ -206,7 +206,7 @@ func loadLocaleFile(cfg i19n.Config) ([]string, error) {
 }
 
 /*
-NOTE newLocalizer may very well be a method, but I find that it mixes responsibilities.
+NOTE "newLocalizer" may very well be a method, but I find that it mixes responsibilities.
 Thus, a localizer can be initialized without going through the initializer.
 */
 func newLocalizer(cfg i19n.Config, bundle *i18n.Bundle, lang string, defaultLocale *i19n.Locale) (*i18n.Localizer, error) {

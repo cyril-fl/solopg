@@ -4,7 +4,10 @@ import (
 	"solopg/app/shared/services/logs"
 )
 
-// NOTE WARNING Pas sur que le codi ici fonctionne.
+/*
+	FIXME WARNING The following function is a temporary solution to handle errors in the stream.
+	It is not a permanent solution and should be replaced with a more robust error handling mechanism in the future.
+*/
 func (m *model[T]) handleStreamError(err error) {
 	if m.hasSameStringError(err) {
 

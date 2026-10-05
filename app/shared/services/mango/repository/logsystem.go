@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// TODO i18N -- register les erreur a la sortie, pas dans le module repository si non ca va merde.
 const LoggingCollection mango.Collection = "log_system"
 
 // Methods
@@ -44,7 +43,6 @@ func (r *logsystemrepository) Watch(ctx context.Context) (<-chan logs.Log, error
 	return r.watchCollection[logs.Log](ctx)
 }
 
-// TODO a la sorier de lui, pas register mais l'afficher direct ou panic ?
 func (r *logsystemrepository) Register(log *logs.Log) error {
 	return r.toCollection(log)
 }

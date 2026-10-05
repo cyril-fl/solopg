@@ -1,23 +1,22 @@
 package yaml
 
 import (
-	"fmt"
 	"os"
+	"solopg/app/shared/services/logs"
 
 	yamlv3 "gopkg.in/yaml.v3"
 )
 
-// i18N A voir si c'est viable
 func SaveToFile[T any](fileAddress string, value T) error {
 	data, err := yamlv3.Marshal(value)
 	if err != nil {
 		// Ici
-		return fmt.Errorf("marshal %s: %w", fileAddress, err)
+		return logs.RawError("marshal %s: %w", fileAddress, err)
 	}
 
 	if err := os.WriteFile(fileAddress, data, 0o644); err != nil {
 		// Ici
-		return fmt.Errorf("write %s: %w", fileAddress, err)
+		return logs.RawError("write %s: %w", fileAddress, err)
 	}
 
 	return nil

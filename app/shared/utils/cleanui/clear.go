@@ -1,18 +1,11 @@
 package cleanui
 
-import (
-	"os"
-	"os/exec"
-)
+import "fmt"
 
 const (
-	// TODO LOW Check ka quelle fonctionne et faire une config gene cleatm mode 1 / 2
-	// CLEAR = "\033[H\033[2J"
-	CLEAR = "clear"
+	CLEAR = "\033[H\033[2J\033[3J"
 )
 
 func Run() {
-	cmd := exec.Command(CLEAR)
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+	fmt.Print(CLEAR)
 }

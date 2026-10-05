@@ -90,7 +90,7 @@ func (m *mill) Tail() *mill {
 	}
 
 	/*
-		NOTE
+		NOTE The following conditions are underlying:
 		if (tail <= 0) -> m
 		if (tail > len(m.list)) -> m
 	*/
