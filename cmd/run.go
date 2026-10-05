@@ -12,7 +12,7 @@ var runCmd = &cobra.Command{
 	Long:    cmd.Run.Long,
 	Example: cmd.Run.Example,
 	RunE: func(cobra *cobra.Command, args []string) error {
-		return src.Start()
+		return src.RunCmdRun()
 	},
 }
 

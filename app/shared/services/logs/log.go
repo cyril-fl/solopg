@@ -2,6 +2,7 @@ package logs
 
 import (
 	"fmt"
+	"slices"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"strings"
@@ -10,14 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-type Log struct {
-	ID        id.ID
-	Type      Kind
-	Author    string
-	Message   string
-	CreatedAt time.Time
-}
-
+// -- Kind -- //
 type Kind string
 
 const (
@@ -27,7 +21,24 @@ const (
 	WARN Kind = "warn"
 )
 
-var Kinds = []Kind{ERR, INFO}
+func AssertKind(kind Kind) bool {
+	kinds := []Kind{
+		SUCC,
+		ERR,
+		INFO,
+		WARN,
+	}
+	return slices.Contains(kinds, kind)
+}
+
+// -- Log -- //
+type Log struct {
+	ID        id.ID
+	Type      Kind
+	Author    string
+	Message   string
+	CreatedAt time.Time
+}
 
 // NOTE Regularly review the code to identify any additional logs that may need to be added.
 type Template struct {

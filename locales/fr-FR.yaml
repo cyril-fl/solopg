@@ -37,6 +37,10 @@ attempt:
 draw:
   other: "tirage"
 
+# Log
+filter:
+  other: "filtre"
+
 # System
 onboarding:
   other: "Creer un personnage"

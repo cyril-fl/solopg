@@ -37,6 +37,10 @@ attempt:
 draw:
   other: "draw"
 
+# Log
+filter:
+  other: "filter"
+
 # System
 onboarding:
   other: "Create character"

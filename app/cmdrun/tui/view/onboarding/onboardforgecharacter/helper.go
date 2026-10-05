@@ -15,8 +15,8 @@ func drowBuild() ([]stats.Modifier, error) {
 	generator := millstats.New()
 	generator.GenerateFromOracle()
 
-	if generator.HasError() {
-		return nil, generator.GetError()
+	if generator.HasErr() {
+		return nil, generator.GetErr()
 	}
 
 	return generator.GetModifiers(), nil

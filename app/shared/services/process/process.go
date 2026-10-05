@@ -1,6 +1,6 @@
 package process
 
-import "errors"
+import "solopg/app/shared/types/primitive"
 
 // Interface
 type Processable interface {
@@ -18,26 +18,12 @@ type ProcessableResult[T any] interface {
 }
 
 type Process struct {
-	errs []error
+	primitive.Fallible
 }
 
 // Methods
 func NewErr() *Process {
 	return &Process{}
-}
-
-func (p *Process) GetErr() error {
-	return errors.Join(p.errs...)
-}
-
-func (p *Process) SetErr(err error) {
-	if err != nil {
-		p.errs = append(p.errs, err)
-	}
-}
-
-func (p *Process) HasErr() bool {
-	return len(p.errs) > 0
 }
 
 // Helper
@@ -69,6 +55,7 @@ func Process() *p {
 
 	}
 }
+
 func (i *p) Run() {}
 
 func (i *p) GetResult() {

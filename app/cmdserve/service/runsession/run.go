@@ -13,6 +13,7 @@ import (
 	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
+	"github.com/spf13/pflag"
 )
 
 type runner[T interfass.Stringable] struct {
@@ -20,6 +21,7 @@ type runner[T interfass.Stringable] struct {
 	cache[T]
 
 	getRepository func() repository.Watchable[T]
+	getFlags      func() *pflag.FlagSet
 }
 
 type cache[T interfass.Stringable] struct {
@@ -27,13 +29,17 @@ type cache[T interfass.Stringable] struct {
 	repository repository.Watchable[T]
 }
 
+type ProcessTemplate[T interfass.Stringable] struct {
+	GetRepository func() repository.Watchable[T]
+	GetFlags      func() *pflag.FlagSet
+}
+
 func Process[T interfass.Stringable](
-	getRepository func() repository.Watchable[T],
-	// getFlags func() *pflag.FlagSet,
+	params ProcessTemplate[T],
 ) *runner[T] {
 	return &runner[T]{
-		getRepository: getRepository,
-		// getFlags: getFlags,
+		getRepository: params.GetRepository,
+		getFlags:      params.GetFlags,
 	}
 }
 
@@ -68,11 +74,16 @@ func (p *runner[T]) runTuiView() {
 		Deplaver le moteur aiderais a ameliore et fixer ici
 		Ne devrai pas rester comme ça ca ca marche mais ma melanger les responsabilté
 	*/
-	model := cmdservetui.NewModel[T](ctx, p.cache.view.GetSteps(), p.repository)
+	model := cmdservetui.New(cmdservetui.StreamModelTemplate[T]{
+		Context:    ctx,
+		Steps:      p.cache.view.GetSteps(),
+		Repository: p.repository,
+		Flags:      p.getFlags(),
+	})
 
 	p.cache.view.Run(&model, tea.WithContext(ctx))
-	if err := model.Err(); err != nil {
-		p.SetErr(err)
+	if model.HasErr() {
+		p.SetErr(model.GetErr())
 	}
 
 	if p.cache.view.HasErr() {

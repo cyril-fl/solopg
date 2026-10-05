@@ -47,6 +47,10 @@ error.unexpected:value:
 # Unexpected actions
 unexpected:action.build_engine:
   other: "building engine"
+unexpected:action.logs:filter:
+  other: "logs filter"
+unexpected:action.logs:display:
+  other: "logs display"
 unexpected:action.load_archives:
   other: "loading archives"
 unexpected:action.load_campaigns:

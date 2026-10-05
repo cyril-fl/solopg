@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"solopg/app/cmdrun/types"
+	"solopg/app/shared/types/set"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -148,7 +148,7 @@ func isFileFormatValid(extension format) error {
 }
 
 func isLocalesConfigValid(defaultLocale string, locales []Locale) error {
-	localeSet := make(types.Set[string])
+	localeSet := make(set.Set[string])
 
 	for _, locale := range locales {
 		if localeSet.Has(locale.Code) {

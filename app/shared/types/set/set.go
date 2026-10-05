@@ -1,4 +1,4 @@
-package types
+package set
 
 type Set[T comparable] map[T]struct{}
 
@@ -27,6 +27,6 @@ func (s Set[T]) ToSlice() []T {
 	return slice
 }
 
-func NewSet[T comparable]() Set[T] {
+func New[T comparable]() Set[T] {
 	return make(Set[T])
 }

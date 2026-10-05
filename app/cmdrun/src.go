@@ -10,7 +10,7 @@ import (
 	"solopg/config"
 )
 
-func Start() error {
+func RunCmdRun() error {
 	var db *mango.Mongo
 	var err error
 
@@ -28,8 +28,8 @@ func Start() error {
 		- STEP 3: Run session
 	*/
 
-	translation := initI19n.Process(config.Current.I18n, "")
 	logger := initlogger.Process(db)
+	translation := initI19n.Process(config.Current.I18n, "")
 	session := cmdrunrunsession.Process(db)
 
 	processes := []process.Processable{

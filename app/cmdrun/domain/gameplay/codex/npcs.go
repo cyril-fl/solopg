@@ -52,12 +52,11 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 		Randomness: true,
 	})
 
-	if generator.HasError() {
-
+	if generator.HasErr() {
 		cwd, err := os.Getwd()
 		return logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
-			"Error": errors.Join(err, generator.GetError()),
+			"Error": errors.Join(err, generator.GetErr()),
 		})
 	}
 

@@ -7,15 +7,17 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
+	"solopg/app/shared/services/factory"
 	"solopg/app/shared/services/logs"
 	"strconv"
 )
 
 type mill struct {
+	factory.Mill
+
 	values    map[string]string
 	modifiers []stats.Modifier
 	oraclesId string
-	error     []error
 }
 
 func New() *mill {
@@ -38,14 +40,6 @@ func (m *mill) GetStats() stats.Stats {
 
 func (m *mill) GetModifiers() []stats.Modifier {
 	return m.modifiers
-}
-
-func (m *mill) GetError() error {
-	return errors.Join(m.error...)
-}
-
-func (m *mill) HasError() bool {
-	return len(m.error) > 0
 }
 
 func (m *mill) SetOracleId(entropy string) *mill {
@@ -74,7 +68,7 @@ func (m *mill) makeModifiersFromValuesWithFallback() {
 	rules, err := oracle.GetByName(m.values["encounter"])
 	if err != nil {
 
-		m.error = append(m.error, logs.Error("error.not_found:id-error", map[string]any{
+		m.SetErr(logs.Error("error.not_found:id-error", map[string]any{
 			"Subject": "encounter",
 			"ID":      m.values["encounter"],
 			"Error":   err,
@@ -104,7 +98,7 @@ func (m *mill) makeRandomModifiersFromOracleValue() {
 	modifiers, err := makeModifiersFromOracle(m.oraclesId)
 	if err != nil {
 
-		m.error = append(m.error, logs.Error("error.invalid:new", map[string]any{
+		m.SetErr(logs.Error("error.invalid:new", map[string]any{
 			"Subject": "stat",
 			"Error":   err,
 		}))
@@ -116,7 +110,7 @@ func (m *mill) makeRandomModifiersFromOracleValue() {
 
 func (m *mill) reset() {
 	m.modifiers = nil
-	m.error = nil
+	m.ClearErr()
 }
 
 // Helper

@@ -166,7 +166,7 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 		}
 	}
 
-	logs.SilentInfo("sidemenu.opened", map[string]any{
+	logs.SilentInfo("sidemenu.open", map[string]any{
 		"Subject": "page",
 		"Value":   selected.id,
 	})
