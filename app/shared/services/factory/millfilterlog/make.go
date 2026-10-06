@@ -89,11 +89,10 @@ func (m *mill) Tail() *mill {
 		return m
 	}
 
-	/*
-		NOTE The following conditions are underlying:
-		if (tail <= 0) -> m
-		if (tail > len(m.list)) -> m
-	*/
+	if tail <= 0 || tail > len(m.list) {
+		return m
+	}
+
 	if tail < len(m.list) {
 		m.list = m.list[len(m.list)-tail:]
 	}
