@@ -18,7 +18,7 @@ type model struct {
 	err     error
 }
 
-// TODO rendre ça generique
+// TODO LOW rendre ça generique
 type Context struct {
 	SelectedSave     *campaign.Campaign
 	SelectedName     string

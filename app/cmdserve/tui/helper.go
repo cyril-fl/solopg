@@ -10,7 +10,6 @@ import (
 */
 func (m *model[T]) handleStreamError(err error) {
 	if m.hasSameStringError(err) {
-
 		return
 	}
 

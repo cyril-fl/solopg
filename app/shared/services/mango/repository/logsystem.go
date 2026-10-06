@@ -21,7 +21,7 @@ func LogSystem() *logsystemrepository {
 	}
 }
 
-// Getters & setters
+// Getters & Setters
 func (r *logsystemrepository) GetDb() *mango.Mongo {
 	return r.getDb()
 }

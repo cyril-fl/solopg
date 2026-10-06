@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"slices"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/yaml"
 	"strings"
@@ -57,8 +58,12 @@ func (p *run) Run() {
 	p.seti19n()
 }
 
+// Getters & Setters
 func (p *run) GetResult() {
-
+	logs.SilentWarning("error:not_implemented", map[string]any{
+		"Function": "GetResult",
+		"Subject":  "init:i19n",
+	})
 }
 
 // Methods

@@ -12,15 +12,12 @@ import (
 	"solopg/app/shared/services/process"
 )
 
-// Todo mettre en factory
-
 type run struct {
 	process.Process
 	cache
 
 	db  *mango.Mongo
 	ctx *cmdruntui.Context
-	err []error
 }
 
 type cache struct {
@@ -39,19 +36,20 @@ func Process(db *mango.Mongo, ctx *cmdruntui.Context) *run {
 }
 
 func (p *run) Run() {
-	p.setCampaign()
-	p.setArchives()
-	p.setAuthor()
-	p.setEngine()
+	p.makeCampaign()
+	p.makeArchives()
+	p.makeAuthor()
+	p.makeEngine()
 	p.ensureSaveState()
 }
 
+// Getters & Setters
 func (p *run) GetResult() *game.Engine {
 	return p.cache.engine
 }
 
 // Methods
-func (p *run) setCampaign() {
+func (p *run) makeCampaign() {
 	process := resolvecampaign.Process(p.ctx)
 	process.Run()
 
@@ -60,7 +58,7 @@ func (p *run) setCampaign() {
 	p.SetErr(process.GetErr())
 }
 
-func (p *run) setArchives() {
+func (p *run) makeArchives() {
 	if p.HasErr() {
 		return
 	}
@@ -73,7 +71,7 @@ func (p *run) setArchives() {
 	p.SetErr(process.GetErr())
 }
 
-func (p *run) setEngine() {
+func (p *run) makeEngine() {
 	if p.HasErr() {
 		return
 	}
@@ -84,7 +82,7 @@ func (p *run) setEngine() {
 	}))
 }
 
-func (p *run) setAuthor() {
+func (p *run) makeAuthor() {
 	logs.SetAuthor(p.cache.resolvedCampaign.ID.String())
 }
 
@@ -104,3 +102,5 @@ func (p *run) ensureSaveState() {
 
 	p.SetErr(process.GetErr())
 }
+
+//  Helper

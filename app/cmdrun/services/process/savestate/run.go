@@ -27,6 +27,7 @@ func (p *run) Run() {
 	p.saveArchives()
 }
 
+// Getters & Setters
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
@@ -34,7 +35,7 @@ func (p *run) GetResult() {
 	})
 }
 
-// Helpers
+// Methods
 func (p *run) saveCampaign() {
 	repo := repository.Campaign().SetDb(p.db)
 	data := p.engine.ExportCampaign()
@@ -49,6 +50,7 @@ func (p *run) saveArchives() {
 	p.SetErr(repo.Register(data))
 }
 
+// Helpers
 // Save returns a function that saves the game state to the database when called.
 func Save(db *mango.Mongo, engine *game.Engine) func() error {
 	return func() error {

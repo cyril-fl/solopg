@@ -20,7 +20,6 @@ type run struct {
 	cache
 
 	ctx  *cmdruntui.Context
-	errs []error
 }
 
 type cache struct {
@@ -46,6 +45,7 @@ func (p *run) Run() {
 	}
 }
 
+// Getters & Setters
 func (p *run) GetResult() *campaign.Campaign {
 	return p.cache.campaign
 }

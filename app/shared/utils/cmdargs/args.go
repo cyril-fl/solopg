@@ -25,7 +25,7 @@ func MakeFlags(cmd *cobra.Command, args []config.Arg) []*pflag.FlagSet {
 	return flags
 }
 
-// Helper
+// Helpers
 func assertIntValue(value string) int {
 	v, err := strconv.Atoi(value)
 	if err != nil {

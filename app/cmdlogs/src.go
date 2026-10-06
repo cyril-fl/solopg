@@ -40,11 +40,6 @@ func RunCmdLogs(flags func() *pflag.FlagSet) error {
 		GetFlags: flags,
 	})
 
-	session.Run()
-	if session.HasErr() {
-		return session.GetErr()
-	}
-
 	processes := []process.Processable{
 		logger,
 		translation,

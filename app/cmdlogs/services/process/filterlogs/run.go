@@ -36,11 +36,12 @@ func Process(params ProcessTemplate) *run {
 }
 
 func (p *run) Run() {
-	p.setList()
+	p.makeList()
 	p.makeMill()
 	p.displayResult()
 }
 
+// Getters & Setters
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
@@ -49,7 +50,7 @@ func (p *run) GetResult() {
 }
 
 // Methods
-func (p *run) setList() {
+func (p *run) makeList() {
 	list, err := p.getList()
 	if err != nil {
 		p.SetErr(err)
@@ -91,3 +92,5 @@ func (p *run) displayResult() {
 		fmt.Println(log.String())
 	}
 }
+
+// Helpers

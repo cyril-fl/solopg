@@ -31,7 +31,7 @@ func NewWithValues(values map[string]string) *mill {
 	}
 }
 
-// Getter & Setter
+// Getters & Setters
 func (m *mill) GetStats() stats.Stats {
 	s := stats.GetBasic()
 	s.ApplyModifiers(m.modifiers)
@@ -113,7 +113,7 @@ func (m *mill) reset() {
 	m.ClearErr()
 }
 
-// Helper
+// Helpers
 type FromValuesParams struct {
 	Randomness bool
 }

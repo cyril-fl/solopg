@@ -36,11 +36,12 @@ func (p *run) Run() {
 	p.ensureArchivesInitialized()
 }
 
+// Getters & Setters
 func (p *run) GetResult() *campaign.Archives {
 	return p.cache.loadedArchives
 }
 
-// Helpers
+// Methods
 func (p *run) loadArchives() {
 	reppo := repository.Archives()
 	reppo.SetDb(p.db)
@@ -90,3 +91,5 @@ func (p *run) ensureArchivesInitialized() {
 
 	p.cache.loadedArchives.EnsureInitialized()
 }
+
+// Helpers

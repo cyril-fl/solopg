@@ -84,7 +84,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-// helper
+// Helpers
 func startWatch[T interfass.Stringable](m model[T]) tea.Cmd {
 	return func() tea.Msg {
 		stream, err := m.repository.Watch(m.ctx)

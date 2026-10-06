@@ -49,8 +49,8 @@ func (r *archivesrepository) LoadByCampaignID(campaignID id.ID) (*campaign.Archi
 	}
 
 	/*
-		NOTE If no archives are found, returning (nil, nil) is perfectly fine.
-		That's the reason why return type is *campaign.Archives and not campaign.Archives.
+		NOTE If no archives found, returning (nil, nil) is perfectly fine.
+		That's why return type is *campaign.Archives and not campaign.Archives.
 		If not the whished behavior, the error should be handled appropriately in
 		the calling function.
 	*/

@@ -13,10 +13,8 @@ var (
 	Commit  = ""
 	Date    = ""
 )
-// TODO adapter cette ,ottation au autre process
-type Generator = p
 
-type p struct {
+type run struct {
 	process.Process
 	cache
 }
@@ -35,50 +33,18 @@ const (
 	GET_VERSION = "git describe --tags --always --dirty 2>/dev/null || echo dev"
 )
 
-func Process() *p {
-	return &p{}
+func Process() *run {
+	return &run{}
 }
-func (p *p) Run() {
+func (p *run) Run() {
 	executeByEnv(executablenv{
-		devfunc:  p.setDevEnv,
-		prodfunc: p.setProdEnv,
+		devfunc:  p.makeDevEnv,
+		prodfunc: p.makeProdEnv,
 	})
 }
 
-func (p *p) setDevEnv() {
-	p.setVersion()
-	p.setCommit()
-	p.setDate()
-}
-
-func (p *p) setCommit() {
-	p.cache.commit = p.executeCmd(GET_COMMIT)
-}
-
-func (p *p) setDate() {
-	p.cache.date = p.executeCmd(GET_DATE)
-}
-
-func (p *p) setVersion() {
-	p.cache.version = p.executeCmd(GET_VERSION)
-}
-
-func (p *p) executeCmd(cmd shellcmd) string {
-	c := exec.Command("sh", "-c", cmd)
-	out, err := c.Output()
-	if err != nil {
-		return ""
-	}
-	return strings.TrimSpace(string(out))
-}
-
-func (p *p) setProdEnv() {
-	p.cache.version = Version
-	p.cache.commit = Commit
-	p.cache.date = Date
-}
-
-func (p *p) GetResult() buildinfo.BuildInfo {
+// Getters & Setters
+func (p *run) GetResult() buildinfo.BuildInfo {
 	infos := buildinfo.New(buildinfo.InfoTemplate{
 		Version: p.cache.version,
 		Commit:  p.cache.commit,
@@ -88,7 +54,42 @@ func (p *p) GetResult() buildinfo.BuildInfo {
 	return infos
 }
 
-// helpers
+// Methods
+func (p *run) makeDevEnv() {
+	p.makeVersion()
+	p.makeCommit()
+	p.makeDate()
+}
+
+func (p *run) makeProdEnv() {
+	p.cache.version = Version
+	p.cache.commit = Commit
+	p.cache.date = Date
+}
+
+func (p *run) makeCommit() {
+	p.cache.commit = p.executeCmd(GET_COMMIT)
+}
+
+func (p *run) makeDate() {
+	p.cache.date = p.executeCmd(GET_DATE)
+}
+
+func (p *run) makeVersion() {
+	p.cache.version = p.executeCmd(GET_VERSION)
+}
+
+func (p *run) executeCmd(cmd shellcmd) string {
+	c := exec.Command("sh", "-c", cmd)
+	out, err := c.Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
+
+// Helper
 type executablenv struct {
 	devfunc  func()
 	prodfunc func()

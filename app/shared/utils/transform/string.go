@@ -41,3 +41,10 @@ func ParseJson(data interface{}) string {
 
 	return string(json)
 }
+
+func ParseAsString(value any) string {
+	if value == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v", value)
+}

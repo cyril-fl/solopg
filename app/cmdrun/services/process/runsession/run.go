@@ -43,12 +43,13 @@ func Process(db *mango.Mongo) *run {
 }
 
 func (p *run) Run() {
-	p.createTuiView()
+	p.makeTuiView()
 	p.makeSelectsaveStep()
 	p.makeResolveStep()
 	p.runTuiView()
 }
 
+// Getters & Setters
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
@@ -57,7 +58,7 @@ func (p *run) GetResult() {
 }
 
 // Methods
-func (p *run) createTuiView() {
+func (p *run) makeTuiView() {
 	p.cache.view = generatesteplist.Process[cmdruntui.Context]()
 }
 

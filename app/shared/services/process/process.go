@@ -26,7 +26,7 @@ func NewErr() *Process {
 	return &Process{}
 }
 
-// Helper
+// Helpers
 func HandleProcess(processes []Processable) error {
 	for _, p := range processes {
 		p.Run()
@@ -40,7 +40,7 @@ func HandleProcess(processes []Processable) error {
 }
 
 /*
-NOTE Snippet
+NOTE Snippet - Process
 
 type p struct {
 	process.Process
@@ -58,10 +58,15 @@ func Process() *p {
 
 func (i *p) Run() {}
 
+// Getters & Setters
 func (i *p) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "",
 	})
 }
+// Methods
+
+// Helpers
+
 */

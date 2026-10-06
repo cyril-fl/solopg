@@ -5,6 +5,7 @@ import (
 	"solopg/app/cmdrun/components/form"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/utils/transform"
 	"strings"
 
 	"strconv"
@@ -55,10 +56,7 @@ func (f *textField[T]) Value() any {
 }
 
 func (f *textField[T]) GetValueAsString() string {
-	if f.Value() == nil {
-		return ""
-	}
-	return fmt.Sprintf("%v", f.Value())
+	return transform.ParseAsString(f.Value())
 }
 
 func (f *textField[T]) Reset() {

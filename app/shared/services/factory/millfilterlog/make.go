@@ -29,7 +29,7 @@ func New(params Template) *mill {
 	}
 }
 
-// Getter & Setter
+// Getters & Setters
 func (m *mill) GetList() []logs.Log {
 	return m.list
 }
@@ -100,4 +100,4 @@ func (m *mill) Tail() *mill {
 	return m
 }
 
-// Helper
+// Helpers

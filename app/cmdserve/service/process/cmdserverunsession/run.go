@@ -44,11 +44,12 @@ func Process[T interfass.Stringable](
 }
 
 func (p *run[T]) Run() {
-	p.setRepository()
-	p.createTuiView()
+	p.makeRepository()
+	p.makeTuiView()
 	p.runTuiView()
 }
 
+// Getters & Setters
 func (p *run[T]) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
@@ -57,11 +58,11 @@ func (p *run[T]) GetResult() {
 }
 
 // Methods
-func (p *run[T]) setRepository() {
+func (p *run[T]) makeRepository() {
 	p.repository = p.getRepository()
 }
 
-func (p *run[T]) createTuiView() {
+func (p *run[T]) makeTuiView() {
 	p.cache.view = generatesteplist.Process[cmdservetui.Context]()
 }
 
@@ -70,7 +71,7 @@ func (p *run[T]) runTuiView() {
 	defer stop()
 
 	/*
-		FIXME MEDIUM de vrai etre une vue et nom l'equilavent du moteur qui tourne dans CMDRUN
+		FIXME MEDIUM devrais être une vue et nom l'equilavent du moteur qui tourne dans CMDRUN
 		Deplaver le moteur aiderais a ameliore et fixer ici
 		Ne devrai pas rester comme ça ca ca marche mais ma melanger les responsabilté
 	*/

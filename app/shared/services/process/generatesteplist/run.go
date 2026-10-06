@@ -10,6 +10,7 @@ import (
 
 type run[T any] struct {
 	process.Process
+	
 	steps step.List[T]
 }
 
@@ -17,16 +18,6 @@ type Generator[T any] = run[T]
 
 func Process[T any]() *run[T] {
 	return &run[T]{}
-}
-func (p *run[T]) GetSteps() *step.List[T] {
-	return &p.steps
-}
-
-func (p *run[T]) GetResult() {
-	logs.SilentWarning("error:not_implemented", map[string]any{
-		"Function": "GetResult",
-		"Subject":  "session",
-	})
 }
 
 func (p *run[T]) Run(model tea.Model, opts ...tea.ProgramOption) {
@@ -36,6 +27,20 @@ func (p *run[T]) Run(model tea.Model, opts ...tea.ProgramOption) {
 	p.SetErr(err)
 }
 
+// Getters & Setters
+func (p *run[T]) GetResult() {
+	logs.SilentWarning("error:not_implemented", map[string]any{
+		"Function": "GetResult",
+		"Subject":  "session",
+	})
+}
+
+
+func (p *run[T]) GetSteps() *step.List[T] {
+	return &p.steps
+}
+
+// Methods
 func (p *run[T]) Add(steps ...step.Step[T]) *run[T] {
 	p.steps.Steps = append(p.steps.Steps, steps...)
 	return p
@@ -64,3 +69,5 @@ func (p *run[T]) Insert(steps ...step.Step[T]) *run[T] {
 	p.steps.Steps = newSteps
 	return p
 }
+
+// Helpers

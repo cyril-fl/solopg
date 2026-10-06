@@ -7,6 +7,7 @@ import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -61,11 +62,7 @@ func (f *selectField[T]) Value() any {
 }
 
 func (f *selectField[T]) GetValueAsString() string {
-	if f.Value() == nil {
-		return ""
-	}
-	// TODO LOW trouver un truc plus egalant avc transform
-	return fmt.Sprintf("%v", f.Value())
+	return transform.ParseAsString(f.Value())
 }
 
 func (f *selectField[T]) Reset() {

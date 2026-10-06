@@ -2,7 +2,7 @@ package mango
 
 import (
 	"context"
-	"errors"
+	"solopg/app/shared/types/primitive"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,91 +13,70 @@ var env = NewEnvironment()
 
 // -- Mongo & Database -- //
 type Mongo struct {
+	primitive.Fallible
+
 	client   *mongo.Client
 	instance *mongo.Database
-	err      []error
 }
 
 func New() *Mongo {
 	return &Mongo{}
 }
 
-// - Methods -
-// Dis.connection
-func (db *Mongo) Connect() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	env.ReadEnv()
-	env.SetEnvURI()
-
-	db.open(ctx)
-}
-
-func (db *Mongo) Disconnect() {
-	db.close(context.Background())
-}
-
-// Error
-func (db *Mongo) HasErrors() bool {
-	return len(db.err) > 0
-}
-
-func (db *Mongo) GetErrors() error {
-	return errors.Join(db.err...)
-}
-
-// Collection
+// Getters & Setters
 func (db *Mongo) GetCollection(collection Collection) *mongo.Collection {
 	return db.instance.Collection(collection.String())
 }
 
-// Helper
-func (db *Mongo) open(ctx context.Context) {
+func (db *Mongo) setClient(client *mongo.Client) {
+	db.client = client
+}
+
+func (db *Mongo) setInstance(client *mongo.Client) {
+	db.instance = client.Database(env.GetEnvDBName())
+}
+
+// Methods
+func (db *Mongo) Connect() {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	client, err := mongo.
 		Connect(ctx, options.Client().
 			ApplyURI(env.GetEnvURI()).
 			SetDirect(true))
 
 	if err != nil {
-		db.setErrors(err)
+		db.SetErr(err)
 		return
 	}
 
 	if err := client.Ping(ctx, nil); err != nil {
 		client.Disconnect(ctx)
-		db.setErrors(err)
+		db.SetErr(err)
 		return
 	}
 
-	db.client = client
-	db.instance = client.Database(env.GetEnvDBName())
+	db.setClient(client)
+	db.setInstance(client)
 }
 
-func (db *Mongo) close(ctx context.Context) error {
+func (db *Mongo) Disconnect() {
 	if db.client == nil {
-		return nil
+		return 
 	}
-
-	return db.client.Disconnect(ctx)
+	db.client.Disconnect(context.Background())
 }
 
-func (db *Mongo) setErrors(err error) {
-	db.err = append(db.err, err)
-}
-
-// -- Collection -- //
-type Collection string
-
-func (c Collection) String() string {
-	return string(c)
-}
-
+// Helpers
 func Init() (db *Mongo, err error) {
+	env.ReadEnv()
+	env.SetEnvURI()
+
 	db = New()
 	db.Connect()
-	if db.HasErrors() {
-		return nil, db.GetErrors()
+	if db.HasErr() {
+		return nil, db.GetErr()
 	}
 	return db, nil
 }
