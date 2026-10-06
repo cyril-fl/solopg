@@ -6,7 +6,6 @@ import (
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process/initI19n"
-	"solopg/app/shared/utils/debug"
 	"solopg/config"
 
 	"github.com/spf13/cobra"
@@ -33,12 +32,7 @@ func Try(cobra *cobra.Command, args []string) error {
 	setLogRepository(db)
 	// ------------------------- //
 
-	println("Serve Args:")
-	arg := config.Current.Commands.Serve.Args
-	debug.Json(arg)
-	arg = config.Current.Commands.Logs.Args
-	println("Logs Args")
-	debug.Json(arg)
+	println("Try command executed successfully.")
 
 	return nil
 }

@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var	env = ""
+
 type config struct {
 	Name      string            `yaml:"name"`
 	Verbose   bool              `yaml:"verbose"`
@@ -66,6 +68,16 @@ type arg struct {
 	Value     string `yaml:"value"`
 	Usage     string `yaml:"usage"`
 	Type      string `yaml:"type"`
+}
+
+func (c config) IsDev() bool {
+	for _, validEnv := range []string{"dev", "development"} {
+		if strings.EqualFold(env, validEnv) || env == "" {
+			return true
+		}
+	}
+
+	return false
 }
 
 type Arg = arg

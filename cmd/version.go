@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"solopg/config"
+	"solopg/app/cmdversion"
 
 	"github.com/spf13/cobra"
 )
@@ -12,9 +11,7 @@ var versionCmd = &cobra.Command{
 	Short:   cmd.Version.Short,
 	Long:    cmd.Version.Long,
 	Example: cmd.Version.Example,
-	Run: func(cobra *cobra.Command, args []string) {
-		fmt.Println(config.String())
-	},
+	Run: cmdversion.Version,
 }
 
 func init() {

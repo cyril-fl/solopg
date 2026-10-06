@@ -12,10 +12,10 @@ var c = config.Current
 var cmd = c.Commands
 
 var cmdRoot = &cobra.Command{
-	Use:     c.Name,
-	Short:   cmd.Root.Short,
-	Long:    cmd.Root.Long,
-	Version: config.Version,
+	Use:   c.Name,
+	Short: cmd.Root.Short,
+	Long:  cmd.Root.Long,
+	// Version: config.Version,
 	Example: cmd.Root.Example,
 
 	RunE: func(cobra *cobra.Command, args []string) error {
