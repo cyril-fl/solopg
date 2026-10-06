@@ -1,6 +1,7 @@
 package filterlogs
 
 import (
+	"fmt"
 	"solopg/app/shared/services/factory/millfilterlog"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/process"
@@ -12,38 +13,81 @@ type run struct {
 	process.Process
 	cache
 
-	flags *pflag.FlagSet
-	list  []logs.Log
+	getList func() ([]logs.Log, error)
+	getFlags      func() *pflag.FlagSet
 }
+
 
 type cache struct {
 	mill *millfilterlog.Mill
+	list  []logs.Log
 }
 
-func Process(get func() *pflag.FlagSet, logs []logs.Log) *run {
+type ProcessTemplate struct {
+	GetList func() ([]logs.Log, error)
+	GetFlags      func() *pflag.FlagSet
+}
+
+func Process(params ProcessTemplate) *run {
 	return &run{
-		flags: get(),
-		list:  logs,
+		getList: params.GetList,
+		getFlags:      params.GetFlags,
 	}
 }
 
 func (p *run) Run() {
+	p.setList()
 	p.makeMill()
+	p.displayResult()
 }
 
-func (p *run) GetResult() []logs.Log {
-	return p.mill.
-		Tail().
-		Filter().
-		GetList()
+func (p *run) GetResult() {
+	logs.SilentWarning("error:not_implemented", map[string]any{
+		"Function": "GetResult",
+		"Subject":  "session",
+	})
 }
 
 // Methods
+func (p *run) setList() {
+	list, err := p.getList()
+	if err != nil {
+		p.SetErr(err)
+		return
+	}
+
+	p.list = list
+}
+
 func (p *run) makeMill() {
+	if p.HasErr() {
+		return
+	}
+
 	mill := millfilterlog.New(millfilterlog.Template{
 		LogList: p.list,
-		Flags:   p.flags,
+		Flags:   p.getFlags(),
 	})
 
+	if mill.HasErr() {
+		p.SetErr(mill.GetErr())
+		return
+	}
+
 	p.mill = mill
+}
+
+func (p *run) displayResult() {
+	if p.HasErr() {
+		return
+	}
+
+	result := p.mill.
+		Tail().
+		Filter().
+		GetList()
+
+	for _, log := range result {
+		fmt.Println(log.String())
+	}
 }
