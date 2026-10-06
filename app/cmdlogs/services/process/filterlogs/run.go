@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type filter struct {
+type run struct {
 	process.Process
 	cache
 
@@ -20,18 +20,18 @@ type cache struct {
 	mill *millfilterlog.Mill
 }
 
-func Process(get func() *pflag.FlagSet, logs []logs.Log) *filter {
-	return &filter{
+func Process(get func() *pflag.FlagSet, logs []logs.Log) *run {
+	return &run{
 		flags: get(),
 		list:  logs,
 	}
 }
 
-func (p *filter) Run() {
+func (p *run) Run() {
 	p.makeMill()
 }
 
-func (p *filter) GetResult() []logs.Log {
+func (p *run) GetResult() []logs.Log {
 	return p.mill.
 		Tail().
 		Filter().
@@ -39,7 +39,7 @@ func (p *filter) GetResult() []logs.Log {
 }
 
 // Methods
-func (p *filter) makeMill() {
+func (p *run) makeMill() {
 	mill := millfilterlog.New(millfilterlog.Template{
 		LogList: p.list,
 		Flags:   p.flags,

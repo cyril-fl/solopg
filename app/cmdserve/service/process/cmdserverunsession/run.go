@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type runner[T interfass.Stringable] struct {
+type run[T interfass.Stringable] struct {
 	process.Process
 	cache[T]
 
@@ -36,20 +36,20 @@ type ProcessTemplate[T interfass.Stringable] struct {
 
 func Process[T interfass.Stringable](
 	params ProcessTemplate[T],
-) *runner[T] {
-	return &runner[T]{
+) *run[T] {
+	return &run[T]{
 		getRepository: params.GetRepository,
 		getFlags:      params.GetFlags,
 	}
 }
 
-func (p *runner[T]) Run() {
+func (p *run[T]) Run() {
 	p.setRepository()
 	p.createTuiView()
 	p.runTuiView()
 }
 
-func (p *runner[T]) GetResult() {
+func (p *run[T]) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
@@ -57,15 +57,15 @@ func (p *runner[T]) GetResult() {
 }
 
 // Methods
-func (p *runner[T]) setRepository() {
+func (p *run[T]) setRepository() {
 	p.repository = p.getRepository()
 }
 
-func (p *runner[T]) createTuiView() {
+func (p *run[T]) createTuiView() {
 	p.cache.view = generatesteplist.Process[cmdservetui.Context]()
 }
 
-func (p *runner[T]) runTuiView() {
+func (p *run[T]) runTuiView() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 

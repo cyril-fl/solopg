@@ -11,7 +11,7 @@ import (
 	"solopg/app/shared/services/process"
 )
 
-type resolver struct {
+type run struct {
 	process.Process
 	cache
 
@@ -23,25 +23,25 @@ type cache struct {
 	loadedArchives *campaign.Archives
 }
 
-func Process(db *mango.Mongo, campaignID id.ID) *resolver {
-	return &resolver{
+func Process(db *mango.Mongo, campaignID id.ID) *run {
+	return &run{
 		db:         db,
 		campaignID: campaignID,
 	}
 }
 
-func (p *resolver) Run() {
+func (p *run) Run() {
 	p.loadArchives()
 	p.ensureArchives()
 	p.ensureArchivesInitialized()
 }
 
-func (p *resolver) GetResult() *campaign.Archives {
+func (p *run) GetResult() *campaign.Archives {
 	return p.cache.loadedArchives
 }
 
 // Helpers
-func (p *resolver) loadArchives() {
+func (p *run) loadArchives() {
 	reppo := repository.Archives()
 	reppo.SetDb(p.db)
 
@@ -54,7 +54,7 @@ func (p *resolver) loadArchives() {
 	p.cache.loadedArchives = result
 }
 
-func (p *resolver) ensureArchives() {
+func (p *run) ensureArchives() {
 	if p.HasErr() {
 		return
 	}
@@ -71,7 +71,7 @@ func (p *resolver) ensureArchives() {
 	})
 }
 
-func (p *resolver) ensureArchivesInitialized() {
+func (p *run) ensureArchivesInitialized() {
 	if p.HasErr() {
 		return
 	}

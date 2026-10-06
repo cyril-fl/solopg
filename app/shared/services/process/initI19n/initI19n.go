@@ -13,7 +13,7 @@ import (
 	y "gopkg.in/yaml.v3"
 )
 
-type initializer struct {
+type run struct {
 	process.Process
 	cache
 
@@ -31,150 +31,150 @@ type cache struct {
 	files []string
 }
 
-func Process(cfg i19n.Config, locale string) *initializer {
-	return &initializer{
+func Process(cfg i19n.Config, locale string) *run {
+	return &run{
 		cfg:    cfg,
 		locale: locale,
 	}
 }
 
-func (i *initializer) Run() {
+func (p *run) Run() {
 	// Set env
-	i.reset()
-	i.assertConfig()
-	i.setDefaultLocale()
+	p.reset()
+	p.assertConfig()
+	p.setDefaultLocale()
 
 	// Bundle
-	i.initBundle()
-	i.loadLocaleFiles()
-	i.registerLocaleFiles()
+	p.initBundle()
+	p.loadLocaleFiles()
+	p.registerLocaleFiles()
 
 	// Localizer
-	i.initLocalizer()
-	i.initErrorLocalizer()
+	p.initLocalizer()
+	p.initErrorLocalizer()
 
 	// Set
-	i.seti19n()
+	p.seti19n()
 }
 
-func (i *initializer) GetResult() {
+func (p *run) GetResult() {
 
 }
 
 // Methods
-func (i *initializer) assertConfig() {
-	if i.HasErr() {
+func (p *run) assertConfig() {
+	if p.HasErr() {
 		return
 	}
 
-	if err := i.cfg.Validate(); err != nil {
-		i.SetErr(err)
+	if err := p.cfg.Validate(); err != nil {
+		p.SetErr(err)
 	}
 }
 
-func (i *initializer) setDefaultLocale() {
-	if i.HasErr() {
+func (p *run) setDefaultLocale() {
+	if p.HasErr() {
 		return
 	}
 
-	defaultLocale, err := i.cfg.GetDefaultLocale(i.cfg.Default)
+	defaultLocale, err := p.cfg.GetDefaultLocale(p.cfg.Default)
 	if err != nil {
-		i.SetErr(err)
+		p.SetErr(err)
 		return
 	}
 
-	i.defaultLocale = defaultLocale
+	p.defaultLocale = defaultLocale
 }
 
-func (i *initializer) initBundle() {
-	if i.HasErr() {
+func (p *run) initBundle() {
+	if p.HasErr() {
 		return
 	}
 
-	tag, err := i.defaultLocale.ParseTag()
+	tag, err := p.defaultLocale.ParseTag()
 	if err != nil {
-		i.SetErr(err)
+		p.SetErr(err)
 		return
 	}
 
 	bundle := i18n.NewBundle(tag)
-	bundle.RegisterUnmarshalFunc(string(i.cfg.Format), y.Unmarshal)
+	bundle.RegisterUnmarshalFunc(string(p.cfg.Format), y.Unmarshal)
 
-	i.bundle = bundle
+	p.bundle = bundle
 }
 
-func (i *initializer) loadLocaleFiles() {
-	if i.HasErr() {
+func (p *run) loadLocaleFiles() {
+	if p.HasErr() {
 		return
 	}
 
-	files, err := loadLocaleFile(i.cfg)
+	files, err := loadLocaleFile(p.cfg)
 	if err != nil {
 
-		i.SetErr(err)
+		p.SetErr(err)
 		return
 	}
 
-	i.files = files
+	p.files = files
 }
 
-func (i *initializer) registerLocaleFiles() {
-	if i.HasErr() {
+func (p *run) registerLocaleFiles() {
+	if p.HasErr() {
 		return
 	}
 
-	for _, path := range i.files {
-		if _, err := i.bundle.LoadMessageFile(path); err != nil {
-			i.SetErr(fmt.Errorf("load message file '%s': %w", path, err))
+	for _, path := range p.files {
+		if _, err := p.bundle.LoadMessageFile(path); err != nil {
+			p.SetErr(fmt.Errorf("load message file '%s': %w", path, err))
 		}
 	}
 }
 
-func (i *initializer) initLocalizer() {
-	if i.HasErr() {
+func (p *run) initLocalizer() {
+	if p.HasErr() {
 		return
 	}
 
-	localizer, err := newLocalizer(i.cfg, i.bundle, i.locale, i.defaultLocale)
+	localizer, err := newLocalizer(p.cfg, p.bundle, p.locale, p.defaultLocale)
 	if err != nil {
-		i.SetErr(err)
+		p.SetErr(err)
 		return
 	}
 
-	i.local = localizer
+	p.local = localizer
 }
 
-func (i *initializer) initErrorLocalizer() {
-	if i.HasErr() {
+func (p *run) initErrorLocalizer() {
+	if p.HasErr() {
 		return
 	}
 
-	localizer, err := newLocalizer(i.cfg, i.bundle, "en", i.defaultLocale)
+	localizer, err := newLocalizer(p.cfg, p.bundle, "en", p.defaultLocale)
 	if err != nil {
-		i.SetErr(err)
+		p.SetErr(err)
 		return
 	}
 
-	i.localerror = localizer
+	p.localerror = localizer
 }
 
-func (i *initializer) seti19n() {
-	if i.HasErr() {
+func (p *run) seti19n() {
+	if p.HasErr() {
 		return
 	}
 
 	t := i19n.New()
-	t.SetBundle(i.bundle)
-	t.SetLocale(i.local)
-	t.SetLocalerror(i.localerror)
+	t.SetBundle(p.bundle)
+	t.SetLocale(p.local)
+	t.SetLocalerror(p.localerror)
 
 	i19n.SetCache(t)
 }
 
-func (i *initializer) reset() {
-	i.cache = cache{}
+func (p *run) reset() {
+	p.cache = cache{}
 
-	i.SetErr(nil)
+	p.SetErr(nil)
 	i19n.SetCache(i19n.New())
 }
 

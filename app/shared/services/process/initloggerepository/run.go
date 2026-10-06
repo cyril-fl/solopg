@@ -7,19 +7,19 @@ import (
 	"solopg/app/shared/services/process"
 )
 
-type initializer struct {
+type run struct {
 	process.Process
 
 	db *mango.Mongo
 }
 
-func Process(db *mango.Mongo) *initializer {
-	return &initializer{
+func Process(db *mango.Mongo) *run {
+	return &run{
 		db: db,
 	}
 }
 
-func (p *initializer) Run() {
+func (p *run) Run() {
 	repo := repository.LogSystem()
 	repo.SetDb(p.db)
 

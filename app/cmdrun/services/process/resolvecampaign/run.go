@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-type resolver struct {
+type run struct {
 	process.Process
 	cache
 
@@ -30,13 +30,13 @@ type cache struct {
 	err error
 }
 
-func Process(ctx *cmdruntui.Context) *resolver {
-	return &resolver{
+func Process(ctx *cmdruntui.Context) *run {
+	return &run{
 		ctx: ctx,
 	}
 }
 
-func (p *resolver) Run() {
+func (p *run) Run() {
 	if p.isNewCampaign() {
 		p.assertContext()
 		p.generateCharacter()
@@ -46,16 +46,16 @@ func (p *resolver) Run() {
 	}
 }
 
-func (p *resolver) GetResult() *campaign.Campaign {
+func (p *run) GetResult() *campaign.Campaign {
 	return p.cache.campaign
 }
 
 // Methods
-func (p *resolver) isNewCampaign() bool {
+func (p *run) isNewCampaign() bool {
 	return p.ctx.SelectedSave == nil
 }
 
-func (p *resolver) assertContext() {
+func (p *run) assertContext() {
 	isValid := false
 	c := p.ctx
 
@@ -79,7 +79,7 @@ func (p *resolver) assertContext() {
 	p.checkError()
 }
 
-func (p *resolver) generateCharacter() {
+func (p *run) generateCharacter() {
 	if p.HasErr() {
 		return
 	}
@@ -98,7 +98,7 @@ func (p *resolver) generateCharacter() {
 	p.checkError()
 }
 
-func (p *resolver) generateCampaign() {
+func (p *run) generateCampaign() {
 	if p.HasErr() {
 		return
 	}
@@ -109,7 +109,7 @@ func (p *resolver) generateCampaign() {
 	})
 }
 
-func (p *resolver) checkError() {
+func (p *run) checkError() {
 	if p.cache.err != nil {
 		p.SetErr(p.cache.err)
 		p.cache.err = nil

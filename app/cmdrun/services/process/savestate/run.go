@@ -8,26 +8,26 @@ import (
 	"solopg/app/shared/services/process"
 )
 
-type saver struct {
+type run struct {
 	process.Process
 
 	db     *mango.Mongo
 	engine *game.Engine
 }
 
-func Process(db *mango.Mongo, engine *game.Engine) *saver {
-	return &saver{
+func Process(db *mango.Mongo, engine *game.Engine) *run {
+	return &run{
 		db:     db,
 		engine: engine,
 	}
 }
 
-func (p *saver) Run() {
+func (p *run) Run() {
 	p.saveCampaign()
 	p.saveArchives()
 }
 
-func (p *saver) GetResult() {
+func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "savestate",
@@ -35,14 +35,14 @@ func (p *saver) GetResult() {
 }
 
 // Helpers
-func (p *saver) saveCampaign() {
+func (p *run) saveCampaign() {
 	repo := repository.Campaign().SetDb(p.db)
 	data := p.engine.ExportCampaign()
 
 	p.SetErr(repo.Register(data))
 }
 
-func (p *saver) saveArchives() {
+func (p *run) saveArchives() {
 	repo := repository.Archives().SetDb(p.db)
 	data := p.engine.ExportArchives()
 

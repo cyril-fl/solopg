@@ -24,7 +24,7 @@ import (
 	"solopg/app/cmdrun/tui/view/onboarding/onboardlocation"
 )
 
-type runner struct {
+type run struct {
 	process.Process
 	cache
 
@@ -36,20 +36,20 @@ type cache struct {
 	view *generatesteplist.Generator[cmdruntui.Context]
 }
 
-func Process(db *mango.Mongo) *runner {
-	return &runner{
+func Process(db *mango.Mongo) *run {
+	return &run{
 		db: db,
 	}
 }
 
-func (p *runner) Run() {
+func (p *run) Run() {
 	p.createTuiView()
 	p.makeSelectsaveStep()
 	p.makeResolveStep()
 	p.runTuiView()
 }
 
-func (p *runner) GetResult() {
+func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
@@ -57,11 +57,11 @@ func (p *runner) GetResult() {
 }
 
 // Methods
-func (p *runner) createTuiView() {
+func (p *run) createTuiView() {
 	p.cache.view = generatesteplist.Process[cmdruntui.Context]()
 }
 
-func (p *runner) makeSelectsaveStep() {
+func (p *run) makeSelectsaveStep() {
 	if p.HasErr() {
 		return
 	}
@@ -104,7 +104,7 @@ func (p *runner) makeSelectsaveStep() {
 		})
 }
 
-func (p *runner) makeResolveStep() {
+func (p *run) makeResolveStep() {
 	if p.HasErr() {
 		return
 	}
@@ -135,7 +135,7 @@ func (p *runner) makeResolveStep() {
 		})
 }
 
-func (p *runner) runTuiView() {
+func (p *run) runTuiView() {
 	model := cmdruntui.NewModel(p.cache.view.GetSteps())
 
 	p.cache.view.Run(&model)

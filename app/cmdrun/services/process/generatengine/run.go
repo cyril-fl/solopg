@@ -14,7 +14,7 @@ import (
 
 // Todo mettre en factory
 
-type generator struct {
+type run struct {
 	process.Process
 	cache
 
@@ -31,76 +31,76 @@ type cache struct {
 	err error
 }
 
-func Process(db *mango.Mongo, ctx *cmdruntui.Context) *generator {
-	return &generator{
+func Process(db *mango.Mongo, ctx *cmdruntui.Context) *run {
+	return &run{
 		db:  db,
 		ctx: ctx,
 	}
 }
 
-func (m *generator) Run() {
-	m.setCampaign()
-	m.setArchives()
-	m.setAuthor()
-	m.setEngine()
-	m.ensureSaveState()
+func (p *run) Run() {
+	p.setCampaign()
+	p.setArchives()
+	p.setAuthor()
+	p.setEngine()
+	p.ensureSaveState()
 }
 
-func (m *generator) GetResult() *game.Engine {
-	return m.cache.engine
+func (p *run) GetResult() *game.Engine {
+	return p.cache.engine
 }
 
 // Methods
-func (m *generator) setCampaign() {
-	process := resolvecampaign.Process(m.ctx)
+func (p *run) setCampaign() {
+	process := resolvecampaign.Process(p.ctx)
 	process.Run()
 
-	m.cache.resolvedCampaign = process.GetResult()
+	p.cache.resolvedCampaign = process.GetResult()
 
-	m.SetErr(process.GetErr())
+	p.SetErr(process.GetErr())
 }
 
-func (m *generator) setArchives() {
-	if m.HasErr() {
+func (p *run) setArchives() {
+	if p.HasErr() {
 		return
 	}
 
-	process := resolvearchives.Process(m.db, m.cache.resolvedCampaign.ID)
+	process := resolvearchives.Process(p.db, p.cache.resolvedCampaign.ID)
 	process.Run()
 
-	m.cache.loadedArchives = process.GetResult()
+	p.cache.loadedArchives = process.GetResult()
 
-	m.SetErr(process.GetErr())
+	p.SetErr(process.GetErr())
 }
 
-func (m *generator) setEngine() {
-	if m.HasErr() {
+func (p *run) setEngine() {
+	if p.HasErr() {
 		return
 	}
 
-	m.cache.engine = game.NewEngine(m.cache.resolvedCampaign.ID, game.NewState(game.CampaignData{
-		Campaign: m.cache.resolvedCampaign,
-		Archives: m.cache.loadedArchives,
+	p.cache.engine = game.NewEngine(p.cache.resolvedCampaign.ID, game.NewState(game.CampaignData{
+		Campaign: p.cache.resolvedCampaign,
+		Archives: p.cache.loadedArchives,
 	}))
 }
 
-func (m *generator) setAuthor() {
-	logs.SetAuthor(m.cache.resolvedCampaign.ID.String())
+func (p *run) setAuthor() {
+	logs.SetAuthor(p.cache.resolvedCampaign.ID.String())
 }
 
-func (m *generator) ensureSaveState() {
-	if m.HasErr() {
+func (p *run) ensureSaveState() {
+	if p.HasErr() {
 		return
 	}
 
-	if m.ctx.SelectedSave != nil {
+	if p.ctx.SelectedSave != nil {
 		return
 	}
 
-	m.cache.engine.Initialize()
+	p.cache.engine.Initialize()
 
-	process := savestate.Process(m.db, m.cache.engine)
+	process := savestate.Process(p.db, p.cache.engine)
 	process.Run()
 
-	m.SetErr(process.GetErr())
+	p.SetErr(process.GetErr())
 }

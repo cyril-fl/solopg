@@ -8,38 +8,40 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-type Generator[T any] struct {
+type run[T any] struct {
 	process.Process
 	steps step.List[T]
 }
 
-func Process[T any]() *Generator[T] {
-	return &Generator[T]{}
+type Generator[T any] = run[T]
+
+func Process[T any]() *run[T] {
+	return &run[T]{}
 }
-func (p *Generator[T]) GetSteps() *step.List[T] {
+func (p *run[T]) GetSteps() *step.List[T] {
 	return &p.steps
 }
 
-func (p *Generator[T]) GetResult() {
+func (p *run[T]) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})
 }
 
-func (p *Generator[T]) Run(model tea.Model, opts ...tea.ProgramOption) {
+func (p *run[T]) Run(model tea.Model, opts ...tea.ProgramOption) {
 	program := tea.NewProgram(model, opts...)
 	_, err := program.Run()
 
 	p.SetErr(err)
 }
 
-func (p *Generator[T]) Add(steps ...step.Step[T]) *Generator[T] {
+func (p *run[T]) Add(steps ...step.Step[T]) *run[T] {
 	p.steps.Steps = append(p.steps.Steps, steps...)
 	return p
 }
 
-func (p *Generator[T]) Insert(steps ...step.Step[T]) *Generator[T] {
+func (p *run[T]) Insert(steps ...step.Step[T]) *run[T] {
 	if len(steps) == 0 {
 		return p
 	}
