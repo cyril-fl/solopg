@@ -6,6 +6,8 @@ import (
 
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/locations"
+	"solopg/app/cmdrun/services/timer"
+
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/utils/transform"
@@ -17,6 +19,7 @@ type Campaign struct {
 	ID              id.ID                 `bson:"Id" json:"Id"`
 	Player          *characters.Character `bson:"character" json:"character"`
 	CurrentLocation *locations.Location   `bson:"location" json:"location"`
+	TimeHistory     []timer.Record        `bson:"timeHistory" json:"timeHistory"`
 	CreatedAt       time.Time             `bson:"createdAt" json:"createdAt"`
 	UpdatedAt       time.Time             `bson:"updatedAt" json:"updatedAt"`
 }

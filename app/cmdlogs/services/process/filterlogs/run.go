@@ -13,25 +13,24 @@ type run struct {
 	process.Process
 	cache
 
-	getList func() ([]logs.Log, error)
-	getFlags      func() *pflag.FlagSet
+	getList  func() ([]logs.Log, error)
+	getFlags func() *pflag.FlagSet
 }
-
 
 type cache struct {
 	mill *millfilterlog.Mill
-	list  []logs.Log
+	list []logs.Log
 }
 
 type ProcessTemplate struct {
-	GetList func() ([]logs.Log, error)
-	GetFlags      func() *pflag.FlagSet
+	GetList  func() ([]logs.Log, error)
+	GetFlags func() *pflag.FlagSet
 }
 
 func Process(params ProcessTemplate) *run {
 	return &run{
-		getList: params.GetList,
-		getFlags:      params.GetFlags,
+		getList:  params.GetList,
+		getFlags: params.GetFlags,
 	}
 }
 

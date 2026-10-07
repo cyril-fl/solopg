@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var	env = ""
+var env = ""
 
 type config struct {
 	Name      string            `yaml:"name"`

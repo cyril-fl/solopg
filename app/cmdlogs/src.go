@@ -32,7 +32,7 @@ func RunCmdLogs(flags func() *pflag.FlagSet) error {
 	logger := initloggerepository.Process(db)
 	translation := initI19n.Process(config.Current.I18n, "")
 	session := cmdlogssession.Process(cmdlogssession.ProcessTemplate{
-		GetList: 	func() ([]logs.Log, error) {
+		GetList: func() ([]logs.Log, error) {
 			repo := repository.LogSystem()
 			repo.SetDb(db)
 			return repo.Load(nil)

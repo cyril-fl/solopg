@@ -88,7 +88,6 @@ func (p *run) executeCmd(cmd shellcmd) string {
 	return strings.TrimSpace(string(out))
 }
 
-
 // Helper
 type executablenv struct {
 	devfunc  func()

@@ -5,6 +5,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/codex"
+	"solopg/app/cmdrun/services/timer"
 	"time"
 )
 
@@ -13,6 +14,8 @@ type State struct {
 	CurrentLocation *locations.Location
 	Codex           *codex.Codex
 	AdventureLog    *campaign.Journal
+	TimeHistory     []timer.Record
+	Timer           *timer.Timer
 	Metadata        Metadata
 }
 type Metadata struct {
@@ -29,14 +32,13 @@ type CampaignData struct {
 }
 
 func NewState(data CampaignData) *State {
-	/*
-		TODO LOW Add a timer logic to register the time spent in the game and update the state accordingly.
-	*/
 	return &State{
 		Player:          data.Campaign.Player,
 		CurrentLocation: data.Campaign.CurrentLocation,
 		Codex:           data.Archives.Codex,
 		AdventureLog:    data.Archives.Journal,
+		TimeHistory:     data.Campaign.TimeHistory,
+		Timer:           timer.New(),
 		Metadata: Metadata{
 			Archive: Timestamps{
 				CreatedAt: data.Archives.CreatedAt,

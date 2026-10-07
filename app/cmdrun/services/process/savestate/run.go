@@ -39,7 +39,6 @@ func (p *run) GetResult() {
 func (p *run) saveCampaign() {
 	repo := repository.Campaign().SetDb(p.db)
 	data := p.engine.ExportCampaign()
-
 	p.SetErr(repo.Register(data))
 }
 

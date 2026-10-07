@@ -63,7 +63,7 @@ func (db *Mongo) Connect() {
 
 func (db *Mongo) Disconnect() {
 	if db.client == nil {
-		return 
+		return
 	}
 	db.client.Disconnect(context.Background())
 }

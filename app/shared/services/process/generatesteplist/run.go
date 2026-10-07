@@ -10,7 +10,7 @@ import (
 
 type run[T any] struct {
 	process.Process
-	
+
 	steps step.List[T]
 }
 
@@ -34,7 +34,6 @@ func (p *run[T]) GetResult() {
 		"Subject":  "session",
 	})
 }
-
 
 func (p *run[T]) GetSteps() *step.List[T] {
 	return &p.steps

@@ -21,13 +21,13 @@ func RunCmdServe(flags func() *pflag.FlagSet) error {
 	if db, err = mango.Init(); err != nil {
 		return err
 	}
-		// Cannot be i19n, as DB is init first.
+	// Cannot be i19n, as DB is init first.
 	log := logs.New(logs.Template{
 		Type:    logs.SUCC,
 		Message: "🥭 DB MongoDB connected successfully.",
 	})
 
-	fmt.Println(log.String())	
+	fmt.Println(log.String())
 	defer db.Disconnect()
 
 	/* --- NOTE Everything above this line is non loggable --- */

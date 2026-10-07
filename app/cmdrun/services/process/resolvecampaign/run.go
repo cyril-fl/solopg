@@ -19,7 +19,7 @@ type run struct {
 	process.Process
 	cache
 
-	ctx  *cmdruntui.Context
+	ctx *cmdruntui.Context
 }
 
 type cache struct {

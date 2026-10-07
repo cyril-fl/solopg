@@ -11,7 +11,7 @@ var versionCmd = &cobra.Command{
 	Short:   cmd.Version.Short,
 	Long:    cmd.Version.Long,
 	Example: cmd.Version.Example,
-	Run: cmdversion.Version,
+	Run:     cmdversion.Version,
 }
 
 func init() {

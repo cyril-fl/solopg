@@ -15,6 +15,10 @@ type MongoEnvironment struct {
 	dbname   string
 }
 
+/*
+NOTE HOST and PORT, are use as default values, but they could be
+overwritten per build environment with LDFLAGS if omit in .env file
+*/
 const (
 	HOST = "localhost"
 	PORT = "27017"

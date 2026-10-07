@@ -91,6 +91,8 @@ func (p *run) ensureSaveState() {
 		return
 	}
 
+	p.cache.engine.State.Timer.Start()
+
 	if p.ctx.SelectedSave != nil {
 		return
 	}

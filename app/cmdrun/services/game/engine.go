@@ -21,7 +21,6 @@ func NewEngine(CampaignID id.ID, State *State) *Engine {
 
 func (e *Engine) Initialize() {
 	logs.SilentInfo("system.msg:init")
-
 	e.DiscoverLocation(e.State.CurrentLocation)
 }
 
@@ -66,6 +65,7 @@ func (e *Engine) ExportCampaign() *campaign.Campaign {
 		ID:              e.CampaignID,
 		Player:          e.State.Player,
 		CurrentLocation: e.State.CurrentLocation,
+		TimeHistory:     append(e.State.TimeHistory, e.State.Timer.GetHistory()...),
 		CreatedAt:       e.State.Metadata.Campaign.CreatedAt,
 		UpdatedAt:       e.State.Metadata.Campaign.UpdatedAt,
 	}
