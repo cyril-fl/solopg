@@ -15,7 +15,9 @@ var tryCmd = &cobra.Command{
 }
 
 func init() {
-	if !c.IsDev() { return }
+	if !c.IsDev() {
+		return
+	}
 
 	cmdRoot.AddCommand(tryCmd)
 }

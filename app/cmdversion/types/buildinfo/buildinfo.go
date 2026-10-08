@@ -28,7 +28,7 @@ func New(params InfoTemplate) BuildInfo {
 
 func (b BuildInfo) String() string {
 	sb := strings.Builder{}
-	
+
 	env := "dev"
 	if !config.Current.IsDev() {
 		env = "prod"
