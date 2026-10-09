@@ -3,7 +3,7 @@ package layout
 import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/footer"
-	"solopg/app/shared/components/page"
+	interfass "solopg/app/shared/types/interface"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -50,7 +50,7 @@ func (v *Layout) SetBody(content tea.Model) {
 }
 
 func (v *Layout) setBodyHeight(model tea.Model) {
-	if view, ok := model.(page.Pagineable); ok {
+	if view, ok := model.(interfass.Presentable); ok {
 		b := trimPadding(v.body.View().Content)
 		bodyBaseHeight := max(0, lipgloss.Height(b))
 		bodyBaseHeight = 0
@@ -70,6 +70,17 @@ func (v *Layout) getHeightWithinBorder() int {
 	offsetBecauseBorder := 0
 
 	return max(0, v.size.GetHeight()-offsetBecauseBorder)
+}
+
+func (v *Layout) GetSize() size.Size {
+	return v.size
+}
+
+func (v *Layout) GetAvailableSize() size.Size {
+	return size.New(size.Template{
+		Width:  v.size.GetWidth(),
+		Height: v.getHeightAvailable(),
+	})
 }
 
 func (v *Layout) getHeightAvailable() int {
